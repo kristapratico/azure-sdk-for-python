@@ -74,6 +74,8 @@ from .operations.service_endpoint_policy_definitions_operations import ServiceEn
 from .operations.usages_operations import UsagesOperations
 from .operations.virtual_networks_operations import VirtualNetworksOperations
 from .operations.subnets_operations import SubnetsOperations
+from .operations.resource_navigation_links_operations import ResourceNavigationLinksOperations
+from .operations.service_association_links_operations import ServiceAssociationLinksOperations
 from .operations.virtual_network_peerings_operations import VirtualNetworkPeeringsOperations
 from .operations.virtual_network_gateways_operations import VirtualNetworkGatewaysOperations
 from .operations.virtual_network_gateway_connections_operations import VirtualNetworkGatewayConnectionsOperations
@@ -244,6 +246,10 @@ class NetworkManagementClient(SDKClient):
     :vartype virtual_networks: azure.mgmt.network.v2019_02_01.operations.VirtualNetworksOperations
     :ivar subnets: Subnets operations
     :vartype subnets: azure.mgmt.network.v2019_02_01.operations.SubnetsOperations
+    :ivar resource_navigation_links: ResourceNavigationLinks operations
+    :vartype resource_navigation_links: azure.mgmt.network.v2019_02_01.operations.ResourceNavigationLinksOperations
+    :ivar service_association_links: ServiceAssociationLinks operations
+    :vartype service_association_links: azure.mgmt.network.v2019_02_01.operations.ServiceAssociationLinksOperations
     :ivar virtual_network_peerings: VirtualNetworkPeerings operations
     :vartype virtual_network_peerings: azure.mgmt.network.v2019_02_01.operations.VirtualNetworkPeeringsOperations
     :ivar virtual_network_gateways: VirtualNetworkGateways operations
@@ -406,6 +412,10 @@ class NetworkManagementClient(SDKClient):
         self.virtual_networks = VirtualNetworksOperations(
             self._client, self.config, self._serialize, self._deserialize)
         self.subnets = SubnetsOperations(
+            self._client, self.config, self._serialize, self._deserialize)
+        self.resource_navigation_links = ResourceNavigationLinksOperations(
+            self._client, self.config, self._serialize, self._deserialize)
+        self.service_association_links = ServiceAssociationLinksOperations(
             self._client, self.config, self._serialize, self._deserialize)
         self.virtual_network_peerings = VirtualNetworkPeeringsOperations(
             self._client, self.config, self._serialize, self._deserialize)

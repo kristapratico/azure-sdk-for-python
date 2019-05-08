@@ -249,6 +249,8 @@ try:
     from .usage_py3 import Usage
     from .address_space_py3 import AddressSpace
     from .virtual_network_peering_py3 import VirtualNetworkPeering
+    from .resource_navigation_links_list_result_py3 import ResourceNavigationLinksListResult
+    from .service_association_links_list_result_py3 import ServiceAssociationLinksListResult
     from .dhcp_options_py3 import DhcpOptions
     from .virtual_network_py3 import VirtualNetwork
     from .ip_address_availability_result_py3 import IPAddressAvailabilityResult
@@ -546,6 +548,8 @@ except (SyntaxError, ImportError):
     from .usage import Usage
     from .address_space import AddressSpace
     from .virtual_network_peering import VirtualNetworkPeering
+    from .resource_navigation_links_list_result import ResourceNavigationLinksListResult
+    from .service_association_links_list_result import ServiceAssociationLinksListResult
     from .dhcp_options import DhcpOptions
     from .virtual_network import VirtualNetwork
     from .ip_address_availability_result import IPAddressAvailabilityResult
@@ -1017,6 +1021,8 @@ __all__ = [
     'Usage',
     'AddressSpace',
     'VirtualNetworkPeering',
+    'ResourceNavigationLinksListResult',
+    'ServiceAssociationLinksListResult',
     'DhcpOptions',
     'VirtualNetwork',
     'IPAddressAvailabilityResult',

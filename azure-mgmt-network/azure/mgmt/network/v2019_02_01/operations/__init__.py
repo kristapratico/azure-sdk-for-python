@@ -65,6 +65,8 @@ from .service_endpoint_policy_definitions_operations import ServiceEndpointPolic
 from .usages_operations import UsagesOperations
 from .virtual_networks_operations import VirtualNetworksOperations
 from .subnets_operations import SubnetsOperations
+from .resource_navigation_links_operations import ResourceNavigationLinksOperations
+from .service_association_links_operations import ServiceAssociationLinksOperations
 from .virtual_network_peerings_operations import VirtualNetworkPeeringsOperations
 from .virtual_network_gateways_operations import VirtualNetworkGatewaysOperations
 from .virtual_network_gateway_connections_operations import VirtualNetworkGatewayConnectionsOperations
@@ -138,6 +140,8 @@ __all__ = [
     'UsagesOperations',
     'VirtualNetworksOperations',
     'SubnetsOperations',
+    'ResourceNavigationLinksOperations',
+    'ServiceAssociationLinksOperations',
     'VirtualNetworkPeeringsOperations',
     'VirtualNetworkGatewaysOperations',
     'VirtualNetworkGatewayConnectionsOperations',

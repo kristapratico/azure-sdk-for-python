@@ -2403,6 +2403,19 @@ class NetworkManagementClient(MultiApiClientMixin, SDKClient):
         return OperationClass(self._client, self.config, Serializer(self._models_dict(api_version)), Deserializer(self._models_dict(api_version)))
 
     @property
+    def resource_navigation_links(self):
+        """Instance depends on the API version:
+
+           * 2019-02-01: :class:`ResourceNavigationLinksOperations<azure.mgmt.network.v2019_02_01.operations.ResourceNavigationLinksOperations>`
+        """
+        api_version = self._get_api_version('resource_navigation_links')
+        if api_version == '2019-02-01':
+            from .v2019_02_01.operations import ResourceNavigationLinksOperations as OperationClass
+        else:
+            raise NotImplementedError("APIVersion {} is not available".format(api_version))
+        return OperationClass(self._client, self.config, Serializer(self._models_dict(api_version)), Deserializer(self._models_dict(api_version)))
+
+    @property
     def route_filter_rules(self):
         """Instance depends on the API version:
 
@@ -2721,6 +2734,19 @@ class NetworkManagementClient(MultiApiClientMixin, SDKClient):
             from .v2018_12_01.operations import SecurityRulesOperations as OperationClass
         elif api_version == '2019-02-01':
             from .v2019_02_01.operations import SecurityRulesOperations as OperationClass
+        else:
+            raise NotImplementedError("APIVersion {} is not available".format(api_version))
+        return OperationClass(self._client, self.config, Serializer(self._models_dict(api_version)), Deserializer(self._models_dict(api_version)))
+
+    @property
+    def service_association_links(self):
+        """Instance depends on the API version:
+
+           * 2019-02-01: :class:`ServiceAssociationLinksOperations<azure.mgmt.network.v2019_02_01.operations.ServiceAssociationLinksOperations>`
+        """
+        api_version = self._get_api_version('service_association_links')
+        if api_version == '2019-02-01':
+            from .v2019_02_01.operations import ServiceAssociationLinksOperations as OperationClass
         else:
             raise NotImplementedError("APIVersion {} is not available".format(api_version))
         return OperationClass(self._client, self.config, Serializer(self._models_dict(api_version)), Deserializer(self._models_dict(api_version)))

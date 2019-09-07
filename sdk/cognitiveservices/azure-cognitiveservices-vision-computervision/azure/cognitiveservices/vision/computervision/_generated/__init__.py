@@ -5,5 +5,10 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-VERSION = "2.1"
+from ._computer_vision_client import ComputerVision
+__all__ = ['ComputerVision']
+
+from .version import VERSION
+
+__version__ = VERSION
 

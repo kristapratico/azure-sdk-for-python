@@ -5,5 +5,5 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-VERSION = "2.1"
-
+from ._computer_vision_client_async import ComputerVisionClient
+__all__ = ['ComputerVisionClient']

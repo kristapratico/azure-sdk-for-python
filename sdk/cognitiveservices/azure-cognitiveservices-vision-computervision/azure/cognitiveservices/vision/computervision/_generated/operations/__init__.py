@@ -5,5 +5,8 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-VERSION = "2.1"
+from ._computer_vision_client_operations import ComputerVisionClientOperationsMixin
 
+__all__ = [
+    'ComputerVisionClientOperationsMixin',
+]

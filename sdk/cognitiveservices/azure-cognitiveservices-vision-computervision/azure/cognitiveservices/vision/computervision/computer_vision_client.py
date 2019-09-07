@@ -46,7 +46,7 @@ class ComputerVisionClient(ComputerVision):
 
     def detect_objects(self, url, **kwargs):
         try:
-            return self.vision.describe_image(
+            return self.vision.detect_objects(
                 url=url,
                 cls=kwargs.pop("cls", None),
                 **kwargs,

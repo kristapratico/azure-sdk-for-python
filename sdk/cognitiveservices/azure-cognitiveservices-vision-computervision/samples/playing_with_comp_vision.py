@@ -2,6 +2,7 @@ import os
 from azure.cognitiveservices.vision.computervision.computer_vision_client import ComputerVisionClient
 from azure.cognitiveservices.vision.computervision._generated.models import VisualFeatureTypes
 from msrest.authentication import CognitiveServicesCredentials
+import settings_real as settings
 
 IMAGES_FOLDER = "C:\\Users\\krpratic\\azure-sdk-for-python\\sdk\\cognitiveservices\\azure-cognitiveservices-vision-computervision\\samples\\images"
 
@@ -11,35 +12,81 @@ def response_handler(response, deserialized, response_headers):
 
 
 def test_analyze_image():
-    credential = "d926defc24d24403ac6252b360aa6ab2"
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential,
+        credentials=settings.COG_KEY,
+    )
+
+    # resp = client.analyze_image(
+    #     data="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+    #     visual_features=[
+    #         VisualFeatureTypes.image_type,
+    #         VisualFeatureTypes.faces,
+    #         VisualFeatureTypes.categories,
+    #         VisualFeatureTypes.color,
+    #         VisualFeatureTypes.tags,
+    #         VisualFeatureTypes.description,
+    #     ],
+    # )
+
+    with open(os.path.join(IMAGES_FOLDER, "house.jpg"), "rb") as image_stream:
+        resp = client.analyze_image(
+            data=image_stream,
+            visual_features=[
+                "ImageType",
+                "Faces",
+                "Categories",
+                "Color",
+                "Tags",
+                "Description",
+            ],
+        )
+
+    print("This image can be described as: {}\n".format(
+        resp.description.captions[0].text))
+
+    print("Tags associated with this image:\nTag\t\tConfidence")
+    for tag in resp.tags:
+        print("{}\t\t{}".format(tag.name, tag.confidence))
+
+    print("\nThe primary colors of this image are: {}".format(
+        resp.color.dominant_colors))
+
+
+def test_analyze_image_landmarks():
+    client = ComputerVisionClient(
+        endpoint="https://westus2.api.cognitive.microsoft.com/",
+        credentials=settings.COG_KEY,
     )
 
     des = client.analyze_image(
-        url="https://images2.minutemediacdn.com/image/upload/c_crop,h_1193,w_2121,x_0,y_64/f_auto,q_auto,w_1100/v1565279671/shape/mentalfloss/578211-gettyimages-542930526.jpg",
-        visual_features=[
-            VisualFeatureTypes.image_type,
-            VisualFeatureTypes.faces,
-            VisualFeatureTypes.categories,
-            VisualFeatureTypes.color,
-            VisualFeatureTypes.tags,
-            VisualFeatureTypes.description,
-        ],
+        url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+        details=["Landmarks"]
     )
 
     for item in des.categories:
-        print(item)
-
-    print(des.metadata)
+        print(item.detail.landmarks[0].name)
 
 
-def test_image_analysis_in_stream():
-    credential = CognitiveServicesCredentials("d926defc24d24403ac6252b360aa6ab2")
+def test_analyze_image_by_domain_landmarks():
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential,
+        credentials=settings.COG_KEY,
+    )
+
+    resp = client.analyze_image_by_domain(
+        url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+        model="landmarks"
+    )
+
+    for landmark in resp.result["landmarks"]:
+        print("Landmark name: ", landmark['name'])
+        print("Confidence score: ", landmark['confidence'])
+
+def test_image_analysis_in_stream():
+    client = ComputerVisionClient(
+        endpoint="https://westus2.api.cognitive.microsoft.com/",
+        credentials=settings.COG_KEY,
     )
 
     with open(os.path.join(IMAGES_FOLDER, "house.jpg"), "rb") as image_stream:
@@ -76,10 +123,9 @@ def test_image_analysis_in_stream():
 
 def recognize_text_in_stream_using_lropoller():
     import time
-    credential = CognitiveServicesCredentials("d926defc24d24403ac6252b360aa6ab2")
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential
+        credentials=settings.COG_KEY
     )
 
     with open(
@@ -108,10 +154,9 @@ def recognize_text_in_stream_using_lropoller():
 
 def test_recognize_text_in_stream():
     import time
-    credential = CognitiveServicesCredentials("d926defc24d24403ac6252b360aa6ab2")
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential
+        credentials=settings.COG_KEY
     )
 
     with open(
@@ -141,12 +186,12 @@ def test_recognize_text_in_stream():
     print(lines[2].words[0].text)  # "happen"
 
 
-def recognize_text_with_lropoller():
+def test_recognize_text_with_lropoller():
     import time
 
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials="d926defc24d24403ac6252b360aa6ab2",
+        credentials=settings.COG_KEY,
     )
 
     poller = client.recognize_text(
@@ -154,27 +199,26 @@ def recognize_text_with_lropoller():
         url="http://d2jaiao3zdxbzm.cloudfront.net/wp-content/uploads/figure-65.png",
     )
 
-    image_analysis = None
+    text_operation_result = None
     while poller.status() in ["NotStarted", "Running"]:
         time.sleep(1)
         if poller.status() == "Succeeded":
-            image_analysis = poller.result()
+            text_operation_result = poller.result()
         if poller.status() == "Failed":
             print("Oh no")
 
-    print("Job completion is: {}\n".format(image_analysis.status))
+    print("Job completion is: {}\n".format(text_operation_result.status))
     print("Recognized:\n")
-    lines = image_analysis.recognition_result.lines
+    lines = text_operation_result.recognition_result.lines
     for line in lines:
         print(line.text)
 
 
 def test_recognize_text():
     import time
-    credential = CognitiveServicesCredentials("d926defc24d24403ac6252b360aa6ab2")
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential,
+        credentials=settings.COG_KEY,
     )
 
     job = client.recognize_text(
@@ -200,36 +244,36 @@ def test_recognize_text():
         print(line.text)
 
 
-def batch_read_file_with_lropoller():
+def test_batch_read_file_with_lropoller():
     import time
 
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials="d926defc24d24403ac6252b360aa6ab2",
+        credentials=settings.COG_KEY,
     )
 
-    poller = client.batch_read_file(url="http://d2jaiao3zdxbzm.cloudfront.net/wp-content/uploads/figure-65.png")
-    image_analysis = None
+    poller = client.batch_read_file(url="http://www.historytube.org/wp-content/uploads/2013/07/Declaration-of-Independence-broadside-1776-Jamestown-Yorktown-Foundation2.jpg")
+    read_operation_result = None
     while poller.status() in ["NotStarted", "Running"]:
         time.sleep(1)
         if poller.status() == "Succeeded":
-            image_analysis = poller.result()
+            read_operation_result = poller.result()
         if poller.status() == "Failed":
             print("Oh no")
 
-    print("Job completion is: {}\n".format(image_analysis.status))
+    print("Job completion is: {}\n".format(read_operation_result.status))
     print("Recognized:\n")
-    result = image_analysis.recognition_results
-    for line in result[0].lines:
-        print(line.text)
+    result = read_operation_result.recognition_results
+    for image_text in result:
+        for line in image_text.lines:
+            print(line.text)
 
 
 def test_batch_read_file():
     import time
-    credential = CognitiveServicesCredentials("d926defc24d24403ac6252b360aa6ab2")
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential,
+        credentials=settings.COG_KEY,
     )
 
     job = client.batch_read_file(url="http://d2jaiao3zdxbzm.cloudfront.net/wp-content/uploads/figure-65.png",
@@ -257,7 +301,7 @@ def test_batch_read_file_in_stream_with_lropoller():
 
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials="d926defc24d24403ac6252b360aa6ab2",
+        credentials=settings.COG_KEY,
     )
 
     with open(
@@ -284,10 +328,10 @@ def test_batch_read_file_in_stream_with_lropoller():
 
 def test_batch_read_file_in_stream():
     import time
-    credential = CognitiveServicesCredentials("d926defc24d24403ac6252b360aa6ab2")
+
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential,
+        credentials=settings.COG_KEY,
     )
 
     with open(
@@ -315,11 +359,34 @@ def test_batch_read_file_in_stream():
         print(line.text)
 
 
-def test_recognize_printed_text_in_stream():
-    credential = CognitiveServicesCredentials("d926defc24d24403ac6252b360aa6ab2")
+def test_recognize_printed_text():
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential,
+        credentials=settings.COG_KEY,
+    )
+
+    with open(
+        os.path.join(IMAGES_FOLDER, "text_test2.png"), "rb"
+    ) as image_stream:
+        image_analysis = client.recognize_printed_text_in_stream(
+            image=image_stream,
+        )
+
+    print("Printed text recognized:\n")
+    for region in image_analysis.regions:
+        for line in region.lines:
+            line_text = " ".join([word.text for word in line.words])
+            print(line_text)
+
+    print("Language: ", image_analysis.language)
+    print("Angle of detected text: ", image_analysis.text_angle)
+    print("Orientation of detected text: ", image_analysis.orientation)
+
+
+def test_recognize_printed_text_in_stream():
+    client = ComputerVisionClient(
+        endpoint="https://westus2.api.cognitive.microsoft.com/",
+        credentials=settings.COG_KEY,
     )
 
     with open(
@@ -338,45 +405,42 @@ def test_recognize_printed_text_in_stream():
 
 
 def test_describe_image():
-    credential = CognitiveServicesCredentials("d926defc24d24403ac6252b360aa6ab2")
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential,
+        credentials=settings.COG_KEY,
     )
 
-    des = client.describe_image(
+    resp = client.describe_image(
         url="https://images2.minutemediacdn.com/image/upload/c_crop,h_1193,w_2121,x_0,y_64/f_auto,q_auto,w_1100/v1565279671/shape/mentalfloss/578211-gettyimages-542930526.jpg",
+        max_candidates=3
     )
 
-    for cap in des.captions:
-        print(cap.text, cap.confidence)
-    print(des.captions)
+    print(resp.tags)  # list[str] of tags
+    for caption in resp.captions:
+        print(caption.text, caption.confidence)
 
 
 def test_detect_object():
-    credential = CognitiveServicesCredentials("d926defc24d24403ac6252b360aa6ab2")
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential,
+        credentials=settings.COG_KEY,
     )
 
-    des = client.detect_objects(
-        url="https://hips.hearstapps.com/ame-prod-goodhousekeeping-assets.s3.amazonaws.com/main/embedded/29857/three-kittens.jpg?resize=480:*",
-    )
-
-    des2 = client.detect_objects(
+    resp = client.detect_objects(
         url="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg",
     )
 
-    for obj in des2.objects:
-        print(obj)
+    for obj in resp.objects:
+        print("Detected object: ", obj.object_property)
+        print("Object location: ", obj.rectangle)  # {x, y, width, height}
+        print("Confidence score: ", obj.confidence)
+        print("Parent object: ", obj.parent.object_property)
 
 
 def test_detect_object_in_stream():
-    credential = CognitiveServicesCredentials("d926defc24d24403ac6252b360aa6ab2")
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential,
+        credentials=settings.COG_KEY,
     )
 
     with open(os.path.join(IMAGES_FOLDER, "house.jpg"), "rb") as image_stream:
@@ -389,31 +453,60 @@ def test_detect_object_in_stream():
 
 
 def test_list_models():
-    credential = CognitiveServicesCredentials("d926defc24d24403ac6252b360aa6ab2")
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential,
+        credentials=settings.COG_KEY,
     )
+
     models = client.list_models()
-    print(models.models_property)
-    for mod in models.models_property:
-        print(mod)
+    for model in models.models_property:
+        print(model.name, model.categories)
 
 
 def test_tag_image_in_stream():
-    credential = "d926defc24d24403ac6252b360aa6ab2"
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=credential,
+        credentials=settings.COG_KEY,
     )
     with open(
         os.path.join(IMAGES_FOLDER, "house.jpg"), "rb"
     ) as image_stream:
-        tag_result = client.tag_image_in_stream(
+        resp = client.tag_image_in_stream(
             image=image_stream,
         )
 
-    print(tag_result)
-    for tag in tag_result.tags:
-        print(tag)
+    for tag in resp.tags:
+        print(tag.name, tag.confidence)
 
+
+def test_generate_thumbnail():
+    client = ComputerVisionClient(
+        endpoint="https://westus2.api.cognitive.microsoft.com/",
+        credentials=settings.COG_KEY,
+    )
+
+    thumb = client.generate_thumbnail(
+        url="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg",
+        width=100,
+        height=100,
+    )
+
+    with open("my_thumbnail.jpeg", "wb") as img:
+        for byt in thumb:
+            img.write(byt)
+
+
+def test_get_area_of_interest():
+    client = ComputerVisionClient(
+        endpoint="https://westus2.api.cognitive.microsoft.com/",
+        credentials=settings.COG_KEY,
+    )
+
+    result = client.get_area_of_interest(
+        url="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg",
+    )
+
+    print("x: ", result.area_of_interest.x)
+    print("y: ", result.area_of_interest.y)
+    print("width: ", result.area_of_interest.w)
+    print("height: ", result.area_of_interest.h)

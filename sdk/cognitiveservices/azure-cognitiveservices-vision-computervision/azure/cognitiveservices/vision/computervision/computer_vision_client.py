@@ -3,6 +3,8 @@
 # Licensed under the MIT License.
 # ------------------------------------
 import functools
+import six
+import io
 from azure.core.polling import LROPoller
 from azure.cognitiveservices.vision.computervision._generated._computer_vision_client import ComputerVision
 from azure.cognitiveservices.vision.computervision._generated.models import ComputerVisionErrorException
@@ -17,19 +19,35 @@ class ComputerVisionClient(ComputerVision):
     def __init__(self, endpoint, credentials, **kwargs):
         super(ComputerVisionClient, self).__init__(endpoint=endpoint, credentials=credentials, **kwargs)
 
-    def analyze_image(self, url, visual_features=None, details=None, language="en", description_exclude=None, **kwargs):
-        try:
-            return self.vision.analyze_image(
-                url=url,
-                visual_features=visual_features,
-                details=details,
-                language=language,
-                description_exclude=description_exclude,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-        except ComputerVisionErrorException as error:
-            raise error
+    def analyze_image(self, data, visual_features=None, details=None, language="en", description_exclude=None, **kwargs):
+        if isinstance(data, six.text_type):
+            try:
+                return self.vision.analyze_image(
+                    url=data,
+                    visual_features=visual_features,
+                    details=details,
+                    language=language,
+                    description_exclude=description_exclude,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+            except ComputerVisionErrorException as error:
+                raise error
+        if isinstance(data, io.BufferedReader):
+            try:
+                return self.vision.analyze_image_in_stream(
+                    image=data,
+                    visual_features=visual_features,
+                    details=details,
+                    language=language,
+                    description_exclude=description_exclude,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+            except ComputerVisionErrorException as error:
+                raise error
+        else:
+            raise TypeError("Unsupported data type: {}".format(type(data)))
 
     def describe_image(self, url, max_candidates=1, language="en", description_exclude=None, **kwargs):
         try:
@@ -56,7 +74,7 @@ class ComputerVisionClient(ComputerVision):
 
     def list_models(self, **kwargs):
         try:
-            self.vision.list_models(
+            return self.vision.list_models(
                 cls=kwargs.pop("cls", None),
                 **kwargs,
             )
@@ -68,7 +86,7 @@ class ComputerVisionClient(ComputerVision):
             return self.vision.analyze_image_by_domain(
                 model=model,
                 url=url,
-                langauge=language,
+                language=language,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
             )
@@ -80,7 +98,7 @@ class ComputerVisionClient(ComputerVision):
             return self.vision.recognize_printed_text(
                 url=url,
                 detect_orientation=detect_orientation,
-                langauge=language,
+                language=language,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
             )
@@ -91,7 +109,7 @@ class ComputerVisionClient(ComputerVision):
         try:
             return self.vision.tag_image(
                 url=url,
-                langauge=language,
+                language=language,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
             )

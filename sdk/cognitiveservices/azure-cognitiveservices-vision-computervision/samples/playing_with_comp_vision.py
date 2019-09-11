@@ -20,11 +20,11 @@ def test_analyze_image():
     resp = client.analyze_image(
         data="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
         visual_features=[
-            "Brands"
+            # "Brands"
             # "ImageType",
             # "Faces",
             # "Categories",
-            # "Color",
+            "Color",
             # "Tags",
             # "Description",
         ],
@@ -143,6 +143,7 @@ def test_detect_faces():
         print(face.age)
         print(face.gender)
         print(face.face_rectangle)
+        print(face.metadata.format)
 
 def test_detect_categories():
     client = ComputerVisionClient(
@@ -506,12 +507,10 @@ def test_describe_image():
         max_candidates=3
     )
 
-    # currently returning generic list[dict{}] for captions instead of ImageCaption and dict{} instead of ImageMetadata.
+
     print(resp.tags)
-    print(resp.captions)
-    print(resp.metadata)
     for caption in resp.captions:
-        print(caption['text'], caption['confidence'])
+        print(caption.text, caption.confidence)
 
 
 def test_detect_object():
@@ -524,7 +523,7 @@ def test_detect_object():
         url="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg",
     )
 
-    for obj in resp.objects:
+    for obj in resp:
         print("Detected object: ", obj.object_property)
         print("Object location: ", obj.rectangle)  # {x, y, width, height}
         print("Confidence score: ", obj.confidence)

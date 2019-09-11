@@ -10,7 +10,7 @@ from azure.cognitiveservices.vision.computervision._generated._computer_vision_c
 from azure.cognitiveservices.vision.computervision._generated.models import ComputerVisionErrorException
 from azure.cognitiveservices.vision.computervision._polling import ComputerVisionPollingMethod
 
-from ._deserialize import deserialize_image_description_results
+from ._deserialize import deserialize_image_description_results, deserialize_color_results,deserialize_face_results
 
 def response_handler(response, deserialized, response_headers):
     return response
@@ -120,10 +120,10 @@ class ComputerVisionClient(ComputerVision):
                     url=data,
                     visual_features=["Color"],
                     language=language,
-                    cls=kwargs.pop("cls", None),
+                    cls=deserialize_color_results,
                     **kwargs,
                 )
-                return resp.color
+                return resp
             except ComputerVisionErrorException as error:
                 raise error
         if isinstance(data, io.BufferedReader):
@@ -148,10 +148,10 @@ class ComputerVisionClient(ComputerVision):
                     url=data,
                     visual_features=["Faces"],
                     language=language,
-                    cls=kwargs.pop("cls", None),
+                    cls=deserialize_face_results,
                     **kwargs,
                 )
-                return resp.faces
+                return resp
             except ComputerVisionErrorException as error:
                 raise error
         if isinstance(data, io.BufferedReader):
@@ -322,7 +322,7 @@ class ComputerVisionClient(ComputerVision):
                 max_candidates=max_candidates,
                 language=language,
                 description_exclude=description_exclude,
-                cls=deserialize_image_description_results,
+                cls=kwargs.pop("cls", None),
                 **kwargs,
             )
             return img_description
@@ -345,11 +345,12 @@ class ComputerVisionClient(ComputerVision):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            return self.vision.detect_objects(
+            response = self.vision.detect_objects(
                 url=url,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
             )
+            return response.objects
         except ComputerVisionErrorException as error:
             raise error
 

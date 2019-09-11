@@ -313,20 +313,21 @@ for image_text in result:
 
 Changes:
 1. Operations that accept a url and operations that accept an image stream are combined into one operation that takes
-    a generic `data` parameter. E.g. analyze_image_in_stream(image, ...) --> analyze_image(data, ...)
-2. No longer use CognitiveServicesCredentials from msrest. Now pass in cognitive services key. Need support for AAD?
-3. LRO recognize_text() and batch_read_file() return LROPoller's and do the call to get_text_operation_result()
-    get_read_operation_result() behind the scenes.
+    a generic `data` parameter. E.g. `analyze_image_in_stream(image, ...)` --> `analyze_image(data, ...)`
+2. No longer use `CognitiveServicesCredentials` from msrest. Now pass in cognitive services key. Need support for AAD?
+3. LRO `recognize_text()` and `batch_read_file()` return LROPoller's and do the call to `get_text_operation_result()`
+    `get_read_operation_result()` behind the scenes.
 4. Moving from msrest to azure.core we lose params `custom_headers, raw, **operation_config` and gain `cls, **kwargs`.
     cls moved to a kwarg.
 5. analyze_image() broken up into several specific methods: detect_colors, detect_faces, detect_categories,
     detect_adult_content, detect_brands, detect_image_type. analyze_image() unchanged.
-6. list_models() returns a list[ModelDescription] instead of a ListModelsResult
-7. tag_image() returns a list[ImageTag] instead of a TagResult
-8. get_area_of_interest() returns a BoundingRect instead of AreaOfInterestResult
-9. recognize_text() LROPoller returns a TextRecognitionResult instead of TextOperationResult.
+6. list_models() returns a `list[ModelDescription]` instead of a `ListModelsResult`
+7. tag_image() returns a `list[ImageTag]` instead of a `TagResult`
+8. get_area_of_interest() returns a `BoundingRect` instead of `AreaOfInterestResult`
+9. detect_objects() now returns a `list[DetectedObject]` instead of `DetectResult`.
+10. recognize_text() LROPoller returns a `TextRecognitionResult` instead of `TextOperationResult`.
     Status is now checked with poller object - poller.status()
-10. batch_read_file() LROPoller returns a list[TextRecognitionResult] instead of ReadOperationResult.
+11. batch_read_file() LROPoller returns a `list[TextRecognitionResult]` instead of `ReadOperationResult`.
     Status is now checked with poller object - poller.status()
 
 ```python
@@ -344,7 +345,7 @@ ComputerVisionClient.analyze_image_by_domain(data, model, language="en", **kwarg
 # Returns ImageDescription
 ComputerVisionClient.describe_image(data, max_candidates=1, language="en", description_exclude=None, **kwargs)
 
-# Returns DetectResult
+# Returns list[DetectedObject]
 ComputerVisionClient.detect_objects(data, **kwargs)
 
 # Returns ColorInfo
@@ -534,7 +535,7 @@ for tag in resp:
     print(tag.name, tag.confidence)
 ```
 
-### 19. Changes to get_area_of_interest()
+### 20. Changes to get_area_of_interest()
 ```python
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 
@@ -553,7 +554,27 @@ print("width: ", result.w)
 print("height: ", result.h)
 ```
 
-### 19. Changes to recognize_text()
+### 21. Changes to detect_objects()
+```python
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+
+client = ComputerVisionClient(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credentials="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+
+resp = client.detect_objects(
+    data="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg",
+)
+
+for obj in resp:
+    print("Detected object: ", obj.object_property)
+    print("Object location: ", obj.rectangle)  # {x, y, width, height}
+    print("Confidence score: ", obj.confidence)
+    print("Parent object: ", obj.parent.object_property)
+```
+
+### 22. Changes to recognize_text()
 ```python
 import time
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
@@ -583,7 +604,7 @@ for line in lines:
     print(line.text)
 ```
 
-### 19. Changes to batch_read_file()
+### 23. Changes to batch_read_file()
 ```python
 import time
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient

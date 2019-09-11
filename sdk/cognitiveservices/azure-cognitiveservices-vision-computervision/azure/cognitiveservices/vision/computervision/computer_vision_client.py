@@ -10,6 +10,8 @@ from azure.cognitiveservices.vision.computervision._generated._computer_vision_c
 from azure.cognitiveservices.vision.computervision._generated.models import ComputerVisionErrorException
 from azure.cognitiveservices.vision.computervision._polling import ComputerVisionPollingMethod
 
+from ._deserialize import deserialize_image_description_results
+
 def response_handler(response, deserialized, response_headers):
     return response
 
@@ -111,6 +113,176 @@ class ComputerVisionClient(ComputerVision):
         else:
             raise TypeError("Unsupported data type: {}".format(type(data)))
 
+    def detect_colors(self, data, language="en", **kwargs):
+        if isinstance(data, six.text_type):
+            try:
+                resp = self.vision.analyze_image(
+                    url=data,
+                    visual_features=["Color"],
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.color
+            except ComputerVisionErrorException as error:
+                raise error
+        if isinstance(data, io.BufferedReader):
+            try:
+                resp = self.vision.analyze_image_in_stream(
+                    image=data,
+                    visual_features=["Color"],
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.color
+            except ComputerVisionErrorException as error:
+                raise error
+        else:
+            raise TypeError("Unsupported data type: {}".format(type(data)))
+
+    def detect_faces(self, data, language="en", **kwargs):
+        if isinstance(data, six.text_type):
+            try:
+                resp = self.vision.analyze_image(
+                    url=data,
+                    visual_features=["Faces"],
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.faces
+            except ComputerVisionErrorException as error:
+                raise error
+        if isinstance(data, io.BufferedReader):
+            try:
+                resp = self.vision.analyze_image_in_stream(
+                    image=data,
+                    visual_features=["Faces"],
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.faces
+            except ComputerVisionErrorException as error:
+                raise error
+        else:
+            raise TypeError("Unsupported data type: {}".format(type(data)))
+
+    def detect_adult_content(self, data, language="en", **kwargs):
+        if isinstance(data, six.text_type):
+            try:
+                resp = self.vision.analyze_image(
+                    url=data,
+                    visual_features=["Adult"],
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.adult
+            except ComputerVisionErrorException as error:
+                raise error
+        if isinstance(data, io.BufferedReader):
+            try:
+                resp = self.vision.analyze_image_in_stream(
+                    image=data,
+                    visual_features=["Adult"],
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.adult
+            except ComputerVisionErrorException as error:
+                raise error
+        else:
+            raise TypeError("Unsupported data type: {}".format(type(data)))
+
+    def detect_brands(self, data, **kwargs):
+        if isinstance(data, six.text_type):
+            try:
+                resp = self.vision.analyze_image(
+                    url=data,
+                    visual_features=["Brands"],
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.brands
+            except ComputerVisionErrorException as error:
+                raise error
+        if isinstance(data, io.BufferedReader):
+            try:
+                resp = self.vision.analyze_image_in_stream(
+                    image=data,
+                    visual_features=["Brands"],
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.brands
+            except ComputerVisionErrorException as error:
+                raise error
+        else:
+            raise TypeError("Unsupported data type: {}".format(type(data)))
+
+    def detect_image_type(self, data, language="en", **kwargs):
+        if isinstance(data, six.text_type):
+            try:
+                resp = self.vision.analyze_image(
+                    url=data,
+                    visual_features=["ImageType"],
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.image_type
+            except ComputerVisionErrorException as error:
+                raise error
+        if isinstance(data, io.BufferedReader):
+            try:
+                resp = self.vision.analyze_image_in_stream(
+                    image=data,
+                    visual_features=["ImageType"],
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.image_type
+            except ComputerVisionErrorException as error:
+                raise error
+        else:
+            raise TypeError("Unsupported data type: {}".format(type(data)))
+
+    def detect_categories(self, data, language="en", details=None, description_exclude=None, **kwargs):
+        if isinstance(data, six.text_type):
+            try:
+                resp = self.vision.analyze_image(
+                    url=data,
+                    visual_features=["Categories"],
+                    language=language,
+                    details=details,
+                    description_exclude=description_exclude,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.categories
+            except ComputerVisionErrorException as error:
+                raise error
+        if isinstance(data, io.BufferedReader):
+            try:
+                resp = self.vision.analyze_image_in_stream(
+                    image=data,
+                    visual_features=["Categories"],
+                    language=language,
+                    details=details,
+                    description_exclude=description_exclude,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return resp.categories
+            except ComputerVisionErrorException as error:
+                raise error
+        else:
+            raise TypeError("Unsupported data type: {}".format(type(data)))
+
     def describe_image(self, url, max_candidates=1, language="en", description_exclude=None, **kwargs):
         """This operation generates a description of an image in human readable
         language with complete sentences. The description is based on a
@@ -145,14 +317,15 @@ class ComputerVisionClient(ComputerVision):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            return self.vision.describe_image(
+            img_description = self.vision.describe_image(
                 url=url,
                 max_candidates=max_candidates,
                 language=language,
                 description_exclude=description_exclude,
-                cls=kwargs.pop("cls", None),
+                cls=deserialize_image_description_results,
                 **kwargs,
             )
+            return img_description
         except ComputerVisionErrorException as error:
             raise error
 
@@ -195,10 +368,11 @@ class ComputerVisionClient(ComputerVision):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            return self.vision.list_models(
+            response = self.vision.list_models(
                 cls=kwargs.pop("cls", None),
                 **kwargs,
             )
+            return response.models_property
         except ComputerVisionErrorException as error:
             raise error
 
@@ -307,12 +481,13 @@ class ComputerVisionClient(ComputerVision):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            return self.vision.tag_image(
+            tag_result = self.vision.tag_image(
                 url=url,
                 language=language,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
             )
+            return tag_result.tags
         except ComputerVisionErrorException as error:
             raise error
 
@@ -375,11 +550,12 @@ class ComputerVisionClient(ComputerVision):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            return self.vision.get_area_of_interest(
+            response = self.vision.get_area_of_interest(
                 url=url,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
             )
+            return response.area_of_interest
         except ComputerVisionErrorException as error:
             raise error
 

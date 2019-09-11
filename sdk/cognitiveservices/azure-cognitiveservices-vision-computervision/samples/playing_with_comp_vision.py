@@ -17,30 +17,32 @@ def test_analyze_image():
         credentials=settings.COG_KEY,
     )
 
-    # resp = client.analyze_image(
-    #     data="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
-    #     visual_features=[
-    #         VisualFeatureTypes.image_type,
-    #         VisualFeatureTypes.faces,
-    #         VisualFeatureTypes.categories,
-    #         VisualFeatureTypes.color,
-    #         VisualFeatureTypes.tags,
-    #         VisualFeatureTypes.description,
-    #     ],
-    # )
+    resp = client.analyze_image(
+        data="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+        visual_features=[
+            "Brands"
+            # "ImageType",
+            # "Faces",
+            # "Categories",
+            # "Color",
+            # "Tags",
+            # "Description",
+        ],
+        # details=["Landmarks"]
+    )
 
-    with open(os.path.join(IMAGES_FOLDER, "house.jpg"), "rb") as image_stream:
-        resp = client.analyze_image(
-            data=image_stream,
-            visual_features=[
-                "ImageType",
-                "Faces",
-                "Categories",
-                "Color",
-                "Tags",
-                "Description",
-            ],
-        )
+    # with open(os.path.join(IMAGES_FOLDER, "house.jpg"), "rb") as image_stream:
+    #     resp = client.analyze_image(
+    #         data=image_stream,
+    #         visual_features=[
+    #             "ImageType",
+    #             "Faces",
+    #             "Categories",
+    #             "Color",
+    #             "Tags",
+    #             "Description",
+    #         ],
+    #     )
 
     print("This image can be described as: {}\n".format(
         resp.description.captions[0].text))
@@ -51,6 +53,49 @@ def test_analyze_image():
 
     print("\nThe primary colors of this image are: {}".format(
         resp.color.dominant_colors))
+
+
+def test_detect_adult_content():
+    client = ComputerVisionClient(
+        endpoint="https://westus2.api.cognitive.microsoft.com/",
+        credentials=settings.COG_KEY,
+    )
+
+    resp = client.detect_adult_content(
+        data="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+    )
+
+    print(resp.is_adult_content, resp.adult_score)
+    print(resp.is_gory_content, resp.gore_score)
+    print(resp.is_racy_content, resp.racy_score)
+
+def test_detect_image_type():
+    client = ComputerVisionClient(
+        endpoint="https://westus2.api.cognitive.microsoft.com/",
+        credentials=settings.COG_KEY,
+    )
+
+    resp = client.detect_image_type(
+        data="https://image.shutterstock.com/image-vector/cute-cartoon-panda-character-eating-260nw-1050298676.jpg",
+    )
+
+    print(resp.clip_art_type)
+    print(resp.line_drawing_type)
+
+def test_detect_brands():
+    client = ComputerVisionClient(
+        endpoint="https://westus2.api.cognitive.microsoft.com/",
+        credentials=settings.COG_KEY,
+    )
+
+    resp = client.detect_brands(
+        data="https://di2ponv0v5otw.cloudfront.net/posts/2018/07/05/5b3e96572d8a366433533e80/m_5b3e965b951996f8abec1d42.jpeg",
+    )
+
+    for brand in resp:
+        print("Brand found: ", brand.name)
+        print("Confidence: ", brand.confidence)
+        print("location: ", brand.rectangle)
 
 
 def test_analyze_image_landmarks():
@@ -68,6 +113,51 @@ def test_analyze_image_landmarks():
         print(item.detail.landmarks[0].name)
 
 
+def test_detect_colors():
+    client = ComputerVisionClient(
+        endpoint="https://westus2.api.cognitive.microsoft.com/",
+        credentials=settings.COG_KEY,
+    )
+
+    colors = client.detect_colors(
+        data="https://afremov.com/images/product/COLORFUL-NIGHT.jpg",
+    )
+
+    print(colors.dominant_color_foreground)
+    print(colors.dominant_color_background)
+    print(colors.dominant_colors)
+    print(colors.accent_color)
+    print("Black and white image: ", colors.is_bw_img)
+
+
+def test_detect_faces():
+    client = ComputerVisionClient(
+        endpoint="https://westus2.api.cognitive.microsoft.com/",
+        credentials=settings.COG_KEY,
+    )
+
+    faces = client.detect_faces(
+        data="https://image.shutterstock.com/image-photo/family-relaxing-on-sofa-260nw-278188052.jpg",
+    )
+    for face in faces:
+        print(face.age)
+        print(face.gender)
+        print(face.face_rectangle)
+
+def test_detect_categories():
+    client = ComputerVisionClient(
+        endpoint="https://westus2.api.cognitive.microsoft.com/",
+        credentials=settings.COG_KEY,
+    )
+
+    resp = client.detect_categories(
+        data="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+        details=["Landmarks"]
+    )
+    for category in resp:
+        print(category.name, category.score)
+
+
 def test_analyze_image_by_domain_landmarks():
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
@@ -76,12 +166,13 @@ def test_analyze_image_by_domain_landmarks():
 
     resp = client.analyze_image_by_domain(
         url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
-        model="landmarks"
+        model="landmarks",
     )
 
     for landmark in resp.result["landmarks"]:
         print("Landmark name: ", landmark['name'])
         print("Confidence score: ", landmark['confidence'])
+
 
 def test_image_analysis_in_stream():
     client = ComputerVisionClient(
@@ -199,17 +290,17 @@ def test_recognize_text_with_lropoller():
         url="http://d2jaiao3zdxbzm.cloudfront.net/wp-content/uploads/figure-65.png",
     )
 
-    text_operation_result = None
+    text_result = None
     while poller.status() in ["NotStarted", "Running"]:
         time.sleep(1)
         if poller.status() == "Succeeded":
-            text_operation_result = poller.result()
+            text_result = poller.result()
         if poller.status() == "Failed":
             print("Oh no")
 
-    print("Job completion is: {}\n".format(text_operation_result.status))
+    print("Job completion is: {}\n".format(poller.status()))
     print("Recognized:\n")
-    lines = text_operation_result.recognition_result.lines
+    lines = text_result.lines
     for line in lines:
         print(line.text)
 
@@ -253,18 +344,18 @@ def test_batch_read_file_with_lropoller():
     )
 
     poller = client.batch_read_file(url="http://www.historytube.org/wp-content/uploads/2013/07/Declaration-of-Independence-broadside-1776-Jamestown-Yorktown-Foundation2.jpg")
-    read_operation_result = None
+    read_result = None
     while poller.status() in ["NotStarted", "Running"]:
         time.sleep(1)
         if poller.status() == "Succeeded":
-            read_operation_result = poller.result()
+            read_result = poller.result()
         if poller.status() == "Failed":
             print("Oh no")
 
-    print("Job completion is: {}\n".format(read_operation_result.status))
+    print("Job completion is: {}\n".format(poller.status()))
     print("Recognized:\n")
-    result = read_operation_result.recognition_results
-    for image_text in result:
+
+    for image_text in read_result:
         for line in image_text.lines:
             print(line.text)
 
@@ -415,9 +506,12 @@ def test_describe_image():
         max_candidates=3
     )
 
-    print(resp.tags)  # list[str] of tags
+    # currently returning generic list[dict{}] for captions instead of ImageCaption and dict{} instead of ImageMetadata.
+    print(resp.tags)
+    print(resp.captions)
+    print(resp.metadata)
     for caption in resp.captions:
-        print(caption.text, caption.confidence)
+        print(caption['text'], caption['confidence'])
 
 
 def test_detect_object():
@@ -459,23 +553,21 @@ def test_list_models():
     )
 
     models = client.list_models()
-    for model in models.models_property:
+    for model in models:
         print(model.name, model.categories)
 
 
-def test_tag_image_in_stream():
+def test_tag_image():
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
         credentials=settings.COG_KEY,
     )
-    with open(
-        os.path.join(IMAGES_FOLDER, "house.jpg"), "rb"
-    ) as image_stream:
-        resp = client.tag_image_in_stream(
-            image=image_stream,
-        )
 
-    for tag in resp.tags:
+    resp = client.tag_image(
+        url="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg"
+    )
+
+    for tag in resp:
         print(tag.name, tag.confidence)
 
 
@@ -506,7 +598,7 @@ def test_get_area_of_interest():
         url="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg",
     )
 
-    print("x: ", result.area_of_interest.x)
-    print("y: ", result.area_of_interest.y)
-    print("width: ", result.area_of_interest.w)
-    print("height: ", result.area_of_interest.h)
+    print("x: ", result.x)
+    print("y: ", result.y)
+    print("width: ", result.w)
+    print("height: ", result.h)

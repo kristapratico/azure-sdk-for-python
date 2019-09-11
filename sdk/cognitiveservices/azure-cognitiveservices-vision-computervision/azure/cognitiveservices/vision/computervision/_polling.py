@@ -50,4 +50,7 @@ class ComputerVisionPollingMethod(PollingMethod):
     def resource(self):
         if not self.finished:
             self._update_status()
-        return self.operation_result
+        try:
+            return self.operation_result.recognition_result
+        except AttributeError:
+            return self.operation_result.recognition_results

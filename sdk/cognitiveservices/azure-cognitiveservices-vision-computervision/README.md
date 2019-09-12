@@ -11,7 +11,9 @@ Changes:
     a generic `data` parameter. E.g. analyze_image_in_stream(image, ...) --> analyze_image(data, ...)
 2. No longer use CognitiveServicesCredentials from msrest. Now pass in cognitive services key. Need support for AAD?
 3. LRO recognize_text() and batch_read_file() return LROPoller's and do the call to get_text_operation_result()
-    get_read_operation_result() behind the scenes.
+    get_read_operation_result() behind the scenes. User checks operation status with the poller object. 
+    recognize_text() returns a `TextRecognitionResult` instead of `TextOperationResult`. batch_read_file() returns a 
+    `list[TextRecognitionResult]` instead of `ReadOperationResult`.
 4. Moving from msrest to azure.core we lose params `custom_headers, raw, **operation_config` and gain `cls, **kwargs`.
     cls moved to a kwarg.
 
@@ -51,10 +53,10 @@ ComputerVisionClient.get_area_of_interest(data, **kwargs)
 
 # OCR operations
 
-# Returns an LROPoller. Poller returns TextOperationResult
+# Returns an LROPoller. Poller returns TextRecognitionResult
 ComputerVisionClient.recognize_text(data, mode, **kwargs)
 
-# Returns an LROPoller. Poller returns ReadOperationResult.
+# Returns an LROPoller. Poller returns list[TextRecognitionResult]
 ComputerVisionClient.batch_read_file(data, **kwargs)
 ```
 
@@ -306,8 +308,6 @@ for image_text in result:
     for line in image_text.lines:
         print(line.text)
 ```
-
-
 
 ## ComputerVisionClient API
 

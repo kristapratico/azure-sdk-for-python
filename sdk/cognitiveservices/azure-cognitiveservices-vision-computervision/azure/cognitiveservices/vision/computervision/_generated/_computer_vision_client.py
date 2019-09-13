@@ -9,7 +9,7 @@ from azure.core import PipelineClient
 from msrest import Serializer, Deserializer
 
 from ._configuration import ComputerVisionClientConfiguration
-from .operations import ComputerVisionClientOperationsMixin
+from .operations import ComputerVisionClientOperations
 from . import models
 
 
@@ -28,19 +28,18 @@ class ComputerVision(object):
     """
 
     def __init__(
-            self, credentials, endpoint, **kwargs):
+            self, credentials, endpoint, config=None, **kwargs):
 
         base_url = '{Endpoint}/vision/v2.1'
-        self._config = ComputerVisionClientConfiguration(credentials, endpoint, **kwargs)
-        policies = self._get_policies()
-        self._client = PipelineClient(base_url=base_url, config=self._config, policies=policies, **kwargs)
+        self._config = config or ComputerVisionClientConfiguration(credentials, endpoint, **kwargs)
+        self._client = PipelineClient(base_url=base_url, config=self._config, **kwargs)
 
         client_models = {k: v for k, v in models.__dict__.items() if isinstance(v, type)}
         self.api_version = '2.1'
         self._serialize = Serializer(client_models)
         self._deserialize = Deserializer(client_models)
 
-        self.vision = ComputerVisionClientOperationsMixin(
+        self.vision = ComputerVisionClientOperations(
             self._client, self._config, self._serialize, self._deserialize)
 
 
@@ -50,15 +49,3 @@ class ComputerVision(object):
     def __exit__(self, *exc_details):
         self._client.__exit__(*exc_details)
 
-    def _get_policies(self):
-        policies = [
-            self._config.user_agent_policy,
-            self._config.headers_policy,
-            self._config.credential_policy,
-            self._config.proxy_policy,
-            self._config.logging_policy,
-            self._config.retry_policy,
-            self._config.custom_hook_policy,
-            self._config.redirect_policy,
-        ]
-        return policies

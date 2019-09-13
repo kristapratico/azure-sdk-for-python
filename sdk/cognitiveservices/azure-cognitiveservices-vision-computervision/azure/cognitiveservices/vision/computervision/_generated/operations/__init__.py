@@ -5,8 +5,8 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from ._computer_vision_client_operations import ComputerVisionClientOperationsMixin
+from ._computer_vision_client_operations import ComputerVisionClientOperations
 
 __all__ = [
-    'ComputerVisionClientOperationsMixin',
+    'ComputerVisionClientOperations',
 ]

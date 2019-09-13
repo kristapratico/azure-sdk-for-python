@@ -9,6 +9,7 @@ from azure.core.polling import LROPoller
 from azure.cognitiveservices.vision.computervision._generated._computer_vision_client import ComputerVision
 from azure.cognitiveservices.vision.computervision._generated.models import ComputerVisionErrorException
 from azure.cognitiveservices.vision.computervision._polling import ComputerVisionPollingMethod
+from azure.cognitiveservices.vision.computervision._base_client import ComputerVisionClientBase
 
 from ._deserialize import deserialize_image_description_results, deserialize_color_results,deserialize_face_results
 
@@ -16,7 +17,7 @@ def response_handler(response, deserialized, response_headers):
     return response
 
 
-class ComputerVisionClient(ComputerVision):
+class ComputerVisionClient(ComputerVisionClientBase):
     """The Computer Vision API provides state-of-the-art algorithms to process images and return information.
     For example, it can be used to determine if an image contains mature content, or it can be used to find all the
     faces in an image.  It also has other features like estimating dominant and accent colors, categorizing the content
@@ -30,8 +31,10 @@ class ComputerVisionClient(ComputerVision):
     """
     def __init__(self, endpoint, credentials, **kwargs):
         super(ComputerVisionClient, self).__init__(endpoint=endpoint, credentials=credentials, **kwargs)
+        self._client = ComputerVision(
+            endpoint=endpoint, credentials=credentials, config=self._config, pipeline=self._pipeline)
 
-    def analyze_image(self, data, visual_features=None, details=None, language="en", description_exclude=None, **kwargs):
+    def analyze_image(self, image_or_url, visual_features=None, details=None, language="en", description_exclude=None, **kwargs):
         """This operation extracts a rich set of visual features based on the
         image content.
         Two input methods are supported -- (1) Uploading an image or (2)
@@ -42,8 +45,8 @@ class ComputerVisionClient(ComputerVision):
         the response will contain an error code and a message to help
         understand what went wrong.
 
-        :param data: Publicly reachable URL of an image or an image stream.
-        :type data: str or bytes
+        :param image_or_url: Publicly reachable URL of an image or an image stream.
+        :type image_or_url: str or bytes
         :param visual_features: A string indicating what visual feature types
          to return. Multiple values should be comma-separated. Valid visual
          feature types include: Categories - categorizes image content
@@ -84,10 +87,10 @@ class ComputerVisionClient(ComputerVision):
         :raises:
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
-        if isinstance(data, six.text_type):
+        if isinstance(image_or_url, six.text_type):
             try:
-                return self.vision.analyze_image(
-                    url=data,
+                return self._client.vision.analyze_image(
+                    url=image_or_url,
                     visual_features=visual_features,
                     details=details,
                     language=language,
@@ -97,10 +100,10 @@ class ComputerVisionClient(ComputerVision):
                 )
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(data, io.BufferedReader):
+        if isinstance(image_or_url, io.BufferedReader):
             try:
-                return self.vision.analyze_image_in_stream(
-                    image=data,
+                return self._client.vision.analyze_image_in_stream(
+                    image=image_or_url,
                     visual_features=visual_features,
                     details=details,
                     language=language,
@@ -111,13 +114,13 @@ class ComputerVisionClient(ComputerVision):
             except ComputerVisionErrorException as error:
                 raise error
         else:
-            raise TypeError("Unsupported data type: {}".format(type(data)))
+            raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
 
-    def detect_colors(self, data, language="en", **kwargs):
-        if isinstance(data, six.text_type):
+    def detect_colors(self, image_or_url, language="en", **kwargs):
+        if isinstance(image_or_url, six.text_type):
             try:
-                resp = self.vision.analyze_image(
-                    url=data,
+                resp = self._client.vision.analyze_image(
+                    url=image_or_url,
                     visual_features=["Color"],
                     language=language,
                     cls=deserialize_color_results,
@@ -126,10 +129,10 @@ class ComputerVisionClient(ComputerVision):
                 return resp
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(data, io.BufferedReader):
+        if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self.vision.analyze_image_in_stream(
-                    image=data,
+                resp = self._client.vision.analyze_image_in_stream(
+                    image=image_or_url,
                     visual_features=["Color"],
                     language=language,
                     cls=kwargs.pop("cls", None),
@@ -139,13 +142,13 @@ class ComputerVisionClient(ComputerVision):
             except ComputerVisionErrorException as error:
                 raise error
         else:
-            raise TypeError("Unsupported data type: {}".format(type(data)))
+            raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
 
-    def detect_faces(self, data, language="en", **kwargs):
-        if isinstance(data, six.text_type):
+    def detect_faces(self, image_or_url, language="en", **kwargs):
+        if isinstance(image_or_url, six.text_type):
             try:
-                resp = self.vision.analyze_image(
-                    url=data,
+                resp = self._client.vision.analyze_image(
+                    url=image_or_url,
                     visual_features=["Faces"],
                     language=language,
                     cls=deserialize_face_results,
@@ -154,10 +157,10 @@ class ComputerVisionClient(ComputerVision):
                 return resp
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(data, io.BufferedReader):
+        if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self.vision.analyze_image_in_stream(
-                    image=data,
+                resp = self._client.vision.analyze_image_in_stream(
+                    image=image_or_url,
                     visual_features=["Faces"],
                     language=language,
                     cls=kwargs.pop("cls", None),
@@ -167,13 +170,13 @@ class ComputerVisionClient(ComputerVision):
             except ComputerVisionErrorException as error:
                 raise error
         else:
-            raise TypeError("Unsupported data type: {}".format(type(data)))
+            raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
 
-    def detect_adult_content(self, data, language="en", **kwargs):
-        if isinstance(data, six.text_type):
+    def detect_adult_content(self, image_or_url, language="en", **kwargs):
+        if isinstance(image_or_url, six.text_type):
             try:
-                resp = self.vision.analyze_image(
-                    url=data,
+                resp = self._client.vision.analyze_image(
+                    url=image_or_url,
                     visual_features=["Adult"],
                     language=language,
                     cls=kwargs.pop("cls", None),
@@ -182,10 +185,10 @@ class ComputerVisionClient(ComputerVision):
                 return resp.adult
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(data, io.BufferedReader):
+        if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self.vision.analyze_image_in_stream(
-                    image=data,
+                resp = self._client.vision.analyze_image_in_stream(
+                    image=image_or_url,
                     visual_features=["Adult"],
                     language=language,
                     cls=kwargs.pop("cls", None),
@@ -195,13 +198,13 @@ class ComputerVisionClient(ComputerVision):
             except ComputerVisionErrorException as error:
                 raise error
         else:
-            raise TypeError("Unsupported data type: {}".format(type(data)))
+            raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
 
-    def detect_brands(self, data, **kwargs):
-        if isinstance(data, six.text_type):
+    def detect_brands(self, image_or_url, **kwargs):
+        if isinstance(image_or_url, six.text_type):
             try:
-                resp = self.vision.analyze_image(
-                    url=data,
+                resp = self._client.vision.analyze_image(
+                    url=image_or_url,
                     visual_features=["Brands"],
                     cls=kwargs.pop("cls", None),
                     **kwargs,
@@ -209,10 +212,10 @@ class ComputerVisionClient(ComputerVision):
                 return resp.brands
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(data, io.BufferedReader):
+        if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self.vision.analyze_image_in_stream(
-                    image=data,
+                resp = self._client.vision.analyze_image_in_stream(
+                    image=image_or_url,
                     visual_features=["Brands"],
                     cls=kwargs.pop("cls", None),
                     **kwargs,
@@ -221,13 +224,13 @@ class ComputerVisionClient(ComputerVision):
             except ComputerVisionErrorException as error:
                 raise error
         else:
-            raise TypeError("Unsupported data type: {}".format(type(data)))
+            raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
 
-    def detect_image_type(self, data, language="en", **kwargs):
-        if isinstance(data, six.text_type):
+    def detect_image_type(self, image_or_url, language="en", **kwargs):
+        if isinstance(image_or_url, six.text_type):
             try:
-                resp = self.vision.analyze_image(
-                    url=data,
+                resp = self._client.vision.analyze_image(
+                    url=image_or_url,
                     visual_features=["ImageType"],
                     language=language,
                     cls=kwargs.pop("cls", None),
@@ -236,10 +239,10 @@ class ComputerVisionClient(ComputerVision):
                 return resp.image_type
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(data, io.BufferedReader):
+        if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self.vision.analyze_image_in_stream(
-                    image=data,
+                resp = self._client.vision.analyze_image_in_stream(
+                    image=image_or_url,
                     visual_features=["ImageType"],
                     language=language,
                     cls=kwargs.pop("cls", None),
@@ -249,13 +252,13 @@ class ComputerVisionClient(ComputerVision):
             except ComputerVisionErrorException as error:
                 raise error
         else:
-            raise TypeError("Unsupported data type: {}".format(type(data)))
+            raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
 
-    def detect_categories(self, data, language="en", details=None, description_exclude=None, **kwargs):
-        if isinstance(data, six.text_type):
+    def detect_categories(self, image_or_url, language="en", details=None, description_exclude=None, **kwargs):
+        if isinstance(image_or_url, six.text_type):
             try:
-                resp = self.vision.analyze_image(
-                    url=data,
+                resp = self._client.vision.analyze_image(
+                    url=image_or_url,
                     visual_features=["Categories"],
                     language=language,
                     details=details,
@@ -266,10 +269,10 @@ class ComputerVisionClient(ComputerVision):
                 return resp.categories
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(data, io.BufferedReader):
+        if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self.vision.analyze_image_in_stream(
-                    image=data,
+                resp = self._client.vision.analyze_image_in_stream(
+                    image=image_or_url,
                     visual_features=["Categories"],
                     language=language,
                     details=details,
@@ -281,7 +284,7 @@ class ComputerVisionClient(ComputerVision):
             except ComputerVisionErrorException as error:
                 raise error
         else:
-            raise TypeError("Unsupported data type: {}".format(type(data)))
+            raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
 
     def describe_image(self, url, max_candidates=1, language="en", description_exclude=None, **kwargs):
         """This operation generates a description of an image in human readable
@@ -296,8 +299,8 @@ class ComputerVisionClient(ComputerVision):
         the response will contain an error code and a message to help
         understand what went wrong.
 
-        :param data: Publicly reachable URL of an image or an image stream.
-        :type data: str or bytes
+        :param image_or_url: Publicly reachable URL of an image or an image stream.
+        :type image_or_url: str or bytes
         :param max_candidates: Maximum number of candidate descriptions to be
          returned.  The default is 1.
         :type max_candidates: int
@@ -317,7 +320,7 @@ class ComputerVisionClient(ComputerVision):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            img_description = self.vision.describe_image(
+            img_description = self._client.vision.describe_image(
                 url=url,
                 max_candidates=max_candidates,
                 language=language,
@@ -337,15 +340,15 @@ class ComputerVisionClient(ComputerVision):
         the response will contain an error code and a message to help
         understand what went wrong.
 
-        :param data: Publicly reachable URL of an image or an image stream.
-        :type data: str or bytes
+        :param image_or_url: Publicly reachable URL of an image or an image stream.
+        :type image_or_url: str or bytes
         :return: DetectResult
         :rtype: ~computervision.models.DetectResult
         :raises:
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            response = self.vision.detect_objects(
+            response = self._client.vision.detect_objects(
                 url=url,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
@@ -369,7 +372,7 @@ class ComputerVisionClient(ComputerVision):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            response = self.vision.list_models(
+            response = self._client.vision.list_models(
                 cls=kwargs.pop("cls", None),
                 **kwargs,
             )
@@ -389,8 +392,8 @@ class ComputerVisionClient(ComputerVision):
         If the request failed, the response will contain an error code and a
         message to help understand what went wrong.
 
-        :param data: Publicly reachable URL of an image or an image stream.
-        :type data: str or bytes
+        :param image_or_url: Publicly reachable URL of an image or an image stream.
+        :type image_or_url: str or bytes
         :param model: The domain-specific content to recognize.
         :type model: str
         :param language: The desired language for output generation. If this
@@ -405,7 +408,7 @@ class ComputerVisionClient(ComputerVision):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            return self.vision.analyze_image_by_domain(
+            return self._client.vision.analyze_image_by_domain(
                 model=model,
                 url=url,
                 language=language,
@@ -425,8 +428,8 @@ class ComputerVisionClient(ComputerVision):
         InvalidImageFormat, InvalidImageSize, NotSupportedImage,
         NotSupportedLanguage, or InternalServerError.
 
-        :param data: Publicly reachable URL of an image or an image stream.
-        :type data: str or bytes
+        :param image_or_url: Publicly reachable URL of an image or an image stream.
+        :type image_or_url: str or bytes
         :param detect_orientation: Whether detect the text orientation in the
          image. With detectOrientation=true the OCR service tries to detect the
          image orientation and correct it before further processing (e.g. if
@@ -444,7 +447,7 @@ class ComputerVisionClient(ComputerVision):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            return self.vision.recognize_printed_text(
+            return self._client.vision.recognize_printed_text(
                 url=url,
                 detect_orientation=detect_orientation,
                 language=language,
@@ -468,8 +471,8 @@ class ComputerVisionClient(ComputerVision):
         the response will contain an error code and a message to help
         understand what went wrong.
 
-        :param data: Publicly reachable URL of an image or an image stream.
-        :type data: str or bytes
+        :param image_or_url: Publicly reachable URL of an image or an image stream.
+        :type image_or_url: str or bytes
         :param language: The desired language for output generation. If this
          parameter is not specified, the default value is
          &quot;en&quot;.Supported languages:en - English, Default. es -
@@ -482,7 +485,7 @@ class ComputerVisionClient(ComputerVision):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            tag_result = self.vision.tag_image(
+            tag_result = self._client.vision.tag_image(
                 url=url,
                 language=language,
                 cls=kwargs.pop("cls", None),
@@ -506,8 +509,8 @@ class ComputerVisionClient(ComputerVision):
         InvalidImageSize, InvalidThumbnailSize, NotSupportedImage,
         FailedToProcess, Timeout, or InternalServerError.
 
-        :param data: Publicly reachable URL of an image or an image stream.
-        :type data: str or bytes
+        :param image_or_url: Publicly reachable URL of an image or an image stream.
+        :type image_or_url: str or bytes
         :param width: Width of the thumbnail, in pixels. It must be between 1
          and 1024. Recommended minimum of 50.
         :type width: int
@@ -521,7 +524,7 @@ class ComputerVisionClient(ComputerVision):
         :raises: :class:`HttpResponseError<azure.core.HttpResponseError>`
         """
         try:
-            return self.vision.generate_thumbnail(
+            return self._client.vision.generate_thumbnail(
                 width=width,
                 height=height,
                 url=url,
@@ -543,15 +546,15 @@ class ComputerVisionClient(ComputerVision):
         InvalidImageSize, NotSupportedImage, FailedToProcess, Timeout, or
         InternalServerError.
 
-        :param data: Publicly reachable URL of an image or an image stream.
-        :type data: str or bytes
+        :param image_or_url: Publicly reachable URL of an image or an image stream.
+        :type image_or_url: str or bytes
         :return: AreaOfInterestResult
         :rtype: ~computervision.models.AreaOfInterestResult
         :raises:
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            response = self.vision.get_area_of_interest(
+            response = self._client.vision.get_area_of_interest(
                 url=url,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
@@ -569,7 +572,7 @@ class ComputerVisionClient(ComputerVision):
         **kwargs
     ):
         try:
-            return self.vision.analyze_image_in_stream(
+            return self._client.vision.analyze_image_in_stream(
                 image=image,
                 visual_features=visual_features,
                 details=details,
@@ -583,7 +586,7 @@ class ComputerVisionClient(ComputerVision):
 
     def get_area_of_interest_in_stream(self, image, **kwargs):
         try:
-            return self.vision.get_area_of_interest_in_stream(
+            return self._client.vision.get_area_of_interest_in_stream(
                 image=image,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
@@ -593,7 +596,7 @@ class ComputerVisionClient(ComputerVision):
 
     def describe_image_in_stream(self, image, max_candidates=1, language="en", description_exclude=None, **kwargs):
         try:
-            return self.vision.describe_image_in_stream(
+            return self._client.vision.describe_image_in_stream(
                 image=image,
                 max_candidates=max_candidates,
                 language=language,
@@ -606,7 +609,7 @@ class ComputerVisionClient(ComputerVision):
 
     def detect_objects_in_stream(self, image, **kwargs):
         try:
-            return self.vision.detect_objects_in_stream(
+            return self._client.vision.detect_objects_in_stream(
                 image=image,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
@@ -616,7 +619,7 @@ class ComputerVisionClient(ComputerVision):
 
     def generate_thumbnail_in_stream(self, width, height, image, smart_cropping=False, **kwargs):
         try:
-            return self.vision.generate_thumbnail_in_stream(
+            return self._client.vision.generate_thumbnail_in_stream(
                 width=width,
                 height=height,
                 image=image,
@@ -629,7 +632,7 @@ class ComputerVisionClient(ComputerVision):
 
     def analyze_image_by_domain_in_stream(self, model, image, language="en", **kwargs):
         try:
-            return self.vision.analyze_image_by_domain_in_stream(
+            return self._client.vision.analyze_image_by_domain_in_stream(
                 model=model,
                 image=image,
                 language=language,
@@ -641,7 +644,7 @@ class ComputerVisionClient(ComputerVision):
 
     def recognize_printed_text_in_stream(self, image, detect_orientation=True, language="unk", **kwargs):
         try:
-            return self.vision.recognize_printed_text_in_stream(
+            return self._client.vision.recognize_printed_text_in_stream(
                 image=image,
                 detect_orientation=detect_orientation,
                 language=language,
@@ -653,7 +656,7 @@ class ComputerVisionClient(ComputerVision):
 
     def tag_image_in_stream(self, image, language="en", **kwargs):
         try:
-            return self.vision.tag_image_in_stream(
+            return self._client.vision.tag_image_in_stream(
                 image=image,
                 language=language,
                 cls=kwargs.pop("cls", None),
@@ -665,8 +668,8 @@ class ComputerVisionClient(ComputerVision):
     def recognize_text(self, mode, url, **kwargs):
         """Recognize Text operation.
 
-        :param data: Publicly reachable URL of an image or an image stream.
-        :type data: str or bytes
+        :param image_or_url: Publicly reachable URL of an image or an image stream.
+        :type image_or_url: str or bytes
         :param mode: Type of text to recognize. Possible values include:
          'Handwritten', 'Printed'
         :type mode: str or ~ocr.models.TextRecognitionMode
@@ -676,7 +679,7 @@ class ComputerVisionClient(ComputerVision):
          :class:`ComputerVisionErrorException<ocr.models.ComputerVisionErrorException>`
         """
         try:
-            job = self.vision.recognize_text(
+            job = self._client.vision.recognize_text(
                 mode=mode,
                 url=url,
                 cls=response_handler,
@@ -688,7 +691,7 @@ class ComputerVisionClient(ComputerVision):
         operation_id = job.headers["Operation-Location"].split("/")[-1]
 
         command = functools.partial(
-            self.vision.get_text_operation_result,
+            self._client.vision.get_text_operation_result,
             operation_id,
         )
 
@@ -704,15 +707,15 @@ class ComputerVisionClient(ComputerVision):
         state-of-the-art Optical Character Recognition (OCR) algorithms
         optimized for text-heavy documents.
 
-        :param data: Publicly reachable URL of an image or an image stream.
-        :type data: str or bytes
+        :param image_or_url: Publicly reachable URL of an image or an image stream.
+        :type image_or_url: str or bytes
         :return: A poller object
         :rtype: ~azure.core.polling.LROPoller
         :raises:
          :class:`ComputerVisionErrorException<ocr.models.ComputerVisionErrorException>`
         """
         try:
-            job = self.vision.batch_read_file(
+            job = self._client.vision.batch_read_file(
                 url=url,
                 cls=response_handler,
                 **kwargs,
@@ -723,7 +726,7 @@ class ComputerVisionClient(ComputerVision):
         operation_id = job.headers["Operation-Location"].split("/")[-1]
 
         command = functools.partial(
-            self.vision.get_read_operation_result,
+            self._client.vision.get_read_operation_result,
             operation_id,
         )
 
@@ -736,7 +739,7 @@ class ComputerVisionClient(ComputerVision):
 
     def recognize_text_in_stream(self, image, mode, **kwargs):
         try:
-            job = self.vision.recognize_text_in_stream(
+            job = self._client.vision.recognize_text_in_stream(
                 image=image,
                 mode=mode,
                 cls=response_handler,
@@ -748,7 +751,7 @@ class ComputerVisionClient(ComputerVision):
         operation_id = job.headers["Operation-Location"].split("/")[-1]
 
         command = functools.partial(
-            self.vision.get_text_operation_result,
+            self._client.vision.get_text_operation_result,
             operation_id,
         )
 
@@ -761,7 +764,7 @@ class ComputerVisionClient(ComputerVision):
 
     def batch_read_file_in_stream(self, image, **kwargs):
         try:
-            job = self.vision.batch_read_file_in_stream(
+            job = self._client.vision.batch_read_file_in_stream(
                 image=image,
                 cls=response_handler,
                 **kwargs,
@@ -772,7 +775,7 @@ class ComputerVisionClient(ComputerVision):
         operation_id = job.headers["Operation-Location"].split("/")[-1]
 
         command = functools.partial(
-            self.vision.get_read_operation_result,
+            self._client.vision.get_read_operation_result,
             operation_id,
         )
 

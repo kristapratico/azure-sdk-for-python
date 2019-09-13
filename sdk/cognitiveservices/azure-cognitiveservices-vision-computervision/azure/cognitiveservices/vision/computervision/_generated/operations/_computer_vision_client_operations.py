@@ -10,7 +10,7 @@ from .. import models
 import uuid
 
 
-class ComputerVisionClientOperationsMixin(object):
+class ComputerVisionClientOperations(object):
 
     def __init__(self, client, config, serializer, deserializer):
         self._client = client

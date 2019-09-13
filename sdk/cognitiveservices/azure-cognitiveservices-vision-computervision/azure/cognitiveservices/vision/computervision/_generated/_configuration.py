@@ -6,7 +6,6 @@
 # --------------------------------------------------------------------------
 from azure.core.configuration import Configuration
 from azure.core.pipeline import policies
-from azure.cognitiveservices.vision.computervision._policies import CognitiveServicesCredentialPolicy
 from .version import VERSION
 
 
@@ -30,7 +29,7 @@ class ComputerVisionClientConfiguration(Configuration):
             raise ValueError("Parameter 'endpoint' must not be None.")
 
         super(ComputerVisionClientConfiguration, self).__init__(**kwargs)
-        self._configure(credentials, **kwargs)
+        self._configure(**kwargs)
 
         self.user_agent_policy.add_user_agent('azsdk-python-computervisionclient/{}'.format(VERSION))
         self.generate_client_request_id = True
@@ -39,7 +38,7 @@ class ComputerVisionClientConfiguration(Configuration):
         self.endpoint = endpoint
 
 
-    def _configure(self, credentials, **kwargs):
+    def _configure(self, **kwargs):
         self.user_agent_policy = kwargs.get('user_agent_policy') or policies.UserAgentPolicy(**kwargs)
         self.headers_policy = kwargs.get('headers_policy') or policies.HeadersPolicy(**kwargs)
         self.proxy_policy = kwargs.get('proxy_policy') or policies.ProxyPolicy(**kwargs)
@@ -47,4 +46,3 @@ class ComputerVisionClientConfiguration(Configuration):
         self.retry_policy = kwargs.get('retry_policy') or policies.RetryPolicy(**kwargs)
         self.custom_hook_policy = kwargs.get('custom_hook_policy') or policies.CustomHookPolicy(**kwargs)
         self.redirect_policy = kwargs.get('redirect_policy') or policies.RedirectPolicy(**kwargs)
-        self.credential_policy = CognitiveServicesCredentialPolicy(credentials, **kwargs)

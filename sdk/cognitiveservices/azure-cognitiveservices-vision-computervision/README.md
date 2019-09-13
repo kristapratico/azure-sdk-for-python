@@ -355,7 +355,7 @@ ComputerVisionClient.detect_colors(data, language="en", **kwargs)
 ComputerVisionClient.detect_faces(data, language="en", **kwargs)
 
 # Returns list[Category]
-ComputerVisionClient.detect_categories(data, language="en", details=None, description_exclude=None, **kwargs)
+ComputerVisionClient.detect_categories(data, language="en", details=None, **kwargs)
 
 # Returns AdultInfo
 ComputerVisionClient.detect_adult_content(data, language="en", **kwargs)

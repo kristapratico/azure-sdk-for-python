@@ -26,9 +26,10 @@ def test_analyze_image():
             "Categories",
             # "Color",
             # "Tags",
-            # "Description",
+            "Description",
         ],
-        details=["Landmarks", "Celebrities"]
+        details=["Landmarks", "Celebrities"],
+        # description_exclude=["Landmarks"]
     )
 
     # with open(os.path.join(IMAGES_FOLDER, "house.jpg"), "rb") as image_stream:
@@ -153,7 +154,8 @@ def test_detect_categories():
 
     resp = client.detect_categories(
         data="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
-        # details=["Landmarks"]
+        details=["Landmarks"],
+        description_exclude=["Landmarks"]
     )
     for category in resp:
         print(category.name, category.score)

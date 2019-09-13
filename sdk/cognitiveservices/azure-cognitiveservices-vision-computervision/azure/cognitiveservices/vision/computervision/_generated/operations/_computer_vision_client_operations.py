@@ -10,13 +10,7 @@ from .. import models
 import uuid
 
 
-class ComputerVisionClientOperations(object):
-
-    def __init__(self, client, config, serializer, deserializer):
-        self._client = client
-        self._serialize = serializer
-        self._deserialize = deserializer
-        self._config = config
+class ComputerVisionClientOperationsMixin(object):
 
     def analyze_image(self, url, visual_features=None, details=None, language="en", description_exclude=None, cls=None, **kwargs):
         """This operation extracts a rich set of visual features based on the

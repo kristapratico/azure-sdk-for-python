@@ -37,7 +37,6 @@ class ComputerVisionClientConfiguration(Configuration):
         self.credentials = credentials
         self.endpoint = endpoint
 
-
     def _configure(self, **kwargs):
         self.user_agent_policy = kwargs.get('user_agent_policy') or policies.UserAgentPolicy(**kwargs)
         self.headers_policy = kwargs.get('headers_policy') or policies.HeadersPolicy(**kwargs)

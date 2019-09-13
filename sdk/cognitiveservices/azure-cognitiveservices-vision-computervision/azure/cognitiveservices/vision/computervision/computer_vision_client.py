@@ -6,7 +6,7 @@ import functools
 import six
 import io
 from azure.core.polling import LROPoller
-from azure.cognitiveservices.vision.computervision._generated._computer_vision_client import ComputerVision
+from azure.cognitiveservices.vision.computervision._generated._computer_vision import ComputerVision
 from azure.cognitiveservices.vision.computervision._generated.models import ComputerVisionErrorException
 from azure.cognitiveservices.vision.computervision._polling import ComputerVisionPollingMethod
 from azure.cognitiveservices.vision.computervision._base_client import ComputerVisionClientBase
@@ -89,7 +89,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         """
         if isinstance(image_or_url, six.text_type):
             try:
-                return self._client.vision.analyze_image(
+                return self._client.analyze_image(
                     url=image_or_url,
                     visual_features=visual_features,
                     details=details,
@@ -102,7 +102,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 raise error
         if isinstance(image_or_url, io.BufferedReader):
             try:
-                return self._client.vision.analyze_image_in_stream(
+                return self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=visual_features,
                     details=details,
@@ -119,7 +119,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
     def detect_colors(self, image_or_url, language="en", **kwargs):
         if isinstance(image_or_url, six.text_type):
             try:
-                resp = self._client.vision.analyze_image(
+                resp = self._client.analyze_image(
                     url=image_or_url,
                     visual_features=["Color"],
                     language=language,
@@ -131,7 +131,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 raise error
         if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self._client.vision.analyze_image_in_stream(
+                resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=["Color"],
                     language=language,
@@ -147,7 +147,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
     def detect_faces(self, image_or_url, language="en", **kwargs):
         if isinstance(image_or_url, six.text_type):
             try:
-                resp = self._client.vision.analyze_image(
+                resp = self._client.analyze_image(
                     url=image_or_url,
                     visual_features=["Faces"],
                     language=language,
@@ -159,7 +159,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 raise error
         if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self._client.vision.analyze_image_in_stream(
+                resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=["Faces"],
                     language=language,
@@ -175,7 +175,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
     def detect_adult_content(self, image_or_url, language="en", **kwargs):
         if isinstance(image_or_url, six.text_type):
             try:
-                resp = self._client.vision.analyze_image(
+                resp = self._client.analyze_image(
                     url=image_or_url,
                     visual_features=["Adult"],
                     language=language,
@@ -187,7 +187,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 raise error
         if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self._client.vision.analyze_image_in_stream(
+                resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=["Adult"],
                     language=language,
@@ -203,7 +203,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
     def detect_brands(self, image_or_url, **kwargs):
         if isinstance(image_or_url, six.text_type):
             try:
-                resp = self._client.vision.analyze_image(
+                resp = self._client.analyze_image(
                     url=image_or_url,
                     visual_features=["Brands"],
                     cls=kwargs.pop("cls", None),
@@ -214,7 +214,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 raise error
         if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self._client.vision.analyze_image_in_stream(
+                resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=["Brands"],
                     cls=kwargs.pop("cls", None),
@@ -229,7 +229,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
     def detect_image_type(self, image_or_url, language="en", **kwargs):
         if isinstance(image_or_url, six.text_type):
             try:
-                resp = self._client.vision.analyze_image(
+                resp = self._client.analyze_image(
                     url=image_or_url,
                     visual_features=["ImageType"],
                     language=language,
@@ -241,7 +241,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 raise error
         if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self._client.vision.analyze_image_in_stream(
+                resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=["ImageType"],
                     language=language,
@@ -257,7 +257,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
     def detect_categories(self, image_or_url, language="en", details=None, description_exclude=None, **kwargs):
         if isinstance(image_or_url, six.text_type):
             try:
-                resp = self._client.vision.analyze_image(
+                resp = self._client.analyze_image(
                     url=image_or_url,
                     visual_features=["Categories"],
                     language=language,
@@ -271,7 +271,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 raise error
         if isinstance(image_or_url, io.BufferedReader):
             try:
-                resp = self._client.vision.analyze_image_in_stream(
+                resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=["Categories"],
                     language=language,
@@ -320,7 +320,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            img_description = self._client.vision.describe_image(
+            img_description = self._client.describe_image(
                 url=url,
                 max_candidates=max_candidates,
                 language=language,
@@ -348,7 +348,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            response = self._client.vision.detect_objects(
+            response = self._client.detect_objects(
                 url=url,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
@@ -372,7 +372,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            response = self._client.vision.list_models(
+            response = self._client.list_models(
                 cls=kwargs.pop("cls", None),
                 **kwargs,
             )
@@ -408,7 +408,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            return self._client.vision.analyze_image_by_domain(
+            return self._client.analyze_image_by_domain(
                 model=model,
                 url=url,
                 language=language,
@@ -447,7 +447,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            return self._client.vision.recognize_printed_text(
+            return self._client.recognize_printed_text(
                 url=url,
                 detect_orientation=detect_orientation,
                 language=language,
@@ -485,7 +485,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            tag_result = self._client.vision.tag_image(
+            tag_result = self._client.tag_image(
                 url=url,
                 language=language,
                 cls=kwargs.pop("cls", None),
@@ -524,7 +524,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         :raises: :class:`HttpResponseError<azure.core.HttpResponseError>`
         """
         try:
-            return self._client.vision.generate_thumbnail(
+            return self._client.generate_thumbnail(
                 width=width,
                 height=height,
                 url=url,
@@ -554,7 +554,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            response = self._client.vision.get_area_of_interest(
+            response = self._client.get_area_of_interest(
                 url=url,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
@@ -572,7 +572,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         **kwargs
     ):
         try:
-            return self._client.vision.analyze_image_in_stream(
+            return self._client.analyze_image_in_stream(
                 image=image,
                 visual_features=visual_features,
                 details=details,
@@ -586,7 +586,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
 
     def get_area_of_interest_in_stream(self, image, **kwargs):
         try:
-            return self._client.vision.get_area_of_interest_in_stream(
+            return self._client.get_area_of_interest_in_stream(
                 image=image,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
@@ -596,7 +596,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
 
     def describe_image_in_stream(self, image, max_candidates=1, language="en", description_exclude=None, **kwargs):
         try:
-            return self._client.vision.describe_image_in_stream(
+            return self._client.describe_image_in_stream(
                 image=image,
                 max_candidates=max_candidates,
                 language=language,
@@ -609,7 +609,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
 
     def detect_objects_in_stream(self, image, **kwargs):
         try:
-            return self._client.vision.detect_objects_in_stream(
+            return self._client.detect_objects_in_stream(
                 image=image,
                 cls=kwargs.pop("cls", None),
                 **kwargs,
@@ -619,7 +619,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
 
     def generate_thumbnail_in_stream(self, width, height, image, smart_cropping=False, **kwargs):
         try:
-            return self._client.vision.generate_thumbnail_in_stream(
+            return self._client.generate_thumbnail_in_stream(
                 width=width,
                 height=height,
                 image=image,
@@ -632,7 +632,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
 
     def analyze_image_by_domain_in_stream(self, model, image, language="en", **kwargs):
         try:
-            return self._client.vision.analyze_image_by_domain_in_stream(
+            return self._client.analyze_image_by_domain_in_stream(
                 model=model,
                 image=image,
                 language=language,
@@ -644,7 +644,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
 
     def recognize_printed_text_in_stream(self, image, detect_orientation=True, language="unk", **kwargs):
         try:
-            return self._client.vision.recognize_printed_text_in_stream(
+            return self._client.recognize_printed_text_in_stream(
                 image=image,
                 detect_orientation=detect_orientation,
                 language=language,
@@ -656,7 +656,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
 
     def tag_image_in_stream(self, image, language="en", **kwargs):
         try:
-            return self._client.vision.tag_image_in_stream(
+            return self._client.tag_image_in_stream(
                 image=image,
                 language=language,
                 cls=kwargs.pop("cls", None),
@@ -679,7 +679,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<ocr.models.ComputerVisionErrorException>`
         """
         try:
-            job = self._client.vision.recognize_text(
+            job = self._client.recognize_text(
                 mode=mode,
                 url=url,
                 cls=response_handler,
@@ -691,7 +691,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         operation_id = job.headers["Operation-Location"].split("/")[-1]
 
         command = functools.partial(
-            self._client.vision.get_text_operation_result,
+            self._client.get_text_operation_result,
             operation_id,
         )
 
@@ -715,7 +715,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<ocr.models.ComputerVisionErrorException>`
         """
         try:
-            job = self._client.vision.batch_read_file(
+            job = self._client.batch_read_file(
                 url=url,
                 cls=response_handler,
                 **kwargs,
@@ -726,7 +726,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         operation_id = job.headers["Operation-Location"].split("/")[-1]
 
         command = functools.partial(
-            self._client.vision.get_read_operation_result,
+            self._client.get_read_operation_result,
             operation_id,
         )
 
@@ -739,7 +739,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
 
     def recognize_text_in_stream(self, image, mode, **kwargs):
         try:
-            job = self._client.vision.recognize_text_in_stream(
+            job = self._client.recognize_text_in_stream(
                 image=image,
                 mode=mode,
                 cls=response_handler,
@@ -751,7 +751,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         operation_id = job.headers["Operation-Location"].split("/")[-1]
 
         command = functools.partial(
-            self._client.vision.get_text_operation_result,
+            self._client.get_text_operation_result,
             operation_id,
         )
 
@@ -764,7 +764,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
 
     def batch_read_file_in_stream(self, image, **kwargs):
         try:
-            job = self._client.vision.batch_read_file_in_stream(
+            job = self._client.batch_read_file_in_stream(
                 image=image,
                 cls=response_handler,
                 **kwargs,
@@ -775,7 +775,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         operation_id = job.headers["Operation-Location"].split("/")[-1]
 
         command = functools.partial(
-            self._client.vision.get_read_operation_result,
+            self._client.get_read_operation_result,
             operation_id,
         )
 

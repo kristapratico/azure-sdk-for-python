@@ -5,7 +5,7 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from ._computer_vision_client import ComputerVision
+from ._computer_vision import ComputerVision
 __all__ = ['ComputerVision']
 
 from .version import VERSION

@@ -6,7 +6,6 @@
 # --------------------------------------------------------------------------
 from azure.core.configuration import Configuration
 from azure.core.pipeline import policies
-from msrest.authentication import CognitiveServicesCredentials
 from ..version import VERSION
 
 
@@ -31,12 +30,7 @@ class ComputerVisionClientConfiguration(Configuration):
 
         super(ComputerVisionClientConfiguration, self).__init__(**kwargs)
         self._configure(**kwargs)
-        if isinstance(credentials, CognitiveServicesCredentials):
-            self.headers_policy.add_header(
-                "Ocp-Apim-Subscription-Key",
-                credentials.in_headers['Ocp-Apim-Subscription-Key']
-            )
-            self.headers_policy.add_header("X-BingApis-SDK-Client", "Python-SDK")
+
         self.user_agent_policy.add_user_agent('azsdk-python-computervisionclient/{}'.format(VERSION))
         self.generate_client_request_id = True
 

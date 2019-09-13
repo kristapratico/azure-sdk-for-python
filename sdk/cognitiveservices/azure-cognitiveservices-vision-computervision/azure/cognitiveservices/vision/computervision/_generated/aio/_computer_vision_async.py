@@ -5,20 +5,17 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from azure.core import PipelineClient
+from azure.core import AsyncPipelineClient
 from msrest import Serializer, Deserializer
 
-from ._configuration import ComputerVisionClientConfiguration
-from .operations import ComputerVisionClientOperations
-from . import models
+from ._configuration_async import ComputerVisionClientConfiguration
+from .operations_async import ComputerVisionClientOperationsMixin
+from .. import models
 
 
-class ComputerVision(object):
-    """The Computer Vision API provides state-of-the-art algorithms to process images and return information.
-    For example, it can be used to determine if an image contains mature content, or it can be used to find all the
-    faces in an image.  It also has other features like estimating dominant and accent colors, categorizing the content
-    of images, and describing an image with complete English sentences.  Additionally, it can also intelligently
-    generate images thumbnails for displaying large images effectively.
+class ComputerVision(ComputerVisionClientOperationsMixin):
+    """The Computer Vision API provides state-of-the-art algorithms to process images and return information. For example, it can be used to determine if an image contains mature content, or it can be used to find all the faces in an image.  It also has other features like estimating dominant and accent colors, categorizing the content of images, and describing an image with complete English sentences.  Additionally, it can also intelligently generate images thumbnails for displaying large images effectively.
+
 
     :param credentials: Credentials needed for the client to connect to Azure.
     :type credentials: :mod:`A msrestazure Credentials
@@ -32,20 +29,16 @@ class ComputerVision(object):
 
         base_url = '{Endpoint}/vision/v2.1'
         self._config = config or ComputerVisionClientConfiguration(credentials, endpoint, **kwargs)
-        self._client = PipelineClient(base_url=base_url, config=self._config, **kwargs)
+        self._client = AsyncPipelineClient(base_url=base_url, config=self._config, **kwargs)
 
         client_models = {k: v for k, v in models.__dict__.items() if isinstance(v, type)}
         self.api_version = '2.1'
         self._serialize = Serializer(client_models)
         self._deserialize = Deserializer(client_models)
 
-        self.vision = ComputerVisionClientOperations(
-            self._client, self._config, self._serialize, self._deserialize)
 
-
-    def __enter__(self):
-        self._client.__enter__()
+    async def __aenter__(self):
+        await self._client.__aenter__()
         return self
-    def __exit__(self, *exc_details):
-        self._client.__exit__(*exc_details)
-
+    async def __aexit__(self, *exc_details):
+        await self._client.__aexit__(*exc_details)

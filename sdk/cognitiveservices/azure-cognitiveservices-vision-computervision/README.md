@@ -254,6 +254,7 @@ print("height: ", result.area_of_interest.h)
 
 ### 10. Recognize text in an image (long running operation).
 ```python
+import time
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 
 client = ComputerVisionClient(
@@ -266,23 +267,24 @@ poller = client.recognize_text(
     image_or_url="http://d2jaiao3zdxbzm.cloudfront.net/wp-content/uploads/figure-65.png",
 )
 
-text_operation_result = None
+text_result = None
 while poller.status() in ["NotStarted", "Running"]:
     time.sleep(1)
     if poller.status() == "Succeeded":
-        text_operation_result = poller.result()
+        text_result = poller.result()
     if poller.status() == "Failed":
         print("Oh no")
 
-print("Job completion is: {}\n".format(text_operation_result.status))
+print("Job completion is: {}\n".format(poller.status()))
 print("Recognized:\n")
-lines = text_operation_result.recognition_result.lines
+lines = text_result.lines
 for line in lines:
     print(line.text)
 ```
 
 ### 11. Recognize text in a text heavy image (long running operation).
 ```python
+import time
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 
 client = ComputerVisionClient(
@@ -290,22 +292,18 @@ client = ComputerVisionClient(
     credentials="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 )
 
-poller = client.batch_read_file(
-    image_or_url="http://www.historytube.org/wp-content/uploads/2013/07/Declaration-of-Independence-broadside-1776-Jamestown-Yorktown-Foundation2.jpg"
-)
-
-read_operation_result = None
+poller = client.batch_read_file(image_or_url="http://www.historytube.org/wp-content/uploads/2013/07/Declaration-of-Independence-broadside-1776-Jamestown-Yorktown-Foundation2.jpg")
+read_result = None
 while poller.status() in ["NotStarted", "Running"]:
     time.sleep(1)
     if poller.status() == "Succeeded":
-        read_operation_result = poller.result()
+        read_result = poller.result()
     if poller.status() == "Failed":
         print("Oh no")
 
-print("Job completion is: {}\n".format(read_operation_result.status))
+print("Job completion is: {}\n".format(poller.status()))
 print("Recognized:\n")
-result = read_operation_result.recognition_results
-for image_text in result:
+for image_text in read_result:
     for line in image_text.lines:
         print(line.text)
 ```

@@ -1,13 +1,12 @@
 from azure.cognitiveservices.vision.computervision._policies import CognitiveServicesCredentialPolicy
 from azure.core import Configuration
-from azure.core.pipeline import Pipeline
+from azure.core.pipeline import AsyncPipeline
 from azure.core.pipeline import policies
-from azure.core.pipeline.transport import RequestsTransport
 from azure.core.pipeline.policies.distributed_tracing import DistributedTracingPolicy
 from .version import VERSION
 
 
-class ComputerVisionClientBase(object):
+class ComputerVisionClientBaseAsync(object):
 
     def __init__(self, endpoint, credentials, **kwargs):
         self._config, self._pipeline = self._create_pipeline(credentials, **kwargs)
@@ -20,7 +19,11 @@ class ComputerVisionClientBase(object):
         config = self.create_configuration(**kwargs)
         config.transport = kwargs.get("transport")  # type: ignore
         if not config.transport:
-            config.transport = RequestsTransport(**kwargs)
+            try:
+                from azure.core.pipeline.transport import AioHttpTransport
+            except ImportError:
+                raise ImportError("Unable to create async transport. Please check aiohttp is installed.")
+            config.transport = AioHttpTransport(**kwargs)
         config.user_agent_policy.add_user_agent('azsdk-python-computervisionclient/{}'.format(VERSION))
 
         policies = [
@@ -34,7 +37,7 @@ class ComputerVisionClientBase(object):
             config.redirect_policy,
             DistributedTracingPolicy()
         ]
-        return config, Pipeline(config.transport, policies=policies)
+        return config, AsyncPipeline(config.transport, policies=policies)
 
     def create_configuration(self, **kwargs):
         config = Configuration(**kwargs)
@@ -42,8 +45,8 @@ class ComputerVisionClientBase(object):
         config.headers_policy = kwargs.get('headers_policy') or policies.HeadersPolicy(**kwargs)
         config.proxy_policy = kwargs.get('proxy_policy') or policies.ProxyPolicy(**kwargs)
         config.logging_policy = kwargs.get('logging_policy') or policies.NetworkTraceLoggingPolicy(**kwargs)
-        config.retry_policy = kwargs.get('retry_policy') or policies.RetryPolicy(**kwargs)
+        config.retry_policy = kwargs.get('retry_policy') or policies.AsyncRetryPolicy(**kwargs)
         config.custom_hook_policy = kwargs.get('custom_hook_policy') or policies.CustomHookPolicy(**kwargs)
-        config.redirect_policy = kwargs.get('redirect_policy') or policies.RedirectPolicy(**kwargs)
+        config.redirect_policy = kwargs.get('redirect_policy') or policies.AsyncRedirectPolicy(**kwargs)
         config.authentication_policy = self.credential_policy
         return config

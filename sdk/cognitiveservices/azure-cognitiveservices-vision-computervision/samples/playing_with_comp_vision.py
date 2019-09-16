@@ -18,7 +18,7 @@ def test_analyze_image():
     )
 
     resp = client.analyze_image(
-        image_or_url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+        image_or_url="https://dn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
         visual_features=[
             # "Brands"
             # "ImageType",
@@ -47,13 +47,13 @@ def test_analyze_image():
 
     print("This image can be described as: {}\n".format(
         resp.description.captions[0].text))
-
-    print("Tags associated with this image:\nTag\t\tConfidence")
-    for tag in resp.tags:
-        print("{}\t\t{}".format(tag.name, tag.confidence))
-
-    print("\nThe primary colors of this image are: {}".format(
-        resp.color.dominant_colors))
+    #
+    # print("Tags associated with this image:\nTag\t\tConfidence")
+    # for tag in resp.tags:
+    #     print("{}\t\t{}".format(tag.name, tag.confidence))
+    #
+    # print("\nThe primary colors of this image are: {}".format(
+    #     resp.color.dominant_colors))
 
 
 def test_detect_adult_content():
@@ -63,7 +63,7 @@ def test_detect_adult_content():
     )
 
     resp = client.detect_adult_content(
-        data="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+        image_or_url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
     )
 
     print(resp.is_adult_content, resp.adult_score)
@@ -77,7 +77,7 @@ def test_detect_image_type():
     )
 
     resp = client.detect_image_type(
-        data="https://image.shutterstock.com/image-vector/cute-cartoon-panda-character-eating-260nw-1050298676.jpg",
+        image_or_url="https://image.shutterstock.com/image-vector/cute-cartoon-panda-character-eating-260nw-1050298676.jpg",
     )
 
     print(resp.clip_art_type)
@@ -90,7 +90,7 @@ def test_detect_brands():
     )
 
     resp = client.detect_brands(
-        data="https://di2ponv0v5otw.cloudfront.net/posts/2018/07/05/5b3e96572d8a366433533e80/m_5b3e965b951996f8abec1d42.jpeg",
+        image_or_url="https://di2ponv0v5otw.cloudfront.net/posts/2018/07/05/5b3e96572d8a366433533e80/m_5b3e965b951996f8abec1d42.jpeg",
     )
 
     for brand in resp:
@@ -106,7 +106,7 @@ def test_analyze_image_landmarks():
     )
 
     des = client.analyze_image(
-        url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+        image_or_url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
         details=["Landmarks"]
     )
 
@@ -121,7 +121,7 @@ def test_detect_colors():
     )
 
     colors = client.detect_colors(
-        data="https://afremov.com/images/product/COLORFUL-NIGHT.jpg",
+        image_or_url="https://afremov.com/images/product/COLORFUL-NIGHT.jpg",
     )
 
     print(colors.dominant_color_foreground)
@@ -138,7 +138,7 @@ def test_detect_faces():
     )
 
     faces = client.detect_faces(
-        data="https://image.shutterstock.com/image-photo/family-relaxing-on-sofa-260nw-278188052.jpg",
+        image_or_url="https://image.shutterstock.com/image-photo/family-relaxing-on-sofa-260nw-278188052.jpg",
     )
     for face in faces:
         print(face.age)
@@ -153,7 +153,7 @@ def test_detect_categories():
     )
 
     resp = client.detect_categories(
-        data="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+        image_or_url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
         details=["Landmarks"],
         description_exclude=["Landmarks"]
     )
@@ -168,7 +168,7 @@ def test_analyze_image_by_domain_landmarks():
     )
 
     resp = client.analyze_image_by_domain(
-        url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+        image_or_url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
         model="landmarks",
     )
 
@@ -185,7 +185,7 @@ def test_image_analysis_in_stream():
 
     with open(os.path.join(IMAGES_FOLDER, "house.jpg"), "rb") as image_stream:
         image_analysis = client.analyze_image_in_stream(
-            image=image_stream,
+            image_or_url=image_stream,
             visual_features=[
                 VisualFeatureTypes.image_type,
                 VisualFeatureTypes.faces,
@@ -226,7 +226,7 @@ def recognize_text_in_stream_using_lropoller():
         os.path.join(IMAGES_FOLDER, "make_things_happen.jpg"), "rb"
     ) as image_stream:
         poller = client.recognize_text_in_stream(
-            image=image_stream,
+            image_or_url=image_stream,
             mode="Printed",
         )
 
@@ -257,7 +257,7 @@ def test_recognize_text_in_stream():
         os.path.join(IMAGES_FOLDER, "make_things_happen.jpg"), "rb"
     ) as image_stream:
         job = client.recognize_text_in_stream(
-            image=image_stream,
+            image_or_url=image_stream,
             mode="Printed",
             cls=response_handler
         )
@@ -505,9 +505,16 @@ def test_describe_image():
     )
 
     resp = client.describe_image(
-        url="https://images2.minutemediacdn.com/image/upload/c_crop,h_1193,w_2121,x_0,y_64/f_auto,q_auto,w_1100/v1565279671/shape/mentalfloss/578211-gettyimages-542930526.jpg",
+        image_or_url="https://images2.minutemediacdn.com/image/upload/c_crop,h_1193,w_2121,x_0,y_64/f_auto,q_auto,w_1100/v1565279671/shape/mentalfloss/578211-gettyimages-542930526.jpg",
         max_candidates=3
     )
+    # with open(
+    #     os.path.join(IMAGES_FOLDER, "computer_vision_ocr.png"), "rb"
+    # ) as image_stream:
+    #     resp = client.describe_image(
+    #         image_or_url=image_stream,
+    #         language="en",
+    #     )
 
 
     print(resp.tags)

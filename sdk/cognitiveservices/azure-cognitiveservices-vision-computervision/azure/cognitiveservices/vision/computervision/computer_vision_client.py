@@ -6,6 +6,8 @@ import functools
 import six
 import io
 from azure.core.polling import LROPoller
+from azure.core.exceptions import ResourceNotFoundError
+from azure.core.tracing.decorator import distributed_trace
 from azure.cognitiveservices.vision.computervision._generated._computer_vision import ComputerVision
 from azure.cognitiveservices.vision.computervision._generated.models import ComputerVisionErrorException
 from azure.cognitiveservices.vision.computervision._polling import ComputerVisionPollingMethod
@@ -87,8 +89,8 @@ class ComputerVisionClient(ComputerVisionClientBase):
         :raises:
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
-        if isinstance(image_or_url, six.text_type):
-            try:
+        try:
+            if isinstance(image_or_url, six.text_type):
                 return self._client.analyze_image(
                     url=image_or_url,
                     visual_features=visual_features,
@@ -98,10 +100,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
-            except ComputerVisionErrorException as error:
-                raise error
-        if isinstance(image_or_url, io.BufferedReader):
-            try:
+            if isinstance(image_or_url, io.BufferedReader):
                 return self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=visual_features,
@@ -111,10 +110,10 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
-            except ComputerVisionErrorException as error:
-                raise error
-        else:
-            raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
+            else:
+                raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
+        except ComputerVisionErrorException as error:
+            raise error
 
     def detect_colors(self, image_or_url, language="en", **kwargs):
         if isinstance(image_or_url, six.text_type):
@@ -286,7 +285,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         else:
             raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
 
-    def describe_image(self, url, max_candidates=1, language="en", description_exclude=None, **kwargs):
+    def describe_image(self, image_or_url, max_candidates=1, language="en", description_exclude=None, **kwargs):
         """This operation generates a description of an image in human readable
         language with complete sentences. The description is based on a
         collection of content tags, which are also returned by the operation.
@@ -300,7 +299,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         understand what went wrong.
 
         :param image_or_url: Publicly reachable URL of an image or an image stream.
-        :type image_or_url: str or bytes
+        :type image_or_url: str or io.BinaryIO
         :param max_candidates: Maximum number of candidate descriptions to be
          returned.  The default is 1.
         :type max_candidates: int
@@ -320,19 +319,28 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            img_description = self._client.describe_image(
-                url=url,
-                max_candidates=max_candidates,
-                language=language,
-                description_exclude=description_exclude,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-            return img_description
+            if isinstance(image_or_url, six.text_type):
+                return self._client.describe_image(
+                    url=image_or_url,
+                    max_candidates=max_candidates,
+                    language=language,
+                    description_exclude=description_exclude,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+            if isinstance(image_or_url, io.BufferedReader):
+                return self._client.describe_image_in_stream(
+                    image=image_or_url,
+                    max_candidates=max_candidates,
+                    language=language,
+                    description_exclude=description_exclude,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
         except ComputerVisionErrorException as error:
             raise error
 
-    def detect_objects(self, url, **kwargs):
+    def detect_objects(self, image_or_url, **kwargs):
         """Performs object detection on the specified image.
         Two input methods are supported -- (1) Uploading an image or (2)
         specifying an image URL.
@@ -341,19 +349,27 @@ class ComputerVisionClient(ComputerVisionClientBase):
         understand what went wrong.
 
         :param image_or_url: Publicly reachable URL of an image or an image stream.
-        :type image_or_url: str or bytes
+        :type image_or_url: str or io.BinaryIO
         :return: DetectResult
         :rtype: ~computervision.models.DetectResult
         :raises:
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            response = self._client.detect_objects(
-                url=url,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-            return response.objects
+            if isinstance(image_or_url, six.text_type):
+                response = self._client.detect_objects(
+                    url=image_or_url,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return response.objects
+            if isinstance(image_or_url, io.BufferedReader):
+                response = self._client.detect_objects_in_stream(
+                    image=image_or_url,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return response.objects
         except ComputerVisionErrorException as error:
             raise error
 
@@ -380,7 +396,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         except ComputerVisionErrorException as error:
             raise error
 
-    def analyze_image_by_domain(self, model, url, language="en", **kwargs):
+    def analyze_image_by_domain(self, image_or_url, model, language="en", **kwargs):
         """This operation recognizes content within an image by applying a
         domain-specific model. The list of domain-specific models that are
         supported by the Computer Vision API can be retrieved using the /models
@@ -408,17 +424,26 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            return self._client.analyze_image_by_domain(
-                model=model,
-                url=url,
-                language=language,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
+            if isinstance(image_or_url, six.text_type):
+                return self._client.analyze_image_by_domain(
+                    url=image_or_url,
+                    model=model,
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+            if isinstance(image_or_url, io.BufferedReader):
+                return self._client.analyze_image_by_domain_in_stream(
+                    image=image_or_url,
+                    model=model,
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
         except ComputerVisionErrorException as error:
             raise error
 
-    def recognize_printed_text(self, url, detect_orientation=True, language="unk", **kwargs):
+    def recognize_printed_text(self, image_or_url, detect_orientation=True, language="unk", **kwargs):
         """Optical Character Recognition (OCR) detects text in an image and
         extracts the recognized characters into a machine-usable character
         stream.
@@ -447,17 +472,26 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            return self._client.recognize_printed_text(
-                url=url,
-                detect_orientation=detect_orientation,
-                language=language,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
+            if isinstance(image_or_url, six.text_type):
+                return self._client.recognize_printed_text(
+                    url=image_or_url,
+                    detect_orientation=detect_orientation,
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+            if isinstance(image_or_url, io.BufferedReader):
+                return self._client.recognize_printed_text_in_stream(
+                    image=image_or_url,
+                    detect_orientation=detect_orientation,
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
         except ComputerVisionErrorException as error:
             raise error
 
-    def tag_image(self, url, language="en", **kwargs):
+    def tag_image(self, image_or_url, language="en", **kwargs):
         """This operation generates a list of words, or tags, that are relevant to
         the content of the supplied image. The Computer Vision API can return
         tags based on objects, living beings, scenery or actions found in
@@ -485,17 +519,26 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            tag_result = self._client.tag_image(
-                url=url,
-                language=language,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-            return tag_result.tags
+            if isinstance(image_or_url, six.text_type):
+                tag_result = self._client.tag_image(
+                    url=image_or_url,
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return tag_result.tags
+            if isinstance(image_or_url, io.BufferedReader):
+                tag_result = self._client.tag_image_in_stream(
+                    image=image_or_url,
+                    language=language,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return tag_result.tags
         except ComputerVisionErrorException as error:
             raise error
 
-    def generate_thumbnail(self, width, height, url, smart_cropping=False, **kwargs):
+    def generate_thumbnail(self, image_or_url, width, height, smart_cropping=False, **kwargs):
         """This operation generates a thumbnail image with the user-specified
         width and height. By default, the service analyzes the image,
         identifies the region of interest (ROI), and generates smart cropping
@@ -524,18 +567,28 @@ class ComputerVisionClient(ComputerVisionClientBase):
         :raises: :class:`HttpResponseError<azure.core.HttpResponseError>`
         """
         try:
-            return self._client.generate_thumbnail(
-                width=width,
-                height=height,
-                url=url,
-                smart_cropping=smart_cropping,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
+            if isinstance(image_or_url, six.text_type):
+                return self._client.generate_thumbnail(
+                    url=image_or_url,
+                    width=width,
+                    height=height,
+                    smart_cropping=smart_cropping,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+            if isinstance(image_or_url, io.BufferedReader):
+                return self._client.generate_thumbnail_in_stream(
+                    image=image_or_url,
+                    width=width,
+                    height=height,
+                    smart_cropping=smart_cropping,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
         except ComputerVisionErrorException as error:
             raise error
 
-    def get_area_of_interest(self, url, **kwargs):
+    def get_area_of_interest(self, image_or_url, **kwargs):
         """This operation returns a bounding box around the most important area of
         the image.
         A successful response will be returned in JSON. If the request failed,
@@ -554,118 +607,24 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
         """
         try:
-            response = self._client.get_area_of_interest(
-                url=url,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-            return response.area_of_interest
+            if isinstance(image_or_url, six.text_type):
+                response = self._client.get_area_of_interest(
+                    url=image_or_url,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return response.area_of_interest
+            if isinstance(image_or_url, io.BufferedReader):
+                response = self._client.get_area_of_interest_in_stream(
+                    image=image_or_url,
+                    cls=kwargs.pop("cls", None),
+                    **kwargs,
+                )
+                return response.area_of_interest
         except ComputerVisionErrorException as error:
             raise error
 
-    def analyze_image_in_stream(
-        self, image,
-        visual_features=None,
-        details=None,
-        language="en",
-        description_exclude=None,
-        **kwargs
-    ):
-        try:
-            return self._client.analyze_image_in_stream(
-                image=image,
-                visual_features=visual_features,
-                details=details,
-                language=language,
-                description_exclude=description_exclude,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-        except ComputerVisionErrorException as error:
-            raise error
-
-    def get_area_of_interest_in_stream(self, image, **kwargs):
-        try:
-            return self._client.get_area_of_interest_in_stream(
-                image=image,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-        except ComputerVisionErrorException as error:
-            raise error
-
-    def describe_image_in_stream(self, image, max_candidates=1, language="en", description_exclude=None, **kwargs):
-        try:
-            return self._client.describe_image_in_stream(
-                image=image,
-                max_candidates=max_candidates,
-                language=language,
-                description_exclude=description_exclude,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-        except ComputerVisionErrorException as error:
-            raise error
-
-    def detect_objects_in_stream(self, image, **kwargs):
-        try:
-            return self._client.detect_objects_in_stream(
-                image=image,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-        except ComputerVisionErrorException as error:
-            raise error
-
-    def generate_thumbnail_in_stream(self, width, height, image, smart_cropping=False, **kwargs):
-        try:
-            return self._client.generate_thumbnail_in_stream(
-                width=width,
-                height=height,
-                image=image,
-                smart_cropping=smart_cropping,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-        except ComputerVisionErrorException as error:
-            raise error
-
-    def analyze_image_by_domain_in_stream(self, model, image, language="en", **kwargs):
-        try:
-            return self._client.analyze_image_by_domain_in_stream(
-                model=model,
-                image=image,
-                language=language,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-        except ComputerVisionErrorException as error:
-            raise error
-
-    def recognize_printed_text_in_stream(self, image, detect_orientation=True, language="unk", **kwargs):
-        try:
-            return self._client.recognize_printed_text_in_stream(
-                image=image,
-                detect_orientation=detect_orientation,
-                language=language,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-        except ComputerVisionErrorException as error:
-            raise error
-
-    def tag_image_in_stream(self, image, language="en", **kwargs):
-        try:
-            return self._client.tag_image_in_stream(
-                image=image,
-                language=language,
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-        except ComputerVisionErrorException as error:
-            raise error
-
-    def recognize_text(self, mode, url, **kwargs):
+    def recognize_text(self, image_or_url, mode, **kwargs):
         """Recognize Text operation.
 
         :param image_or_url: Publicly reachable URL of an image or an image stream.
@@ -679,12 +638,20 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<ocr.models.ComputerVisionErrorException>`
         """
         try:
-            job = self._client.recognize_text(
-                mode=mode,
-                url=url,
-                cls=response_handler,
-                **kwargs,
-            )
+            if isinstance(image_or_url, six.text_type):
+                job = self._client.recognize_text(
+                    url=image_or_url,
+                    mode=mode,
+                    cls=response_handler,
+                    **kwargs,
+                )
+            if isinstance(image_or_url, io.BufferedReader):
+                job = self._client.recognize_text_in_stream(
+                    image=image_or_url,
+                    mode=mode,
+                    cls=response_handler,
+                    **kwargs,
+                )
         except ComputerVisionErrorException as error:
             raise error
 
@@ -695,14 +662,11 @@ class ComputerVisionClient(ComputerVisionClientBase):
             operation_id,
         )
 
-        try:
-            start_recognize_text = command()
-        except ComputerVisionErrorException as error:
-            raise error
+        start_recognize_text = command()
         polling_method = ComputerVisionPollingMethod(1)  # what should polling interval be set to?
         return LROPoller(command, start_recognize_text, None, polling_method)
 
-    def batch_read_file(self, url, **kwargs):
+    def batch_read_file(self, image_or_url, **kwargs):
         """Use this interface to get the result of a Read operation, employing the
         state-of-the-art Optical Character Recognition (OCR) algorithms
         optimized for text-heavy documents.
@@ -715,11 +679,18 @@ class ComputerVisionClient(ComputerVisionClientBase):
          :class:`ComputerVisionErrorException<ocr.models.ComputerVisionErrorException>`
         """
         try:
-            job = self._client.batch_read_file(
-                url=url,
-                cls=response_handler,
-                **kwargs,
-            )
+            if isinstance(image_or_url, six.text_type):
+                job = self._client.batch_read_file(
+                    url=image_or_url,
+                    cls=response_handler,
+                    **kwargs,
+                )
+            if isinstance(image_or_url, io.BufferedReader):
+                job = self._client.batch_read_file_in_stream(
+                    image=image_or_url,
+                    cls=response_handler,
+                    **kwargs,
+                )
         except ComputerVisionErrorException as error:
             raise error
 
@@ -730,58 +701,6 @@ class ComputerVisionClient(ComputerVisionClientBase):
             operation_id,
         )
 
-        try:
-            start_batch_read_file = command()
-        except ComputerVisionErrorException as error:
-            raise error
+        start_batch_read_file = command()
         polling_method = ComputerVisionPollingMethod(1)  # what should polling interval be set to?
         return LROPoller(command, start_batch_read_file, None, polling_method)
-
-    def recognize_text_in_stream(self, image, mode, **kwargs):
-        try:
-            job = self._client.recognize_text_in_stream(
-                image=image,
-                mode=mode,
-                cls=response_handler,
-                **kwargs,
-            )
-        except ComputerVisionErrorException as error:
-            raise error
-
-        operation_id = job.headers["Operation-Location"].split("/")[-1]
-
-        command = functools.partial(
-            self._client.get_text_operation_result,
-            operation_id,
-        )
-
-        try:
-            start_recognize_text_in_stream = command()
-        except ComputerVisionErrorException as error:
-            raise error
-        polling_method = ComputerVisionPollingMethod(1)  # what should polling interval be set to?
-        return LROPoller(command, start_recognize_text_in_stream, None, polling_method)
-
-    def batch_read_file_in_stream(self, image, **kwargs):
-        try:
-            job = self._client.batch_read_file_in_stream(
-                image=image,
-                cls=response_handler,
-                **kwargs,
-            )
-        except ComputerVisionErrorException as error:
-            raise error
-
-        operation_id = job.headers["Operation-Location"].split("/")[-1]
-
-        command = functools.partial(
-            self._client.get_read_operation_result,
-            operation_id,
-        )
-
-        try:
-            start_batch_read_file_in_stream = command()
-        except ComputerVisionErrorException as error:
-            raise error
-        polling_method = ComputerVisionPollingMethod(1)  # what should polling interval be set to?
-        return LROPoller(command, start_batch_read_file_in_stream, None, polling_method)

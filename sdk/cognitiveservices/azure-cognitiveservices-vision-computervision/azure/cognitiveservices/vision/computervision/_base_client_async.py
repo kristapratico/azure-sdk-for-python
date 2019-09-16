@@ -14,7 +14,7 @@ class ComputerVisionClientBaseAsync(object):
         self._config.endpoint = endpoint
 
     def _create_pipeline(self, credentials, **kwargs):
-        self.credential_policy = CognitiveServicesCredentialPolicy(credentials)
+        self.credential_policy = CognitiveServicesCredentialPolicy(credentials, **kwargs)
 
         config = self.create_configuration(**kwargs)
         config.transport = kwargs.get("transport")  # type: ignore
@@ -29,7 +29,7 @@ class ComputerVisionClientBaseAsync(object):
         policies = [
             config.user_agent_policy,
             config.headers_policy,
-            config.authentication_policy,
+            self.credential_policy,
             config.proxy_policy,
             config.logging_policy,
             config.retry_policy,
@@ -48,5 +48,5 @@ class ComputerVisionClientBaseAsync(object):
         config.retry_policy = kwargs.get('retry_policy') or policies.AsyncRetryPolicy(**kwargs)
         config.custom_hook_policy = kwargs.get('custom_hook_policy') or policies.CustomHookPolicy(**kwargs)
         config.redirect_policy = kwargs.get('redirect_policy') or policies.AsyncRedirectPolicy(**kwargs)
-        config.authentication_policy = self.credential_policy
+
         return config

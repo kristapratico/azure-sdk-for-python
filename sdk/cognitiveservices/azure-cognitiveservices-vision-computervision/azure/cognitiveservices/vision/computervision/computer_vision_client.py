@@ -5,6 +5,10 @@
 import functools
 import six
 import io
+from typing import (  # pylint: disable=unused-import
+    Union, Optional, Any, IO, Iterable, AnyStr, Dict, List, Tuple, Generator,
+    TYPE_CHECKING
+)
 from azure.core.polling import LROPoller
 from azure.core.exceptions import ResourceNotFoundError
 from azure.core.tracing.decorator import distributed_trace
@@ -14,6 +18,24 @@ from azure.cognitiveservices.vision.computervision._polling import ComputerVisio
 from azure.cognitiveservices.vision.computervision._base_client import ComputerVisionClientBase
 
 from ._deserialize import deserialize_image_description_results, deserialize_color_results,deserialize_face_results
+
+if TYPE_CHECKING:
+    from azure.cognitiveservices.vision.computervision._generated.models import (
+        VisualFeatureTypes,
+        Details,
+        DescriptionExclude
+    )
+    from azure.cognitiveservices.vision.computervision._generated.models import (
+        ImageAnalysis,
+        ImageDescription,
+        DetectResult,
+        ListModelsResult,
+        DomainModelResults,
+        OcrResult,
+        TagResult,
+        AreaOfInterestResult,
+        TextRecognitionMode,
+    )
 
 def response_handler(response, deserialized, response_headers):
     return response
@@ -31,12 +53,20 @@ class ComputerVisionClient(ComputerVisionClientBase):
     :param credentials: Cognitive Services account key credentials needed for the client to connect to Azure.
     :type credentials: str
     """
-    def __init__(self, endpoint, credentials, **kwargs):
-        super(ComputerVisionClient, self).__init__(endpoint=endpoint, credentials=credentials, **kwargs)
+    def __init__(self, endpoint, credential, **kwargs):
+        # type: (str, str, Any) -> None
+        super(ComputerVisionClient, self).__init__(endpoint=endpoint, credentials=credential, **kwargs)
         self._client = ComputerVision(
-            endpoint=endpoint, credentials=credentials, config=self._config, pipeline=self._pipeline)
+            endpoint=endpoint, credentials=credential, config=self._config, pipeline=self._pipeline)
 
-    def analyze_image(self, image_or_url, visual_features=None, details=None, language="en", description_exclude=None, **kwargs):
+    def analyze_image(
+            self, image_or_url,  # type: Union[str, io.BufferedReader]
+            visual_features=None,  # type: Union[List[str], VisualFeatureTypes]
+            details=None,  # type: List[str, Details]
+            language="en",  # type: str
+            description_exclude=None,  # type: Union[List[str], DescriptionExclude]
+            **kwargs  # type: Any
+        ):  # type: (...) -> ImageAnalysis
         """This operation extracts a rich set of visual features based on the
         image content.
         Two input methods are supported -- (1) Uploading an image or (2)
@@ -285,7 +315,13 @@ class ComputerVisionClient(ComputerVisionClientBase):
         else:
             raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
 
-    def describe_image(self, image_or_url, max_candidates=1, language="en", description_exclude=None, **kwargs):
+    def describe_image(
+            self, image_or_url,  # type: Union[str, io.BufferedReader]
+            max_candidates=1,  # type: int
+            language="en",  # type: str
+            description_exclude=None,  # type: Union[List[str], DescriptionExclude]
+            **kwargs  # type: Any
+        ):  # type: (...) -> ImageDescription
         """This operation generates a description of an image in human readable
         language with complete sentences. The description is based on a
         collection of content tags, which are also returned by the operation.
@@ -337,10 +373,13 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
+            else:
+                raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
             raise error
 
     def detect_objects(self, image_or_url, **kwargs):
+        # type: (Union[str, io.BufferedReader], Any) -> DetectResult
         """Performs object detection on the specified image.
         Two input methods are supported -- (1) Uploading an image or (2)
         specifying an image URL.
@@ -370,10 +409,13 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     **kwargs,
                 )
                 return response.objects
+            else:
+                raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
             raise error
 
     def list_models(self, **kwargs):
+        # type: (Any) -> ListModelsResult
         """This operation returns the list of domain-specific models that are
         supported by the Computer Vision API. Currently, the API supports
         following domain-specific models: celebrity recognizer, landmark
@@ -397,6 +439,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
             raise error
 
     def analyze_image_by_domain(self, image_or_url, model, language="en", **kwargs):
+        # type: (Union[str, io.BufferedReader], str, str, Any) -> DomainModelResults
         """This operation recognizes content within an image by applying a
         domain-specific model. The list of domain-specific models that are
         supported by the Computer Vision API can be retrieved using the /models
@@ -440,10 +483,13 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
+            else:
+                raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
             raise error
 
     def recognize_printed_text(self, image_or_url, detect_orientation=True, language="unk", **kwargs):
+        # type: (Union[str, io.BufferedReader], bool, str, Any) -> OcrResult
         """Optical Character Recognition (OCR) detects text in an image and
         extracts the recognized characters into a machine-usable character
         stream.
@@ -488,10 +534,13 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
+            else:
+                raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
             raise error
 
     def tag_image(self, image_or_url, language="en", **kwargs):
+        # type: (Union[str, io.BufferedReader], str, Any) -> TagResult
         """This operation generates a list of words, or tags, that are relevant to
         the content of the supplied image. The Computer Vision API can return
         tags based on objects, living beings, scenery or actions found in
@@ -535,10 +584,13 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     **kwargs,
                 )
                 return tag_result.tags
+            else:
+                raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
             raise error
 
     def generate_thumbnail(self, image_or_url, width, height, smart_cropping=False, **kwargs):
+        # type: (Union[str, io.BufferedReader], int, int, bool, Any) -> Generator
         """This operation generates a thumbnail image with the user-specified
         width and height. By default, the service analyzes the image,
         identifies the region of interest (ROI), and generates smart cropping
@@ -585,10 +637,13 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
+            else:
+                raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
             raise error
 
     def get_area_of_interest(self, image_or_url, **kwargs):
+        # type: (Union[str, io.BufferedReader], Any) -> AreaOfInterestResult
         """This operation returns a bounding box around the most important area of
         the image.
         A successful response will be returned in JSON. If the request failed,
@@ -621,10 +676,13 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     **kwargs,
                 )
                 return response.area_of_interest
+            else:
+                raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
             raise error
 
     def recognize_text(self, image_or_url, mode, **kwargs):
+        # type: (Union[str, io.BufferedReader], Union[str, TextRecognitionMode], Any) -> LROPoller
         """Recognize Text operation.
 
         :param image_or_url: Publicly reachable URL of an image or an image stream.
@@ -652,6 +710,8 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=response_handler,
                     **kwargs,
                 )
+            else:
+                raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
             raise error
 
@@ -667,6 +727,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         return LROPoller(command, start_recognize_text, None, polling_method)
 
     def batch_read_file(self, image_or_url, **kwargs):
+        # type: (Union[str, io.BufferedReader], Any) -> LROPoller
         """Use this interface to get the result of a Read operation, employing the
         state-of-the-art Optical Character Recognition (OCR) algorithms
         optimized for text-heavy documents.
@@ -691,6 +752,8 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=response_handler,
                     **kwargs,
                 )
+            else:
+                raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
             raise error
 

@@ -54,3 +54,15 @@ class ComputerVisionPollingMethod(PollingMethod):
             return self.operation_result.recognition_result
         except AttributeError:
             return self.operation_result.recognition_results
+
+    # Ask service team if returns a retry-after
+    # def _delay(self):
+    #     """Check for a 'retry-after' header to set timeout,
+    #     otherwise use configured timeout.
+    #     """
+    #     if self._response is None:
+    #         return
+    #     if self._response.headers.get('retry-after'):
+    #         time.sleep(int(self._response.headers['retry-after']))
+    #     else:
+    #         time.sleep(self._timeout)

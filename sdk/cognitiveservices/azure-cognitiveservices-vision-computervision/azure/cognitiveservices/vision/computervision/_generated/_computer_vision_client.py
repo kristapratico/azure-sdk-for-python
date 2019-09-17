@@ -13,7 +13,7 @@ from .operations import ComputerVisionClientOperationsMixin
 from . import models
 
 
-class ComputerVision(ComputerVisionClientOperationsMixin):
+class ComputerVisionClient(ComputerVisionClientOperationsMixin):
     """The Computer Vision API provides state-of-the-art algorithms to process images and return information.
     For example, it can be used to determine if an image contains mature content, or it can be used to find all the
     faces in an image.  It also has other features like estimating dominant and accent colors, categorizing the content
@@ -28,10 +28,10 @@ class ComputerVision(ComputerVisionClientOperationsMixin):
     """
 
     def __init__(
-            self, credentials, endpoint, config=None, **kwargs):
+            self, credentials, endpoint, **kwargs):
 
         base_url = '{Endpoint}/vision/v2.1'
-        self._config = config or ComputerVisionClientConfiguration(credentials, endpoint, **kwargs)
+        self._config = ComputerVisionClientConfiguration(credentials, endpoint, **kwargs)
         self._client = PipelineClient(base_url=base_url, config=self._config, **kwargs)
 
         client_models = {k: v for k, v in models.__dict__.items() if isinstance(v, type)}

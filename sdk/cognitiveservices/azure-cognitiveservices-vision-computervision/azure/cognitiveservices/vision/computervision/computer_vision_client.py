@@ -12,10 +12,10 @@ from typing import (  # pylint: disable=unused-import
 from azure.core.polling import LROPoller
 from azure.core.exceptions import ResourceNotFoundError
 from azure.core.tracing.decorator import distributed_trace
-from azure.cognitiveservices.vision.computervision._generated._computer_vision import ComputerVision
-from azure.cognitiveservices.vision.computervision._generated.models import ComputerVisionErrorException
-from azure.cognitiveservices.vision.computervision._polling import ComputerVisionPollingMethod
-from azure.cognitiveservices.vision.computervision._base_client import ComputerVisionClientBase
+from ._generated._computer_vision_client import ComputerVisionClient as ComputerVision
+from ._generated.models import ComputerVisionErrorException
+from ._polling import ComputerVisionPollingMethod
+from ._base_client import ComputerVisionClientBase
 
 from ._deserialize import deserialize_image_description_results, deserialize_color_results,deserialize_face_results
 
@@ -55,16 +55,15 @@ class ComputerVisionClient(ComputerVisionClientBase):
     """
     def __init__(self, endpoint, credential, **kwargs):
         # type: (str, str, Any) -> None
-        super(ComputerVisionClient, self).__init__(endpoint=endpoint, credentials=credential, **kwargs)
+        super(ComputerVisionClient, self).__init__(credentials=credential, **kwargs)
         self._client = ComputerVision(
-            endpoint=endpoint, credentials=credential, config=self._config, pipeline=self._pipeline)
+            endpoint=endpoint, credentials=credential, pipeline=self._pipeline)
 
     def analyze_image(
             self, image_or_url,  # type: Union[str, io.BufferedReader]
-            visual_features=None,  # type: Union[List[str], VisualFeatureTypes]
-            details=None,  # type: List[str, Details]
-            language="en",  # type: str
-            description_exclude=None,  # type: Union[List[str], DescriptionExclude]
+            visual_features=None,  # type: Optional[Union[List[str], VisualFeatureTypes]]
+            details=None,  # type: Optional[List[str, Details]]
+            language="en",  # type: Optional[str]
             **kwargs  # type: Any
         ):  # type: (...) -> ImageAnalysis
         """This operation extracts a rich set of visual features based on the
@@ -126,17 +125,17 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     visual_features=visual_features,
                     details=details,
                     language=language,
-                    description_exclude=description_exclude,
+                    description_exclude=kwargs.pop("description_exclude", None),
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
-            if isinstance(image_or_url, io.BufferedReader):
+            if hasattr(image_or_url, "read"):
                 return self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=visual_features,
                     details=details,
                     language=language,
-                    description_exclude=description_exclude,
+                    description_exclude=kwargs.pop("description_exclude", None),
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
@@ -158,7 +157,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 return resp
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(image_or_url, io.BufferedReader):
+        if hasattr(image_or_url, "read"):
             try:
                 resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
@@ -186,7 +185,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 return resp
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(image_or_url, io.BufferedReader):
+        if hasattr(image_or_url, "read"):
             try:
                 resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
@@ -214,7 +213,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 return resp.adult
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(image_or_url, io.BufferedReader):
+        if hasattr(image_or_url, "read"):
             try:
                 resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
@@ -241,7 +240,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 return resp.brands
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(image_or_url, io.BufferedReader):
+        if hasattr(image_or_url, "read"):
             try:
                 resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
@@ -268,7 +267,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 return resp.image_type
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(image_or_url, io.BufferedReader):
+        if hasattr(image_or_url, "read"):
             try:
                 resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
@@ -298,7 +297,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 return resp.categories
             except ComputerVisionErrorException as error:
                 raise error
-        if isinstance(image_or_url, io.BufferedReader):
+        if hasattr(image_or_url, "read"):
             try:
                 resp = self._client.analyze_image_in_stream(
                     image=image_or_url,
@@ -317,9 +316,8 @@ class ComputerVisionClient(ComputerVisionClientBase):
 
     def describe_image(
             self, image_or_url,  # type: Union[str, io.BufferedReader]
-            max_candidates=1,  # type: int
-            language="en",  # type: str
-            description_exclude=None,  # type: Union[List[str], DescriptionExclude]
+            max_candidates=1,  # type: Optional[int]
+            language="en",  # type: Optional[str]
             **kwargs  # type: Any
         ):  # type: (...) -> ImageDescription
         """This operation generates a description of an image in human readable
@@ -360,16 +358,16 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     url=image_or_url,
                     max_candidates=max_candidates,
                     language=language,
-                    description_exclude=description_exclude,
+                    description_exclude=kwargs.pop("description_exclude", None),
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
-            if isinstance(image_or_url, io.BufferedReader):
+            if hasattr(image_or_url, "read"):
                 return self._client.describe_image_in_stream(
                     image=image_or_url,
                     max_candidates=max_candidates,
                     language=language,
-                    description_exclude=description_exclude,
+                    description_exclude=kwargs.pop("description_exclude", None),
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
@@ -402,7 +400,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     **kwargs,
                 )
                 return response.objects
-            if isinstance(image_or_url, io.BufferedReader):
+            if hasattr(image_or_url, "read"):
                 response = self._client.detect_objects_in_stream(
                     image=image_or_url,
                     cls=kwargs.pop("cls", None),
@@ -439,7 +437,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
             raise error
 
     def analyze_image_by_domain(self, image_or_url, model, language="en", **kwargs):
-        # type: (Union[str, io.BufferedReader], str, str, Any) -> DomainModelResults
+        # type: (Union[str, io.BufferedReader], str, Optional[str], Any) -> DomainModelResults
         """This operation recognizes content within an image by applying a
         domain-specific model. The list of domain-specific models that are
         supported by the Computer Vision API can be retrieved using the /models
@@ -475,7 +473,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
-            if isinstance(image_or_url, io.BufferedReader):
+            if hasattr(image_or_url, "read"):
                 return self._client.analyze_image_by_domain_in_stream(
                     image=image_or_url,
                     model=model,
@@ -489,7 +487,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
             raise error
 
     def recognize_printed_text(self, image_or_url, detect_orientation=True, language="unk", **kwargs):
-        # type: (Union[str, io.BufferedReader], bool, str, Any) -> OcrResult
+        # type: (Union[str, io.BufferedReader], Optional[bool], str, Any) -> OcrResult
         """Optical Character Recognition (OCR) detects text in an image and
         extracts the recognized characters into a machine-usable character
         stream.
@@ -526,7 +524,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
-            if isinstance(image_or_url, io.BufferedReader):
+            if hasattr(image_or_url, "read"):
                 return self._client.recognize_printed_text_in_stream(
                     image=image_or_url,
                     detect_orientation=detect_orientation,
@@ -576,7 +574,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     **kwargs,
                 )
                 return tag_result.tags
-            if isinstance(image_or_url, io.BufferedReader):
+            if hasattr(image_or_url, "read"):
                 tag_result = self._client.tag_image_in_stream(
                     image=image_or_url,
                     language=language,
@@ -628,7 +626,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
-            if isinstance(image_or_url, io.BufferedReader):
+            if hasattr(image_or_url, "read"):
                 return self._client.generate_thumbnail_in_stream(
                     image=image_or_url,
                     width=width,
@@ -669,7 +667,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     **kwargs,
                 )
                 return response.area_of_interest
-            if isinstance(image_or_url, io.BufferedReader):
+            if hasattr(image_or_url, "read"):
                 response = self._client.get_area_of_interest_in_stream(
                     image=image_or_url,
                     cls=kwargs.pop("cls", None),
@@ -703,7 +701,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=response_handler,
                     **kwargs,
                 )
-            if isinstance(image_or_url, io.BufferedReader):
+            elif hasattr(image_or_url, "read"):
                 job = self._client.recognize_text_in_stream(
                     image=image_or_url,
                     mode=mode,
@@ -746,7 +744,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=response_handler,
                     **kwargs,
                 )
-            if isinstance(image_or_url, io.BufferedReader):
+            elif hasattr(image_or_url, "read"):
                 job = self._client.batch_read_file_in_stream(
                     image=image_or_url,
                     cls=response_handler,

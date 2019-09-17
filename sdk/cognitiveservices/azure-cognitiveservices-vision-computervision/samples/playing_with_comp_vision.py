@@ -14,11 +14,11 @@ def response_handler(response, deserialized, response_headers):
 def test_analyze_image():
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=settings.COG_KEY,
+        credential=settings.COG_KEY,
     )
 
     resp = client.analyze_image(
-        image_or_url="https://dn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+        image_or_url=u"https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
         visual_features=[
             # "Brands"
             # "ImageType",
@@ -34,7 +34,7 @@ def test_analyze_image():
 
     # with open(os.path.join(IMAGES_FOLDER, "house.jpg"), "rb") as image_stream:
     #     resp = client.analyze_image(
-    #         data=image_stream,
+    #         image_or_url=image_stream,
     #         visual_features=[
     #             "ImageType",
     #             "Faces",
@@ -102,7 +102,7 @@ def test_detect_brands():
 def test_analyze_image_landmarks():
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=settings.COG_KEY,
+        credential=settings.COG_KEY,
     )
 
     des = client.analyze_image(
@@ -164,7 +164,7 @@ def test_detect_categories():
 def test_analyze_image_by_domain_landmarks():
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=settings.COG_KEY,
+        credential=settings.COG_KEY,
     )
 
     resp = client.analyze_image_by_domain(
@@ -343,10 +343,10 @@ def test_batch_read_file_with_lropoller():
 
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=settings.COG_KEY,
+        credential=settings.COG_KEY,
     )
 
-    poller = client.batch_read_file(url="http://www.historytube.org/wp-content/uploads/2013/07/Declaration-of-Independence-broadside-1776-Jamestown-Yorktown-Foundation2.jpg")
+    poller = client.batch_read_file(image_or_url="http://www.historytube.org/wp-content/uploads/2013/07/Declaration-of-Independence-broadside-1776-Jamestown-Yorktown-Foundation2.jpg")
     read_result = None
     while poller.status() in ["NotStarted", "Running"]:
         time.sleep(1)

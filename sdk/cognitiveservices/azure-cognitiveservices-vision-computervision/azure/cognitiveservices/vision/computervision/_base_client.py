@@ -9,10 +9,8 @@ from .version import VERSION
 
 class ComputerVisionClientBase(object):
 
-    def __init__(self, endpoint, credentials, **kwargs):
-        self._config, self._pipeline = self._create_pipeline(credentials, **kwargs)
-        self._config.generate_client_request_id = True
-        self._config.endpoint = endpoint
+    def __init__(self, credentials, **kwargs):
+        self._pipeline = self._create_pipeline(credentials, **kwargs)
 
     def _create_pipeline(self, credentials, **kwargs):
         self.credential_policy = CognitiveServicesCredentialPolicy(credentials, **kwargs)
@@ -34,7 +32,7 @@ class ComputerVisionClientBase(object):
             config.redirect_policy,
             DistributedTracingPolicy()
         ]
-        return config, Pipeline(config.transport, policies=policies)
+        return Pipeline(config.transport, policies=policies)
 
     def create_configuration(self, **kwargs):
         config = Configuration(**kwargs)

@@ -646,6 +646,10 @@ Changes:
     - list_models() returns a `list[ModelDescription]` instead of `ListModelsResult`
     - tag_image() returns a `list[ImageTag]` instead of a `TagResult`
     - get_area_of_interest() returns a `BoundingRect` instead of a `AreaOfInterestResult`
+6. Since image tags can be returned from tag_image(), let's not return them for describe_image() as well. We can simplify
+    the response type by removing metadata and request ID, too. So describe_image() will return a list[ImageCaption] 
+    instead of ImageDescription.
+7. Parameter `description_exclude` moved to kwargs for analyze_image() and describe_image()
 
 ```python
 azure.cognitiveservices.vision.computervision.ComputerVisionClient(endpoint, credentials)
@@ -654,13 +658,13 @@ azure.cognitiveservices.vision.computervision.ComputerVisionClient(endpoint, cre
 
 # Returns ImageAnalysis
 ComputerVisionClient.analyze_image(
-    image_or_url, visual_features=None, details=None, language="en", description_exclude=None, **kwargs)
+    image_or_url, visual_features=None, details=None, language="en", **kwargs)
 
 # Returns DomainModelResults
 ComputerVisionClient.analyze_image_by_domain(image_or_url, model, language="en", **kwargs)
 
-# Returns ImageDescription
-ComputerVisionClient.describe_image(image_or_url, max_candidates=1, language="en", description_exclude=None, **kwargs)
+# Returns list[ImageCaption]
+ComputerVisionClient.describe_image(image_or_url, max_candidates=1, language="en", **kwargs)
 
 # Returns list[DetectedObject]
 ComputerVisionClient.detect_objects(image_or_url, **kwargs)

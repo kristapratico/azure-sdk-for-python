@@ -647,9 +647,12 @@ Changes:
     - tag_image() returns a `list[ImageTag]` instead of a `TagResult`
     - get_area_of_interest() returns a `BoundingRect` instead of a `AreaOfInterestResult`
 6. Since image tags can be returned from tag_image(), let's not return them for describe_image() as well. We can simplify
-    the response type by removing metadata and request ID, too. So describe_image() will return a list[ImageCaption] 
-    instead of ImageDescription.
+    the response type by removing metadata and request ID, too. So describe_image() will return a `list[ImageCaption]` 
+    instead of `ImageDescription`.
 7. Parameter `description_exclude` moved to kwargs for analyze_image() and describe_image()
+8. For analyze_image_by_domain(), move metadata and request_id to response hook and simplify response by removing
+    outer dictionary. Response type changed to `list[dict{name, confidence}]` from `DomainModelResult`. We could create
+    a new model to make this return type less generic? `list[DomainResult]`?
 
 ```python
 azure.cognitiveservices.vision.computervision.ComputerVisionClient(endpoint, credentials)
@@ -660,7 +663,7 @@ azure.cognitiveservices.vision.computervision.ComputerVisionClient(endpoint, cre
 ComputerVisionClient.analyze_image(
     image_or_url, visual_features=None, details=None, language="en", **kwargs)
 
-# Returns DomainModelResults
+# Returns list[dict{name:, confidence:}]
 ComputerVisionClient.analyze_image_by_domain(image_or_url, model, language="en", **kwargs)
 
 # Returns list[ImageCaption]

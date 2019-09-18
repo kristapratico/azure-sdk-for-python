@@ -10,7 +10,6 @@ from typing import (  # pylint: disable=unused-import
     TYPE_CHECKING
 )
 from azure.core.polling import LROPoller
-from azure.core.exceptions import ResourceNotFoundError
 from azure.core.tracing.decorator import distributed_trace
 from ._generated._computer_vision_client import ComputerVisionClient as ComputerVision
 from ._generated.models import ComputerVisionErrorException
@@ -23,14 +22,12 @@ if TYPE_CHECKING:
     from azure.cognitiveservices.vision.computervision._generated.models import (
         VisualFeatureTypes,
         Details,
-        DescriptionExclude
     )
     from azure.cognitiveservices.vision.computervision._generated.models import (
         ImageAnalysis,
         ImageDescription,
         DetectResult,
         ListModelsResult,
-        DomainModelResults,
         OcrResult,
         TagResult,
         AreaOfInterestResult,
@@ -437,7 +434,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
             raise error
 
     def analyze_image_by_domain(self, image_or_url, model, language="en", **kwargs):
-        # type: (Union[str, io.BufferedReader], str, Optional[str], Any) -> DomainModelResults
+        # type: (Union[str, io.BufferedReader], str, Optional[str], Any) -> List[Dict]
         """This operation recognizes content within an image by applying a
         domain-specific model. The list of domain-specific models that are
         supported by the Computer Vision API can be retrieved using the /models
@@ -466,13 +463,14 @@ class ComputerVisionClient(ComputerVisionClientBase):
         """
         try:
             if isinstance(image_or_url, six.text_type):
-                return self._client.analyze_image_by_domain(
+                resp = self._client.analyze_image_by_domain(
                     url=image_or_url,
                     model=model,
                     language=language,
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
+                return resp.result[model]
             if hasattr(image_or_url, "read"):
                 return self._client.analyze_image_by_domain_in_stream(
                     image=image_or_url,
@@ -487,7 +485,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
             raise error
 
     def recognize_printed_text(self, image_or_url, detect_orientation=True, language="unk", **kwargs):
-        # type: (Union[str, io.BufferedReader], Optional[bool], str, Any) -> OcrResult
+        # type: (Union[str, io.BufferedReader], Optional[bool], Optional[str], Any) -> OcrResult
         """Optical Character Recognition (OCR) detects text in an image and
         extracts the recognized characters into a machine-usable character
         stream.
@@ -538,7 +536,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
             raise error
 
     def tag_image(self, image_or_url, language="en", **kwargs):
-        # type: (Union[str, io.BufferedReader], str, Any) -> TagResult
+        # type: (Union[str, io.BufferedReader], Optional[str], Any) -> TagResult
         """This operation generates a list of words, or tags, that are relevant to
         the content of the supplied image. The Computer Vision API can return
         tags based on objects, living beings, scenery or actions found in
@@ -588,7 +586,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
             raise error
 
     def generate_thumbnail(self, image_or_url, width, height, smart_cropping=False, **kwargs):
-        # type: (Union[str, io.BufferedReader], int, int, bool, Any) -> Generator
+        # type: (Union[str, io.BufferedReader], int, int, Optional[bool], Any) -> Generator
         """This operation generates a thumbnail image with the user-specified
         width and height. By default, the service analyzes the image,
         identifies the region of interest (ROI), and generates smart cropping

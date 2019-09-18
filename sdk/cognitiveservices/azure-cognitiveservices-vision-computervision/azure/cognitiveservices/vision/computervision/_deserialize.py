@@ -48,7 +48,7 @@ def deserialize_image_description_results(response, obj, headers):
 
 
 def deserialize_color_results(response, obj, headers):
-    metadata = deserialize_image_metadata(response, obj, headers)
+    # metadata = deserialize_image_metadata(response, obj, headers)
     img_color_results = ColorInfo(
         dominant_color_foreground=obj.color.dominant_color_foreground,
         dominant_color_background=obj.color.dominant_color_background,
@@ -56,8 +56,8 @@ def deserialize_color_results(response, obj, headers):
         accent_color=obj.color.accent_color,
         is_bw_img=obj.color.is_bw_img,
     )
-    img_color_results.request_id = obj.request_id
-    img_color_results.metadata = metadata
+    # img_color_results.request_id = obj.request_id
+    # img_color_results.metadata = metadata
     return img_color_results
 
 

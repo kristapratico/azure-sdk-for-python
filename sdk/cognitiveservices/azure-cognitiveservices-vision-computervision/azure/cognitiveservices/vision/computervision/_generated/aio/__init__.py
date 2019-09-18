@@ -5,5 +5,5 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from ._computer_vision_async import ComputerVision
-__all__ = ['ComputerVision']
+from ._computer_vision_client_async import ComputerVisionClient
+__all__ = ['ComputerVisionClient']

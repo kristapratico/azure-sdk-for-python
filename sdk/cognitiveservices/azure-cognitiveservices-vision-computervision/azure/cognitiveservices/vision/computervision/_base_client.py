@@ -1,4 +1,4 @@
-from azure.cognitiveservices.vision.computervision._policies import CognitiveServicesCredentialPolicy
+from azure.cognitiveservices.vision.computervision._policies import CognitiveServicesCredentialPolicy, ComputerVisionResponseHook
 from azure.core import Configuration
 from azure.core.pipeline import Pipeline
 from azure.core.pipeline import policies
@@ -13,7 +13,8 @@ class ComputerVisionClientBase(object):
         self._pipeline = self._create_pipeline(credentials, **kwargs)
 
     def _create_pipeline(self, credentials, **kwargs):
-        self.credential_policy = CognitiveServicesCredentialPolicy(credentials, **kwargs)
+        credential_policy = CognitiveServicesCredentialPolicy(credentials, **kwargs)
+        response_hook = ComputerVisionResponseHook(**kwargs)
 
         config = self.create_configuration(**kwargs)
         config.transport = kwargs.get("transport")  # type: ignore
@@ -24,12 +25,13 @@ class ComputerVisionClientBase(object):
         policies = [
             config.user_agent_policy,
             config.headers_policy,
-            self.credential_policy,
+            credential_policy,
             config.proxy_policy,
             config.logging_policy,
             config.retry_policy,
             config.custom_hook_policy,
             config.redirect_policy,
+            response_hook,
             DistributedTracingPolicy()
         ]
         return Pipeline(config.transport, policies=policies)

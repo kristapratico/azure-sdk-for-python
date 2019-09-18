@@ -22,13 +22,15 @@ def test_analyze_image():
         visual_features=[
             # "Brands"
             # "ImageType",
-            # "Faces",
-            "Categories",
+            "faces",
+            # "Categories",
             # "Color",
             # "Tags",
-            "Description",
+            # "Description",
+            # "Adult",
+            # "Objects",
         ],
-        details=["Landmarks", "Celebrities"],
+        # details=["Landmarks", "Celebrities"],
         # description_exclude=["Landmarks"]
     )
 
@@ -117,11 +119,16 @@ def test_analyze_image_landmarks():
 def test_detect_colors():
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=settings.COG_KEY,
+        credential=settings.COG_KEY,
     )
+
+    def callback(response):
+        print(response.context["metadata"])
+        print(response.context["request_id"])
 
     colors = client.detect_colors(
         image_or_url="https://afremov.com/images/product/COLORFUL-NIGHT.jpg",
+        raw_response_hook=callback
     )
 
     print(colors.dominant_color_foreground)
@@ -172,7 +179,7 @@ def test_analyze_image_by_domain_landmarks():
         model="landmarks",
     )
 
-    for landmark in resp.result["landmarks"]:
+    for landmark in resp:
         print("Landmark name: ", landmark['name'])
         print("Confidence score: ", landmark['confidence'])
 
@@ -285,12 +292,12 @@ def test_recognize_text_with_lropoller():
 
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=settings.COG_KEY,
+        credential=settings.COG_KEY,
     )
 
     poller = client.recognize_text(
         mode="Printed",
-        url="http://d2jaiao3zdxbzm.cloudfront.net/wp-content/uploads/figure-65.png",
+        image_or_url="http://d2jaiao3zdxbzm.cloudfront.net/wp-content/uploads/figure-65.png",
     )
 
     text_result = None
@@ -568,11 +575,11 @@ def test_list_models():
 def test_tag_image():
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=settings.COG_KEY,
+        credential=settings.COG_KEY,
     )
 
     resp = client.tag_image(
-        url="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg"
+        image_or_url="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg"
     )
 
     for tag in resp:

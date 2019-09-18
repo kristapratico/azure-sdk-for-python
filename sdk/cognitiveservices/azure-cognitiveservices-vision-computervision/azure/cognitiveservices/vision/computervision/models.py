@@ -28,7 +28,7 @@ class ImageDescription(GeneratedImageDescription):
         self.metadata = kwargs.get('metadata', None)
 
 
-class ColorInfo(GeneratedColorInfo):
+class ColorInfo(object):
     """An object providing additional metadata describing color attributes.
 
     :param dominant_color_foreground: Possible dominant foreground color.
@@ -42,14 +42,6 @@ class ColorInfo(GeneratedColorInfo):
     :param is_bw_img: A value indicating if the image is black and white.
     :type is_bw_img: bool
     """
-
-    _attribute_map = {
-        'dominant_color_foreground': {'key': 'dominantColorForeground', 'type': 'str'},
-        'dominant_color_background': {'key': 'dominantColorBackground', 'type': 'str'},
-        'dominant_colors': {'key': 'dominantColors', 'type': '[str]'},
-        'accent_color': {'key': 'accentColor', 'type': 'str'},
-        'is_bw_img': {'key': 'isBWImg', 'type': 'bool'},
-    }
 
     def __init__(self, **kwargs):
         self.dominant_color_foreground = kwargs.get('dominant_color_foreground', None)

@@ -5,6 +5,15 @@
 The Text Analytics SDK provides a single client that allows you to engage with the Azure Text Analytics API.
 
 The client includes text analysis of batched documents and single text operations.
+The client is created with an endpoint and credential. The credential string is the user's cognitive services key.
+
+The batched operations will accept the documents parameter as a `list[str]` or `list[(Multi)LanguageInput]`. If the user
+passes in a `list[str]` the ID will be added behind the scenes (0 based) and the country_hint/language will use the 
+default. A mix of `list[str]` and `list[(Multi)LanguageInput]` is disallowed.
+
+The single text operations do not get assigned an ID and move the statistics and model_version results to a 
+response hook. The user can pass in a country_hint or language hint as an optional parameter. If the operation fails, 
+the exception is raised with an error message.
 
 ## TextAnalyticsClient
 

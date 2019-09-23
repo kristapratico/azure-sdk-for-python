@@ -17,43 +17,43 @@ azure.cognitiveservices.language.textanalytics.TextAnalyticsClient(endpoint, cre
 TextAnalyticsClient.batch_detect_language(documents, model_version=None, show_stats=False, **kwargs)
 
 # Returns list[DetectedLanguage]
-TextAnalyticsClient.detect_language(text, country_hint="US", model_version=None, **kwargs)
+TextAnalyticsClient.detect_language(text, country_hint="US", model_version=None, show_stats=False, **kwargs)
 
 # Returns EntitiesResult
 TextAnalyticsClient.batch_detect_entities(documents, model_version=None, show_stats=False, **kwargs)
 
 # Returns list[Entity]
-TextAnalyticsClient.detect_entities(text, language="en", model_version=None, **kwargs)
+TextAnalyticsClient.detect_entities(text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns HealthcareResult
 TextAnalyticsClient.batch_detect_healthcare_entities(documents, model_version=None, show_stats=False, **kwargs)
 
 # Returns list[DocumentHealthcareEntities]
-TextAnalyticsClient.detect_healthcare_entities(text, language="en", model_version=None, **kwargs)
+TextAnalyticsClient.detect_healthcare_entities(text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns EntitiesResult
 TextAnalyticsClient.batch_detect_pii_entities(documents, model_version=None, show_stats=False, **kwargs)
 
 # Returns list[Entity]
-TextAnalyticsClient.detect_pii_entities(text, language="en", model_version=None, **kwargs)
+TextAnalyticsClient.detect_pii_entities(text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns EntityLinkingResult
 TextAnalyticsClient.batch_detect_linked_entities(documents, model_version=None, show_stats=False, **kwargs)
 
 # Returns list[LinkedEntity]
-TextAnalyticsClient.detect_linked_entities(text, language="en", model_version=None, **kwargs)
+TextAnalyticsClient.detect_linked_entities(text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns KeyPhraseResult
 TextAnalyticsClient.batch_detect_key_phrases(documents, model_version=None, show_stats=False, **kwargs)
 
 # Returns list[str]
-TextAnalyticsClient.detect_key_phrases(text, language="en", model_version=None, **kwargs)
+TextAnalyticsClient.detect_key_phrases(text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns SentimentResponse
 TextAnalyticsClient.batch_detect_sentiment(documents, model_version=None, show_stats=False, **kwargs)
 
 # Returns DocumentSentiment
-TextAnalyticsClient.detect_sentiment(text, language="en", model_version=None, **kwargs)
+TextAnalyticsClient.detect_sentiment(text, language="en", model_version=None, show_stats=False, **kwargs)
 ```
 
 ## Scenarios

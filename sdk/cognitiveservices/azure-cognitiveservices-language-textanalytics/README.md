@@ -4,16 +4,17 @@
 
 The Text Analytics SDK provides a single client that allows you to engage with the Azure Text Analytics API.
 
-The client includes text analysis of batched documents and single text operations.
-The client is created with an endpoint and credential. The credential string is the user's cognitive services key.
+The client includes analysis of batched documents and single text operations for new users getting started with 
+text analytics. The client is created with an endpoint and credential. 
+The credential string is the user's cognitive services key.
 
-The batched operations will accept the documents parameter as a `list[str]` or `list[(Multi)LanguageInput]`. If the user
-passes in a `list[str]` the ID will be added behind the scenes (0 based) and the country_hint/language will use the 
-default. A mix of `list[str]` and `list[(Multi)LanguageInput]` is disallowed.
+The batched operations will accept the documents parameter as a `list[str]` or `list[(Multi)LanguageInput]`. 
+If the user passes in a `list[str]` the ID will be added behind the scenes (0 based) and the country_hint/language 
+will use the default.
 
-The single text operations do not get assigned an ID and move the statistics and model_version results to a 
-response hook. The user can pass in a country_hint or language hint as an optional parameter. If the operation fails, 
-the exception is raised with an error message.
+The module level, single text operations do not get assigned an ID and move the statistics and model_version results 
+to a response hook. The user can pass in a country_hint or language hint as an optional parameter. 
+If the operation fails, the exception is raised with an error message.
 
 ## TextAnalyticsClient
 
@@ -22,47 +23,58 @@ azure.cognitiveservices.language.textanalytics.TextAnalyticsClient(endpoint, cre
 
 # Text Analytics operations
 
-# Returns LanguageResult
-TextAnalyticsClient.batch_detect_language(documents, model_version=None, show_stats=False, **kwargs)
+# Module level operations
 
 # Returns list[DetectedLanguage]
-TextAnalyticsClient.detect_language(text, country_hint="US", model_version=None, show_stats=False, **kwargs)
-
-# Returns EntitiesResult
-TextAnalyticsClient.batch_detect_entities(documents, model_version=None, show_stats=False, **kwargs)
+single_detect_language(
+    endpoint, credential, text, country_hint="US", model_version=None, show_stats=False, **kwargs)
 
 # Returns list[Entity]
-TextAnalyticsClient.detect_entities(text, language="en", model_version=None, show_stats=False, **kwargs)
-
-# Returns HealthcareResult
-TextAnalyticsClient.batch_detect_healthcare_entities(documents, model_version=None, show_stats=False, **kwargs)
+single_detect_entities(
+    endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns list[DocumentHealthcareEntities]
-TextAnalyticsClient.detect_healthcare_entities(text, language="en", model_version=None, show_stats=False, **kwargs)
-
-# Returns EntitiesResult
-TextAnalyticsClient.batch_detect_pii_entities(documents, model_version=None, show_stats=False, **kwargs)
+single_detect_healthcare_entities(
+    endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns list[Entity]
-TextAnalyticsClient.detect_pii_entities(text, language="en", model_version=None, show_stats=False, **kwargs)
-
-# Returns EntityLinkingResult
-TextAnalyticsClient.batch_detect_linked_entities(documents, model_version=None, show_stats=False, **kwargs)
+single_detect_pii_entities(
+    endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns list[LinkedEntity]
-TextAnalyticsClient.detect_linked_entities(text, language="en", model_version=None, show_stats=False, **kwargs)
-
-# Returns KeyPhraseResult
-TextAnalyticsClient.batch_detect_key_phrases(documents, model_version=None, show_stats=False, **kwargs)
+single_detect_linked_entities(
+    endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns list[str]
-TextAnalyticsClient.detect_key_phrases(text, language="en", model_version=None, show_stats=False, **kwargs)
-
-# Returns SentimentResponse
-TextAnalyticsClient.batch_detect_sentiment(documents, model_version=None, show_stats=False, **kwargs)
+single_detect_key_phrases(
+    endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns DocumentSentiment
-TextAnalyticsClient.detect_sentiment(text, language="en", model_version=None, show_stats=False, **kwargs)
+single_detect_sentiment(
+    endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
+
+# Client operations
+
+# Returns list[Union(DocumentLanguage, Error)]
+TextAnalyticsClient.detect_language(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentEntities, Error)]
+TextAnalyticsClient.detect_entities(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentHealthcareEntities, Error)]
+TextAnalyticsClient.detect_healthcare_entities(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentEntities, Error)]
+TextAnalyticsClient.detect_pii_entities(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentLinkedEntities, Error)]
+TextAnalyticsClient.detect_linked_entities(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentKeyPhrases, Error)]
+TextAnalyticsClient.detect_key_phrases(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentSentiment, Error)]
+TextAnalyticsClient.detect_sentiment(documents, model_version=None, show_stats=False, **kwargs)
 ```
 
 ## Scenarios
@@ -81,12 +93,12 @@ docs = ["This is written in English", "Este es un document escrito en Español."
 docs = [{"id": "1", "country_hint": "US", "text": "This is written in English"}, 
         {"id": "2", "country_hint": "es", "text": "Este es un document escrito en Español."}]
 
+# request statistics, model_version go to response hook
+response = client.detect_language(documents=docs)  # list[Union(DocumentLanguage, Error)]
 
-response = client.batch_detect_language(documents=docs)  # LanguageResult
+docs = [doc for doc in response if not isinstance(doc, Error)]
 
-for doc in response.documents:
-    print(doc.id)
-    print(doc.statistics)
+for doc in docs:
     for language in doc.detected_languages:
         print(language.name)
         print(language.iso6391_name)
@@ -95,14 +107,13 @@ for doc in response.documents:
 
 ### 2. Detect language in text.
 ```python
-from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
+from azure.cognitiveservices.language.textanalytics import single_detect_language
 
-client = TextAnalyticsClient(
+response = single_detect_language(  
     endpoint="https://westus2.api.cognitive.microsoft.com/",
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-)
-
-response = client.detect_language("This is written in English")  # list[DetectedLanguage]
+    text="This is written in English",
+) # list[DetectedLanguage]
 
 print(response[0].name)
 print(response[0].iso6391_name)
@@ -121,12 +132,12 @@ client = TextAnalyticsClient(
 # documents can be a list[str] or list[MultiLanguageInput]
 docs = ["Satya Nadella is the CEO of Microsoft", "Elon Musk is the CEO of SpaceX and Tesla."]
 
-response = client.batch_detect_entities(documents=docs)  # EntitiesResult
+response = client.detect_entities(documents=docs)  # list[Union(DocumentEntities, Error)]
 
-for text in response.documents:
-    print(text.id)
-    print(text.statistics)
-    for entity in text.entities:
+docs = [doc for doc in response if not isinstance(doc, Error)]
+
+for doc in docs:
+    for entity in doc.entities:
         print(entity.text)
         print(entity.type)
         print(entity.sub_type)
@@ -137,14 +148,13 @@ for text in response.documents:
 
 ### 4. Recognize entities in text.
 ```python
-from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
+from azure.cognitiveservices.language.textanalytics import single_detect_entities
 
-client = TextAnalyticsClient(
+response = single_detect_entities(
     endpoint="https://westus2.api.cognitive.microsoft.com/",
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-)
-
-response = client.detect_entities("Satya Nadella is the CEO of Microsoft")  # list[Entity]
+    text="Satya Nadella is the CEO of Microsoft",
+) # list[Entity]
 
 for entity in response:
     print(entity.text)
@@ -168,33 +178,32 @@ client = TextAnalyticsClient(
 docs = ["Patient should take 40mg ibuprofen twice a week.", 
         "Patient has a fever and sinus infection."]
 
-response = client.batch_detect_healthcare_entities(documents=docs)  # HealthcareResult
+response = client.detect_healthcare_entities(documents=docs)  # list[Union(DocumentHealthcareEntities, Error)]
 
-for text in response.documents:
-    print(text.id)
-    print(text.statistics)
-    for entity in text.entities:
+docs = [doc for doc in response if not isinstance(doc, Error)]
+
+for doc in docs:
+    for entity in doc.entities:
         print(entity.id)
         print(entity.type)
         print(entity.category)
         print(entity.score)
         print(entity.offset)
         print(entity.umls_id)
-    for relation in text.relations:
+    for relation in doc.relations:
         print(relation.relation_type)
         print(relation.score)
 ```
 
 ### 6. Recognize healthcare entities in text.
 ```python
-from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
+from azure.cognitiveservices.language.textanalytics import single_detect_healthcare_entities
 
-client = TextAnalyticsClient(
+response = single_detect_healthcare_entities(
     endpoint="https://westus2.api.cognitive.microsoft.com/",
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-)
-
-response = client.detect_healthcare_entities("Patient manages his diabetes with insulin")  # list[DocumentHealthcareEntities]
+    text="Patient manages his diabetes with insulin"
+) # list[DocumentHealthcareEntities]
 
 for entity in response.entities:
     print(entity.id)
@@ -220,12 +229,12 @@ client = TextAnalyticsClient(
 # documents can be a list[str] or list[MultiLanguageInput]
 docs = ["My SSN is 555-55-5555", "Visa card 4147999933330000"]
 
-response = client.batch_detect_pii_entities(documents=docs)  # EntitiesResult
+response = client.batch_detect_pii_entities(documents=docs)   # list[Union(DocumentEntities, Error)]
 
-for text in response.documents:
-    print(text.id)
-    print(text.statistics)
-    for entity in text.entities:
+docs = [doc for doc in response if not isinstance(doc, Error)]
+
+for doc in docs:
+    for entity in doc.entities:
         print(entity.text)
         print(entity.type)
         print(entity.sub_type)
@@ -236,14 +245,13 @@ for text in response.documents:
 
 ### 8. Recognize personally identifiable information in text.
 ```python
-from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
+from azure.cognitiveservices.language.textanalytics import single_detect_pii_entities
 
-client = TextAnalyticsClient(
+response = single_detect_pii_entities(
     endpoint="https://westus2.api.cognitive.microsoft.com/",
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-)
-
-response = client.detect_pii_entities("My SSN is 555-55-5555")  # list[Entity]
+    text="My SSN is 555-55-5555",
+) # list[Entity]
 
 for entity in response:
     print(entity.text)
@@ -266,12 +274,12 @@ client = TextAnalyticsClient(
 # documents can be a list[str] or list[MultiLanguageInput]
 docs = ["Old Faithful is a geyser at Yellowstone Park", "Mount Shasta has lenticular clouds."]
 
-response = client.batch_detect_linked_entities(documents=docs)  # EntityLinkingResult
+response = client.detect_linked_entities(documents=docs)  # list[Union(DocumentLinkedEntities, Error)]
 
-for text in response.documents:
-    print(text.id)
-    print(text.statistics)
-    for entity in text.entities:
+docs = [doc for doc in response if not isinstance(doc, Error)]
+
+for doc in docs:
+    for entity in doc.entities:
         print(entity.name)
         print(entity.url)
         print(entity.data_source)
@@ -279,14 +287,13 @@ for text in response.documents:
 
 ### 10. Recognize linked entities in text.
 ```python
-from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
+from azure.cognitiveservices.language.textanalytics import single_detect_linked_entities
 
-client = TextAnalyticsClient(
+response = single_detect_linked_entities(
     endpoint="https://westus2.api.cognitive.microsoft.com/",
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-)
-
-response = client.detect_linked_entities("Old Faithful is a geyser at Yellowstone Park")  # list[LinkedEntity]
+    text="Old Faithful is a geyser at Yellowstone Park",
+) # list[LinkedEntity]
 
 for entity in response:
     print(entity.name)
@@ -306,22 +313,23 @@ client = TextAnalyticsClient(
 # documents can be a list[str] or list[MultiLanguageInput]
 docs = ["My cat might need to see a veterinarian", "The pitot tube is used to measure airspeed."]
 
-response = client.batch_detect_key_phrases(documents=docs)  # KeyPhraseResult
+response = client.detect_key_phrases(documents=docs)  # list[Union(DocumentKeyPhrases, Error)]
 
-for phrases in response.documents:
+docs = [doc for doc in response if not isinstance(doc, Error)]
+
+for phrases in docs:
     print(phrases.key_phrases)
 ```
 
 ### 12. Recognize key phrases in text.
 ```python
-from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
+from azure.cognitiveservices.language.textanalytics import single_detect_key_phrases
 
-client = TextAnalyticsClient(
+response = single_detect_key_phrases( 
     endpoint="https://westus2.api.cognitive.microsoft.com/",
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-)
-
-response = client.detect_key_phrases("My cat might need to see a veterinarian")  # list[str]
+    text="My cat might need to see a veterinarian",
+) # list[str]
 
 print(response)
 ```
@@ -338,23 +346,24 @@ client = TextAnalyticsClient(
 # documents can be a list[str] or list[MultiLanguageInput]
 docs = ["The hotel was dark and unclean.", "The restaurant had amazing gnocci."]
 
-response = client.batch_detect_sentiment(documents=docs)  # SentimentResponse
+response = client.detect_sentiment(documents=docs)   # list[Union(DocumentSentiment, Error)]
 
-for doc in response.documents:
+docs = [doc for doc in response if not isinstance(doc, Error)]
+
+for doc in docs:
     print("Sentiment: ", doc.sentiment)
     print("Score: ", doc.document_scores)
 ```
 
 ### 14. Detect sentiment in text.
 ```python
-from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
+from azure.cognitiveservices.language.textanalytics import single_detect_sentiment
 
-client = TextAnalyticsClient(
+response = single_detect_sentiment(
     endpoint="https://westus2.api.cognitive.microsoft.com/",
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-)
-
-response = client.detect_sentiment("I will never fly Spirit airlines again.")  # DocumentSentiment
+    text="I will never fly Spirit airlines again."
+) # DocumentSentiment
 
 print("Sentiment: ", response.sentiment)
 print("Score: ", response.document_scores)

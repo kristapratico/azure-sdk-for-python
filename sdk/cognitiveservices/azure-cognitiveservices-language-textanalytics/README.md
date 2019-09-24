@@ -236,7 +236,8 @@ response = client.detect_key_phrases(documents=documents)  # list[Union(Document
 docs = [doc for doc in response if not doc.is_error]
 
 for doc in docs:
-    print(doc.key_phrases)
+    for phrase in doc.key_phrases:
+        print(phrase)
 ```
 
 ### 7. Detect sentiment in a batch of documents.

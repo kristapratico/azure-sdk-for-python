@@ -21,7 +21,28 @@ If the operation fails, the exception is raised with an error message.
 ```python
 azure.cognitiveservices.language.textanalytics.TextAnalyticsClient(endpoint, credential)
 
-# Text Analytics operations
+# Client operations
+
+# Returns list[Union(DocumentLanguage, Error)]
+TextAnalyticsClient.detect_language(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentEntities, Error)]
+TextAnalyticsClient.detect_entities(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentHealthcareEntities, Error)]
+TextAnalyticsClient.detect_healthcare_entities(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentEntities, Error)]
+TextAnalyticsClient.detect_pii_entities(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentLinkedEntities, Error)]
+TextAnalyticsClient.detect_linked_entities(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentKeyPhrases, Error)]
+TextAnalyticsClient.detect_key_phrases(documents, model_version=None, show_stats=False, **kwargs)
+
+# Returns list[Union(DocumentSentiment, Error)]
+TextAnalyticsClient.detect_sentiment(documents, model_version=None, show_stats=False, **kwargs)
 
 # Module level operations
 
@@ -52,32 +73,11 @@ single_detect_key_phrases(
 # Returns DocumentSentiment
 single_detect_sentiment(
     endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
-
-# Client operations
-
-# Returns list[Union(DocumentLanguage, Error)]
-TextAnalyticsClient.detect_language(documents, model_version=None, show_stats=False, **kwargs)
-
-# Returns list[Union(DocumentEntities, Error)]
-TextAnalyticsClient.detect_entities(documents, model_version=None, show_stats=False, **kwargs)
-
-# Returns list[Union(DocumentHealthcareEntities, Error)]
-TextAnalyticsClient.detect_healthcare_entities(documents, model_version=None, show_stats=False, **kwargs)
-
-# Returns list[Union(DocumentEntities, Error)]
-TextAnalyticsClient.detect_pii_entities(documents, model_version=None, show_stats=False, **kwargs)
-
-# Returns list[Union(DocumentLinkedEntities, Error)]
-TextAnalyticsClient.detect_linked_entities(documents, model_version=None, show_stats=False, **kwargs)
-
-# Returns list[Union(DocumentKeyPhrases, Error)]
-TextAnalyticsClient.detect_key_phrases(documents, model_version=None, show_stats=False, **kwargs)
-
-# Returns list[Union(DocumentSentiment, Error)]
-TextAnalyticsClient.detect_sentiment(documents, model_version=None, show_stats=False, **kwargs)
 ```
 
 ## Scenarios
+
+## Client Operations
 
 ### 1. Detect language for a batch of documents.
 ```python
@@ -105,22 +105,7 @@ for doc in docs:
         print(language.score)
 ```
 
-### 2. Detect language in text.
-```python
-from azure.cognitiveservices.language.textanalytics import single_detect_language
-
-response = single_detect_language(  
-    endpoint="https://westus2.api.cognitive.microsoft.com/",
-    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-    text="This is written in English",
-) # list[DetectedLanguage]
-
-print(response[0].name)
-print(response[0].iso6391_name)
-print(response[0].score)
-```
-
-### 3. Recognize entities in a batch of documents.
+### 2. Recognize entities in a batch of documents.
 ```python
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 
@@ -146,26 +131,7 @@ for doc in docs:
         print(entity.length)
 ```
 
-### 4. Recognize entities in text.
-```python
-from azure.cognitiveservices.language.textanalytics import single_detect_entities
-
-response = single_detect_entities(
-    endpoint="https://westus2.api.cognitive.microsoft.com/",
-    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-    text="Satya Nadella is the CEO of Microsoft",
-) # list[Entity]
-
-for entity in response:
-    print(entity.text)
-    print(entity.type)
-    print(entity.sub_type)
-    print(entity.score)
-    print(entity.offset)
-    print(entity.length)
-```
-
-### 5. Recognize healthcare entities in a batch of documents.
+### 3. Recognize healthcare entities in a batch of documents.
 ```python
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 
@@ -195,29 +161,7 @@ for doc in docs:
         print(relation.score)
 ```
 
-### 6. Recognize healthcare entities in text.
-```python
-from azure.cognitiveservices.language.textanalytics import single_detect_healthcare_entities
-
-response = single_detect_healthcare_entities(
-    endpoint="https://westus2.api.cognitive.microsoft.com/",
-    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-    text="Patient manages his diabetes with insulin"
-) # list[DocumentHealthcareEntities]
-
-for entity in response.entities:
-    print(entity.id)
-    print(entity.type)
-    print(entity.category)
-    print(entity.score)
-    print(entity.offset)
-    print(entity.umls_id)
-for relation in response.relations:
-    print(relation.relation_type)
-    print(relation.score)
-```
-
-### 7. Recognize personally identifiable information in a batch of documents.
+### 4. Recognize personally identifiable information in a batch of documents.
 ```python
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 
@@ -243,26 +187,7 @@ for doc in docs:
         print(entity.length)
 ```
 
-### 8. Recognize personally identifiable information in text.
-```python
-from azure.cognitiveservices.language.textanalytics import single_detect_pii_entities
-
-response = single_detect_pii_entities(
-    endpoint="https://westus2.api.cognitive.microsoft.com/",
-    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-    text="My SSN is 555-55-5555",
-) # list[Entity]
-
-for entity in response:
-    print(entity.text)
-    print(entity.type)
-    print(entity.sub_type)
-    print(entity.score)
-    print(entity.offset)
-    print(entity.length)
-```
-
-### 9. Recognize linked entities in a batch of documents.
+### 5. Recognize linked entities in a batch of documents.
 ```python
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 
@@ -285,23 +210,7 @@ for doc in docs:
         print(entity.data_source)
 ```
 
-### 10. Recognize linked entities in text.
-```python
-from azure.cognitiveservices.language.textanalytics import single_detect_linked_entities
-
-response = single_detect_linked_entities(
-    endpoint="https://westus2.api.cognitive.microsoft.com/",
-    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-    text="Old Faithful is a geyser at Yellowstone Park",
-) # list[LinkedEntity]
-
-for entity in response:
-    print(entity.name)
-    print(entity.url)
-    print(entity.data_source)
-```
-
-### 11. Recognize key phrases in a batch of documents.
+### 6. Recognize key phrases in a batch of documents.
 ```python
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 
@@ -321,20 +230,7 @@ for phrases in docs:
     print(phrases.key_phrases)
 ```
 
-### 12. Recognize key phrases in text.
-```python
-from azure.cognitiveservices.language.textanalytics import single_detect_key_phrases
-
-response = single_detect_key_phrases( 
-    endpoint="https://westus2.api.cognitive.microsoft.com/",
-    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
-    text="My cat might need to see a veterinarian",
-) # list[str]
-
-print(response)
-```
-
-### 13. Detect sentiment in a batch of documents.
+### 7. Detect sentiment in a batch of documents.
 ```python
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 
@@ -353,6 +249,112 @@ docs = [doc for doc in response if not isinstance(doc, Error)]
 for doc in docs:
     print("Sentiment: ", doc.sentiment)
     print("Score: ", doc.document_scores)
+```
+
+## Module Level Operations
+
+### 8. Detect language in text.
+```python
+from azure.cognitiveservices.language.textanalytics import single_detect_language
+
+response = single_detect_language(  
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
+    text="This is written in English",
+) # list[DetectedLanguage]
+
+print(response[0].name)
+print(response[0].iso6391_name)
+print(response[0].score)
+```
+
+### 9. Recognize entities in text.
+```python
+from azure.cognitiveservices.language.textanalytics import single_detect_entities
+
+response = single_detect_entities(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
+    text="Satya Nadella is the CEO of Microsoft",
+) # list[Entity]
+
+for entity in response:
+    print(entity.text)
+    print(entity.type)
+    print(entity.sub_type)
+    print(entity.score)
+    print(entity.offset)
+    print(entity.length)
+```
+
+### 10. Recognize healthcare entities in text.
+```python
+from azure.cognitiveservices.language.textanalytics import single_detect_healthcare_entities
+
+response = single_detect_healthcare_entities(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
+    text="Patient manages his diabetes with insulin"
+) # list[DocumentHealthcareEntities]
+
+for entity in response.entities:
+    print(entity.id)
+    print(entity.type)
+    print(entity.category)
+    print(entity.score)
+    print(entity.offset)
+    print(entity.umls_id)
+for relation in response.relations:
+    print(relation.relation_type)
+    print(relation.score)
+```
+
+### 11. Recognize personally identifiable information in text.
+```python
+from azure.cognitiveservices.language.textanalytics import single_detect_pii_entities
+
+response = single_detect_pii_entities(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
+    text="My SSN is 555-55-5555",
+) # list[Entity]
+
+for entity in response:
+    print(entity.text)
+    print(entity.type)
+    print(entity.sub_type)
+    print(entity.score)
+    print(entity.offset)
+    print(entity.length)
+```
+
+### 12. Recognize linked entities in text.
+```python
+from azure.cognitiveservices.language.textanalytics import single_detect_linked_entities
+
+response = single_detect_linked_entities(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
+    text="Old Faithful is a geyser at Yellowstone Park",
+) # list[LinkedEntity]
+
+for entity in response:
+    print(entity.name)
+    print(entity.url)
+    print(entity.data_source)
+```
+
+### 13. Recognize key phrases in text.
+```python
+from azure.cognitiveservices.language.textanalytics import single_detect_key_phrases
+
+response = single_detect_key_phrases( 
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
+    text="My cat might need to see a veterinarian",
+) # list[str]
+
+print(response)
 ```
 
 ### 14. Detect sentiment in text.

@@ -102,6 +102,7 @@ client = TextAnalyticsClient(
 
 # documents can be a list[str] or list[LanguageInput]
 documents = ["This is written in English", "Este es un document escrito en Español."]
+
 documents = [{"id": "1", "country_hint": "US", "text": "This is written in English"}, 
              {"id": "2", "country_hint": "es", "text": "Este es un document escrito en Español."}]
 
@@ -139,8 +140,6 @@ for doc in docs:
         print(entity.type)
         print(entity.sub_type)
         print(entity.score)
-        print(entity.offset)
-        print(entity.length)
 ```
 
 ### 3. Recognize healthcare entities in a batch of documents.
@@ -162,11 +161,9 @@ docs = [doc for doc in response if not doc.is_error]
 
 for doc in docs:
     for entity in doc.entities:
-        print(entity.id)
         print(entity.type)
         print(entity.category)
         print(entity.score)
-        print(entity.offset)
         print(entity.umls_id)
     for relation in doc.relations:
         print(relation.relation_type)
@@ -195,8 +192,6 @@ for doc in docs:
         print(entity.type)
         print(entity.sub_type)
         print(entity.score)
-        print(entity.offset)
-        print(entity.length)
 ```
 
 ### 5. Recognize linked entities in a batch of documents.
@@ -259,8 +254,8 @@ response = client.detect_sentiment(documents=documents)   # list[Union(DocumentS
 docs = [doc for doc in response if not doc.is_error]
 
 for doc in docs:
-    print("Sentiment: ", doc.sentiment)
-    print("Score: ", doc.document_scores)
+    print(doc.sentiment)
+    print(doc.document_scores)
 ```
 
 ### Module Level Operations
@@ -379,6 +374,6 @@ response = single_detect_sentiment(
     text="I will never fly Spirit airlines again."
 ) # DocumentSentiment
 
-print("Sentiment: ", response.sentiment)
-print("Score: ", response.document_scores)
+print(response.sentiment)
+print(response.document_scores)
 ```

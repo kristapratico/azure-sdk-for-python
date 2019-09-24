@@ -9,8 +9,8 @@ text analytics. The client is created with an endpoint and credential.
 The credential string is the user's cognitive services key.
 
 The batched operations will accept the documents parameter as a `list[str]` or `list[(Multi)LanguageInput]`. 
-If the user passes in a `list[str]` the ID will be added behind the scenes (0 based) and the country_hint/language 
-will use the default.
+If the user passes in a `list[str]` the ID will be set internally (0 based) and the country_hint/language 
+will use the default. Mixing the two types of inputs will be explicitly disallowed.
 
 The module level, single text operations do not get assigned an ID and move the statistics and model_version results 
 to a response hook. The user can pass in a country_hint or language hint as an optional parameter. 
@@ -23,31 +23,41 @@ azure.cognitiveservices.language.textanalytics.TextAnalyticsClient(endpoint, cre
 ### Client operations
 
 ```python
-# Returns list[Union(DocumentLanguage, Error)]
+# Returns list[Union(DocumentLanguage, DocumentError)]
 TextAnalyticsClient.detect_language(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentEntities, Error)]
+# Returns list[Union(DocumentEntities, DocumentError)]
 TextAnalyticsClient.detect_entities(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentHealthcareEntities, Error)]
+# Returns list[Union(DocumentHealthcareEntities, DocumentError)]
 TextAnalyticsClient.detect_healthcare_entities(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentEntities, Error)]
+# Returns list[Union(DocumentEntities, DocumentError)]
 TextAnalyticsClient.detect_pii_entities(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentLinkedEntities, Error)]
+# Returns list[Union(DocumentLinkedEntities, DocumentError)]
 TextAnalyticsClient.detect_linked_entities(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentKeyPhrases, Error)]
+# Returns list[Union(DocumentKeyPhrases, DocumentError)]
 TextAnalyticsClient.detect_key_phrases(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentSentiment, Error)]
+# Returns list[Union(DocumentSentiment, DocumentError)]
 TextAnalyticsClient.detect_sentiment(documents, model_version=None, show_stats=False, **kwargs)
 ```
 
 ### Module level operations
 
 ```python
+from azure.cognitiveservices.language.textanalytics import (
+    single_detect_language,
+    single_detect_entities,
+    single_detect_healthcare_entities,
+    single_detect_pii_entities,
+    single_detect_linked_entities,
+    single_detect_key_phrases,
+    single_detect_sentiment,
+)
+
 # Returns list[DetectedLanguage]
 single_detect_language(
     endpoint, credential, text, country_hint="US", model_version=None, show_stats=False, **kwargs)
@@ -91,17 +101,17 @@ client = TextAnalyticsClient(
 )
 
 # documents can be a list[str] or list[LanguageInput]
-docs = ["This is written in English", "Este es un document escrito en Español."]
-docs = [{"id": "1", "country_hint": "US", "text": "This is written in English"}, 
-        {"id": "2", "country_hint": "es", "text": "Este es un document escrito en Español."}]
+documents = ["This is written in English", "Este es un document escrito en Español."]
+documents = [{"id": "1", "country_hint": "US", "text": "This is written in English"}, 
+             {"id": "2", "country_hint": "es", "text": "Este es un document escrito en Español."}]
 
 # request statistics, model_version go to response hook
-response = client.detect_language(documents=docs)  # list[Union(DocumentLanguage, Error)]
+response = client.detect_language(documents=documents)  # list[Union(DocumentLanguage, DocumentError)]
 
-docs = [doc for doc in response if not isinstance(doc, Error)]
+docs = [doc for doc in response if not doc.is_error]
 
 for doc in docs:
-    for language in doc.detected_languages:
+    for language in doc.detected_language:
         print(language.name)
         print(language.iso6391_name)
         print(language.score)
@@ -117,11 +127,11 @@ client = TextAnalyticsClient(
 )
 
 # documents can be a list[str] or list[MultiLanguageInput]
-docs = ["Satya Nadella is the CEO of Microsoft", "Elon Musk is the CEO of SpaceX and Tesla."]
+documents = ["Satya Nadella is the CEO of Microsoft", "Elon Musk is the CEO of SpaceX and Tesla."]
 
-response = client.detect_entities(documents=docs)  # list[Union(DocumentEntities, Error)]
+response = client.detect_entities(documents=documents)  # list[Union(DocumentEntities, DocumentError)]
 
-docs = [doc for doc in response if not isinstance(doc, Error)]
+docs = [doc for doc in response if not doc.is_error]
 
 for doc in docs:
     for entity in doc.entities:
@@ -143,12 +153,12 @@ client = TextAnalyticsClient(
 )
 
 # documents can be a list[str] or list[MultiLanguageInput]
-docs = ["Patient should take 40mg ibuprofen twice a week.", 
-        "Patient has a fever and sinus infection."]
+documents = ["Patient should take 40mg ibuprofen twice a week.", 
+             "Patient has a fever and sinus infection."]
 
-response = client.detect_healthcare_entities(documents=docs)  # list[Union(DocumentHealthcareEntities, Error)]
+response = client.detect_healthcare_entities(documents=documents)  # list[Union(DocumentHealthcareEntities, DocumentError)]
 
-docs = [doc for doc in response if not isinstance(doc, Error)]
+docs = [doc for doc in response if not doc.is_error]
 
 for doc in docs:
     for entity in doc.entities:
@@ -173,11 +183,11 @@ client = TextAnalyticsClient(
 )
 
 # documents can be a list[str] or list[MultiLanguageInput]
-docs = ["My SSN is 555-55-5555", "Visa card 4147999933330000"]
+documents = ["My SSN is 555-55-5555", "Visa card 4147999933330000"]
 
-response = client.batch_detect_pii_entities(documents=docs)   # list[Union(DocumentEntities, Error)]
+response = client.batch_detect_pii_entities(documents=documents)   # list[Union(DocumentEntities, DocumentError)]
 
-docs = [doc for doc in response if not isinstance(doc, Error)]
+docs = [doc for doc in response if not doc.is_error]
 
 for doc in docs:
     for entity in doc.entities:
@@ -199,11 +209,11 @@ client = TextAnalyticsClient(
 )
 
 # documents can be a list[str] or list[MultiLanguageInput]
-docs = ["Old Faithful is a geyser at Yellowstone Park", "Mount Shasta has lenticular clouds."]
+documents = ["Old Faithful is a geyser at Yellowstone Park", "Mount Shasta has lenticular clouds."]
 
-response = client.detect_linked_entities(documents=docs)  # list[Union(DocumentLinkedEntities, Error)]
+response = client.detect_linked_entities(documents=documents)  # list[Union(DocumentLinkedEntities, DocumentError)]
 
-docs = [doc for doc in response if not isinstance(doc, Error)]
+docs = [doc for doc in response if not doc.is_error]
 
 for doc in docs:
     for entity in doc.entities:
@@ -222,14 +232,14 @@ client = TextAnalyticsClient(
 )
 
 # documents can be a list[str] or list[MultiLanguageInput]
-docs = ["My cat might need to see a veterinarian", "The pitot tube is used to measure airspeed."]
+documents = ["My cat might need to see a veterinarian", "The pitot tube is used to measure airspeed."]
 
-response = client.detect_key_phrases(documents=docs)  # list[Union(DocumentKeyPhrases, Error)]
+response = client.detect_key_phrases(documents=documents)  # list[Union(DocumentKeyPhrases, DocumentError)]
 
-docs = [doc for doc in response if not isinstance(doc, Error)]
+docs = [doc for doc in response if not doc.is_error]
 
-for phrases in docs:
-    print(phrases.key_phrases)
+for doc in docs:
+    print(doc.key_phrases)
 ```
 
 ### 7. Detect sentiment in a batch of documents.
@@ -242,11 +252,11 @@ client = TextAnalyticsClient(
 )
 
 # documents can be a list[str] or list[MultiLanguageInput]
-docs = ["The hotel was dark and unclean.", "The restaurant had amazing gnocci."]
+documents = ["The hotel was dark and unclean.", "The restaurant had amazing gnocci."]
 
-response = client.detect_sentiment(documents=docs)   # list[Union(DocumentSentiment, Error)]
+response = client.detect_sentiment(documents=documents)   # list[Union(DocumentSentiment, DocumentError)]
 
-docs = [doc for doc in response if not isinstance(doc, Error)]
+docs = [doc for doc in response if not doc.is_error]
 
 for doc in docs:
     print("Sentiment: ", doc.sentiment)

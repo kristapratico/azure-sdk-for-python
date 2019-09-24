@@ -155,7 +155,9 @@ client = TextAnalyticsClient(
 documents = ["Patient should take 40mg ibuprofen twice a week.", 
              "Patient has a fever and sinus infection."]
 
-response = client.detect_healthcare_entities(documents=documents)  # list[Union(DocumentHealthcareEntities, DocumentError)]
+response = client.detect_healthcare_entities(
+    documents=documents
+)  # list[Union(DocumentHealthcareEntities, DocumentError)]
 
 docs = [doc for doc in response if not doc.is_error]
 

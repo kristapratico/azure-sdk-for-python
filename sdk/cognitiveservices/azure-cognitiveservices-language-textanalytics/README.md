@@ -17,12 +17,12 @@ to a response hook. The user can pass in a country_hint or language hint as an o
 If the operation fails, the exception is raised with an error message.
 
 ## TextAnalyticsClient
-
 ```python
 azure.cognitiveservices.language.textanalytics.TextAnalyticsClient(endpoint, credential)
+```
+### Client operations
 
-# Client operations
-
+```python
 # Returns list[Union(DocumentLanguage, Error)]
 TextAnalyticsClient.detect_language(documents, model_version=None, show_stats=False, **kwargs)
 
@@ -43,9 +43,11 @@ TextAnalyticsClient.detect_key_phrases(documents, model_version=None, show_stats
 
 # Returns list[Union(DocumentSentiment, Error)]
 TextAnalyticsClient.detect_sentiment(documents, model_version=None, show_stats=False, **kwargs)
+```
 
-# Module level operations
+### Module level operations
 
+```python
 # Returns list[DetectedLanguage]
 single_detect_language(
     endpoint, credential, text, country_hint="US", model_version=None, show_stats=False, **kwargs)
@@ -77,7 +79,7 @@ single_detect_sentiment(
 
 ## Scenarios
 
-## Client Operations
+### Client Operations
 
 ### 1. Detect language for a batch of documents.
 ```python
@@ -251,7 +253,7 @@ for doc in docs:
     print("Score: ", doc.document_scores)
 ```
 
-## Module Level Operations
+### Module Level Operations
 
 ### 8. Detect language in text.
 ```python

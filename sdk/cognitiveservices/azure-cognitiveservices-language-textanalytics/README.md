@@ -186,7 +186,7 @@ client = TextAnalyticsClient(
 # documents can be a list[str] or list[MultiLanguageInput]
 documents = ["My SSN is 555-55-5555", "Visa card 4147999933330000"]
 
-response = client.batch_detect_pii_entities(documents=documents)   # list[Union[DocumentEntities, DocumentError]]
+response = client.detect_pii_entities(documents=documents)   # list[Union[DocumentEntities, DocumentError]]
 
 docs = [doc for doc in response if not doc.is_error]
 

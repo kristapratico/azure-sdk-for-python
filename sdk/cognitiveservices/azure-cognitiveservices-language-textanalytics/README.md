@@ -10,11 +10,13 @@ The credential string is the user's cognitive services key.
 
 The batched operations will accept the documents parameter as a `list[str]` or `list[(Multi)LanguageInput]`. 
 If the user passes in a `list[str]` the ID will be set internally (0 based) and the country_hint/language 
-will use the default. Mixing the two types of inputs will be explicitly disallowed.
+will use the default. Mixing the two types of inputs will be explicitly disallowed. The batched operations will
+return a response consisting of a combined list of the results and errors in the order that the user passed in
+the documents.
 
-The module level, single text operations do not get assigned an ID and move the statistics and model_version results 
-to a response hook. The user can pass in a country_hint or language hint as an optional parameter. 
-If the operation fails, the exception is raised with an error message.
+The module level, single text operations do not get assigned an ID and move the request statistics and 
+model_version results to a response hook. The user can pass in a country_hint or language hint as an optional 
+parameter. If the operation fails, the exception is raised with an error message.
 
 ## TextAnalyticsClient
 ```python
@@ -23,25 +25,25 @@ azure.cognitiveservices.language.textanalytics.TextAnalyticsClient(endpoint, cre
 ### Client operations
 
 ```python
-# Returns list[Union(DocumentLanguage, DocumentError)]
+# Returns list[Union[DocumentLanguage, DocumentError]]
 TextAnalyticsClient.detect_language(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentEntities, DocumentError)]
+# Returns list[Union[DocumentEntities, DocumentError]]
 TextAnalyticsClient.detect_entities(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentHealthcareEntities, DocumentError)]
+# Returns list[Union[DocumentHealthcareEntities, DocumentError]]
 TextAnalyticsClient.detect_healthcare_entities(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentEntities, DocumentError)]
+# Returns list[Union[DocumentEntities, DocumentError]]
 TextAnalyticsClient.detect_pii_entities(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentLinkedEntities, DocumentError)]
+# Returns list[Union[DocumentLinkedEntities, DocumentError]]
 TextAnalyticsClient.detect_linked_entities(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentKeyPhrases, DocumentError)]
+# Returns list[Union[DocumentKeyPhrases, DocumentError]]
 TextAnalyticsClient.detect_key_phrases(documents, model_version=None, show_stats=False, **kwargs)
 
-# Returns list[Union(DocumentSentiment, DocumentError)]
+# Returns list[Union[DocumentSentiment, DocumentError]]
 TextAnalyticsClient.detect_sentiment(documents, model_version=None, show_stats=False, **kwargs)
 ```
 
@@ -107,7 +109,7 @@ documents = [{"id": "1", "country_hint": "US", "text": "This is written in Engli
              {"id": "2", "country_hint": "es", "text": "Este es un document escrito en Español."}]
 
 # request statistics, model_version go to response hook
-response = client.detect_language(documents=documents)  # list[Union(DocumentLanguage, DocumentError)]
+response = client.detect_language(documents=documents)  # list[Union[DocumentLanguage, DocumentError]]
 
 docs = [doc for doc in response if not doc.is_error]
 
@@ -130,7 +132,7 @@ client = TextAnalyticsClient(
 # documents can be a list[str] or list[MultiLanguageInput]
 documents = ["Satya Nadella is the CEO of Microsoft", "Elon Musk is the CEO of SpaceX and Tesla."]
 
-response = client.detect_entities(documents=documents)  # list[Union(DocumentEntities, DocumentError)]
+response = client.detect_entities(documents=documents)  # list[Union[DocumentEntities, DocumentError]]
 
 docs = [doc for doc in response if not doc.is_error]
 
@@ -157,7 +159,7 @@ documents = ["Patient should take 40mg ibuprofen twice a week.",
 
 response = client.detect_healthcare_entities(
     documents=documents
-)  # list[Union(DocumentHealthcareEntities, DocumentError)]
+)  # list[Union[DocumentHealthcareEntities, DocumentError]]
 
 docs = [doc for doc in response if not doc.is_error]
 
@@ -184,7 +186,7 @@ client = TextAnalyticsClient(
 # documents can be a list[str] or list[MultiLanguageInput]
 documents = ["My SSN is 555-55-5555", "Visa card 4147999933330000"]
 
-response = client.batch_detect_pii_entities(documents=documents)   # list[Union(DocumentEntities, DocumentError)]
+response = client.batch_detect_pii_entities(documents=documents)   # list[Union[DocumentEntities, DocumentError]]
 
 docs = [doc for doc in response if not doc.is_error]
 
@@ -208,7 +210,7 @@ client = TextAnalyticsClient(
 # documents can be a list[str] or list[MultiLanguageInput]
 documents = ["Old Faithful is a geyser at Yellowstone Park", "Mount Shasta has lenticular clouds."]
 
-response = client.detect_linked_entities(documents=documents)  # list[Union(DocumentLinkedEntities, DocumentError)]
+response = client.detect_linked_entities(documents=documents)  # list[Union[DocumentLinkedEntities, DocumentError]]
 
 docs = [doc for doc in response if not doc.is_error]
 
@@ -231,7 +233,7 @@ client = TextAnalyticsClient(
 # documents can be a list[str] or list[MultiLanguageInput]
 documents = ["My cat might need to see a veterinarian", "The pitot tube is used to measure airspeed."]
 
-response = client.detect_key_phrases(documents=documents)  # list[Union(DocumentKeyPhrases, DocumentError)]
+response = client.detect_key_phrases(documents=documents)  # list[Union[DocumentKeyPhrases, DocumentError]]
 
 docs = [doc for doc in response if not doc.is_error]
 
@@ -252,7 +254,7 @@ client = TextAnalyticsClient(
 # documents can be a list[str] or list[MultiLanguageInput]
 documents = ["The hotel was dark and unclean.", "The restaurant had amazing gnocci."]
 
-response = client.detect_sentiment(documents=documents)   # list[Union(DocumentSentiment, DocumentError)]
+response = client.detect_sentiment(documents=documents)   # list[Union[DocumentSentiment, DocumentError]]
 
 docs = [doc for doc in response if not doc.is_error]
 
@@ -293,8 +295,6 @@ for entity in response:
     print(entity.type)
     print(entity.sub_type)
     print(entity.score)
-    print(entity.offset)
-    print(entity.length)
 ```
 
 ### 10. Recognize healthcare entities in text.
@@ -312,7 +312,6 @@ for entity in response.entities:
     print(entity.type)
     print(entity.category)
     print(entity.score)
-    print(entity.offset)
     print(entity.umls_id)
 for relation in response.relations:
     print(relation.relation_type)
@@ -334,8 +333,6 @@ for entity in response:
     print(entity.type)
     print(entity.sub_type)
     print(entity.score)
-    print(entity.offset)
-    print(entity.length)
 ```
 
 ### 12. Recognize linked entities in text.

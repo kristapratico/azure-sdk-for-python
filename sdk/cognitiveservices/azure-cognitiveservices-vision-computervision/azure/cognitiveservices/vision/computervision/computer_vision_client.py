@@ -16,7 +16,12 @@ from ._generated.models import ComputerVisionErrorException
 from ._polling import ComputerVisionPollingMethod
 from ._base_client import ComputerVisionClientBase
 
-from ._deserialize import deserialize_image_description_results, deserialize_color_results,deserialize_face_results
+from ._deserialize import (
+    deserialize_image_description_results,
+    deserialize_color_results,
+    deserialize_face_results,
+    deserialize_ocr_result,
+)
 
 if TYPE_CHECKING:
     from azure.cognitiveservices.vision.computervision._generated.models import (
@@ -519,7 +524,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     url=image_or_url,
                     detect_orientation=detect_orientation,
                     language=language,
-                    cls=kwargs.pop("cls", None),
+                    cls=deserialize_ocr_result,
                     **kwargs,
                 )
             if hasattr(image_or_url, "read"):

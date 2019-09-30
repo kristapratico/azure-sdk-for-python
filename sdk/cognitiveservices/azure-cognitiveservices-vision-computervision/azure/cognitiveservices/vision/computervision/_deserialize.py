@@ -8,6 +8,8 @@
 from .models import ImageDescription
 from .models import ColorInfo
 from .models import FaceDescription
+from .models import OcrResult
+from .models import TextRecognitionResult
 
 def deserialize_image_metadata(response, obj, headers):  # pylint: disable=unused-argument
     raw_metadata = {"width": obj.metadata.width,
@@ -76,3 +78,39 @@ def deserialize_face_results(response, obj, headers):
         faces.append(img_face_results)
 
     return faces
+
+# will need to return a list[regions] for full text
+def deserialize_ocr_result(response, obj, headers):
+    lines = obj.regions[0].lines
+    full_text = ""
+    for line in lines:
+        line_text = " ".join([word.text for word in line.words])
+        full_text += "\n" + line_text
+
+    ocr_result = OcrResult(
+        language=obj.language,
+        text_angle=obj.text_angle,
+        orientation=obj.orientation,
+        regions=obj.regions,
+        full_text=full_text
+    )
+    return ocr_result
+
+
+# this won't work with batch read file since its a list[textRecognitionResult]
+def deserialize_text_recognition_result(obj):
+    full_text = ""
+    for image_text in obj:
+        for line in image_text.lines:
+            full_text += "\n" + line.text
+
+    text_result = TextRecognitionResult(
+        page=obj[0].page,
+        clockwise_orientation=obj[0].clockwise_orientation,
+        width=obj[0].width,
+        height=obj[0].height,
+        unit=obj[0].unit,
+        lines=obj[0].lines,
+        full_text=full_text
+    )
+    return text_result

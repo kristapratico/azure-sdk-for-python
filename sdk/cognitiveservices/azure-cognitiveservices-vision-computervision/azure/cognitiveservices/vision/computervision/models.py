@@ -74,3 +74,72 @@ class FaceDescription(GeneratedFaceDescription):
         self.age = kwargs.get('age', None)
         self.gender = kwargs.get('gender', None)
         self.face_rectangle = kwargs.get('face_rectangle', None)
+
+
+class OcrResult(object):
+    """OcrResult.
+
+    :param language: The BCP-47 language code of the text in the image.
+    :type language: str
+    :param text_angle: The angle, in radians, of the detected text with
+     respect to the closest horizontal or vertical direction. After rotating
+     the input image clockwise by this angle, the recognized text lines become
+     horizontal or vertical. In combination with the orientation property it
+     can be used to overlay recognition results correctly on the original
+     image, by rotating either the original image or recognition results by a
+     suitable angle around the center of the original image. If the angle
+     cannot be confidently detected, this property is not present. If the image
+     contains text at different angles, only part of the text will be
+     recognized correctly.
+    :type text_angle: float
+    :param orientation: Orientation of the text recognized in the image, if
+     requested. The value (up, down, left, or right) refers to the direction
+     that the top of the recognized text is facing, after the image has been
+     rotated around its center according to the detected text angle (see
+     textAngle property).
+     If detection of the orientation was not requested, or no text is detected,
+     the value is 'NotDetected'.
+    :type orientation: str
+    :param regions: An array of objects, where each object represents a region
+     of recognized text.
+    :type regions: list[~computervision.models.OcrRegion]
+    """
+
+    def __init__(self, **kwargs):
+        self.language = kwargs.get('language', None)
+        self.text_angle = kwargs.get('text_angle', None)
+        self.orientation = kwargs.get('orientation', None)
+        self.regions = kwargs.get('regions', None)
+        self.full_text = kwargs.get('full_text', None)
+
+
+class TextRecognitionResult(object):
+    """An object representing a recognized text region.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :param page: The 1-based page number of the recognition result.
+    :type page: int
+    :param clockwise_orientation: The orientation of the image in degrees in
+     the clockwise direction. Range between [0, 360).
+    :type clockwise_orientation: float
+    :param width: The width of the image in pixels or the PDF in inches.
+    :type width: float
+    :param height: The height of the image in pixels or the PDF in inches.
+    :type height: float
+    :param unit: The unit used in the Width, Height and BoundingBox. For
+     images, the unit is 'pixel'. For PDF, the unit is 'inch'. Possible values
+     include: 'pixel', 'inch'
+    :type unit: str or ~ocr.models.TextRecognitionResultDimensionUnit
+    :param lines: Required. A list of recognized text lines.
+    :type lines: list[~ocr.models.Line]
+    """
+
+    def __init__(self, **kwargs):
+        self.page = kwargs.get('page', None)
+        self.clockwise_orientation = kwargs.get('clockwise_orientation', None)
+        self.width = kwargs.get('width', None)
+        self.height = kwargs.get('height', None)
+        self.unit = kwargs.get('unit', None)
+        self.lines = kwargs.get('lines', None)
+        self.full_text = kwargs.get('full_text', None)

@@ -22,8 +22,8 @@ def test_analyze_image():
         visual_features=[
             # "Brands"
             # "ImageType",
-            "faces",
-            # "Categories",
+            # "faces",
+            "categories",
             # "Color",
             # "Tags",
             # "Description",
@@ -302,7 +302,7 @@ def test_recognize_text_with_lropoller():
 
     text_result = None
     while poller.status() in ["NotStarted", "Running"]:
-        time.sleep(1)
+        # time.sleep(1)
         if poller.status() == "Succeeded":
             text_result = poller.result()
         if poller.status() == "Failed":
@@ -311,8 +311,10 @@ def test_recognize_text_with_lropoller():
     print("Job completion is: {}\n".format(poller.status()))
     print("Recognized:\n")
     lines = text_result.lines
+    full_text = ""
     for line in lines:
-        print(line.text)
+        full_text += "\n" + line.text
+    print(full_text)
 
 
 def test_recognize_text():
@@ -365,9 +367,12 @@ def test_batch_read_file_with_lropoller():
     print("Job completion is: {}\n".format(poller.status()))
     print("Recognized:\n")
 
+    full_text = ""
     for image_text in read_result:
         for line in image_text.lines:
-            print(line.text)
+            # print(line.text)
+            full_text += "\n" + line.text
+    print(full_text)
 
 
 def test_batch_read_file():
@@ -463,14 +468,14 @@ def test_batch_read_file_in_stream():
 def test_recognize_printed_text():
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=settings.COG_KEY,
+        credential=settings.COG_KEY,
     )
 
     with open(
         os.path.join(IMAGES_FOLDER, "text_test2.png"), "rb"
     ) as image_stream:
-        image_analysis = client.recognize_printed_text_in_stream(
-            image=image_stream,
+        image_analysis = client.recognize_printed_text(
+            image_or_url=image_stream,
         )
 
     print("Printed text recognized:\n")
@@ -487,23 +492,23 @@ def test_recognize_printed_text():
 def test_recognize_printed_text_in_stream():
     client = ComputerVisionClient(
         endpoint="https://westus2.api.cognitive.microsoft.com/",
-        credentials=settings.COG_KEY,
+        credential=settings.COG_KEY,
     )
 
-    with open(
-        os.path.join(IMAGES_FOLDER, "computer_vision_ocr.png"), "rb"
-    ) as image_stream:
-        image_analysis = client.recognize_printed_text_in_stream(
-            image=image_stream,
+
+    image_analysis = client.recognize_printed_text(
+            image_or_url="https://i.pinimg.com/originals/13/0b/22/130b22cf2b620b752dd4e56037f55e86.jpg",
             language="en",
         )
 
     lines = image_analysis.regions[0].lines
     print("Recognized:\n")
+    full_text = ""
     for line in lines:
         line_text = " ".join([word.text for word in line.words])
-        print(line_text)
-
+        full_text += "\n" + line_text
+        # print(line_text)
+    print(full_text)
 
 def test_describe_image():
     client = ComputerVisionClient(

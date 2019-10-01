@@ -532,7 +532,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     image=image_or_url,
                     detect_orientation=detect_orientation,
                     language=language,
-                    cls=kwargs.pop("cls", None),
+                    cls=deserialize_ocr_result,
                     **kwargs,
                 )
             else:

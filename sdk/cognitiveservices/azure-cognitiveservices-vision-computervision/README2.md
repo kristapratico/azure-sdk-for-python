@@ -13,30 +13,29 @@ Changes:
     an `image_or_url` parameter. E.g. analyze_image_in_stream(image, ...) --> analyze_image(image_or_url, ...)
 2. No longer use CognitiveServicesCredentials from msrest. Now pass credential parameter which can be the cognitive
     services account key or Azure Active Directory credentials.
-3. LRO recognize_text() and batch_read_file() return LROPoller's and do the call to get_text_operation_result() and
-    get_read_operation_result() internally. User checks operation status with the poller object. Response changes:
-    recognize_text() returns a `TextRecognitionResult` instead of `TextOperationResult`. batch_read_file() returns a 
+3. LRO recognize_text() is being deprecated and will not be included in the sdk.
+4. LRO batch_read_file() will return an LROPoller and do the call to get_read_operation_result() internally. 
+    User checks operation status with the poller object. batch_read_file() will return a 
     `list[TextRecognitionResult]` instead of `ReadOperationResult`.
-4. Re-locate metadata and request_id to response hook to help simplify the models returned:
+5. Re-locate metadata and request_id to response hook to help simplify the models returned:
     - detect_objects() returns `list[DetectedObject]` instead of `DetectResult`
     - list_models() returns a `list[ModelDescription]` instead of `ListModelsResult`
     - tag_image() returns a `list[ImageTag]` instead of a `TagResult`
     - get_area_of_interest() returns a `BoundingRect` instead of a `AreaOfInterestResult`
-5. Since image tags can be returned from tag_image(), let's not return them for describe_image() as well. 
+6. Since image tags can be returned from tag_image(), let's not return them for describe_image() as well. 
     We can further simplify the response by sending metadata and request ID to response hook. 
     So describe_image() will return a `list[ImageCaption]` instead of `ImageDescription`.
-6. Parameter `description_exclude` moved to kwargs for analyze_image() and describe_image()
-7. For analyze_image_by_domain(), move metadata and request_id to response hook and simplify response by removing
+7. Parameter `description_exclude` moved to kwargs for analyze_image() and describe_image()
+8. For analyze_image_by_domain(), move metadata and request_id to response hook and simplify response by removing
     outer dictionary. Response changed to `list[dict{name, confidence}]` from `DomainModelResult`. We could create
     a new model to make this return type less generic? `list[DomainResult]`?
-8. The operations which read characters/text from an image (recognize_text, recognize_printed_text, batch_read_file)
+9. The operations which read characters/text from an image (recognize_printed_text, batch_read_file)
     will include an extra param in the model returned called `full_text`. This will contain all the text recognized
     as a string. This makes workflows in which OCR data is passed into text analytics services more seamless.
 
 ```python
 azure.cognitiveservices.vision.computervision.ComputerVisionClient(endpoint, credentials)
 
-# Computer Vision operations
 
 # Returns ImageAnalysis
 ComputerVisionClient.analyze_image(
@@ -65,11 +64,6 @@ ComputerVisionClient.generate_thumbnail(image_or_url, width, height, smart_cropp
 
 # Returns BoundingRect
 ComputerVisionClient.get_area_of_interest(image_or_url, **kwargs)
-
-# OCR operations
-
-# Returns an LROPoller. Poller returns TextRecognitionResult
-ComputerVisionClient.recognize_text(image_or_url, mode, **kwargs)
 
 # Returns an LROPoller. Poller returns list[TextRecognitionResult]
 ComputerVisionClient.batch_read_file(image_or_url, **kwargs)
@@ -269,41 +263,7 @@ print("width: ", result.w)
 print("height: ", result.h)
 ```
 
-### 10. Recognize text in an image (long running operation).
-```python
-import time
-from azure.cognitiveservices.vision.computervision import ComputerVisionClient
-
-client = ComputerVisionClient(
-    endpoint="https://westus2.api.cognitive.microsoft.com/",
-    credentials="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-)
-
-poller = client.recognize_text(
-    mode="Printed",
-    image_or_url="http://d2jaiao3zdxbzm.cloudfront.net/wp-content/uploads/figure-65.png",
-)
-
-text_result = None
-while poller.status() in ["NotStarted", "Running"]:
-    time.sleep(1)
-    if poller.status() == "Succeeded":
-        text_result = poller.result()
-    if poller.status() == "Failed":
-        print("Oh no")
-
-print("Job completion is: {}\n".format(poller.status()))
-
-print("Recognized full text:\n")
-print(text_result.full_text)
-
-print("Recognized text line-by-line:\n")
-lines = text_result.lines
-for line in lines:
-    print(line.text)
-```
-
-### 11. Recognize text in a text heavy image or a batch of images/pdf files (long running operation).
+### 10. Recognize text in a text heavy image or a batch of images/pdf files (long running operation).
 ```python
 import time
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient

@@ -79,38 +79,44 @@ def deserialize_face_results(response, obj, headers):
 
     return faces
 
-# will need to return a list[regions] for full text
+
 def deserialize_ocr_result(response, obj, headers):
-    lines = obj.regions[0].lines
-    full_text = ""
-    for line in lines:
-        line_text = " ".join([word.text for word in line.words])
-        full_text += "\n" + line_text
+    full_text_result = []
+    for lines in obj.regions:
+        full_text = ""
+        for line in lines.lines:
+            line_text = " ".join([word.text for word in line.words])
+            full_text += "\n" + line_text
+
+        full_text_result.append(full_text)
 
     ocr_result = OcrResult(
         language=obj.language,
         text_angle=obj.text_angle,
         orientation=obj.orientation,
         regions=obj.regions,
-        full_text=full_text
+        full_text=full_text_result
     )
     return ocr_result
 
 
-# this won't work with batch read file since its a list[textRecognitionResult]
 def deserialize_text_recognition_result(obj):
-    full_text = ""
+    read_result = []
+    full_text_result = []
     for image_text in obj:
+        full_text = ""
         for line in image_text.lines:
             full_text += "\n" + line.text
+        full_text_result.append(full_text)
 
-    text_result = TextRecognitionResult(
-        page=obj[0].page,
-        clockwise_orientation=obj[0].clockwise_orientation,
-        width=obj[0].width,
-        height=obj[0].height,
-        unit=obj[0].unit,
-        lines=obj[0].lines,
-        full_text=full_text
-    )
-    return text_result
+        text_result = TextRecognitionResult(
+            page=image_text.page,
+            clockwise_orientation=image_text.clockwise_orientation,
+            width=image_text.width,
+            height=image_text.height,
+            unit=image_text.unit,
+            lines=image_text.lines,
+            full_text=full_text_result
+        )
+        read_result.append(text_result)
+    return read_result

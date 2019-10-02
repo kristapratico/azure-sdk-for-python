@@ -2,6 +2,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 # ------------------------------------
+
 import functools
 import six
 import io
@@ -27,8 +28,6 @@ if TYPE_CHECKING:
     from azure.cognitiveservices.vision.computervision._generated.models import (
         VisualFeatureTypes,
         Details,
-    )
-    from azure.cognitiveservices.vision.computervision._generated.models import (
         ImageAnalysis,
         ImageDescription,
         DetectResult,

@@ -1,9 +1,13 @@
-from azure.cognitiveservices.vision.computervision._policies import CognitiveServicesCredentialPolicy, ComputerVisionResponseHook
+import six
+from azure.cognitiveservices.vision.computervision._policies import ComputerVisionResponseHook
+# from azure.cognitiveservices.vision.computervision._policies import CognitiveServicesCredentialPolicy
 from azure.core import Configuration
 from azure.core.pipeline import Pipeline
 from azure.core.pipeline import policies
 from azure.core.pipeline.transport import RequestsTransport
+from azure.core.pipeline.policies import BearerTokenCredentialPolicy
 from azure.core.pipeline.policies.distributed_tracing import DistributedTracingPolicy
+from azure.cognitiveservices.core.policies import CognitiveServicesCredentialPolicy
 from .version import VERSION
 
 
@@ -13,8 +17,13 @@ class ComputerVisionClientBase(object):
         self._pipeline = self._create_pipeline(credentials, **kwargs)
 
     def _create_pipeline(self, credentials, **kwargs):
-        credential_policy = CognitiveServicesCredentialPolicy(credentials, **kwargs)
-        response_hook = ComputerVisionResponseHook(**kwargs)
+        credential_policy = None
+        if hasattr(credentials, "get_token"):
+            credential_policy = BearerTokenCredentialPolicy(credentials, "https://cognitiveservices.azure.com/.default")
+        elif isinstance(credentials, six.text_type):
+            credential_policy = CognitiveServicesCredentialPolicy(credentials, **kwargs)
+        elif credentials is not None:
+            raise TypeError("Unsupported credential: {}".format(credentials))
 
         config = self.create_configuration(**kwargs)
         config.transport = kwargs.get("transport")  # type: ignore
@@ -31,7 +40,7 @@ class ComputerVisionClientBase(object):
             config.retry_policy,
             config.custom_hook_policy,
             config.redirect_policy,
-            response_hook,
+            ComputerVisionResponseHook(**kwargs),
             DistributedTracingPolicy()
         ]
         return Pipeline(config.transport, policies=policies)

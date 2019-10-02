@@ -1,4 +1,6 @@
-from azure.cognitiveservices.vision.computervision._policies import CognitiveServicesCredentialPolicy
+import six
+from azure.cognitiveservices.vision.computervision._policies import CognitiveServicesCredentialPolicy, AsyncComputerVisionResponseHook
+from azure.core.pipeline.policies import AsyncBearerTokenCredentialPolicy
 from azure.core import Configuration
 from azure.core.pipeline import AsyncPipeline
 from azure.core.pipeline import policies
@@ -8,13 +10,17 @@ from .version import VERSION
 
 class ComputerVisionClientBaseAsync(object):
 
-    def __init__(self, endpoint, credentials, **kwargs):
-        self._config, self._pipeline = self._create_pipeline(credentials, **kwargs)
-        self._config.generate_client_request_id = True
-        self._config.endpoint = endpoint
+    def __init__(self, credentials, **kwargs):
+        self._pipeline = self._create_pipeline(credentials, **kwargs)
 
     def _create_pipeline(self, credentials, **kwargs):
-        self.credential_policy = CognitiveServicesCredentialPolicy(credentials, **kwargs)
+        credential_policy = None
+        if hasattr(credentials, "get_token"):
+            credential_policy = AsyncBearerTokenCredentialPolicy(credentials, "https://cognitiveservices.azure.com/.default")
+        elif isinstance(credentials, six.text_type):
+            credential_policy = CognitiveServicesCredentialPolicy(credentials, **kwargs)
+        elif credentials is not None:
+            raise TypeError("Unsupported credential: {}".format(credentials))
 
         config = self.create_configuration(**kwargs)
         config.transport = kwargs.get("transport")  # type: ignore
@@ -29,12 +35,13 @@ class ComputerVisionClientBaseAsync(object):
         policies = [
             config.user_agent_policy,
             config.headers_policy,
-            self.credential_policy,
+            credential_policy,
             config.proxy_policy,
             config.logging_policy,
             config.retry_policy,
             config.custom_hook_policy,
             config.redirect_policy,
+            AsyncComputerVisionResponseHook(**kwargs),
             DistributedTracingPolicy()
         ]
         return config, AsyncPipeline(config.transport, policies=policies)

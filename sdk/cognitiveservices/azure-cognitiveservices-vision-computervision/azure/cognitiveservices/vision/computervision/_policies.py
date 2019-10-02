@@ -1,9 +1,13 @@
-from azure.core.pipeline.policies import SansIOHTTPPolicy, HTTPPolicy
 import json
+import asyncio
+from azure.core.pipeline.policies import SansIOHTTPPolicy, HTTPPolicy, AsyncHTTPPolicy
+
 
 class CognitiveServicesCredentialPolicy(SansIOHTTPPolicy):
 
     def __init__(self, cognitiveservices_key, **kwargs):
+        if cognitiveservices_key is None:
+            raise ValueError("Parameter 'credential' must not be None.")
         self.cognitiveservices_key = cognitiveservices_key
         super(CognitiveServicesCredentialPolicy, self).__init__()
 
@@ -18,14 +22,14 @@ class ComputerVisionResponseHook(HTTPPolicy):
         self._response_callback = kwargs.get('raw_response_hook')
         super(ComputerVisionResponseHook, self).__init__()
 
-    def send(self, request):
-        if self._response_callback:
+    def send(self, request, **kwargs):
+        if request.context.options.get('response_hook', self._response_callback):
             metadata = request.context.get("metadata") or \
                 request.context.options.pop("metadata", None)
             request_id = request.context.get("request_id") or \
                 request.context.options.pop("request_id", None)
             response_callback = request.context.get('response_callback') or \
-                request.context.options.pop('raw_response_hook', self._response_callback)
+                request.context.options.pop('response_hook', self._response_callback)
 
             response = self.next.send(request)
             if metadata is None and request_id is None:
@@ -34,11 +38,45 @@ class ComputerVisionResponseHook(HTTPPolicy):
                 metadata = json.loads(metadata[0:-1])
                 request_id = request_id[1:]
             for pipeline_obj in [request, response]:
-                pipeline_obj.context['metadata'] = metadata
-                pipeline_obj.context['request_id'] = request_id
+                pipeline_obj.metadata = metadata
+                pipeline_obj.request_id = request_id
             if response_callback:
                 response_callback(response)
-                request.context['response_callback'] = response_callback
+                request.context.response_callback = response_callback
             return response
         return self.next.send(request)
+
+
+class AsyncComputerVisionResponseHook(AsyncHTTPPolicy):
+    def __init__(self, **kwargs):  # pylint: disable=unused-argument
+        self._response_callback = kwargs.get('raw_response_hook')
+        super(AsyncComputerVisionResponseHook, self).__init__()
+
+    async def send(self, request, **kwargs):
+        if request.context.options.get('response_hook', self._response_callback):
+            metadata = request.context.get("metadata") or \
+                request.context.options.pop("metadata", None)
+            request_id = request.context.get("request_id") or \
+                request.context.options.pop("request_id", None)
+            response_callback = request.context.get('response_callback') or \
+                request.context.options.pop('response_hook', self._response_callback)
+
+            response = await self.next.send(request)
+            if metadata is None and request_id is None:
+                data = response.http_response.internal_response.text.split('"requestId":')[1]
+                request_id, metadata = data.split('","metadata":')
+                metadata = json.loads(metadata[0:-1])
+                request_id = request_id[1:]
+            for pipeline_obj in [request, response]:
+                pipeline_obj.metadata = metadata
+                pipeline_obj.request_id = request_id
+            if response_callback:
+                if asyncio.iscoroutine(response_callback):
+                    await response_callback(response)
+                else:
+                    response_callback(response)
+                request.context.response_callback = response_callback
+            return response
+        return await self.next.send(request)
+
 

@@ -103,24 +103,24 @@ def test_batch_read_file_with_lropoller():
 
     poller = client.batch_read_file(image_or_url="http://www.historytube.org/wp-content/uploads/2013/07/Declaration-of-Independence-broadside-1776-Jamestown-Yorktown-Foundation2.jpg")
     read_result = None
-    while poller.status() in ["NotStarted", "Running"]:
-        time.sleep(1)
+    while poller.status() in ["NotStarted", "Running", "Succeeded"]:
         if poller.status() == "Succeeded":
             read_result = poller.result()
+            break
         if poller.status() == "Failed":
             print("Oh no")
 
     print("Job completion is: {}\n".format(poller.status()))
     print("Full text:\n")
-    print(read_result.full_text)
+    print(read_result[0].full_text)
 
-    print("Recognized line-by-line:\n")
-
-    full_text = ""
-    for image_text in read_result:
-        for line in image_text.lines:
-            full_text += "\n" + line.text
-    print(full_text)
+    # print("Recognized line-by-line:\n")
+    #
+    # full_text = ""
+    # for image_text in read_result:
+    #     for line in image_text.lines:
+    #         full_text += "\n" + line.text
+    # print(full_text)
 
 
 def test_batch_read_file_in_stream_NO_POLLER():
@@ -180,11 +180,11 @@ def test_recognize_printed_text():
     print("Full-text recognized:\n")
     print(image_analysis.full_text)
 
-    print("Printed text recognized line-by-line:\n")
-    for region in image_analysis.regions:
-        for line in region.lines:
-            line_text = " ".join([word.text for word in line.words])
-            print(line_text)
+    # print("Printed text recognized line-by-line:\n")
+    # for region in image_analysis.regions:
+    #     for line in region.lines:
+    #         line_text = " ".join([word.text for word in line.words])
+    #         print(line_text)
 
     print("Language: ", image_analysis.language)
     print("Angle of detected text: ", image_analysis.text_angle)
@@ -272,6 +272,7 @@ def test_generate_thumbnail():
         image_or_url="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg",
         width=100,
         height=100,
+        smart_cropping=True,
     )
 
     with open("my_thumbnail.jpeg", "wb") as img:
@@ -285,8 +286,12 @@ def test_get_area_of_interest():
         credential=settings.COG_KEY,
     )
 
+    def callback(response):
+        print(response.metadata)
+
     result = client.get_area_of_interest(
         image_or_url="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg",
+        response_hook=callback
     )
 
     print("x: ", result.x)
@@ -345,10 +350,9 @@ def test_detect_categories():
     resp = client.detect_categories(
         image_or_url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
         details=["Landmarks"],
-        description_exclude=["Landmarks"]
     )
     for category in resp:
-        print(category.name, category.score)
+        print(category.name, category.score, category.detail.landmarks[0].name)
 
 
 def test_detect_adult_content():

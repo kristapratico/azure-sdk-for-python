@@ -17,11 +17,10 @@ from ._generated.models import ComputerVisionErrorException
 from ._polling import ComputerVisionPollingMethod
 from ._base_client import ComputerVisionClientBase
 
-from ._deserialize import (
-    deserialize_image_description_results,
-    deserialize_color_results,
-    deserialize_face_results,
-    deserialize_ocr_result,
+from .models import (
+    ImageAnalysis,
+    OcrResult,
+    ColorInfo
 )
 
 if TYPE_CHECKING:
@@ -121,7 +120,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
         """
         try:
             if isinstance(image_or_url, six.text_type):
-                return self._client.analyze_image(
+                response = self._client.analyze_image(
                     url=image_or_url,
                     visual_features=visual_features,
                     details=details,
@@ -130,8 +129,9 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
+                return ImageAnalysis._from_generated(response)
             if hasattr(image_or_url, "read"):
-                return self._client.analyze_image_in_stream(
+                response = self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=visual_features,
                     details=details,
@@ -140,6 +140,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
+                return ImageAnalysis._from_generated(response)
             else:
                 raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
@@ -148,26 +149,26 @@ class ComputerVisionClient(ComputerVisionClientBase):
     def detect_colors(self, image_or_url, language="en", **kwargs):
         if isinstance(image_or_url, six.text_type):
             try:
-                resp = self._client.analyze_image(
+                response = self._client.analyze_image(
                     url=image_or_url,
                     visual_features=["Color"],
                     language=language,
-                    cls=deserialize_color_results,
+                    cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
-                return resp
+                return ColorInfo._from_generated(response)
             except ComputerVisionErrorException as error:
                 raise error
         if hasattr(image_or_url, "read"):
             try:
-                resp = self._client.analyze_image_in_stream(
+                response = self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=["Color"],
                     language=language,
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
-                return resp.color
+                return ColorInfo._from_generated(response)
             except ComputerVisionErrorException as error:
                 raise error
         else:
@@ -180,10 +181,10 @@ class ComputerVisionClient(ComputerVisionClientBase):
                     url=image_or_url,
                     visual_features=["Faces"],
                     language=language,
-                    cls=deserialize_face_results,
+                    cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
-                return resp
+                return resp.faces
             except ComputerVisionErrorException as error:
                 raise error
         if hasattr(image_or_url, "read"):
@@ -476,13 +477,14 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 )
                 return resp.result[model]
             if hasattr(image_or_url, "read"):
-                return self._client.analyze_image_by_domain_in_stream(
+                resp = self._client.analyze_image_by_domain_in_stream(
                     image=image_or_url,
                     model=model,
                     language=language,
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
+                return resp.result[model]
             else:
                 raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
@@ -519,19 +521,20 @@ class ComputerVisionClient(ComputerVisionClientBase):
         """
         try:
             if isinstance(image_or_url, six.text_type):
-                return self._client.recognize_printed_text(
+                response = self._client.recognize_printed_text(
                     url=image_or_url,
                     detect_orientation=detect_orientation,
                     language=language,
-                    cls=deserialize_ocr_result,
+                    cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
+                return OcrResult._from_generated(response)
             if hasattr(image_or_url, "read"):
                 return self._client.recognize_printed_text_in_stream(
                     image=image_or_url,
                     detect_orientation=detect_orientation,
                     language=language,
-                    cls=deserialize_ocr_result,
+                    cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
             else:

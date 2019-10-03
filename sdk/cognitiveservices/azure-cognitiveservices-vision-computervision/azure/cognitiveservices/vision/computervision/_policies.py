@@ -33,10 +33,9 @@ class ComputerVisionResponseHook(HTTPPolicy):
 
             response = self.next.send(request)
             if metadata is None and request_id is None:
-                data = response.http_response.internal_response.text.split('"requestId":')[1]
-                request_id, metadata = data.split('","metadata":')
-                metadata = json.loads(metadata[0:-1])
-                request_id = request_id[1:]
+                data = json.loads(response.http_response.internal_response.text)
+                request_id = data['requestId']
+                metadata = data['metadata']
             for pipeline_obj in [request, response]:
                 pipeline_obj.metadata = metadata
                 pipeline_obj.request_id = request_id
@@ -63,10 +62,9 @@ class AsyncComputerVisionResponseHook(AsyncHTTPPolicy):
 
             response = await self.next.send(request)
             if metadata is None and request_id is None:
-                data = response.http_response.internal_response.text.split('"requestId":')[1]
-                request_id, metadata = data.split('","metadata":')
-                metadata = json.loads(metadata[0:-1])
-                request_id = request_id[1:]
+                data = json.loads(response.http_response.internal_response.text)
+                request_id = data['requestId']
+                metadata = data['metadata']
             for pipeline_obj in [request, response]:
                 pipeline_obj.metadata = metadata
                 pipeline_obj.request_id = request_id

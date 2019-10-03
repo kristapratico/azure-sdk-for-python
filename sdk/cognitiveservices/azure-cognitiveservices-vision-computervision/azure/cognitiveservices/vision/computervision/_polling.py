@@ -4,7 +4,7 @@
 from azure.core.polling import PollingMethod
 import time
 import logging
-from ._deserialize import deserialize_text_recognition_result
+from .models import TextRecognitionResult
 
 logger = logging.getLogger(__name__)
 
@@ -52,19 +52,4 @@ class ComputerVisionPollingMethod(PollingMethod):
     def resource(self):
         if not self.finished:
             self._update_status()
-        try:
-            return deserialize_text_recognition_result(self.operation_result.recognition_result)
-        except AttributeError:
-            return deserialize_text_recognition_result(self.operation_result.recognition_results)
-
-    # Ask service team if returns a retry-after
-    # def _delay(self):
-    #     """Check for a 'retry-after' header to set timeout,
-    #     otherwise use configured timeout.
-    #     """
-    #     if self._response is None:
-    #         return
-    #     if self._response.headers.get('retry-after'):
-    #         time.sleep(int(self._response.headers['retry-after']))
-    #     else:
-    #         time.sleep(self._timeout)
+        return TextRecognitionResult._from_generated(self.operation_result.recognition_results)

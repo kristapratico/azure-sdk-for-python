@@ -11,27 +11,26 @@ The client includes Computer Vision and OCR operations.
 Changes:
 1. Operations that accept a url and operations that accept an image stream are combined into one operation that takes
     an `image_or_url` parameter. E.g. analyze_image_in_stream(image, ...) --> analyze_image(image_or_url, ...)
-2. No longer use CognitiveServicesCredentials from msrest. Now pass credential parameter which can be the cognitive
-    services account key or Azure Active Directory credentials.
+2. No longer use CognitiveServicesCredentials from msrest. Pass credential parameter string into client as the 
+    cognitive services account key or Azure Active Directory credentials.
 3. LRO recognize_text() is being deprecated and will not be included in the sdk.
-4. LRO batch_read_file() will return an LROPoller and do the call to get_read_operation_result() internally. 
+4. LRO batch_read_file() will return a polling object and do the calls to get_read_operation_result() internally. 
     User checks operation status with the poller object. batch_read_file() will return a 
     `list[TextRecognitionResult]` instead of `ReadOperationResult`.
-5. Re-locate metadata and request_id to response hook to help simplify the models returned:
+5. The operations which read characters/text from an image (recognize_printed_text, batch_read_file)
+    will include an extra param in the model returned called `full_text`. This will contain all the text recognized
+    as a string. This makes workflows in which text data is passed into text analytics, etc. services more seamless.
+6. Re-locate metadata and request_id to response hook to help simplify the models returned:
     - detect_objects() returns `list[DetectedObject]` instead of `DetectResult`
     - list_models() returns a `list[ModelDescription]` instead of `ListModelsResult`
     - tag_image() returns a `list[ImageTag]` instead of a `TagResult`
     - get_area_of_interest() returns a `BoundingRect` instead of a `AreaOfInterestResult`
-6. Since image tags can be returned from tag_image(), let's not return them for describe_image() as well. 
+    - analyze_image_by_domain() returns a `list[dict{name, confidence}]` instead of a `DomainModelResult`
+7. Since image tags can be returned from tag_image(), let's not return them for describe_image() as well. 
     We can further simplify the response by sending metadata and request ID to response hook. 
     So describe_image() will return a `list[ImageCaption]` instead of `ImageDescription`.
-7. Parameter `description_exclude` moved to kwargs for analyze_image() and describe_image()
-8. For analyze_image_by_domain(), move metadata and request_id to response hook and simplify response by removing
-    outer dictionary. Response changed to `list[dict{name, confidence}]` from `DomainModelResult`. We could create
-    a new model to make this return type less generic? `list[DomainResult]`?
-9. The operations which read characters/text from an image (recognize_printed_text, batch_read_file)
-    will include an extra param in the model returned called `full_text`. This will contain all the text recognized
-    as a string. This makes workflows in which OCR data is passed into text analytics services more seamless.
+8. Parameter `description_exclude` moved to kwargs for analyze_image() and describe_image()
+
 
 ```python
 azure.cognitiveservices.vision.computervision.ComputerVisionClient(endpoint, credentials)
@@ -67,6 +66,27 @@ ComputerVisionClient.get_area_of_interest(image_or_url, **kwargs)
 
 # Returns an LROPoller. Poller returns list[TextRecognitionResult]
 ComputerVisionClient.batch_read_file(image_or_url, **kwargs)
+
+------------------------------------------------------------------------------------------------------------------------
+# Added Operations
+
+# Returns ColorInfo
+ComputerVisionClient.detect_colors(image_or_url, language="en", **kwargs)
+
+# Returns list[FaceDescription]
+ComputerVisionClient.detect_faces(image_or_url, language="en", **kwargs)
+
+# Returns list[Category]
+ComputerVisionClient.categorize_image(image_or_url, details=None, language="en", **kwargs)
+
+# Returns AdultInfo
+ComputerVisionClient.detect_adult_content(image_or_url, language="en", **kwargs)
+
+# Returns list[DetectedBrand]
+ComputerVisionClient.detect_brands(image_or_url, **kwargs)
+
+# Returns ImageType
+ComputerVisionClient.detect_image_type(image_or_url, language="en", **kwargs)
 ```
 
 ## Scenarios
@@ -237,6 +257,7 @@ thumb = client.generate_thumbnail(
     image_or_url="https://www.leisurepro.com/blog/wp-content/uploads/2012/12/shutterstock_653344564-1366x800@2x.jpg",
     width=100,
     height=100,
+    smart_cropping=True
 )
 
 with open("my_thumbnail.jpeg", "wb") as img:
@@ -275,20 +296,132 @@ client = ComputerVisionClient(
 
 poller = client.batch_read_file(image_or_url="http://www.historytube.org/wp-content/uploads/2013/07/Declaration-of-Independence-broadside-1776-Jamestown-Yorktown-Foundation2.jpg")
 read_result = None
-while poller.status() in ["NotStarted", "Running"]:
-    time.sleep(1)
+while poller.status() in ["NotStarted", "Running", "Succeeded"]:
     if poller.status() == "Succeeded":
         read_result = poller.result()
+        break
     if poller.status() == "Failed":
         print("Oh no")
 
 print("Job completion is: {}\n".format(poller.status()))
 
-print("Recognized full text:\n")
-print(read_result.full_text)
+print("Recognized full text, page 1:\n")
+print(read_result[0].full_text)
 
 print("Recognized text line-by-line:\n")
 for image_text in read_result:
     for line in image_text.lines:
         print(line.text)
+```
+
+## Added Scenarios
+
+### 11. Detect colors in an image (url or upload)
+```python
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+
+client = ComputerVisionClient(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credentials="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+
+colors = client.detect_colors(
+    image_or_url="https://afremov.com/images/product/COLORFUL-NIGHT.jpg",
+)
+
+print(colors.dominant_color_foreground)
+print(colors.dominant_color_background)
+print(colors.dominant_colors)
+print(colors.accent_color)
+print("Black and white image: ", colors.is_bw_img)
+```
+
+### 12. Detect faces in an image (url or upload)
+```python
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+
+client = ComputerVisionClient(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credentials="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+
+faces = client.detect_faces(
+    image_or_url="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
+)
+
+for face in faces:
+    print(face.age)
+    print(face.gender)
+    print(face.face_rectangle)
+```
+
+### 13. Detect categories in an image (url or upload)
+```python
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+
+client = ComputerVisionClient(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credentials="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+
+resp = client.categorize_image(
+    image_or_url="https://image.shutterstock.com/image-vector/cute-cartoon-panda-character-eating-260nw-1050298676.jpg",
+)
+
+for category in resp:
+    print(category.name, category.score)
+```
+
+### 14. Detect adult content in an image (url or upload)
+```python
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+
+client = ComputerVisionClient(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credentials="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+
+resp = client.detect_adult_content(
+    image_or_url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+)
+
+print(resp.is_adult_content, resp.adult_score)
+print(resp.is_gory_content, resp.gore_score)
+print(resp.is_racy_content, resp.racy_score)
+```
+
+### 15. Detect brands in an image (url or upload)
+```python
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+
+client = ComputerVisionClient(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credentials="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+
+resp = client.detect_brands(
+    image_or_url="https://di2ponv0v5otw.cloudfront.net/posts/2018/07/05/5b3e96572d8a366433533e80/m_5b3e965b951996f8abec1d42.jpeg",
+)
+
+for brand in resp:
+    print("Brand found: ", brand.name)
+    print("Confidence: ", brand.confidence)
+    print("location: ", brand.rectangle)
+```
+
+### 16. Detect image type (url or upload)
+```python
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+
+client = ComputerVisionClient(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credentials="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+
+resp = client.detect_image_type(
+    image_or_url="https://image.shutterstock.com/image-vector/cute-cartoon-panda-character-eating-260nw-1050298676.jpg",
+)
+
+print(resp.clip_art_type)
+print(resp.line_drawing_type)
 ```

@@ -1,0 +1,87 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 00:36:09 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorageebb81fcf.blob.core.windows.net/utcontainerebb81fcf?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      date:
+      - Wed, 09 Oct 2019 00:36:10 GMT
+      etag:
+      - '"0x8D74C50AEED057E"'
+      last-modified:
+      - Wed, 09 Oct 2019 00:36:11 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      If-Modified-Since:
+      - Wed, 09 Oct 2019 00:51:11 GMT
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 00:36:11 GMT
+      x-ms-lease-action:
+      - acquire
+      x-ms-lease-duration:
+      - '-1'
+      x-ms-proposed-lease-id:
+      - 24130f31-053b-4a62-9ff0-3b32c703589d
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorageebb81fcf.blob.core.windows.net/utcontainerebb81fcf?comp=lease&restype=container
+  response:
+    body:
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>ConditionNotMet</Code><Message>The
+        condition specified using HTTP conditional header(s) is not met.\nRequestId:6d2b8f75-b01e-0022-0f39-7ee801000000\nTime:2019-10-09T00:36:11.2538529Z</Message></Error>"
+    headers:
+      content-length:
+      - '252'
+      content-type:
+      - application/xml
+      date:
+      - Wed, 09 Oct 2019 00:36:10 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-error-code:
+      - ConditionNotMet
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 412
+      message: The condition specified using HTTP conditional header(s) is not met.
+version: 1

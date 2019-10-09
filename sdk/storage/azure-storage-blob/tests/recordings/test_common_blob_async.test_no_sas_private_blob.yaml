@@ -1,0 +1,124 @@
+interactions:
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:49:17 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstoraged0ac134c.blob.core.windows.net/utcontainerd0ac134c?timeout=5&restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      date: Wed, 09 Oct 2019 23:49:19 GMT
+      etag: '"0x8D74D134D8DE227"'
+      last-modified: Wed, 09 Oct 2019 23:49:19 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstoraged0ac134c.blob.core.windows.net
+        - /utcontainerd0ac134c
+        - timeout=5&restype=container
+        - ''
+- request:
+    body: !!binary |
+      b0nDcANB7nSEzAv9M+BhoQ+btBlW0Yw6ER+iqJFccPUG2RXNc6VOi7Ns8OhiO2MjpSjD+SKH7ano
+      PANdWg8nuNjEq62Ckpmo33g0GAFtWe+seKWZPVYsX/386UQKcruOOE4QFUmUwCJbSbBj+zOxpbjd
+      30a82KOebbu5W4i97OcpW1oGkmhk4XAI28eMZmNIJrtaiaERchqdDHV7l2KKfZcSDcr1fTdcoFww
+      JHxnP5Z0bqq6nccFlCcNrvxBHCzUpLPNRLbPARCusXXdL7ZNNe2zIkK603hUcrUBHXePUGiWzn/I
+      vzpBlNLs9QTRXY3IRix2wrIut69Iw9WPfxSah1WeA8UwNBfGmCy9esQE/oSWIzi2KvDtNsQh2WVQ
+      Kwy2+mcr9fC2/MQnQYhc+qL6IN2epWt1Y/Qrd99XBOMbHtNdK0pok4h89okTKA8bcmW7tQNeHvbK
+      KmnHtYVJeic4tIoW4EfWme1y+phr6HQC/VJzPK3bozzqbOpcLqU/JrIuK2hiRkNeoL2xqWDnKcco
+      bkyXPKVPpml6ehKH5YKD65sPhb12TOJJF6lHO61h72LDSsbdsj0ErMKASIe4ItkrEnQPKc6vXSgQ
+      EkYg9wgDo+TJZr/27qalETDbc5vjRmTU5sLpXDumsLv0gHPFSEI0+c+KevxW2ivVXA3CsnuiNNzf
+      WhorwvYt2EEaGuBx14Y2/JEI9r1Xgd7keKkM6wf5pmrwvWYKxmTHJlODWRImqUyxr2PuJL/bYHEy
+      K5l/J1eL7cM1Sku9YkgvP+LtsTvDBjMN7cfteK4UeNNajoF+lDsguNH2miBAj4IydRJV31vzGQ2t
+      VRcthugiSbzZlHQNqQ6Glmxfa3P9EomE+RrbxLyTpAdPQXWU7N6lka1FyIgWFz8cFbM2izvaow4u
+      FiPaYnjsf21bY+2KCj9eUBGZfhkJnhswStkrl+DTN5ee4A+s4gx5LkIP/SBEugx11aXX7LM+FiuF
+      U/mT0T9suoXlUD9zDaGcgrkX0UvFoQP7UB4eWoQ42QwM7R6mgvuTMZvJ1XB/z3/0KYm9GsvdSG/0
+      BP4ov2bNX6RLcUMkRPt9HsbKJ00VtCoAemMC58ytGLFqMpxorT36Fa3dtR25lhL091uDeZuaFgBL
+      N6TQI7C5XbaMnWwAXapcz3w+v37wLQHfp42Qq3zuFh38SnjspuciH+mECsKRnHZ7tnyku2r06bGp
+      FlTn3QmL0fuPV6bzUVIitkxhLE4SjiIe+YDIy756ZfoDAKh9+QluB8sH0uJLG3KXgn23J9CLiSsA
+      COhRXUL7Y1BYsTuUCVq55wJaF6HNJ0+cwLClbjmVAis4QL2YJTymSU0HUlC22syjFu5P7l2kpg==
+    headers:
+      Content-Length:
+      - '1024'
+      Content-Type:
+      - application/octet-stream
+      If-None-Match:
+      - '*'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-blob-type:
+      - BlockBlob
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:49:19 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstoraged0ac134c.blob.core.windows.net/utcontainerd0ac134c/blobd0ac134c
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      content-md5: U8uo46vVUuce8WFyWSWDkQ==
+      date: Wed, 09 Oct 2019 23:49:19 GMT
+      etag: '"0x8D74D134D979488"'
+      last-modified: Wed, 09 Oct 2019 23:49:19 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-content-crc64: eFt4Ora6nQs=
+      x-ms-request-server-encrypted: 'true'
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstoraged0ac134c.blob.core.windows.net
+        - /utcontainerd0ac134c/blobd0ac134c
+        - ''
+        - ''
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.22.0
+    method: GET
+    uri: https://pyacrstoraged0ac134c.blob.core.windows.net/utcontainerd0ac134c/blobd0ac134c
+  response:
+    body:
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>ResourceNotFound</Code><Message>The
+        specified resource does not exist.\nRequestId:2bfa5572-901e-0049-18fc-7ede62000000\nTime:2019-10-09T23:49:20.0422598Z</Message></Error>"
+    headers:
+      content-length:
+      - '223'
+      content-type:
+      - application/xml
+      date:
+      - Wed, 09 Oct 2019 23:49:19 GMT
+      server:
+      - Blob Service Version 1.0 Microsoft-HTTPAPI/2.0
+    status:
+      code: 404
+      message: The specified resource does not exist.
+version: 1

@@ -1,0 +1,145 @@
+interactions:
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:07:21 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage62c1161f.blob.core.windows.net/container62c1161f?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      date: Wed, 09 Oct 2019 23:07:24 GMT
+      etag: '"0x8D74D0D72735623"'
+      last-modified: Wed, 09 Oct 2019 23:07:24 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage62c1161f.blob.core.windows.net
+        - /container62c1161f
+        - restype=container
+        - ''
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:07:24 GMT
+      x-ms-lease-action:
+      - acquire
+      x-ms-lease-duration:
+      - '15'
+      x-ms-proposed-lease-id:
+      - a7e11ea2-005f-4c12-9f28-55b94b6da5d2
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage62c1161f.blob.core.windows.net/container62c1161f?comp=lease&restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      date: Wed, 09 Oct 2019 23:07:24 GMT
+      etag: '"0x8D74D0D72735623"'
+      last-modified: Wed, 09 Oct 2019 23:07:24 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-lease-id: a7e11ea2-005f-4c12-9f28-55b94b6da5d2
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage62c1161f.blob.core.windows.net
+        - /container62c1161f
+        - comp=lease&restype=container
+        - ''
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:07:24 GMT
+      x-ms-lease-action:
+      - break
+      x-ms-lease-break-period:
+      - '5'
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage62c1161f.blob.core.windows.net/container62c1161f?comp=lease&restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      date: Wed, 09 Oct 2019 23:07:24 GMT
+      etag: '"0x8D74D0D72735623"'
+      last-modified: Wed, 09 Oct 2019 23:07:24 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-lease-time: '5'
+      x-ms-version: '2019-02-02'
+    status:
+      code: 202
+      message: Accepted
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage62c1161f.blob.core.windows.net
+        - /container62c1161f
+        - comp=lease&restype=container
+        - ''
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:07:30 GMT
+      x-ms-lease-id:
+      - a7e11ea2-005f-4c12-9f28-55b94b6da5d2
+      x-ms-version:
+      - '2019-02-02'
+    method: DELETE
+    uri: https://pyacrstorage62c1161f.blob.core.windows.net/container62c1161f?restype=container
+  response:
+    body:
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>LeaseLost</Code><Message>A
+        lease ID was specified, but the lease for the container has expired.\nRequestId:92e35885-d01e-00b8-05f6-7e634c000000\nTime:2019-10-09T23:07:30.7552668Z</Message></Error>"
+    headers:
+      content-length: '248'
+      content-type: application/xml
+      date: Wed, 09 Oct 2019 23:07:30 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-error-code: LeaseLost
+      x-ms-version: '2019-02-02'
+    status:
+      code: 412
+      message: A lease ID was specified, but the lease for the container has expired.
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage62c1161f.blob.core.windows.net
+        - /container62c1161f
+        - restype=container
+        - ''
+version: 1

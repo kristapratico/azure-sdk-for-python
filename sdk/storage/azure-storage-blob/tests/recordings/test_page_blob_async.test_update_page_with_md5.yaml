@@ -1,0 +1,127 @@
+interactions:
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Tue, 08 Oct 2019 22:24:40 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorageb8441284.blob.core.windows.net/utcontainerb8441284?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      date: Tue, 08 Oct 2019 22:24:42 GMT
+      etag: '"0x8D74C3E50B29628"'
+      last-modified: Tue, 08 Oct 2019 22:24:42 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorageb8441284.blob.core.windows.net
+        - /utcontainerb8441284
+        - restype=container
+        - ''
+- request:
+    body: null
+    headers:
+      Content-Length:
+      - '0'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-blob-content-length:
+      - '512'
+      x-ms-blob-type:
+      - PageBlob
+      x-ms-date:
+      - Tue, 08 Oct 2019 22:24:42 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorageb8441284.blob.core.windows.net/utcontainerb8441284/blobb8441284
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      date: Tue, 08 Oct 2019 22:24:42 GMT
+      etag: '"0x8D74C3E50B9FC49"'
+      last-modified: Tue, 08 Oct 2019 22:24:42 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-request-server-encrypted: 'true'
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorageb8441284.blob.core.windows.net
+        - /utcontainerb8441284/blobb8441284
+        - ''
+        - ''
+- request:
+    body: !!binary |
+      Q3MSZVgeBddj9x327/kNlJlZuAdvwfygniZTKjGaeZ6MFEAD5bno9aKu0zL4eouGCSLA92z+Yb/g
+      zfFaFxZllXTZ0BJaHpF4UrFcbdFZlu/IxmYVI+sGXcyHo+F2SoEpB6Z8rE99jiinktclBqbffdhU
+      v2wRoNIcNzjNd1NmCT+M5HJ8ZmwjwNRHsx2SdbJaI6zii1U3DmXbqZied2p4uuwDEW4k8Jzyw22r
+      1pu1cH61BvdLvvCcRtmiRz1bfE6ZQkaSO5UXIntVGFvgzAIH3a7jFF+cia5c0Iww+yKGlm5kWr5+
+      MJ8hva8js/a+Q9d/xMFjKooPGR0Ycj97EzhE+foCQIKKksldL+I4vyE3yrU/Uv1l0pDrdN42JBWO
+      lyDnUgMFo/RgX0jBoZyQ3W69jafOGoOQzKf04ecMTiYYI2spI4yJaPdTHdsCxSsbO/RQ/ANPdaa5
+      6GfJJdn8c4YK3uzIDoKzcaMPSpVB5l8jborFx/sr0WECnOKSiiknlzD5Wirj0vSueAv90LoQOxmP
+      pcYBOzpEs24EgnakzO2IZMXU2Fqet6oscTvTCoIcH+80a8yCBIJqxlkY9/BxRz9xIE9zKs5VeGiP
+      XWQFL4cLbDA7FRJsxaRV4cqAOuyR3+yd75JWQTsdnT0JPmAbJck3dgAtKlmWjWp6P1fhRHuXY9I=
+    headers:
+      Content-Length:
+      - '512'
+      Content-MD5:
+      - EZQXYz/ttFuengSAFxQPRQ==
+      Content-Type:
+      - application/octet-stream
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Tue, 08 Oct 2019 22:24:42 GMT
+      x-ms-page-write:
+      - update
+      x-ms-range:
+      - bytes=0-511
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorageb8441284.blob.core.windows.net/utcontainerb8441284/blobb8441284?comp=page
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      content-md5: EZQXYz/ttFuengSAFxQPRQ==
+      date: Tue, 08 Oct 2019 22:24:42 GMT
+      etag: '"0x8D74C3E50BFCA1C"'
+      last-modified: Tue, 08 Oct 2019 22:24:42 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-blob-sequence-number: '0'
+      x-ms-request-server-encrypted: 'true'
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorageb8441284.blob.core.windows.net
+        - /utcontainerb8441284/blobb8441284
+        - comp=page
+        - ''
+version: 1

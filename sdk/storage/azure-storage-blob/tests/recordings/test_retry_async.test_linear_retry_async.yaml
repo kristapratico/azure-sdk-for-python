@@ -5,7 +5,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 18:23:05 GMT
+      - Tue, 08 Oct 2019 19:58:52 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Tue, 08 Oct 2019 18:23:06 GMT
-      etag: '"0x8D74C1C90F03345"'
-      last-modified: Tue, 08 Oct 2019 18:23:07 GMT
+      date: Tue, 08 Oct 2019 19:58:53 GMT
+      etag: '"0x8D74C29F2422CCF"'
+      last-modified: Tue, 08 Oct 2019 19:58:53 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -37,7 +37,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 18:23:05 GMT
+      - Tue, 08 Oct 2019 19:58:52 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -45,11 +45,11 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>ContainerAlreadyExists</Code><Message>The
-        specified container already exists.\nRequestId:a6067856-401e-0046-3305-7e2f39000000\nTime:2019-10-08T18:23:10.1292031Z</Message></Error>"
+        specified container already exists.\nRequestId:9c7d16ce-701e-001b-5d12-7e1ee4000000\nTime:2019-10-08T19:58:56.6364767Z</Message></Error>"
     headers:
       content-length: '230'
       content-type: application/xml
-      date: Tue, 08 Oct 2019 18:23:09 GMT
+      date: Tue, 08 Oct 2019 19:58:56 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code: ContainerAlreadyExists
       x-ms-version: '2019-02-02'
@@ -70,7 +70,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 18:23:09 GMT
+      - Tue, 08 Oct 2019 19:58:56 GMT
       x-ms-version:
       - '2019-02-02'
     method: DELETE
@@ -80,7 +80,7 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Tue, 08 Oct 2019 18:23:09 GMT
+      date: Tue, 08 Oct 2019 19:58:56 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:

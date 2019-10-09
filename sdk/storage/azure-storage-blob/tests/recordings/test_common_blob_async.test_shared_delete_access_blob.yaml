@@ -1,0 +1,165 @@
+interactions:
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:49:40 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage49a21589.blob.core.windows.net/utcontainer49a21589?timeout=5&restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      date: Wed, 09 Oct 2019 23:49:41 GMT
+      etag: '"0x8D74D135ABA65FD"'
+      last-modified: Wed, 09 Oct 2019 23:49:41 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage49a21589.blob.core.windows.net
+        - /utcontainer49a21589
+        - timeout=5&restype=container
+        - ''
+- request:
+    body: !!binary |
+      iZKFSjLgN+1BneKF0Y8GYtKgTDjpPNABk5yEoPfTyOZ3nfasjhpEjdpJXDQMb5ijW86nDonuGJ4p
+      Q1AYLDw0UDdtQB1Ocr5Gy46/sxGfDPoxic/DLtGwVc8gInXBbOHUIRdiAllkb56eX2Ua8XA8vfWK
+      qZNB55AX2cfC0eofDTLB9g0ROG9GG9kdRTm5UAEjOoVmAKaV0eRhV9CL6of3VntEfT5p82NISwoF
+      kzpQ/Aszbk0xeB3O+5RhsnBS9pPHw2L6K2q9etuxAwYVbsQ0odolIPTVyMyN+pK7lzj4zFUshw9C
+      I17RtuKWYyyuX6s9Js4pUoa3U4b95Lqb2XkdAUMccJxgV3BoVRQ1nOw/A4ku+1SJvSzFjVyl8861
+      Wo4Dbiwaij76bA7hweWioUxXFbyFY60iCkM1iSH8EPlJNLjVppNqR/B2r8WWBS/9pOK43g4sONrn
+      DRb1Se1nkhccKeyf2qUhjxw83x1P5ojjvt8DmACVYlYzqzyjkVr3kCNMFRKRyC46W56iMZN0Sz/6
+      Xg/aZGmf8PxsYSdMd/jlT9JbWOYHLe6cPa9/6lsQDULuScRhhEM8PyAdoumCfujg7UIQU9epg2xS
+      tNjDbFM0exLKH6cROAn2li4JDnRWmJYNZBgvQgN69lwJkgW7UWijRwKmzYPrzBmunLqSjW7QO20a
+      OznvUjs4hYd1V2dyisfuy8Ue7dWgFpeigMXmymZ7rZBagPrJW/tYZ80skqKegWvFE7Dykc04Tk5a
+      SIFsg935ei/I8oHR511LKgzuRIRytQ8QXjm0XYpdPuIaH3sB/tHAIJ/2wUmmVMtkAXYF8WWAeW3Y
+      fojccdXQE64bOWHy78TTpzD30lj3tWqW9opmZpdZF9+9uCyWugLMI7hG2fKhhtQ49B7X9ylzJfPz
+      eIODGxx4bTdr6orhPs/BeD5qDX6Z94mph+fkrRT35iygRQyZwE+a4lGUu4ZWlYdp087WT0S+AK3I
+      zxWvLVqLnWes4NAvMHukqLpGkg1ewK6iU/DrPCJGrkucTcgbA5HsQCC9OzGPscsimYN7BzUCOuTI
+      5EE/9AIVuBhFn4JSJpWqHyO6Fh1Z9UOFofY/XAdzJq1ROBgxyOgUXzzWQpfiMyN2uUk4nTQvzHtE
+      1jEIXnH+n8jLu46zOJLb5cVMfoqBmnX2m3FwWwLQm/EpHEhFrILaIjEeVsFQww/pPu+yapTbAGSj
+      OXp5nzj+4qB+Tv76AfwdzgojE3/3oW3aspskOeyyvKQ2KKI6TDMG0EUMCthuuwBYMTRtzmdmCCLr
+      zNVqFJ1ksTx53ho31MecEsERGBv4E3b3kvJ1MUC0mboB+G9cximoJMeBsbPmVsEkNNj4DDBehA==
+    headers:
+      Content-Length:
+      - '1024'
+      Content-Type:
+      - application/octet-stream
+      If-None-Match:
+      - '*'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-blob-type:
+      - BlockBlob
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:49:41 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage49a21589.blob.core.windows.net/utcontainer49a21589/blob49a21589
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      content-md5: us2PSTYV54LnT8AocL3AuQ==
+      date: Wed, 09 Oct 2019 23:49:41 GMT
+      etag: '"0x8D74D135AC219BB"'
+      last-modified: Wed, 09 Oct 2019 23:49:41 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-content-crc64: grP1TjQs6E8=
+      x-ms-request-server-encrypted: 'true'
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage49a21589.blob.core.windows.net
+        - /utcontainer49a21589/blob49a21589
+        - ''
+        - ''
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - python-requests/2.22.0
+    method: DELETE
+    uri: https://pyacrstorage49a21589.blob.core.windows.net/utcontainer49a21589/blob49a21589?se=2019-10-10T00%3A49%3A41Z&sp=d&sv=2019-02-02&sr=b&sig=lw4XvebTiWTRyfV7djm10pS%2B/tHHQ0zN6Y95uScIx4U%3D
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      date:
+      - Wed, 09 Oct 2019 23:49:42 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-delete-type-permanent:
+      - 'true'
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 202
+      message: Accepted
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:49:41 GMT
+      x-ms-range:
+      - bytes=0-33554431
+      x-ms-version:
+      - '2019-02-02'
+    method: GET
+    uri: https://pyacrstorage49a21589.blob.core.windows.net/utcontainer49a21589/blob49a21589?se=2019-10-10T00:49:41Z&sp=d&sv=2019-02-02&sr=b&sig=lw4XvebTiWTRyfV7djm10pS%2B/tHHQ0zN6Y95uScIx4U%3D
+  response:
+    body:
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>AuthorizationPermissionMismatch</Code><Message>This
+        request is not authorized to perform this operation using this permission.\nRequestId:3c21a978-c01e-002d-78fc-7e05f7000000\nTime:2019-10-09T23:49:42.3130193Z</Message></Error>"
+    headers:
+      content-length: '279'
+      content-type: application/xml
+      date: Wed, 09 Oct 2019 23:49:41 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-error-code: AuthorizationPermissionMismatch
+      x-ms-version: '2019-02-02'
+    status:
+      code: 403
+      message: This request is not authorized to perform this operation using this
+        permission.
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage49a21589.blob.core.windows.net
+        - /utcontainer49a21589/blob49a21589
+        - se=2019-10-10T00:49:41Z&sp=d&sv=2019-02-02&sr=b&sig=lw4XvebTiWTRyfV7djm10pS%2B/tHHQ0zN6Y95uScIx4U%3D
+        - ''
+version: 1

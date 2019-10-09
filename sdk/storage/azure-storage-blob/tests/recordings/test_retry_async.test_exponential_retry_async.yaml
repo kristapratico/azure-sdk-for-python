@@ -5,7 +5,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 18:22:58 GMT
+      - Tue, 08 Oct 2019 19:58:52 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Tue, 08 Oct 2019 18:22:59 GMT
-      etag: '"0x8D74C1C8CCEEBB8"'
-      last-modified: Tue, 08 Oct 2019 18:23:00 GMT
+      date: Tue, 08 Oct 2019 19:58:53 GMT
+      etag: '"0x8D74C29F2650423"'
+      last-modified: Tue, 08 Oct 2019 19:58:54 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -37,7 +37,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 18:23:00 GMT
+      - Tue, 08 Oct 2019 19:58:53 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -47,9 +47,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Tue, 08 Oct 2019 18:22:59 GMT
-      etag: '"0x8D74C1C8CCEEBB8"'
-      last-modified: Tue, 08 Oct 2019 18:23:00 GMT
+      date: Tue, 08 Oct 2019 19:58:53 GMT
+      etag: '"0x8D74C29F2650423"'
+      last-modified: Tue, 08 Oct 2019 19:58:54 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-default-encryption-scope: $account-encryption-key
       x-ms-deny-encryption-scope-override: 'false'
@@ -75,7 +75,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 18:23:00 GMT
+      - Tue, 08 Oct 2019 19:58:53 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -85,9 +85,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Tue, 08 Oct 2019 18:23:02 GMT
-      etag: '"0x8D74C1C8CCEEBB8"'
-      last-modified: Tue, 08 Oct 2019 18:23:00 GMT
+      date: Tue, 08 Oct 2019 19:58:56 GMT
+      etag: '"0x8D74C29F2650423"'
+      last-modified: Tue, 08 Oct 2019 19:58:54 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-default-encryption-scope: $account-encryption-key
       x-ms-deny-encryption-scope-override: 'false'
@@ -113,7 +113,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 18:23:00 GMT
+      - Tue, 08 Oct 2019 19:58:53 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -123,9 +123,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Tue, 08 Oct 2019 18:23:10 GMT
-      etag: '"0x8D74C1C8CCEEBB8"'
-      last-modified: Tue, 08 Oct 2019 18:23:00 GMT
+      date: Tue, 08 Oct 2019 19:59:05 GMT
+      etag: '"0x8D74C29F2650423"'
+      last-modified: Tue, 08 Oct 2019 19:58:54 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-default-encryption-scope: $account-encryption-key
       x-ms-deny-encryption-scope-override: 'false'
@@ -151,7 +151,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 18:23:00 GMT
+      - Tue, 08 Oct 2019 19:58:53 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -161,9 +161,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Tue, 08 Oct 2019 18:23:41 GMT
-      etag: '"0x8D74C1C8CCEEBB8"'
-      last-modified: Tue, 08 Oct 2019 18:23:00 GMT
+      date: Tue, 08 Oct 2019 19:59:31 GMT
+      etag: '"0x8D74C29F2650423"'
+      last-modified: Tue, 08 Oct 2019 19:58:54 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-default-encryption-scope: $account-encryption-key
       x-ms-deny-encryption-scope-override: 'false'
@@ -189,7 +189,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 18:23:41 GMT
+      - Tue, 08 Oct 2019 19:59:31 GMT
       x-ms-version:
       - '2019-02-02'
     method: DELETE
@@ -199,7 +199,7 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Tue, 08 Oct 2019 18:23:41 GMT
+      date: Tue, 08 Oct 2019 19:59:31 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:

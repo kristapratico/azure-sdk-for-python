@@ -1,0 +1,300 @@
+interactions:
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 21:15:06 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage606f10b1.blob.core.windows.net/utcontainer606f10b1?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      date: Wed, 09 Oct 2019 21:15:08 GMT
+      etag: '"0x8D74CFDC3500104"'
+      last-modified: Wed, 09 Oct 2019 21:15:08 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage606f10b1.blob.core.windows.net
+        - /utcontainer606f10b1
+        - restype=container
+        - ''
+- request:
+    body: AAABBBCCC
+    headers:
+      Content-Length:
+      - '9'
+      Content-Type:
+      - application/octet-stream
+      If-None-Match:
+      - '*'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-blob-type:
+      - BlockBlob
+      x-ms-date:
+      - Wed, 09 Oct 2019 21:15:07 GMT
+      x-ms-encryption-algorithm:
+      - AES256
+      x-ms-encryption-key:
+      - MDEyMzQ1NjcwMTIzNDU2NzAxMjM0NTY3MDEyMzQ1Njc=
+      x-ms-encryption-key-sha256:
+      - 3QFFFpRA5+XANHqwwbT4yXDmrT/2JaLt/FKHjzhOdoE=
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage606f10b1.blob.core.windows.net/utcontainer606f10b1/cpk606f10b1
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      content-md5: Yge131eW6WNBDTvEtqQhiw==
+      date: Wed, 09 Oct 2019 21:15:08 GMT
+      etag: '"0x8D74CFDC35E9573"'
+      last-modified: Wed, 09 Oct 2019 21:15:08 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-content-crc64: DTngHrtvLQU=
+      x-ms-encryption-key-sha256: 3QFFFpRA5+XANHqwwbT4yXDmrT/2JaLt/FKHjzhOdoE=
+      x-ms-request-server-encrypted: 'true'
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage606f10b1.blob.core.windows.net
+        - /utcontainer606f10b1/cpk606f10b1
+        - ''
+        - ''
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 21:15:07 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: HEAD
+    uri: https://pyacrstorage606f10b1.blob.core.windows.net/utcontainer606f10b1/cpk606f10b1
+  response:
+    body:
+      string: ''
+    headers:
+      date: Wed, 09 Oct 2019 21:15:08 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      transfer-encoding: chunked
+      x-ms-error-code: BlobUsesCustomerSpecifiedEncryption
+      x-ms-version: '2019-02-02'
+    status:
+      code: 409
+      message: The blob is encrypted with customer specified encryption, but it was
+        not provided in the request.
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage606f10b1.blob.core.windows.net
+        - /utcontainer606f10b1/cpk606f10b1
+        - ''
+        - ''
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 21:15:07 GMT
+      x-ms-encryption-algorithm:
+      - AES256
+      x-ms-encryption-key:
+      - MDEyMzQ1NjcwMTIzNDU2NzAxMjM0NTY3MDEyMzQ1Njc=
+      x-ms-encryption-key-sha256:
+      - 3QFFFpRA5+XANHqwwbT4yXDmrT/2JaLt/FKHjzhOdoE=
+      x-ms-version:
+      - '2019-02-02'
+    method: HEAD
+    uri: https://pyacrstorage606f10b1.blob.core.windows.net/utcontainer606f10b1/cpk606f10b1
+  response:
+    body:
+      string: ''
+    headers:
+      accept-ranges: bytes
+      content-length: '9'
+      content-md5: Yge131eW6WNBDTvEtqQhiw==
+      content-type: application/octet-stream
+      date: Wed, 09 Oct 2019 21:15:08 GMT
+      etag: '"0x8D74CFDC35E9573"'
+      last-modified: Wed, 09 Oct 2019 21:15:08 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-blob-type: BlockBlob
+      x-ms-creation-time: Wed, 09 Oct 2019 21:15:08 GMT
+      x-ms-encryption-key-sha256: 3QFFFpRA5+XANHqwwbT4yXDmrT/2JaLt/FKHjzhOdoE=
+      x-ms-lease-state: available
+      x-ms-lease-status: unlocked
+      x-ms-server-encrypted: 'true'
+      x-ms-version: '2019-02-02'
+    status:
+      code: 200
+      message: OK
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage606f10b1.blob.core.windows.net
+        - /utcontainer606f10b1/cpk606f10b1
+        - ''
+        - ''
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 21:15:07 GMT
+      x-ms-meta-UP:
+      - UPval
+      x-ms-meta-hello:
+      - world
+      x-ms-meta-number:
+      - '42'
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage606f10b1.blob.core.windows.net/utcontainer606f10b1/cpk606f10b1?comp=metadata
+  response:
+    body:
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>BlobUsesCustomerSpecifiedEncryption</Code><Message>The
+        blob is encrypted with customer specified encryption, but it was not provided
+        in the request.\nRequestId:26880c26-001e-0036-3ce6-7e9d24000000\nTime:2019-10-09T21:15:09.1569253Z</Message></Error>"
+    headers:
+      content-length: '301'
+      content-type: application/xml
+      date: Wed, 09 Oct 2019 21:15:08 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-error-code: BlobUsesCustomerSpecifiedEncryption
+      x-ms-version: '2019-02-02'
+    status:
+      code: 409
+      message: The blob is encrypted with customer specified encryption, but it was
+        not provided in the request.
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage606f10b1.blob.core.windows.net
+        - /utcontainer606f10b1/cpk606f10b1
+        - comp=metadata
+        - ''
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 21:15:08 GMT
+      x-ms-encryption-algorithm:
+      - AES256
+      x-ms-encryption-key:
+      - MDEyMzQ1NjcwMTIzNDU2NzAxMjM0NTY3MDEyMzQ1Njc=
+      x-ms-encryption-key-sha256:
+      - 3QFFFpRA5+XANHqwwbT4yXDmrT/2JaLt/FKHjzhOdoE=
+      x-ms-meta-UP:
+      - UPval
+      x-ms-meta-hello:
+      - world
+      x-ms-meta-number:
+      - '42'
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage606f10b1.blob.core.windows.net/utcontainer606f10b1/cpk606f10b1?comp=metadata
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      date: Wed, 09 Oct 2019 21:15:08 GMT
+      etag: '"0x8D74CFDC3D2D0E6"'
+      last-modified: Wed, 09 Oct 2019 21:15:09 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-encryption-key-sha256: 3QFFFpRA5+XANHqwwbT4yXDmrT/2JaLt/FKHjzhOdoE=
+      x-ms-request-server-encrypted: 'true'
+      x-ms-version: '2019-02-02'
+    status:
+      code: 200
+      message: OK
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage606f10b1.blob.core.windows.net
+        - /utcontainer606f10b1/cpk606f10b1
+        - comp=metadata
+        - ''
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 21:15:08 GMT
+      x-ms-encryption-algorithm:
+      - AES256
+      x-ms-encryption-key:
+      - MDEyMzQ1NjcwMTIzNDU2NzAxMjM0NTY3MDEyMzQ1Njc=
+      x-ms-encryption-key-sha256:
+      - 3QFFFpRA5+XANHqwwbT4yXDmrT/2JaLt/FKHjzhOdoE=
+      x-ms-version:
+      - '2019-02-02'
+    method: HEAD
+    uri: https://pyacrstorage606f10b1.blob.core.windows.net/utcontainer606f10b1/cpk606f10b1
+  response:
+    body:
+      string: ''
+    headers:
+      accept-ranges: bytes
+      content-length: '9'
+      content-md5: Yge131eW6WNBDTvEtqQhiw==
+      content-type: application/octet-stream
+      date: Wed, 09 Oct 2019 21:15:08 GMT
+      etag: '"0x8D74CFDC3D2D0E6"'
+      last-modified: Wed, 09 Oct 2019 21:15:09 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-blob-type: BlockBlob
+      x-ms-creation-time: Wed, 09 Oct 2019 21:15:08 GMT
+      x-ms-encryption-key-sha256: 3QFFFpRA5+XANHqwwbT4yXDmrT/2JaLt/FKHjzhOdoE=
+      x-ms-lease-state: available
+      x-ms-lease-status: unlocked
+      x-ms-meta-hello: world
+      x-ms-meta-number: '42'
+      x-ms-meta-up: UPval
+      x-ms-server-encrypted: 'true'
+      x-ms-version: '2019-02-02'
+    status:
+      code: 200
+      message: OK
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage606f10b1.blob.core.windows.net
+        - /utcontainer606f10b1/cpk606f10b1
+        - ''
+        - ''
+version: 1

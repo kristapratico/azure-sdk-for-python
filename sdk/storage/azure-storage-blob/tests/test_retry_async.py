@@ -321,7 +321,7 @@ class StorageRetryTestAsync(AsyncBlobTestCase):
     @AsyncBlobTestCase.await_prepared_test
     async def test_retry_with_deserialization_async(self, resource_group, location, storage_account, storage_account_key):
         # Arrange
-        container_name = self.get_resource_name(prefix='retry')
+        container_name = self.get_resource_name('retry')
         retry = ExponentialRetry(initial_backoff=1, increment_base=2)
         service = self._create_storage_service(
             BlobServiceClient, storage_account, storage_account_key, retry_policy=retry, transport=AiohttpTestTransport())

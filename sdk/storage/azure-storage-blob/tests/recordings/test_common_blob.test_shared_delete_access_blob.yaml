@@ -1,0 +1,180 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:36:33 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstoragecbf1130c.blob.core.windows.net/utcontainercbf1130c?timeout=5&restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      date:
+      - Wed, 09 Oct 2019 23:36:34 GMT
+      etag:
+      - '"0x8D74D1185BF50F9"'
+      last-modified:
+      - Wed, 09 Oct 2019 23:36:34 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: !!binary |
+      JGTSk0v8w/QdCBxIPABqOQLcPmyokJsz4FVZF6PMIYSwyyhCjNP4wRU1cHu6uNxhbPAkudJnG+EV
+      UjDJMZoCODC9lAFu7oh+ol/fiONt/ZOzZvYl9iqNLRxt2KbksACWEGe9mBt6C4J8QxXeDuDhuD+N
+      vE880oHtJxYw5GTmPl2fjXbhyUAKW6h9D2w28WJEHFX7RYj4T2Yu88SLNaCmrwzyV/7+v0rpKc/2
+      /fE0C80UyMFCZeK/c/u8V/h6CGiBycKNaaZR9LNAb4AjtbAnwhjLPAzt19I/Icrj0rnjAp7Arqdr
+      JcLPE7EiuCeU8mcBF75FD/NMKaWktRPdXm7jWhvKAabtQLC2q5pXsCcj4eidgmYPUIYzrnhQPalo
+      lsIJCFxf9cdC2WOBUicM33Kmk8HhvRnA27rSaXsm0upDokHtrR163bHmYQ91JwhOIyhkBoT3U/E2
+      log3FYDsO6vdThgqhXFPsea1tXlOdlOFjFekNHONljuq1J2rja0Deb8KnjYDW6eRnHukStD0yyHN
+      MCj4f5YmX+HDtFdwwvbNdA1HEwq8YYjem7dlvHUAk5w9qUTnDKYhxNf45Kl0ETzxIjFF1BDWiR5y
+      G/I6EJvYifiViXq/+eB8zUXh6tZSJJX23KAze8rBN1kauJB8AojHutTmzBlic7rcUadjfQ1Yz/zJ
+      WqLJ8iljCDyYNDBtruCZ+jhNmIZEACWDWq2uq/d64/4cJfE+uG0Jiz6LyFzaY2y5zOJVQReFqyRR
+      SZa545vJECmFCNYjcCW+dxxNAj675C+DtAapSNKzdr0m+PZ2ECX5QHunajzTC48FgTskP624nhUs
+      0GZIO2XpZve6Wg+2Al6CZo9Mdyyp9sfJjD2JFiuONJstI+BGpjjj24SUqlpEfuCmxCed9lMVyqwq
+      aZZyTAxublU+eNxWXfHdwjhO+OblFUjhQdUVFo3UUI1RQZnH0T4/DiPa0px/elTXlF4OLh4sKX9l
+      YEZ5ksPpsSnYC9vJljYa3rZR/ThwI0fTwdYyL1xBS0+P7/UHYU9IZQujHTrWADze2oqnK+l1ICYc
+      HtAwGps24FzQMxThE3Cnju8TK4B8icqkiNG9CdjzoUOy26K7OrzMFO0MMIXi/HX9pPS2FiQU/BF3
+      RlpSD+Jx9OIAWxXiglCY3Ie/wFN00ohKEZ/YDfRcfcuqb2O3QwEFC/TCZuAhV/Mvhl9gws8oYuMU
+      o/NtQU7OE+Jh1RsWIJoCzDjoNpWmxHyAn8nST6Id7wo1CwUmqQOIyuGkieossHUB6bLjmWwcHZPE
+      y8h6nkDG5WGRZiR3vOdDBlILyUPANqEiC1QlZmhxpzIKJzaWozgsuNYTHrloETtWZXdsQb+Yvg==
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1024'
+      Content-Type:
+      - application/octet-stream
+      If-None-Match:
+      - '*'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-blob-type:
+      - BlockBlob
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:36:34 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstoragecbf1130c.blob.core.windows.net/utcontainercbf1130c/blobcbf1130c
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      content-md5:
+      - 0HhuPINeG0sCTNsQ5+0tLw==
+      date:
+      - Wed, 09 Oct 2019 23:36:34 GMT
+      etag:
+      - '"0x8D74D1185CE0166"'
+      last-modified:
+      - Wed, 09 Oct 2019 23:36:35 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-content-crc64:
+      - cAScKEp89fU=
+      x-ms-request-server-encrypted:
+      - 'true'
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - python-requests/2.22.0
+    method: DELETE
+    uri: https://pyacrstoragecbf1130c.blob.core.windows.net/utcontainercbf1130c/blobcbf1130c?se=2019-10-10T00%3A36%3A34Z&sp=d&sv=2019-02-02&sr=b&sig=D4z0r1zORfrf4frElSQtwGfDwaZBeg7CRsjcen%2BzViE%3D
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      date:
+      - Wed, 09 Oct 2019 23:36:35 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-delete-type-permanent:
+      - 'true'
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 202
+      message: Accepted
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:36:34 GMT
+      x-ms-range:
+      - bytes=0-33554431
+      x-ms-version:
+      - '2019-02-02'
+    method: GET
+    uri: https://pyacrstoragecbf1130c.blob.core.windows.net/utcontainercbf1130c/blobcbf1130c?se=2019-10-10T00%3A36%3A34Z&sp=d&sv=2019-02-02&sr=b&sig=D4z0r1zORfrf4frElSQtwGfDwaZBeg7CRsjcen%2BzViE%3D
+  response:
+    body:
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>AuthorizationPermissionMismatch</Code><Message>This
+        request is not authorized to perform this operation using this permission.\nRequestId:399f3014-501e-00c1-69fa-7edf6d000000\nTime:2019-10-09T23:36:35.7233137Z</Message></Error>"
+    headers:
+      content-length:
+      - '279'
+      content-type:
+      - application/xml
+      date:
+      - Wed, 09 Oct 2019 23:36:35 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-error-code:
+      - AuthorizationPermissionMismatch
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 403
+      message: This request is not authorized to perform this operation using this
+        permission.
+version: 1

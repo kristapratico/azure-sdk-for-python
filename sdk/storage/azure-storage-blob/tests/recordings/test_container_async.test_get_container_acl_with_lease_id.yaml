@@ -3,9 +3,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:12:36 GMT
+      - Thu, 10 Oct 2019 20:12:37 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:12:38 GMT
-      etag: '"0x8D74D0E2DB667DF"'
-      last-modified: Wed, 09 Oct 2019 23:12:38 GMT
+      date: Thu, 10 Oct 2019 20:12:38 GMT
+      etag: '"0x8D74DBE327B1325"'
+      last-modified: Thu, 10 Oct 2019 20:12:38 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -35,15 +35,15 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:12:38 GMT
+      - Thu, 10 Oct 2019 20:12:38 GMT
       x-ms-lease-action:
       - acquire
       x-ms-lease-duration:
       - '-1'
       x-ms-proposed-lease-id:
-      - c180caeb-7276-4bdf-8c34-0fc7d7c1f8c9
+      - a14caa80-8a03-42f1-bad2-917a2f8f0a45
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -53,11 +53,11 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:12:38 GMT
-      etag: '"0x8D74D0E2DB667DF"'
-      last-modified: Wed, 09 Oct 2019 23:12:38 GMT
+      date: Thu, 10 Oct 2019 20:12:38 GMT
+      etag: '"0x8D74DBE327B1325"'
+      last-modified: Thu, 10 Oct 2019 20:12:38 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
-      x-ms-lease-id: c180caeb-7276-4bdf-8c34-0fc7d7c1f8c9
+      x-ms-lease-id: a14caa80-8a03-42f1-bad2-917a2f8f0a45
       x-ms-version: '2019-02-02'
     status:
       code: 201
@@ -76,11 +76,11 @@ interactions:
       Accept:
       - application/xml
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:12:38 GMT
+      - Thu, 10 Oct 2019 20:12:38 GMT
       x-ms-lease-id:
-      - c180caeb-7276-4bdf-8c34-0fc7d7c1f8c9
+      - a14caa80-8a03-42f1-bad2-917a2f8f0a45
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -91,9 +91,9 @@ interactions:
         />"
     headers:
       content-type: application/xml
-      date: Wed, 09 Oct 2019 23:12:38 GMT
-      etag: '"0x8D74D0E2DB667DF"'
-      last-modified: Wed, 09 Oct 2019 23:12:38 GMT
+      date: Thu, 10 Oct 2019 20:12:38 GMT
+      etag: '"0x8D74DBE327B1325"'
+      last-modified: Thu, 10 Oct 2019 20:12:38 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding: chunked
       x-ms-version: '2019-02-02'

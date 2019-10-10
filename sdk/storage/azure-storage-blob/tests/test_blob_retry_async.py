@@ -16,6 +16,8 @@ from azure.storage.blob.aio import (
 )
 from devtools_testutils import ResourceGroupPreparer, StorageAccountPreparer
 from azure.core.exceptions import ResourceExistsError, HttpResponseError
+from azure.core.pipeline.transport import AioHttpTransport
+from multidict import CIMultiDict, CIMultiDictProxy
 from testcase import ResponseCallback
 from asyncblobtestcase import (
     AsyncBlobTestCase,
@@ -23,6 +25,17 @@ from asyncblobtestcase import (
 
 # test constants
 PUT_BLOCK_SIZE = 4 * 1024
+
+class AiohttpTestTransport(AioHttpTransport):
+    """Workaround to vcrpy bug: https://github.com/kevin1024/vcrpy/pull/461
+    """
+
+    async def send(self, request, **config):
+        response = await super(AiohttpTestTransport, self).send(request, **config)
+        if not isinstance(response.headers, CIMultiDictProxy):
+            response.headers = CIMultiDictProxy(CIMultiDict(response.internal_response.headers))
+            response.content_type = response.headers.get("content-type")
+        return response
 
 
 class StorageBlobRetryTestAsync(AsyncBlobTestCase):
@@ -59,12 +72,13 @@ class StorageBlobRetryTestAsync(AsyncBlobTestCase):
     @AsyncBlobTestCase.await_prepared_test
     async def test_retry_put_block_with_seekable_stream_async(self, resource_group, location, storage_account,
                                                               storage_account_key):
+        pytest.skip("Aiohttp closes stream after request - cannot rewind.")
         if not self.is_live:
             return
 
         # Arrange
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key,
-                                retry_policy=self.retry)
+                                retry_policy=self.retry, transport=AiohttpTestTransport())
         await self._setup(bsc)
         blob_name = self.get_resource_name('blob')
         data = self.get_random_bytes(PUT_BLOCK_SIZE)
@@ -101,7 +115,7 @@ class StorageBlobRetryTestAsync(AsyncBlobTestCase):
 
         # Arrange
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key,
-                                retry_policy=self.retry)
+                                retry_policy=self.retry, transport=AiohttpTestTransport())
         await self._setup(bsc)
         blob_name = self.get_resource_name('blob')
         data = self.get_random_bytes(PUT_BLOCK_SIZE)
@@ -139,7 +153,7 @@ class StorageBlobRetryTestAsync(AsyncBlobTestCase):
 
         # Arrange
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key,
-                                retry_policy=self.retry)
+                                retry_policy=self.retry, transport=AiohttpTestTransport())
         await self._setup(bsc)
         blob_name = self.get_resource_name('blob')
         data = self.get_random_bytes(PUT_BLOCK_SIZE)

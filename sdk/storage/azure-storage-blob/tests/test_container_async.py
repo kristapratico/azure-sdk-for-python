@@ -70,7 +70,7 @@ class StorageContainerTestAsync(AsyncBlobTestCase):
             pass
         return container
 
-    async def _to_list(async_iterator):
+    async def _to_list(self, async_iterator):
         result = []
         async for item in async_iterator:
             result.append(item)
@@ -94,7 +94,7 @@ class StorageContainerTestAsync(AsyncBlobTestCase):
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
     @AsyncBlobTestCase.await_prepared_test
-    async def test_create_container_with_already_existing_container_fail_on_exist(self, resource_group, location, storage_account, storage_account_key):
+    async def test_create_cntnr_w_existing_cntnr_fail_on_exist(self, resource_group, location, storage_account, storage_account_key):
         bsc = BlobServiceClient(self._account_url(storage_account.name), storage_account_key, transport=AiohttpTestTransport())
         container_name = self._get_container_reference()
 
@@ -774,7 +774,7 @@ class StorageContainerTestAsync(AsyncBlobTestCase):
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
     @AsyncBlobTestCase.await_prepared_test
-    async def test_delete_container_with_non_existing_container_fail_not_exist(self, resource_group, location, storage_account, storage_account_key):
+    async def test_delete_cntnr_w_nonexisting_cntnr_fail_not_exist(self, resource_group, location, storage_account, storage_account_key):
         bsc = BlobServiceClient(self._account_url(storage_account.name), storage_account_key, transport=AiohttpTestTransport())
         container_name = self._get_container_reference()
         container = bsc.get_container_client(container_name)
@@ -959,7 +959,6 @@ class StorageContainerTestAsync(AsyncBlobTestCase):
     @AsyncBlobTestCase.await_prepared_test
     async def test_list_blobs_with_include_metadata(self, resource_group, location, storage_account, storage_account_key):
         bsc = BlobServiceClient(self._account_url(storage_account.name), storage_account_key, transport=AiohttpTestTransport())
-        pytest.skip("Waiting on metadata XML fix in msrest")
         container = await self._create_container(bsc)
         data = b'hello world'
         blob1 = container.get_blob_client('blob1')
@@ -1094,7 +1093,7 @@ class StorageContainerTestAsync(AsyncBlobTestCase):
             pass
 
         # Act
-        response = await _to_list(await container.delete_blobs(
+        response = await self._to_list(await container.delete_blobs(
             'blob1',
             'blob2',
             'blob3',
@@ -1121,11 +1120,11 @@ class StorageContainerTestAsync(AsyncBlobTestCase):
             await container.get_blob_client('blob3').upload_blob(data)
         except:
             pass
-        blobs = await _to_list(container.list_blobs(include='snapshots'))
+        blobs = await self._to_list(container.list_blobs(include='snapshots'))
         assert len(blobs) == 4  # 3 blobs + 1 snapshot
 
         # Act
-        response = await _to_list(await container.delete_blobs(
+        response = await self._to_list(await container.delete_blobs(
             'blob1',
             'blob2',
             'blob3',
@@ -1136,7 +1135,7 @@ class StorageContainerTestAsync(AsyncBlobTestCase):
         assert response[1].status_code == 404  # There was no snapshot
         assert response[2].status_code == 404  # There was no snapshot
 
-        blobs = await _to_list(container.list_blobs(include='snapshots'))
+        blobs = await self._to_list(container.list_blobs(include='snapshots'))
         assert len(blobs) == 3  # 3 blobs
 
     @ResourceGroupPreparer()
@@ -1160,7 +1159,7 @@ class StorageContainerTestAsync(AsyncBlobTestCase):
                 assert blob_ref.blob_tier_inferred
                 assert blob_ref.blob_tier_change_time is None
 
-                parts = await _to_list(await container.set_standard_blob_tier_blobs(
+                parts = await self._to_list(await container.set_standard_blob_tier_blobs(
                     tier,
                     'blob1',
                     'blob2',
@@ -1215,7 +1214,7 @@ class StorageContainerTestAsync(AsyncBlobTestCase):
             assert blob_ref.blob_tier is not None
             assert blob_ref.blob_tier_inferred
 
-            parts = await _to_list(container.set_premium_page_blob_tier_blobs(
+            parts = await self._to_list(container.set_premium_page_blob_tier_blobs(
                 PremiumPageBlobTier.P50,
                 'blob1',
                 'blob2',
@@ -1277,7 +1276,6 @@ class StorageContainerTestAsync(AsyncBlobTestCase):
     @AsyncBlobTestCase.await_prepared_test
     async def test_list_blobs_with_include_multiple(self, resource_group, location, storage_account, storage_account_key):
         bsc = BlobServiceClient(self._account_url(storage_account.name), storage_account_key, transport=AiohttpTestTransport())
-        pytest.skip("Waiting on metadata XML fix in msrest")
         container = await self._create_container(bsc)
         data = b'hello world'
         blob1 = container.get_blob_client('blob1')

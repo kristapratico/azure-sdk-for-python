@@ -30,6 +30,11 @@ except ImportError:
 
 from azure.core.credentials import AccessToken
 
+try:
+    from devtools_testutils import mgmt_settings_real as settings
+except ImportError:
+    from devtools_testutils import mgmt_settings_fake as settings
+
 
 LOGGING_FORMAT = '%(asctime)s %(name)-20s %(levelname)-5s %(message)s'
 

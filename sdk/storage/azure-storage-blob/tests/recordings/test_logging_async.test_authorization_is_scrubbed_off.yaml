@@ -1,0 +1,187 @@
+interactions:
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      x-ms-date:
+      - Thu, 10 Oct 2019 20:30:04 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage509e15e0.blob.core.windows.net/utcontainer509e15e0?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      date: Thu, 10 Oct 2019 20:30:04 GMT
+      etag: '"0x8D74DC0A1FC269E"'
+      last-modified: Thu, 10 Oct 2019 20:30:04 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage509e15e0.blob.core.windows.net
+        - /utcontainer509e15e0
+        - restype=container
+        - ''
+- request:
+    body: !!binary |
+      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
+    headers:
+      Content-Length:
+      - '4096'
+      Content-Type:
+      - application/octet-stream
+      If-None-Match:
+      - '*'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      x-ms-blob-type:
+      - BlockBlob
+      x-ms-date:
+      - Thu, 10 Oct 2019 20:30:04 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage509e15e0.blob.core.windows.net/utcontainer509e15e0/srcblob509e15e0
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      content-md5: wC3ly0K6ZC0HV8uFC9Z4eA==
+      date: Thu, 10 Oct 2019 20:30:04 GMT
+      etag: '"0x8D74DC0A20F6212"'
+      last-modified: Thu, 10 Oct 2019 20:30:04 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-content-crc64: Yi/K3L8eVT4=
+      x-ms-request-server-encrypted: 'true'
+      x-ms-version: '2019-02-02'
+    status:
+      code: 201
+      message: Created
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage509e15e0.blob.core.windows.net
+        - /utcontainer509e15e0/srcblob509e15e0
+        - ''
+        - ''
+- request:
+    body: null
+    headers:
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      x-ms-date:
+      - Thu, 10 Oct 2019 20:30:04 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: GET
+    uri: https://pyacrstorage509e15e0.blob.core.windows.net/utcontainer509e15e0?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length: '0'
+      date: Thu, 10 Oct 2019 20:30:04 GMT
+      etag: '"0x8D74DC0A1FC269E"'
+      last-modified: Thu, 10 Oct 2019 20:30:04 GMT
+      server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-default-encryption-scope: $account-encryption-key
+      x-ms-deny-encryption-scope-override: 'false'
+      x-ms-has-immutability-policy: 'false'
+      x-ms-has-legal-hold: 'false'
+      x-ms-lease-state: available
+      x-ms-lease-status: unlocked
+      x-ms-version: '2019-02-02'
+    status:
+      code: 200
+      message: OK
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - pyacrstorage509e15e0.blob.core.windows.net
+        - /utcontainer509e15e0
+        - restype=container
+        - ''
+version: 1

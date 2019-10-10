@@ -3,9 +3,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:55 GMT
+      - Thu, 10 Oct 2019 20:13:55 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:08:57 GMT
-      etag: '"0x8D74D0DA9E82BB6"'
-      last-modified: Wed, 09 Oct 2019 23:08:57 GMT
+      date: Thu, 10 Oct 2019 20:13:58 GMT
+      etag: '"0x8D74DBE62487D46"'
+      last-modified: Thu, 10 Oct 2019 20:13:58 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -34,16 +34,16 @@ interactions:
 - request:
     body: '<?xml version=''1.0'' encoding=''utf-8''?>
 
-      <SignedIdentifiers><SignedIdentifier><Id>0</Id><AccessPolicy><Start>2019-10-09T23:07:57Z</Start><Expiry>2019-10-10T00:08:57Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>1</Id><AccessPolicy><Start>2019-10-09T23:07:57Z</Start><Expiry>2019-10-10T00:08:57Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
+      <SignedIdentifiers><SignedIdentifier><Id>0</Id><AccessPolicy><Start>2019-10-10T20:12:58Z</Start><Expiry>2019-10-10T21:13:58Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>1</Id><AccessPolicy><Start>2019-10-10T20:12:58Z</Start><Expiry>2019-10-10T21:13:58Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
     headers:
       Content-Length:
       - '426'
       Content-Type:
       - application/xml; charset=utf-8
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:57 GMT
+      - Thu, 10 Oct 2019 20:13:58 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -53,9 +53,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:08:57 GMT
-      etag: '"0x8D74D0DA9EE0ECE"'
-      last-modified: Wed, 09 Oct 2019 23:08:57 GMT
+      date: Thu, 10 Oct 2019 20:13:58 GMT
+      etag: '"0x8D74DBE625478FF"'
+      last-modified: Thu, 10 Oct 2019 20:13:58 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -75,21 +75,21 @@ interactions:
       Accept:
       - application/xml
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:57 GMT
+      - Thu, 10 Oct 2019 20:13:58 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://pyacrstorage8f8b1b31.blob.core.windows.net/container8f8b1b31?restype=container&comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>0</Id><AccessPolicy><Start>2019-10-09T23:07:57.0000000Z</Start><Expiry>2019-10-10T00:08:57.0000000Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>1</Id><AccessPolicy><Start>2019-10-09T23:07:57.0000000Z</Start><Expiry>2019-10-10T00:08:57.0000000Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>0</Id><AccessPolicy><Start>2019-10-10T20:12:58.0000000Z</Start><Expiry>2019-10-10T21:13:58.0000000Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>1</Id><AccessPolicy><Start>2019-10-10T20:12:58.0000000Z</Start><Expiry>2019-10-10T21:13:58.0000000Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type: application/xml
-      date: Wed, 09 Oct 2019 23:08:57 GMT
-      etag: '"0x8D74D0DA9EE0ECE"'
-      last-modified: Wed, 09 Oct 2019 23:08:57 GMT
+      date: Thu, 10 Oct 2019 20:13:58 GMT
+      etag: '"0x8D74DBE625478FF"'
+      last-modified: Thu, 10 Oct 2019 20:13:58 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding: chunked
       x-ms-version: '2019-02-02'

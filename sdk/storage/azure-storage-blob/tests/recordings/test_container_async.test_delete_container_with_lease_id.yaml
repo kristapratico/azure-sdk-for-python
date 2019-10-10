@@ -3,9 +3,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:12:36 GMT
+      - Thu, 10 Oct 2019 20:12:12 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:12:38 GMT
-      etag: '"0x8D74D0E2D6B9998"'
-      last-modified: Wed, 09 Oct 2019 23:12:38 GMT
+      date: Thu, 10 Oct 2019 20:12:12 GMT
+      etag: '"0x8D74DBE236FD468"'
+      last-modified: Thu, 10 Oct 2019 20:12:12 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -35,15 +35,15 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:12:37 GMT
+      - Thu, 10 Oct 2019 20:12:13 GMT
       x-ms-lease-action:
       - acquire
       x-ms-lease-duration:
       - '15'
       x-ms-proposed-lease-id:
-      - 000f39c0-de31-41fd-ad42-f29278a5e3e4
+      - c784d076-aa6a-4a8b-abba-230a657ccfdb
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -53,11 +53,11 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:12:38 GMT
-      etag: '"0x8D74D0E2D6B9998"'
-      last-modified: Wed, 09 Oct 2019 23:12:38 GMT
+      date: Thu, 10 Oct 2019 20:12:13 GMT
+      etag: '"0x8D74DBE236FD468"'
+      last-modified: Thu, 10 Oct 2019 20:12:12 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
-      x-ms-lease-id: 000f39c0-de31-41fd-ad42-f29278a5e3e4
+      x-ms-lease-id: c784d076-aa6a-4a8b-abba-230a657ccfdb
       x-ms-version: '2019-02-02'
     status:
       code: 201
@@ -74,11 +74,11 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:12:37 GMT
+      - Thu, 10 Oct 2019 20:12:13 GMT
       x-ms-lease-id:
-      - 000f39c0-de31-41fd-ad42-f29278a5e3e4
+      - c784d076-aa6a-4a8b-abba-230a657ccfdb
       x-ms-version:
       - '2019-02-02'
     method: DELETE
@@ -88,7 +88,7 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:12:38 GMT
+      date: Thu, 10 Oct 2019 20:12:13 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -106,9 +106,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:12:37 GMT
+      - Thu, 10 Oct 2019 20:12:13 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -116,11 +116,11 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>ContainerNotFound</Code><Message>The
-        specified container does not exist.\nRequestId:68bb6612-901e-011e-36f7-7eacce000000\nTime:2019-10-09T23:12:38.4583209Z</Message></Error>"
+        specified container does not exist.\nRequestId:311aebe1-001e-0044-80a7-7fd666000000\nTime:2019-10-10T20:12:13.1602172Z</Message></Error>"
     headers:
       content-length: '225'
       content-type: application/xml
-      date: Wed, 09 Oct 2019 23:12:38 GMT
+      date: Thu, 10 Oct 2019 20:12:13 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code: ContainerNotFound
       x-ms-version: '2019-02-02'

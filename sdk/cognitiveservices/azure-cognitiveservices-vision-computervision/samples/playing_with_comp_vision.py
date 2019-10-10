@@ -26,19 +26,19 @@ def test_analyze_image():
     )
 
     resp = client.analyze_image(
-        image_or_url="https://cdn.vox-cdn.com/thumbor/2obROpfYnG3r83wV-puexZi-3nQ=/0x0:2971x1939/1200x800/filters:focal(1272x316:1746x790)/cdn.vox-cdn.com/uploads/chorus_image/image/55253763/11364550914_521e079ff7_o_d.1497454023.jpg",
+        image_or_url="https://image.shutterstock.com/image-photo/family-relaxing-on-sofa-260nw-278188052.jpg",
         visual_features=[
-            # "Brands"
-            # "ImageType",
-            # "faces",
-            # "categories",
-            # "Color",
-            # "Tags",
-            # "Description",
+            "Brands",
+            "ImageType",
+            "faces",
+            "categories",
+            "Color",
+            "Tags",
+            "Description",
             "Adult",
-            # "Objects",
+            "Objects",
         ],
-        # details=["Landmarks", "Celebrities"],
+        details=["celebrities", "landmarks"],
         # description_exclude=["Landmarks"]
     )
 
@@ -110,17 +110,25 @@ def test_batch_read_file_with_lropoller():
         if poller.status() == "Failed":
             print("Oh no")
 
+    # while poller.status() in ["NotStarted", "Running"]:
+    #     continue
+    #
+    # if poller.status() == "Succeeded":
+    #     read_result = poller.result()
+    # elif poller.status() == "Failed":
+    #     raise Exception
+
     print("Job completion is: {}\n".format(poller.status()))
     print("Full text:\n")
     print(read_result[0].full_text)
 
-    # print("Recognized line-by-line:\n")
-    #
-    # full_text = ""
-    # for image_text in read_result:
-    #     for line in image_text.lines:
-    #         full_text += "\n" + line.text
-    # print(full_text)
+    print("Recognized line-by-line:\n")
+
+    full_text = ""
+    for image_text in read_result:
+        for line in image_text.lines:
+            full_text += "\n" + line.text
+    print(full_text)
 
 
 def test_batch_read_file_in_stream_NO_POLLER():

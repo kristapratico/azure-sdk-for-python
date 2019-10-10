@@ -1,13 +1,12 @@
 import six
 from azure.cognitiveservices.vision.computervision._policies import ComputerVisionResponseHook
-# from azure.cognitiveservices.vision.computervision._policies import CognitiveServicesCredentialPolicy
+from azure.cognitiveservices.vision.computervision._policies import CognitiveServicesCredentialPolicy
 from azure.core import Configuration
 from azure.core.pipeline import Pipeline
 from azure.core.pipeline import policies
 from azure.core.pipeline.transport import RequestsTransport
 from azure.core.pipeline.policies import BearerTokenCredentialPolicy
 from azure.core.pipeline.policies.distributed_tracing import DistributedTracingPolicy
-from azure.cognitiveservices.core.policies import CognitiveServicesCredentialPolicy
 from .version import VERSION
 
 

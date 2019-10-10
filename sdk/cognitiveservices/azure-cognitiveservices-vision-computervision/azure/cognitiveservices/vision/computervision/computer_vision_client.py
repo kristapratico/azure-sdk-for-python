@@ -16,6 +16,8 @@ from ._generated._computer_vision_client import ComputerVisionClient as Computer
 from ._generated.models import ComputerVisionErrorException
 from ._polling import ComputerVisionPollingMethod
 from ._base_client import ComputerVisionClientBase
+from ._deserialize import response_handler, deserialize_detected_objects, deserialize_image_analysis
+
 
 from .models import (
     ImageAnalysis,
@@ -37,9 +39,6 @@ if TYPE_CHECKING:
         TextRecognitionMode,
     )
 
-def response_handler(response, deserialized, response_headers):
-    return response
-
 
 class ComputerVisionClient(ComputerVisionClientBase):
     """The Computer Vision API provides state-of-the-art algorithms to process images and return information.
@@ -53,6 +52,7 @@ class ComputerVisionClient(ComputerVisionClientBase):
     :param credentials: Cognitive Services account key credentials needed for the client to connect to Azure.
     :type credentials: str
     """
+
     def __init__(self, endpoint, credential, **kwargs):
         # type: (str, str, Any) -> None
         super(ComputerVisionClient, self).__init__(credentials=credential, **kwargs)
@@ -120,27 +120,25 @@ class ComputerVisionClient(ComputerVisionClientBase):
         """
         try:
             if isinstance(image_or_url, six.text_type):
-                response = self._client.analyze_image(
+                return self._client.analyze_image(
                     url=image_or_url,
                     visual_features=visual_features,
                     details=details,
                     language=language,
                     description_exclude=kwargs.pop("description_exclude", None),
-                    cls=kwargs.pop("cls", None),
+                    cls=deserialize_image_analysis,
                     **kwargs,
                 )
-                return ImageAnalysis._from_generated(response)
             if hasattr(image_or_url, "read"):
-                response = self._client.analyze_image_in_stream(
+                return self._client.analyze_image_in_stream(
                     image=image_or_url,
                     visual_features=visual_features,
                     details=details,
                     language=language,
                     description_exclude=kwargs.pop("description_exclude", None),
-                    cls=kwargs.pop("cls", None),
+                    cls=deserialize_image_analysis,
                     **kwargs,
                 )
-                return ImageAnalysis._from_generated(response)
             else:
                 raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
@@ -396,45 +394,19 @@ class ComputerVisionClient(ComputerVisionClientBase):
         """
         try:
             if isinstance(image_or_url, six.text_type):
-                response = self._client.detect_objects(
+                return self._client.detect_objects(
                     url=image_or_url,
-                    cls=kwargs.pop("cls", None),
+                    cls=deserialize_detected_objects,
                     **kwargs,
                 )
-                return response.objects
             if hasattr(image_or_url, "read"):
-                response = self._client.detect_objects_in_stream(
+                return self._client.detect_objects_in_stream(
                     image=image_or_url,
-                    cls=kwargs.pop("cls", None),
+                    cls=deserialize_detected_objects,
                     **kwargs,
                 )
-                return response.objects
             else:
                 raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
-        except ComputerVisionErrorException as error:
-            raise error
-
-    def list_models(self, **kwargs):
-        # type: (Any) -> ListModelsResult
-        """This operation returns the list of domain-specific models that are
-        supported by the Computer Vision API. Currently, the API supports
-        following domain-specific models: celebrity recognizer, landmark
-        recognizer.
-        A successful response will be returned in JSON. If the request failed,
-        the response will contain an error code and a message to help
-        understand what went wrong.
-
-        :return: ListModelsResult
-        :rtype: ~computervision.models.ListModelsResult
-        :raises:
-         :class:`ComputerVisionErrorException<computervision.models.ComputerVisionErrorException>`
-        """
-        try:
-            response = self._client.list_models(
-                cls=kwargs.pop("cls", None),
-                **kwargs,
-            )
-            return response.models_property
         except ComputerVisionErrorException as error:
             raise error
 
@@ -530,13 +502,14 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 )
                 return OcrResult._from_generated(response)
             if hasattr(image_or_url, "read"):
-                return self._client.recognize_printed_text_in_stream(
+                response = self._client.recognize_printed_text_in_stream(
                     image=image_or_url,
                     detect_orientation=detect_orientation,
                     language=language,
                     cls=kwargs.pop("cls", None),
                     **kwargs,
                 )
+                return OcrResult._from_generated(response)
             else:
                 raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
@@ -683,51 +656,6 @@ class ComputerVisionClient(ComputerVisionClientBase):
                 raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
         except ComputerVisionErrorException as error:
             raise error
-
-    def recognize_text(self, image_or_url, mode, **kwargs):
-        # type: (Union[str, io.BufferedReader], Union[str, TextRecognitionMode], Any) -> LROPoller
-        """Recognize Text operation.
-
-        :param image_or_url: Publicly reachable URL of an image or an image stream.
-        :type image_or_url: str or bytes
-        :param mode: Type of text to recognize. Possible values include:
-         'Handwritten', 'Printed'
-        :type mode: str or ~ocr.models.TextRecognitionMode
-        :return: A poller object
-        :rtype: ~azure.core.polling.LROPoller
-        :raises:
-         :class:`ComputerVisionErrorException<ocr.models.ComputerVisionErrorException>`
-        """
-        try:
-            if isinstance(image_or_url, six.text_type):
-                job = self._client.recognize_text(
-                    url=image_or_url,
-                    mode=mode,
-                    cls=response_handler,
-                    **kwargs,
-                )
-            elif hasattr(image_or_url, "read"):
-                job = self._client.recognize_text_in_stream(
-                    image=image_or_url,
-                    mode=mode,
-                    cls=response_handler,
-                    **kwargs,
-                )
-            else:
-                raise TypeError("Unsupported image_or_url type: {}".format(type(image_or_url)))
-        except ComputerVisionErrorException as error:
-            raise error
-
-        operation_id = job.headers["Operation-Location"].split("/")[-1]
-
-        command = functools.partial(
-            self._client.get_text_operation_result,
-            operation_id,
-        )
-
-        start_recognize_text = command()
-        polling_method = ComputerVisionPollingMethod(1)  # what should polling interval be set to?
-        return LROPoller(command, start_recognize_text, None, polling_method)
 
     def batch_read_file(self, image_or_url, **kwargs):
         # type: (Union[str, io.BufferedReader], Any) -> LROPoller

@@ -4,6 +4,61 @@
 # license information.
 # --------------------------------------------------------------------------
 
+from enum import Enum
+
+
+class Gender(str, Enum):
+
+    male = "Male"
+    female = "Female"
+
+
+class DescriptionExclude(str, Enum):
+
+    celebrities = "Celebrities"
+    landmarks = "Landmarks"
+
+
+class AdultInfo(object):
+    """An object describing whether the image contains adult-oriented content
+    and/or is racy.
+
+    :param is_adult_content: A value indicating if the image contains
+     adult-oriented content.
+    :type is_adult_content: bool
+    :param is_racy_content: A value indicating if the image is racy.
+    :type is_racy_content: bool
+    :param is_gory_content: A value indicating if the image is gory.
+    :type is_gory_content: bool
+    :param adult_score: Score from 0 to 1 that indicates how much the content
+     is considered adult-oriented within the image.
+    :type adult_score: float
+    :param racy_score: Score from 0 to 1 that indicates how suggestive is the
+     image.
+    :type racy_score: float
+    :param gore_score: Score from 0 to 1 that indicates how gory is the image.
+    :type gore_score: float
+    """
+
+    def __init__(self, **kwargs):
+        self.is_adult_content = kwargs.get('is_adult_content', None)
+        self.is_racy_content = kwargs.get('is_racy_content', None)
+        self.is_gory_content = kwargs.get('is_gory_content', None)
+        self.adult_score = kwargs.get('adult_score', None)
+        self.racy_score = kwargs.get('racy_score', None)
+        self.gore_score = kwargs.get('gore_score', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        return cls(
+            is_adult_content=obj.is_adult_content,
+            is_racy_content=obj.is_racy_content,
+            is_gory_content=obj.is_gory_content,
+            adult_score=obj.adult_score,
+            racy_score=obj.racy_score,
+            gore_score=obj.gore_score,
+        )
+
 
 class ColorInfo(object):
     """An object providing additional metadata describing color attributes.
@@ -30,11 +85,40 @@ class ColorInfo(object):
     @classmethod
     def _from_generated(cls, obj):
         return cls(
-            dominant_color_foreground=obj.color.dominant_color_foreground,
-            dominant_color_background=obj.color.dominant_color_background,
-            dominant_colors=obj.color.dominant_colors,
-            accent_color=obj.color.accent_color,
-            is_bw_img=obj.color.is_bw_img,
+            dominant_color_foreground=obj.dominant_color_foreground,
+            dominant_color_background=obj.dominant_color_background,
+            dominant_colors=obj.dominant_colors,
+            accent_color=obj.accent_color,
+            is_bw_img=obj.is_bw_img,
+        )
+
+
+class DetectedBrand(object):
+    """A brand detected in an image.
+
+    Variables are only populated by the server, and will be ignored when
+    sending a request.
+
+    :ivar name: Label for the brand.
+    :vartype name: str
+    :ivar confidence: Confidence score of having observed the brand in the
+     image, as a value ranging from 0 to 1.
+    :vartype confidence: float
+    :ivar rectangle: Approximate location of the detected brand.
+    :vartype rectangle: ~computervision.models.BoundingRect
+    """
+
+    def __init__(self, **kwargs):
+        self.name = kwargs.get('name', None)
+        self.confidence = kwargs.get('confidence', None)
+        self.rectangle = kwargs.get('rectangle', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        return cls(
+            name=obj.name,
+            confidence=obj.confidence,
+            rectangle=BoundingRect._from_generated(obj.rectangle)
         )
 
 
@@ -194,91 +278,376 @@ class ImageAnalysis(object):
         self.request_id = kwargs.get('request_id', None)
         self.metadata = kwargs.get('metadata', None)
 
+
+class BoundingRect(object):
+    """A bounding box for an area inside an image.
+
+    :param x: X-coordinate of the top left point of the area, in pixels.
+    :type x: int
+    :param y: Y-coordinate of the top left point of the area, in pixels.
+    :type y: int
+    :param w: Width measured from the top-left point of the area, in pixels.
+    :type w: int
+    :param h: Height measured from the top-left point of the area, in pixels.
+    :type h: int
+    """
+
+    def __init__(self, **kwargs):
+        self.x = kwargs.get('x', None)
+        self.y = kwargs.get('y', None)
+        self.w = kwargs.get('w', None)
+        self.h = kwargs.get('h', None)
+
     @classmethod
     def _from_generated(cls, obj):
         return cls(
-            categories=obj.categories,
-            adult=obj.adult,
-            color=obj.color,
-            image_type=obj.image_type,
-            tags=obj.tags,
-            description=obj.description,
-            faces=obj.faces,
-            objects=obj.objects,
-            brands=obj.brands,
-            request_id=obj.request_id,
-            metadata=obj.metadata
+            x=obj.x,
+            y=obj.y,
+            w=obj.w,
+            h=obj.h
         )
 
 
-# # used by CelebritiesModel and FaceDescription
-# class FaceRectangle(Model):
-#     """An object describing face rectangle.
-#
-#     :param left: X-coordinate of the top left point of the face, in pixels.
-#     :type left: int
-#     :param top: Y-coordinate of the top left point of the face, in pixels.
-#     :type top: int
-#     :param width: Width measured from the top-left point of the face, in
-#      pixels.
-#     :type width: int
-#     :param height: Height measured from the top-left point of the face, in
-#      pixels.
-#     :type height: int
-#     """
-#
-#     _attribute_map = {
-#         'left': {'key': 'left', 'type': 'int'},
-#         'top': {'key': 'top', 'type': 'int'},
-#         'width': {'key': 'width', 'type': 'int'},
-#         'height': {'key': 'height', 'type': 'int'},
-#     }
-#
-#     def __init__(self, **kwargs):
-#         super(FaceRectangle, self).__init__(**kwargs)
-#         self.left = kwargs.get('left', None)
-#         self.top = kwargs.get('top', None)
-#         self.width = kwargs.get('width', None)
-#         self.height = kwargs.get('height', None)
-#
-# # used by AreaOfInterestResult
-# class BoundingRect(Model):
-#     """A bounding box for an area inside an image.
-#
-#     :param x: X-coordinate of the top left point of the area, in pixels.
-#     :type x: int
-#     :param y: Y-coordinate of the top left point of the area, in pixels.
-#     :type y: int
-#     :param w: Width measured from the top-left point of the area, in pixels.
-#     :type w: int
-#     :param h: Height measured from the top-left point of the area, in pixels.
-#     :type h: int
-#     """
-#
-#     _attribute_map = {
-#         'x': {'key': 'x', 'type': 'int'},
-#         'y': {'key': 'y', 'type': 'int'},
-#         'w': {'key': 'w', 'type': 'int'},
-#         'h': {'key': 'h', 'type': 'int'},
-#     }
-#
-#     def __init__(self, **kwargs):
-#         super(BoundingRect, self).__init__(**kwargs)
-#         self.x = kwargs.get('x', None)
-#         self.y = kwargs.get('y', None)
-#         self.w = kwargs.get('w', None)
-#         self.h = kwargs.get('h', None)
+class Category(object):
+    """An object describing identified category.
+
+    :param name: Name of the category.
+    :type name: str
+    :param score: Scoring of the category.
+    :type score: float
+    :param detail: Details of the identified category.
+    :type detail: ~computervision.models.CategoryDetail
+    """
+    def __init__(self, **kwargs):
+        self.name = kwargs.get('name', None)
+        self.score = kwargs.get('score', None)
+        self.detail = kwargs.get('detail', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        if obj is None:
+            return obj
+        return [cls(
+            name=cat.name,
+            score=cat.score,
+            detail=CategoryDetail._from_generated(cat.detail),
+            ) for cat in obj]
 
 
-# Used by OcrLine, OcrRegion, OcrWord, Line, Word
-# :param bounding_box: Bounding box of a recognized region. The four
-#  integers represent the x-coordinate of the left edge, the y-coordinate of
-#  the top edge, width, and height of the bounding box, in the coordinate
-#  system of the input image, after it has been rotated around its center
-#  according to the detected text angle (see textAngle property), with the
-#  origin at the top-left corner, and the y-axis pointing down.
-# :type bounding_box: str
+class CategoryDetail(object):
+    """An object describing additional category details.
+
+    :param celebrities: An array of celebrities if any identified.
+    :type celebrities: list[~computervision.models.CelebritiesModel]
+    :param landmarks: An array of landmarks if any identified.
+    :type landmarks: list[~computervision.models.LandmarksModel]
+    """
+    def __init__(self, **kwargs):
+        self.celebrities = kwargs.get('celebrities', None)
+        self.landmarks = kwargs.get('landmarks', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        if obj is None:
+            return obj
+
+        if obj.landmarks is None:
+            return cls(
+                celebrities=[CelebritiesModel._from_generated(celeb) for celeb in obj.celebrities],
+                landmarks=None
+            )
+
+        if obj.celebrities is None:
+            return cls(
+                celebrities=None,
+                landmarks=[LandmarksModel._from_generated(landmark) for landmark in obj.landmarks]
+            )
+
+        return cls(
+            celebrities=[CelebritiesModel._from_generated(celeb) for celeb in obj.celebrities],
+            landmarks=[LandmarksModel._from_generated(landmark) for landmark in obj.landmarks]
+        )
 
 
-# OcrLine vs Line (has a text field for the entire line)
-# OcrWord vs Word (has a confidence)
+class CelebritiesModel(object):
+    """An object describing possible celebrity identification.
+
+    :param name: Name of the celebrity.
+    :type name: str
+    :param confidence: Confidence level for the celebrity recognition as a
+     value ranging from 0 to 1.
+    :type confidence: float
+    :param face_rectangle: Location of the identified face in the image.
+    :type face_rectangle: ~computervision.models.FaceRectangle
+    """
+
+    def __init__(self, **kwargs):
+        self.name = kwargs.get('name', None)
+        self.confidence = kwargs.get('confidence', None)
+        self.face_rectangle = kwargs.get('face_rectangle', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        return cls(
+            name=obj.name,
+            confidence=obj.confidence,
+            face_rectangle=FaceRectangle._from_generated(obj.face_rectangle),
+        )
+
+
+class FaceDescription(object):
+    """An object describing a face identified in the image.
+
+    :param age: Possible age of the face.
+    :type age: int
+    :param gender: Possible gender of the face. Possible values include:
+     'Male', 'Female'
+    :type gender: str or ~computervision.models.Gender
+    :param face_rectangle: Rectangle in the image containing the identified
+     face.
+    :type face_rectangle: ~computervision.models.FaceRectangle
+    """
+
+    def __init__(self, **kwargs):
+        self.age = kwargs.get('age', None)
+        self.gender = kwargs.get('gender', None)
+        self.face_rectangle = kwargs.get('face_rectangle', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        if obj is None:
+            return obj
+        return [cls(
+                age=face.age,
+                gender=Gender(face.gender),
+                face_rectangle=FaceRectangle._from_generated(face.face_rectangle),
+                ) for face in obj]
+
+
+class FaceRectangle(object):
+    """An object describing face rectangle.
+
+    :param left: X-coordinate of the top left point of the face, in pixels.
+    :type left: int
+    :param top: Y-coordinate of the top left point of the face, in pixels.
+    :type top: int
+    :param width: Width measured from the top-left point of the face, in
+     pixels.
+    :type width: int
+    :param height: Height measured from the top-left point of the face, in
+     pixels.
+    :type height: int
+    """
+
+    def __init__(self, **kwargs):
+        self.left = kwargs.get('left', None)
+        self.top = kwargs.get('top', None)
+        self.width = kwargs.get('width', None)
+        self.height = kwargs.get('height', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        return cls(
+            left=obj.left,
+            top=obj.top,
+            width=obj.width,
+            height=obj.height
+        )
+
+
+class ImageCaption(object):
+    """An image caption, i.e. a brief description of what the image depicts.
+
+    :param text: The text of the caption.
+    :type text: str
+    :param confidence: The level of confidence the service has in the caption.
+    :type confidence: float
+    """
+
+    def __init__(self, **kwargs):
+        self.text = kwargs.get('text', None)
+        self.confidence = kwargs.get('confidence', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        return cls(
+            text=obj.text,
+            confidence=obj.confidence
+        )
+
+
+class ImageDescriptionDetails(object):
+    """A collection of content tags, along with a list of captions sorted by
+    confidence level, and image metadata.
+
+    :param tags: A collection of image tags.
+    :type tags: list[str]
+    :param captions: A list of captions, sorted by confidence level.
+    :type captions: list[~computervision.models.ImageCaption]
+    """
+
+    def __init__(self, **kwargs):
+        self.tags = kwargs.get('tags', None)
+        self.captions = kwargs.get('captions', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        return cls(
+            tags=obj.tags,
+            captions=[ImageCaption._from_generated(caption) for caption in obj.captions]
+        )
+
+
+class ImageMetadata(object):
+    """Image metadata.
+
+    :param width: Image width, in pixels.
+    :type width: int
+    :param height: Image height, in pixels.
+    :type height: int
+    :param format: Image format.
+    :type format: str
+    """
+
+    def __init__(self, **kwargs):
+        self.width = kwargs.get('width', None)
+        self.height = kwargs.get('height', None)
+        self.format = kwargs.get('format', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        return cls(
+            width=obj.width,
+            height=obj.height,
+            format=obj.format
+        )
+
+class ImageTag(object):
+    """An entity observation in the image, along with the confidence score.
+
+    :param name: Name of the entity.
+    :type name: str
+    :param confidence: The level of confidence that the entity was observed.
+    :type confidence: float
+    :param hint: Optional hint/details for this tag.
+    :type hint: str
+    """
+
+    def __init__(self, **kwargs):
+        self.name = kwargs.get('name', None)
+        self.confidence = kwargs.get('confidence', None)
+        self.hint = kwargs.get('hint', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        return [cls(
+            name=tag.name,
+            confidence=tag.confidence,
+            hint=tag.hint,
+        ) for tag in obj]
+
+class ImageType(object):
+    """An object providing possible image types and matching confidence levels.
+
+    :param clip_art_type: Confidence level that the image is a clip art.
+    :type clip_art_type: int
+    :param line_drawing_type: Confidence level that the image is a line
+     drawing.
+    :type line_drawing_type: int
+    """
+
+    def __init__(self, **kwargs):
+        self.clip_art_type = kwargs.get('clip_art_type', None)
+        self.line_drawing_type = kwargs.get('line_drawing_type', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        return cls(
+            clip_art_type=obj.clip_art_type,
+            line_drawing_type=obj.line_drawing_type
+        )
+
+class LandmarksModel(object):
+    """A landmark recognized in the image.
+
+    :param name: Name of the landmark.
+    :type name: str
+    :param confidence: Confidence level for the landmark recognition as a
+     value ranging from 0 to 1.
+    :type confidence: float
+    """
+
+    def __init__(self, **kwargs):
+        self.name = kwargs.get('name', None)
+        self.confidence = kwargs.get('confidence', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        return cls(
+            name=obj.name,
+            confidence=obj.confidence,
+        )
+
+
+class ObjectHierarchy(object):
+    """An object detected inside an image.
+
+    :param object_property: Label for the object.
+    :type object_property: str
+    :param confidence: Confidence score of having observed the object in the
+     image, as a value ranging from 0 to 1.
+    :type confidence: float
+    :param parent: The parent object, from a taxonomy perspective.
+     The parent object is a more generic form of this object.  For example, a
+     'bulldog' would have a parent of 'dog'.
+    :type parent: ~computervision.models.ObjectHierarchy
+    """
+
+    def __init__(self, **kwargs):
+        self.object_property = kwargs.get('object_property', None)
+        self.confidence = kwargs.get('confidence', None)
+        self.parent = kwargs.get('parent', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        if obj is None:
+            return
+        return cls(
+            object_property=obj.object_property,
+            confidence=obj.confidence,
+            parent=ObjectHierarchy._from_generated(obj.parent),
+        )
+
+
+class DetectedObject(object):
+    """An object detected in an image.
+
+    Variables are only populated by the server, and will be ignored when
+    sending a request.
+
+    :ivar rectangle: Approximate location of the detected object.
+    :vartype rectangle: ~computervision.models.BoundingRect
+    :param object_property: Label for the object.
+    :type object_property: str
+    :param confidence: Confidence score of having observed the object in the
+     image, as a value ranging from 0 to 1.
+    :type confidence: float
+    :param parent: The parent object, from a taxonomy perspective.
+     The parent object is a more generic form of this object.  For example, a
+     'bulldog' would have a parent of 'dog'.
+    :type parent: ~computervision.models.ObjectHierarchy
+    """
+    def __init__(self, **kwargs):
+        self.rectangle = kwargs.get('rectangle', None)
+        self.object_property = kwargs.get('object_property', None)
+        self.confidence = kwargs.get('confidence', None)
+        self.parent = kwargs.get('parent', None)
+
+    @classmethod
+    def _from_generated(cls, obj):
+        return cls(
+            rectangle=BoundingRect._from_generated(obj.rectangle),
+            object_property=obj.object_property,
+            confidence=obj.confidence,
+            parent=ObjectHierarchy._from_generated(obj.parent)
+        )

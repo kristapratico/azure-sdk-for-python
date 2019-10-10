@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:00 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       etag:
-      - '"0x8D74D13D2D540E6"'
+      - '"0x8D74D1AF1A33E82"'
       last-modified:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -55,7 +55,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-date:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -69,11 +69,11 @@ interactions:
       content-md5:
       - XrY7u+Ae7tCTyyK7j1rNww==
       date:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       etag:
-      - '"0x8D74D13D2DCEB3E"'
+      - '"0x8D74D1AF1AB8119"'
       last-modified:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-content-crc64:
@@ -103,7 +103,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-date:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -117,11 +117,11 @@ interactions:
       content-md5:
       - 8I3NQ8cSb3nOdR+o0L+t/Q==
       date:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       etag:
-      - '"0x8D74D13D2E689EF"'
+      - '"0x8D74D1AF1B56DF0"'
       last-modified:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-content-crc64:
@@ -145,7 +145,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       x-ms-version:
       - '2019-02-02'
     method: HEAD
@@ -163,17 +163,21 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       etag:
-      - '"0x8D74D13D2E689EF"'
+      - '"0x8D74D1AF1B56DF0"'
       last-modified:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-access-tier:
+      - Hot
+      x-ms-access-tier-inferred:
+      - 'true'
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       x-ms-lease-state:
       - available
       x-ms-lease-status:
@@ -197,7 +201,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       x-ms-range:
       - bytes=0-33554431
       x-ms-version:
@@ -217,11 +221,11 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       etag:
-      - '"0x8D74D13D2E689EF"'
+      - '"0x8D74D1AF1B56DF0"'
       last-modified:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-blob-content-md5:
@@ -229,7 +233,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Wed, 09 Oct 2019 23:53:03 GMT
+      - Thu, 10 Oct 2019 00:44:01 GMT
       x-ms-lease-state:
       - available
       x-ms-lease-status:

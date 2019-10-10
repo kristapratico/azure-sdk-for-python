@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:52:54 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       etag:
-      - '"0x8D74D13CE348ED2"'
+      - '"0x8D74D1AEED93AA5"'
       last-modified:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -55,7 +55,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-date:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -69,11 +69,11 @@ interactions:
       content-md5:
       - XrY7u+Ae7tCTyyK7j1rNww==
       date:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       etag:
-      - '"0x8D74D13CE58566A"'
+      - '"0x8D74D1AEEE2939A"'
       last-modified:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-content-crc64:
@@ -105,7 +105,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-date:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -113,14 +113,14 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>BlobAlreadyExists</Code><Message>The
-        specified blob already exists.\nRequestId:c21a7c04-901e-0022-4efc-7e5f55000000\nTime:2019-10-09T23:52:55.8354895Z</Message></Error>"
+        specified blob already exists.\nRequestId:873106c4-a01e-0084-3f03-7ffee3000000\nTime:2019-10-10T00:43:56.9037493Z</Message></Error>"
     headers:
       content-length:
       - '220'
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:
@@ -142,7 +142,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       x-ms-version:
       - '2019-02-02'
     method: HEAD
@@ -160,17 +160,21 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       etag:
-      - '"0x8D74D13CE58566A"'
+      - '"0x8D74D1AEEE2939A"'
       last-modified:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-access-tier:
+      - Hot
+      x-ms-access-tier-inferred:
+      - 'true'
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       x-ms-lease-state:
       - available
       x-ms-lease-status:
@@ -194,7 +198,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       x-ms-range:
       - bytes=0-33554431
       x-ms-version:
@@ -214,11 +218,11 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       etag:
-      - '"0x8D74D13CE58566A"'
+      - '"0x8D74D1AEEE2939A"'
       last-modified:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-blob-content-md5:
@@ -226,7 +230,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Wed, 09 Oct 2019 23:52:55 GMT
+      - Thu, 10 Oct 2019 00:43:56 GMT
       x-ms-lease-state:
       - available
       x-ms-lease-status:

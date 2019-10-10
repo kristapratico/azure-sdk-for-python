@@ -17,7 +17,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 18:58:34 GMT
+      - Thu, 10 Oct 2019 00:27:11 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -29,7 +29,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:12 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -49,7 +49,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:12 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -57,12 +57,12 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><StorageServiceProperties><Logging><Version>1.0</Version><Read>false</Read><Write>false</Write><Delete>false</Delete><RetentionPolicy><Enabled>false</Enabled></RetentionPolicy></Logging><HourMetrics><Version>1.0</Version><Enabled>true</Enabled><IncludeAPIs>true</IncludeAPIs><RetentionPolicy><Enabled>true</Enabled><Days>7</Days></RetentionPolicy></HourMetrics><MinuteMetrics><Version>1.0</Version><Enabled>false</Enabled><RetentionPolicy><Enabled>false</Enabled></RetentionPolicy></MinuteMetrics><Cors
-        /><DeleteRetentionPolicy><Enabled>true</Enabled><Days>1</Days></DeleteRetentionPolicy></StorageServiceProperties>"
+        /><DeleteRetentionPolicy><Enabled>true</Enabled><Days>1</Days></DeleteRetentionPolicy><StaticWebsite><Enabled>false</Enabled></StaticWebsite></StorageServiceProperties>"
     headers:
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:12 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -90,7 +90,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:12 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -102,7 +102,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:12 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -122,7 +122,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:13 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -130,12 +130,12 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><StorageServiceProperties><Logging><Version>1.0</Version><Read>false</Read><Write>false</Write><Delete>false</Delete><RetentionPolicy><Enabled>false</Enabled></RetentionPolicy></Logging><HourMetrics><Version>1.0</Version><Enabled>true</Enabled><IncludeAPIs>true</IncludeAPIs><RetentionPolicy><Enabled>true</Enabled><Days>7</Days></RetentionPolicy></HourMetrics><MinuteMetrics><Version>1.0</Version><Enabled>false</Enabled><RetentionPolicy><Enabled>false</Enabled></RetentionPolicy></MinuteMetrics><Cors
-        /><DeleteRetentionPolicy><Enabled>true</Enabled><Days>365</Days></DeleteRetentionPolicy></StorageServiceProperties>"
+        /><DeleteRetentionPolicy><Enabled>true</Enabled><Days>365</Days></DeleteRetentionPolicy><StaticWebsite><Enabled>false</Enabled></StaticWebsite></StorageServiceProperties>"
     headers:
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:12 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -157,7 +157,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:13 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -165,12 +165,12 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><StorageServiceProperties><Logging><Version>1.0</Version><Read>false</Read><Write>false</Write><Delete>false</Delete><RetentionPolicy><Enabled>false</Enabled></RetentionPolicy></Logging><HourMetrics><Version>1.0</Version><Enabled>true</Enabled><IncludeAPIs>true</IncludeAPIs><RetentionPolicy><Enabled>true</Enabled><Days>7</Days></RetentionPolicy></HourMetrics><MinuteMetrics><Version>1.0</Version><Enabled>false</Enabled><RetentionPolicy><Enabled>false</Enabled></RetentionPolicy></MinuteMetrics><Cors
-        /><DeleteRetentionPolicy><Enabled>true</Enabled><Days>365</Days></DeleteRetentionPolicy></StorageServiceProperties>"
+        /><DeleteRetentionPolicy><Enabled>true</Enabled><Days>365</Days></DeleteRetentionPolicy><StaticWebsite><Enabled>false</Enabled></StaticWebsite></StorageServiceProperties>"
     headers:
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:12 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -198,7 +198,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:13 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -206,7 +206,7 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>InvalidXmlDocument</Code><Message>XML
-        specified is not syntactically valid.\nRequestId:2e2df4ed-601e-0027-7fd3-7ece9d000000\nTime:2019-10-09T18:58:37.8399581Z</Message><LineNumber>2</LineNumber><LinePosition>91</LinePosition><Reason>Retention
+        specified is not syntactically valid.\nRequestId:f2da2026-e01e-005a-2a01-7f36f7000000\nTime:2019-10-10T00:27:13.1374854Z</Message><LineNumber>2</LineNumber><LinePosition>91</LinePosition><Reason>Retention
         days must be greater than 0 and less than or equal to 365 days.</Reason></Error>"
     headers:
       content-length:
@@ -214,7 +214,7 @@ interactions:
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:12 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:
@@ -236,7 +236,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:13 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -244,12 +244,12 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><StorageServiceProperties><Logging><Version>1.0</Version><Read>false</Read><Write>false</Write><Delete>false</Delete><RetentionPolicy><Enabled>false</Enabled></RetentionPolicy></Logging><HourMetrics><Version>1.0</Version><Enabled>true</Enabled><IncludeAPIs>true</IncludeAPIs><RetentionPolicy><Enabled>true</Enabled><Days>7</Days></RetentionPolicy></HourMetrics><MinuteMetrics><Version>1.0</Version><Enabled>false</Enabled><RetentionPolicy><Enabled>false</Enabled></RetentionPolicy></MinuteMetrics><Cors
-        /><DeleteRetentionPolicy><Enabled>true</Enabled><Days>365</Days></DeleteRetentionPolicy></StorageServiceProperties>"
+        /><DeleteRetentionPolicy><Enabled>true</Enabled><Days>365</Days></DeleteRetentionPolicy><StaticWebsite><Enabled>false</Enabled></StaticWebsite></StorageServiceProperties>"
     headers:
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 18:58:37 GMT
+      - Thu, 10 Oct 2019 00:27:12 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:

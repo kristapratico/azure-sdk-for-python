@@ -5,7 +5,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:42:10 GMT
+      - Thu, 10 Oct 2019 00:49:28 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:42:11 GMT
-      etag: '"0x8D74D124E34CA47"'
-      last-modified: Wed, 09 Oct 2019 23:42:11 GMT
+      date: Thu, 10 Oct 2019 00:49:29 GMT
+      etag: '"0x8D74D1BB54B322F"'
+      last-modified: Thu, 10 Oct 2019 00:49:29 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -33,8 +33,8 @@ interactions:
         - ''
 - request:
     body: !!binary |
-      FRs1AcHbOQlJ42iX1ZOt7ljSGYpmfFYElKIpZ36vvJMbUnP8hCzEl/VtMp2chiAzaeSdEyprLGOA
-      4gpEmK95QeDc8UPAZt6JBom+Xw/5eTgcu9eAhMxsjnxC2JDKr9ggK+Tdiw==
+      IaEEzKXgW6n4vJyerzAk7x5MKqtgfjIvPkcb2QDuDYax2fZtU2/6ORj2ey+GuFK/cOgcJS7rkqr7
+      5CfQFgdN6VBEMbktfc0m/ZadMgr1NN0TZb2t5cDj+PzxEc2iXivemEytyA==
     headers:
       Content-Length:
       - '100'
@@ -47,7 +47,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-date:
-      - Wed, 09 Oct 2019 23:42:11 GMT
+      - Thu, 10 Oct 2019 00:49:29 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -57,12 +57,12 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      content-md5: VLmVDrEXNe+BS8mOFM1bwg==
-      date: Wed, 09 Oct 2019 23:42:11 GMT
-      etag: '"0x8D74D124E3C8C05"'
-      last-modified: Wed, 09 Oct 2019 23:42:11 GMT
+      content-md5: smB/GWO5LR+3Q1vstoBd1Q==
+      date: Thu, 10 Oct 2019 00:49:29 GMT
+      etag: '"0x8D74D1BB5534D35"'
+      last-modified: Thu, 10 Oct 2019 00:49:29 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
-      x-ms-content-crc64: XjnbI/Kn8SU=
+      x-ms-content-crc64: qlLPHr3kN7E=
       x-ms-request-server-encrypted: 'true'
       x-ms-version: '2019-02-02'
     status:
@@ -82,7 +82,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:42:11 GMT
+      - Thu, 10 Oct 2019 00:49:29 GMT
       x-ms-version:
       - '2019-02-02'
     method: HEAD
@@ -93,14 +93,16 @@ interactions:
     headers:
       accept-ranges: bytes
       content-length: '100'
-      content-md5: VLmVDrEXNe+BS8mOFM1bwg==
+      content-md5: smB/GWO5LR+3Q1vstoBd1Q==
       content-type: application/octet-stream
-      date: Wed, 09 Oct 2019 23:42:11 GMT
-      etag: '"0x8D74D124E3C8C05"'
-      last-modified: Wed, 09 Oct 2019 23:42:11 GMT
+      date: Thu, 10 Oct 2019 00:49:29 GMT
+      etag: '"0x8D74D1BB5534D35"'
+      last-modified: Thu, 10 Oct 2019 00:49:29 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-access-tier: Hot
+      x-ms-access-tier-inferred: 'true'
       x-ms-blob-type: BlockBlob
-      x-ms-creation-time: Wed, 09 Oct 2019 23:42:11 GMT
+      x-ms-creation-time: Thu, 10 Oct 2019 00:49:29 GMT
       x-ms-lease-state: available
       x-ms-lease-status: unlocked
       x-ms-server-encrypted: 'true'
@@ -124,7 +126,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:42:11 GMT
+      - Thu, 10 Oct 2019 00:49:29 GMT
       x-ms-range:
       - bytes=0-33554431
       x-ms-version:
@@ -134,20 +136,20 @@ interactions:
   response:
     body:
       string: !!binary |
-        FRs1AcHbOQlJ42iX1ZOt7ljSGYpmfFYElKIpZ36vvJMbUnP8hCzEl/VtMp2chiAzaeSdEyprLGOA
-        4gpEmK95QeDc8UPAZt6JBom+Xw/5eTgcu9eAhMxsjnxC2JDKr9ggK+Tdiw==
+        IaEEzKXgW6n4vJyerzAk7x5MKqtgfjIvPkcb2QDuDYax2fZtU2/6ORj2ey+GuFK/cOgcJS7rkqr7
+        5CfQFgdN6VBEMbktfc0m/ZadMgr1NN0TZb2t5cDj+PzxEc2iXivemEytyA==
     headers:
       accept-ranges: bytes
       content-length: '100'
       content-range: bytes 0-99/100
       content-type: application/octet-stream
-      date: Wed, 09 Oct 2019 23:42:10 GMT
-      etag: '"0x8D74D124E3C8C05"'
-      last-modified: Wed, 09 Oct 2019 23:42:11 GMT
+      date: Thu, 10 Oct 2019 00:49:29 GMT
+      etag: '"0x8D74D1BB5534D35"'
+      last-modified: Thu, 10 Oct 2019 00:49:29 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
-      x-ms-blob-content-md5: VLmVDrEXNe+BS8mOFM1bwg==
+      x-ms-blob-content-md5: smB/GWO5LR+3Q1vstoBd1Q==
       x-ms-blob-type: BlockBlob
-      x-ms-creation-time: Wed, 09 Oct 2019 23:42:11 GMT
+      x-ms-creation-time: Thu, 10 Oct 2019 00:49:29 GMT
       x-ms-lease-state: available
       x-ms-lease-status: unlocked
       x-ms-server-encrypted: 'true'

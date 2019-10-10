@@ -1,0 +1,89 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:53:22 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage90f204a.blob.core.windows.net/utcontainer90f204a?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      date:
+      - Wed, 09 Oct 2019 23:53:22 GMT
+      etag:
+      - '"0x8D74D13DEAC25B1"'
+      last-modified:
+      - Wed, 09 Oct 2019 23:53:23 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: !!binary |
+      O+no9TZ4CY9sodaTmWO57N46pKVN9pkBBs/EPgpqRCEKULvI/voUa6/zr6unmE/Ei3ufPWlae41S
+      OOxxX4hJibmblAhlBxO4qxwH1sP+zNugMukRx8Z9NhI6e+tFobU8HYGBJA==
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '100'
+      Content-Type:
+      - application/octet-stream
+      If-None-Match:
+      - '*'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      x-ms-access-tier:
+      - Cool
+      x-ms-blob-type:
+      - BlockBlob
+      x-ms-date:
+      - Wed, 09 Oct 2019 23:53:23 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage90f204a.blob.core.windows.net/utcontainer90f204a/blob90f204a
+  response:
+    body:
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>BlobAccessTierNotSupportedForAccountType</Code><Message>Blob
+        access tier is not supported on this storage account type.\nRequestId:cdeb1622-201e-0008-7ffc-7e2b05000000\nTime:2019-10-09T23:53:23.4117900Z</Message></Error>"
+    headers:
+      content-length:
+      - '272'
+      content-type:
+      - application/xml
+      date:
+      - Wed, 09 Oct 2019 23:53:23 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-error-code:
+      - BlobAccessTierNotSupportedForAccountType
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 400
+      message: Blob access tier is not supported on this storage account type.
+version: 1

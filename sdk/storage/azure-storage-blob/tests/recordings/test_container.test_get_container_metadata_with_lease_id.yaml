@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:08 GMT
+      - Thu, 10 Oct 2019 16:15:21 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:08 GMT
+      - Thu, 10 Oct 2019 16:15:22 GMT
       etag:
-      - '"0x8D74CFF29B70F44"'
+      - '"0x8D74D9D0D9BB144"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:22 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -51,7 +51,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:08 GMT
+      - Thu, 10 Oct 2019 16:15:23 GMT
       x-ms-meta-hello:
       - world
       x-ms-meta-number:
@@ -67,11 +67,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:22 GMT
       etag:
-      - '"0x8D74CFF29C58E2C"'
+      - '"0x8D74D9D0DA9D298"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:23 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -93,13 +93,13 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:23 GMT
       x-ms-lease-action:
       - acquire
       x-ms-lease-duration:
       - '-1'
       x-ms-proposed-lease-id:
-      - 5e81bae1-96b9-44d2-a909-7ea3f98ed477
+      - a553844b-81b4-4abd-adc6-3ed41fd3cd23
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -111,15 +111,15 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:22 GMT
       etag:
-      - '"0x8D74CFF29C58E2C"'
+      - '"0x8D74D9D0DA9D298"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:23 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-lease-id:
-      - 5e81bae1-96b9-44d2-a909-7ea3f98ed477
+      - a553844b-81b4-4abd-adc6-3ed41fd3cd23
       x-ms-version:
       - '2019-02-02'
     status:
@@ -137,9 +137,9 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:23 GMT
       x-ms-lease-id:
-      - 5e81bae1-96b9-44d2-a909-7ea3f98ed477
+      - a553844b-81b4-4abd-adc6-3ed41fd3cd23
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -151,17 +151,13 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:22 GMT
       etag:
-      - '"0x8D74CFF29C58E2C"'
+      - '"0x8D74D9D0DA9D298"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:23 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
-      x-ms-default-encryption-scope:
-      - $account-encryption-key
-      x-ms-deny-encryption-scope-override:
-      - 'false'
       x-ms-has-immutability-policy:
       - 'false'
       x-ms-has-legal-hold:

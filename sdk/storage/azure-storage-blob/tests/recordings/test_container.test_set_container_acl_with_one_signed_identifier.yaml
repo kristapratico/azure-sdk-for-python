@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:26:36 GMT
+      - Thu, 10 Oct 2019 16:16:55 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:26:38 GMT
+      - Thu, 10 Oct 2019 16:16:54 GMT
       etag:
-      - '"0x8D74CFF5E797CB5"'
+      - '"0x8D74D9D44B00930"'
       last-modified:
-      - Wed, 09 Oct 2019 21:26:38 GMT
+      - Thu, 10 Oct 2019 16:16:55 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -40,7 +40,7 @@ interactions:
 - request:
     body: '<?xml version=''1.0'' encoding=''utf-8''?>
 
-      <SignedIdentifiers><SignedIdentifier><Id>testid</Id><AccessPolicy><Start>2019-10-09T21:26:37Z</Start><Expiry>2019-10-09T22:26:37Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
+      <SignedIdentifiers><SignedIdentifier><Id>testid</Id><AccessPolicy><Start>2019-10-10T16:16:55Z</Start><Expiry>2019-10-10T17:16:55Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
     headers:
       Accept:
       - '*/*'
@@ -55,7 +55,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:26:37 GMT
+      - Thu, 10 Oct 2019 16:16:55 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -67,11 +67,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:26:38 GMT
+      - Thu, 10 Oct 2019 16:16:55 GMT
       etag:
-      - '"0x8D74CFF5E847B1E"'
+      - '"0x8D74D9D44BC429F"'
       last-modified:
-      - Wed, 09 Oct 2019 21:26:38 GMT
+      - Thu, 10 Oct 2019 16:16:55 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:

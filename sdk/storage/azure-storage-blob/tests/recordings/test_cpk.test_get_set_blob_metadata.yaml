@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 01:38:42 GMT
+      - Thu, 10 Oct 2019 18:53:07 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 01:38:45 GMT
+      - Thu, 10 Oct 2019 18:53:07 GMT
       etag:
-      - '"0x8D74C596D13FE95"'
+      - '"0x8D74DB317866F81"'
       last-modified:
-      - Wed, 09 Oct 2019 01:38:46 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -57,7 +57,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-date:
-      - Wed, 09 Oct 2019 01:38:44 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       x-ms-encryption-algorithm:
       - AES256
       x-ms-encryption-key:
@@ -77,11 +77,11 @@ interactions:
       content-md5:
       - Yge131eW6WNBDTvEtqQhiw==
       date:
-      - Wed, 09 Oct 2019 01:38:45 GMT
+      - Thu, 10 Oct 2019 18:53:07 GMT
       etag:
-      - '"0x8D74C596D24C35F"'
+      - '"0x8D74DB31798F886"'
       last-modified:
-      - Wed, 09 Oct 2019 01:38:46 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-content-crc64:
@@ -107,7 +107,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 01:38:44 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       x-ms-version:
       - '2019-02-02'
     method: HEAD
@@ -117,7 +117,7 @@ interactions:
       string: ''
     headers:
       date:
-      - Wed, 09 Oct 2019 01:38:45 GMT
+      - Thu, 10 Oct 2019 18:53:07 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -142,7 +142,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 01:38:45 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       x-ms-encryption-algorithm:
       - AES256
       x-ms-encryption-key:
@@ -166,17 +166,21 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Wed, 09 Oct 2019 01:38:45 GMT
+      - Thu, 10 Oct 2019 18:53:07 GMT
       etag:
-      - '"0x8D74C596D24C35F"'
+      - '"0x8D74DB31798F886"'
       last-modified:
-      - Wed, 09 Oct 2019 01:38:46 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-access-tier:
+      - Hot
+      x-ms-access-tier-inferred:
+      - 'true'
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Wed, 09 Oct 2019 01:38:46 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       x-ms-encryption-key-sha256:
       - 3QFFFpRA5+XANHqwwbT4yXDmrT/2JaLt/FKHjzhOdoE=
       x-ms-lease-state:
@@ -204,7 +208,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 01:38:45 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       x-ms-meta-UP:
       - UPval
       x-ms-meta-hello:
@@ -219,14 +223,14 @@ interactions:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>BlobUsesCustomerSpecifiedEncryption</Code><Message>The
         blob is encrypted with customer specified encryption, but it was not provided
-        in the request.\nRequestId:4e481775-301e-000b-6342-7ef576000000\nTime:2019-10-09T01:38:46.6135625Z</Message></Error>"
+        in the request.\nRequestId:973fb761-101e-0035-7f9b-7f4357000000\nTime:2019-10-10T18:53:08.8948976Z</Message></Error>"
     headers:
       content-length:
       - '301'
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 01:38:46 GMT
+      - Thu, 10 Oct 2019 18:53:07 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:
@@ -251,7 +255,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 01:38:45 GMT
+      - Thu, 10 Oct 2019 18:53:09 GMT
       x-ms-encryption-algorithm:
       - AES256
       x-ms-encryption-key:
@@ -275,11 +279,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 01:38:46 GMT
+      - Thu, 10 Oct 2019 18:53:07 GMT
       etag:
-      - '"0x8D74C596D5EF43B"'
+      - '"0x8D74DB317C9B158"'
       last-modified:
-      - Wed, 09 Oct 2019 01:38:46 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-encryption-key-sha256:
@@ -303,7 +307,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 01:38:45 GMT
+      - Thu, 10 Oct 2019 18:53:09 GMT
       x-ms-encryption-algorithm:
       - AES256
       x-ms-encryption-key:
@@ -327,17 +331,21 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Wed, 09 Oct 2019 01:38:46 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       etag:
-      - '"0x8D74C596D5EF43B"'
+      - '"0x8D74DB317C9B158"'
       last-modified:
-      - Wed, 09 Oct 2019 01:38:46 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-access-tier:
+      - Hot
+      x-ms-access-tier-inferred:
+      - 'true'
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Wed, 09 Oct 2019 01:38:46 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       x-ms-encryption-key-sha256:
       - 3QFFFpRA5+XANHqwwbT4yXDmrT/2JaLt/FKHjzhOdoE=
       x-ms-lease-state:
@@ -371,7 +379,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 01:38:45 GMT
+      - Thu, 10 Oct 2019 18:53:09 GMT
       x-ms-version:
       - '2019-02-02'
     method: DELETE
@@ -383,7 +391,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 01:38:46 GMT
+      - Thu, 10 Oct 2019 18:53:08 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:

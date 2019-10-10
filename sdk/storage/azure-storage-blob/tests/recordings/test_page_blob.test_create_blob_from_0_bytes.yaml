@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 21:39:03 GMT
+      - Thu, 10 Oct 2019 19:27:37 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,49 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:37 GMT
       etag:
-      - '"0x8D74C37F159957F"'
+      - '"0x8D74DB7E8FCB27B"'
       last-modified:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:37 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Thu, 10 Oct 2019 19:27:38 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage8e8211a2.blob.core.windows.net/utcontainersource8e8211a2?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      date:
+      - Thu, 10 Oct 2019 19:27:37 GMT
+      etag:
+      - '"0x8D74DB7E90937DF"'
+      last-modified:
+      - Thu, 10 Oct 2019 19:27:38 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -57,7 +95,7 @@ interactions:
       x-ms-blob-type:
       - PageBlob
       x-ms-date:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -69,11 +107,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:37 GMT
       etag:
-      - '"0x8D74C37F16AAF11"'
+      - '"0x8D74DB7E9193E86"'
       last-modified:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-request-server-encrypted:
@@ -95,7 +133,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       x-ms-version:
       - '2019-02-02'
     method: HEAD
@@ -111,11 +149,11 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:37 GMT
       etag:
-      - '"0x8D74C37F16AAF11"'
+      - '"0x8D74DB7E9193E86"'
       last-modified:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-blob-sequence-number:
@@ -123,7 +161,7 @@ interactions:
       x-ms-blob-type:
       - PageBlob
       x-ms-creation-time:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       x-ms-lease-state:
       - available
       x-ms-lease-status:
@@ -147,7 +185,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       x-ms-range:
       - bytes=0-33554431
       x-ms-version:
@@ -157,7 +195,7 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>InvalidRange</Code><Message>The
-        range specified is invalid for the current size of the resource.\nRequestId:478734fb-e01e-0133-3820-7e2f0e000000\nTime:2019-10-08T21:39:05.5269637Z</Message></Error>"
+        range specified is invalid for the current size of the resource.\nRequestId:2339b69c-d01e-003b-52a0-7fc3e1000000\nTime:2019-10-10T19:27:38.2975825Z</Message></Error>"
     headers:
       content-length:
       - '249'
@@ -166,7 +204,7 @@ interactions:
       content-type:
       - application/xml
       date:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:37 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:
@@ -188,7 +226,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -204,11 +242,11 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:37 GMT
       etag:
-      - '"0x8D74C37F16AAF11"'
+      - '"0x8D74DB7E9193E86"'
       last-modified:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-blob-sequence-number:
@@ -216,7 +254,7 @@ interactions:
       x-ms-blob-type:
       - PageBlob
       x-ms-creation-time:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       x-ms-lease-state:
       - available
       x-ms-lease-status:
@@ -240,7 +278,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -252,11 +290,11 @@ interactions:
       content-type:
       - application/xml
       date:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       etag:
-      - '"0x8D74C37F16AAF11"'
+      - '"0x8D74DB7E9193E86"'
       last-modified:
-      - Tue, 08 Oct 2019 21:39:05 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:

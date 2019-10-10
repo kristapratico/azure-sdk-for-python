@@ -447,7 +447,7 @@ class StorageCPKAsyncTest(AsyncBlobTestCase):
             max_page_size=1024,
             transport=AiohttpTestTransport())
         await self._setup(bsc)
-        blob_client = await self._create_append_blob(cpk=TEST_ENCRYPTION_KEY)
+        blob_client = await self._create_append_blob(bsc, cpk=TEST_ENCRYPTION_KEY)
 
         # Act
         append_blob_prop = await blob_client.upload_blob(self.byte_data,

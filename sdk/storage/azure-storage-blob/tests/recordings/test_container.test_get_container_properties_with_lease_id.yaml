@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:13 GMT
+      - Thu, 10 Oct 2019 16:15:39 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:14 GMT
+      - Thu, 10 Oct 2019 16:15:39 GMT
       etag:
-      - '"0x8D74CFF2D0D2C1D"'
+      - '"0x8D74D9D17DA05BE"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:15 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -51,7 +51,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:14 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       x-ms-meta-hello:
       - world
       x-ms-meta-number:
@@ -67,11 +67,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:14 GMT
+      - Thu, 10 Oct 2019 16:15:39 GMT
       etag:
-      - '"0x8D74CFF2D1C958B"'
+      - '"0x8D74D9D17EB4997"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:15 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -93,13 +93,13 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:14 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       x-ms-lease-action:
       - acquire
       x-ms-lease-duration:
       - '-1'
       x-ms-proposed-lease-id:
-      - 5a558fb5-f54e-48da-a2e9-b0835d4f48a7
+      - d6519ddc-2760-4b66-b8a8-229b10a90436
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -111,15 +111,15 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:15 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       etag:
-      - '"0x8D74CFF2D1C958B"'
+      - '"0x8D74D9D17EB4997"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:15 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-lease-id:
-      - 5a558fb5-f54e-48da-a2e9-b0835d4f48a7
+      - d6519ddc-2760-4b66-b8a8-229b10a90436
       x-ms-version:
       - '2019-02-02'
     status:
@@ -137,9 +137,9 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:14 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       x-ms-lease-id:
-      - 5a558fb5-f54e-48da-a2e9-b0835d4f48a7
+      - d6519ddc-2760-4b66-b8a8-229b10a90436
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -151,11 +151,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:15 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       etag:
-      - '"0x8D74CFF2D1C958B"'
+      - '"0x8D74D9D17EB4997"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:15 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-default-encryption-scope:
@@ -195,7 +195,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:14 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       x-ms-lease-action:
       - break
       x-ms-version:
@@ -209,11 +209,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:15 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       etag:
-      - '"0x8D74CFF2D1C958B"'
+      - '"0x8D74D9D17EB4997"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:15 GMT
+      - Thu, 10 Oct 2019 16:15:40 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-lease-time:

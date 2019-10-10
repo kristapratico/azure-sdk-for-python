@@ -3,9 +3,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:30 GMT
+      - Thu, 10 Oct 2019 20:13:51 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:08:32 GMT
-      etag: '"0x8D74D0D9B046809"'
-      last-modified: Wed, 09 Oct 2019 23:08:32 GMT
+      date: Thu, 10 Oct 2019 20:13:51 GMT
+      etag: '"0x8D74DBE5E857B68"'
+      last-modified: Thu, 10 Oct 2019 20:13:52 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -34,16 +34,16 @@ interactions:
 - request:
     body: '<?xml version=''1.0'' encoding=''utf-8''?>
 
-      <SignedIdentifiers><SignedIdentifier><Id>testid</Id><AccessPolicy><Start>2019-10-09T23:08:32Z</Start><Expiry>2019-10-10T00:08:32Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
+      <SignedIdentifiers><SignedIdentifier><Id>testid</Id><AccessPolicy><Start>2019-10-10T20:13:52Z</Start><Expiry>2019-10-10T21:13:52Z</Expiry><Permission>r</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
     headers:
       Content-Length:
       - '257'
       Content-Type:
       - application/xml; charset=utf-8
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:32 GMT
+      - Thu, 10 Oct 2019 20:13:52 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -53,9 +53,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:08:32 GMT
-      etag: '"0x8D74D0D9B0A3D62"'
-      last-modified: Wed, 09 Oct 2019 23:08:32 GMT
+      date: Thu, 10 Oct 2019 20:13:51 GMT
+      etag: '"0x8D74DBE5E8BB946"'
+      last-modified: Thu, 10 Oct 2019 20:13:52 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:

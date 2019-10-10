@@ -3,9 +3,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:53 GMT
+      - Thu, 10 Oct 2019 20:13:38 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:08:55 GMT
-      etag: '"0x8D74D0DA89A5EDF"'
-      last-modified: Wed, 09 Oct 2019 23:08:55 GMT
+      date: Thu, 10 Oct 2019 20:13:37 GMT
+      etag: '"0x8D74DBE5661557D"'
+      last-modified: Thu, 10 Oct 2019 20:13:38 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -37,11 +37,11 @@ interactions:
       Content-Type:
       - application/xml; charset=utf-8
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-blob-public-access:
       - container
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:54 GMT
+      - Thu, 10 Oct 2019 20:13:38 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -51,9 +51,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:08:55 GMT
-      etag: '"0x8D74D0DA8A05AC4"'
-      last-modified: Wed, 09 Oct 2019 23:08:55 GMT
+      date: Thu, 10 Oct 2019 20:13:38 GMT
+      etag: '"0x8D74DBE5666DB07"'
+      last-modified: Thu, 10 Oct 2019 20:13:38 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -73,9 +73,9 @@ interactions:
       Accept:
       - application/xml
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:54 GMT
+      - Thu, 10 Oct 2019 20:13:38 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -86,9 +86,9 @@ interactions:
         />"
     headers:
       content-type: application/xml
-      date: Wed, 09 Oct 2019 23:08:55 GMT
-      etag: '"0x8D74D0DA8A05AC4"'
-      last-modified: Wed, 09 Oct 2019 23:08:55 GMT
+      date: Thu, 10 Oct 2019 20:13:38 GMT
+      etag: '"0x8D74DBE5666DB07"'
+      last-modified: Thu, 10 Oct 2019 20:13:38 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding: chunked
       x-ms-blob-public-access: container

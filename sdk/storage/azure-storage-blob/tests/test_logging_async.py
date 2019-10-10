@@ -104,11 +104,12 @@ class StorageLoggingTestAsync(AsyncBlobTestCase):
         if not self.is_live:
             return
 
+        bsc = BlobServiceClient(self._account_url(storage_account.name), storage_account_key)
         await self._setup(bsc)
         # Arrange
         container = bsc.get_container_client(self.container_name)
         token = container.generate_shared_access_signature(
-            permission=ContainerPermissions.READ,
+            permission=ContainerSasPermissions(read=True),
             expiry=datetime.utcnow() + timedelta(hours=1),
         )
         # parse out the signed signature
@@ -134,7 +135,7 @@ class StorageLoggingTestAsync(AsyncBlobTestCase):
         # Test can only run live
         if not self.is_live:
             return
-
+        bsc = BlobServiceClient(self._account_url(storage_account.name), storage_account_key)
         await self._setup(bsc)
         # Arrange
         dest_blob_name = self.get_resource_name('destblob')

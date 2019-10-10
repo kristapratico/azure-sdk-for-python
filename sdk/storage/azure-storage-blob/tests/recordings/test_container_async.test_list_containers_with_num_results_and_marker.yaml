@@ -3,9 +3,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:15 GMT
+      - Thu, 10 Oct 2019 20:13:25 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:08:16 GMT
-      etag: '"0x8D74D0D91A8DA68"'
-      last-modified: Wed, 09 Oct 2019 23:08:16 GMT
+      date: Thu, 10 Oct 2019 20:13:25 GMT
+      etag: '"0x8D74DBE4F02A4C7"'
+      last-modified: Thu, 10 Oct 2019 20:13:26 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -35,9 +35,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:16 GMT
+      - Thu, 10 Oct 2019 20:13:26 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -47,9 +47,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:08:16 GMT
-      etag: '"0x8D74D0D91B02ED5"'
-      last-modified: Wed, 09 Oct 2019 23:08:17 GMT
+      date: Thu, 10 Oct 2019 20:13:25 GMT
+      etag: '"0x8D74DBE4F09AAF7"'
+      last-modified: Thu, 10 Oct 2019 20:13:26 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -67,9 +67,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:16 GMT
+      - Thu, 10 Oct 2019 20:13:26 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -79,9 +79,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:08:16 GMT
-      etag: '"0x8D74D0D91B7AA51"'
-      last-modified: Wed, 09 Oct 2019 23:08:17 GMT
+      date: Thu, 10 Oct 2019 20:13:25 GMT
+      etag: '"0x8D74DBE4F112666"'
+      last-modified: Thu, 10 Oct 2019 20:13:26 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -99,9 +99,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:16 GMT
+      - Thu, 10 Oct 2019 20:13:26 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -111,9 +111,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:08:16 GMT
-      etag: '"0x8D74D0D91BF4CE4"'
-      last-modified: Wed, 09 Oct 2019 23:08:17 GMT
+      date: Thu, 10 Oct 2019 20:13:25 GMT
+      etag: '"0x8D74DBE4F187AB3"'
+      last-modified: Thu, 10 Oct 2019 20:13:26 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -133,9 +133,9 @@ interactions:
       Accept:
       - application/xml
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:16 GMT
+      - Thu, 10 Oct 2019 20:13:26 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -143,12 +143,12 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><EnumerationResults
-        ServiceEndpoint=\"https://pyacrstorageea7c1cac.blob.core.windows.net/\"><Prefix>listcontainer</Prefix><MaxResults>2</MaxResults><Containers><Container><Name>listcontainer0ea7c1cac</Name><Properties><Last-Modified>Wed,
-        09 Oct 2019 23:08:16 GMT</Last-Modified><Etag>\"0x8D74D0D91A8DA68\"</Etag><LeaseStatus>unlocked</LeaseStatus><LeaseState>available</LeaseState><DefaultEncryptionScope>$account-encryption-key</DefaultEncryptionScope><DenyEncryptionScopeOverride>false</DenyEncryptionScopeOverride><HasImmutabilityPolicy>false</HasImmutabilityPolicy><HasLegalHold>false</HasLegalHold></Properties></Container><Container><Name>listcontainer1ea7c1cac</Name><Properties><Last-Modified>Wed,
-        09 Oct 2019 23:08:17 GMT</Last-Modified><Etag>\"0x8D74D0D91B02ED5\"</Etag><LeaseStatus>unlocked</LeaseStatus><LeaseState>available</LeaseState><DefaultEncryptionScope>$account-encryption-key</DefaultEncryptionScope><DenyEncryptionScopeOverride>false</DenyEncryptionScopeOverride><HasImmutabilityPolicy>false</HasImmutabilityPolicy><HasLegalHold>false</HasLegalHold></Properties></Container></Containers><NextMarker>/pyacrstorageea7c1cac/listcontainer2ea7c1cac</NextMarker></EnumerationResults>"
+        ServiceEndpoint=\"https://pyacrstorageea7c1cac.blob.core.windows.net/\"><Prefix>listcontainer</Prefix><MaxResults>2</MaxResults><Containers><Container><Name>listcontainer0ea7c1cac</Name><Properties><Last-Modified>Thu,
+        10 Oct 2019 20:13:26 GMT</Last-Modified><Etag>\"0x8D74DBE4F02A4C7\"</Etag><LeaseStatus>unlocked</LeaseStatus><LeaseState>available</LeaseState><HasImmutabilityPolicy>false</HasImmutabilityPolicy><HasLegalHold>false</HasLegalHold></Properties></Container><Container><Name>listcontainer1ea7c1cac</Name><Properties><Last-Modified>Thu,
+        10 Oct 2019 20:13:26 GMT</Last-Modified><Etag>\"0x8D74DBE4F09AAF7\"</Etag><LeaseStatus>unlocked</LeaseStatus><LeaseState>available</LeaseState><HasImmutabilityPolicy>false</HasImmutabilityPolicy><HasLegalHold>false</HasLegalHold></Properties></Container></Containers><NextMarker>/pyacrstorageea7c1cac/listcontainer2ea7c1cac</NextMarker></EnumerationResults>"
     headers:
       content-type: application/xml
-      date: Wed, 09 Oct 2019 23:08:16 GMT
+      date: Thu, 10 Oct 2019 20:13:25 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding: chunked
       x-ms-version: '2019-02-02'
@@ -169,9 +169,9 @@ interactions:
       Accept:
       - application/xml
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:08:16 GMT
+      - Thu, 10 Oct 2019 20:13:26 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -179,13 +179,13 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><EnumerationResults
-        ServiceEndpoint=\"https://pyacrstorageea7c1cac.blob.core.windows.net/\"><Prefix>listcontainer</Prefix><Marker>/pyacrstorageea7c1cac/listcontainer2ea7c1cac</Marker><MaxResults>2</MaxResults><Containers><Container><Name>listcontainer2ea7c1cac</Name><Properties><Last-Modified>Wed,
-        09 Oct 2019 23:08:17 GMT</Last-Modified><Etag>\"0x8D74D0D91B7AA51\"</Etag><LeaseStatus>unlocked</LeaseStatus><LeaseState>available</LeaseState><DefaultEncryptionScope>$account-encryption-key</DefaultEncryptionScope><DenyEncryptionScopeOverride>false</DenyEncryptionScopeOverride><HasImmutabilityPolicy>false</HasImmutabilityPolicy><HasLegalHold>false</HasLegalHold></Properties></Container><Container><Name>listcontainer3ea7c1cac</Name><Properties><Last-Modified>Wed,
-        09 Oct 2019 23:08:17 GMT</Last-Modified><Etag>\"0x8D74D0D91BF4CE4\"</Etag><LeaseStatus>unlocked</LeaseStatus><LeaseState>available</LeaseState><DefaultEncryptionScope>$account-encryption-key</DefaultEncryptionScope><DenyEncryptionScopeOverride>false</DenyEncryptionScopeOverride><HasImmutabilityPolicy>false</HasImmutabilityPolicy><HasLegalHold>false</HasLegalHold></Properties></Container></Containers><NextMarker
+        ServiceEndpoint=\"https://pyacrstorageea7c1cac.blob.core.windows.net/\"><Prefix>listcontainer</Prefix><Marker>/pyacrstorageea7c1cac/listcontainer2ea7c1cac</Marker><MaxResults>2</MaxResults><Containers><Container><Name>listcontainer2ea7c1cac</Name><Properties><Last-Modified>Thu,
+        10 Oct 2019 20:13:26 GMT</Last-Modified><Etag>\"0x8D74DBE4F112666\"</Etag><LeaseStatus>unlocked</LeaseStatus><LeaseState>available</LeaseState><HasImmutabilityPolicy>false</HasImmutabilityPolicy><HasLegalHold>false</HasLegalHold></Properties></Container><Container><Name>listcontainer3ea7c1cac</Name><Properties><Last-Modified>Thu,
+        10 Oct 2019 20:13:26 GMT</Last-Modified><Etag>\"0x8D74DBE4F187AB3\"</Etag><LeaseStatus>unlocked</LeaseStatus><LeaseState>available</LeaseState><HasImmutabilityPolicy>false</HasImmutabilityPolicy><HasLegalHold>false</HasLegalHold></Properties></Container></Containers><NextMarker
         /></EnumerationResults>"
     headers:
       content-type: application/xml
-      date: Wed, 09 Oct 2019 23:08:16 GMT
+      date: Thu, 10 Oct 2019 20:13:25 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding: chunked
       x-ms-version: '2019-02-02'

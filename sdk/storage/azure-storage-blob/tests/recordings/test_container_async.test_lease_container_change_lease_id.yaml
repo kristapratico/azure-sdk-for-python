@@ -3,9 +3,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:12:59 GMT
+      - Thu, 10 Oct 2019 20:12:29 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:13:00 GMT
-      etag: '"0x8D74D0E3B72287D"'
-      last-modified: Wed, 09 Oct 2019 23:13:01 GMT
+      date: Thu, 10 Oct 2019 20:12:29 GMT
+      etag: '"0x8D74DBE2D63B70B"'
+      last-modified: Thu, 10 Oct 2019 20:12:29 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -35,15 +35,15 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:13:01 GMT
+      - Thu, 10 Oct 2019 20:12:30 GMT
       x-ms-lease-action:
       - acquire
       x-ms-lease-duration:
       - '-1'
       x-ms-proposed-lease-id:
-      - de5f62b6-71b2-4fe3-9e34-362a684a061f
+      - 20664427-18fc-4a9d-9d3f-de4a437281e2
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -53,11 +53,11 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:13:00 GMT
-      etag: '"0x8D74D0E3B72287D"'
-      last-modified: Wed, 09 Oct 2019 23:13:01 GMT
+      date: Thu, 10 Oct 2019 20:12:29 GMT
+      etag: '"0x8D74DBE2D63B70B"'
+      last-modified: Thu, 10 Oct 2019 20:12:29 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
-      x-ms-lease-id: de5f62b6-71b2-4fe3-9e34-362a684a061f
+      x-ms-lease-id: 20664427-18fc-4a9d-9d3f-de4a437281e2
       x-ms-version: '2019-02-02'
     status:
       code: 201
@@ -74,13 +74,13 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:13:01 GMT
+      - Thu, 10 Oct 2019 20:12:30 GMT
       x-ms-lease-action:
       - change
       x-ms-lease-id:
-      - de5f62b6-71b2-4fe3-9e34-362a684a061f
+      - 20664427-18fc-4a9d-9d3f-de4a437281e2
       x-ms-proposed-lease-id:
       - 29e0b239-ecda-4f69-bfa3-95f6af91464c
       x-ms-version:
@@ -92,9 +92,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:13:01 GMT
-      etag: '"0x8D74D0E3B72287D"'
-      last-modified: Wed, 09 Oct 2019 23:13:01 GMT
+      date: Thu, 10 Oct 2019 20:12:29 GMT
+      etag: '"0x8D74DBE2D63B70B"'
+      last-modified: Thu, 10 Oct 2019 20:12:29 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-lease-id: 29e0b239-ecda-4f69-bfa3-95f6af91464c
       x-ms-version: '2019-02-02'
@@ -113,9 +113,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:13:01 GMT
+      - Thu, 10 Oct 2019 20:12:30 GMT
       x-ms-lease-action:
       - renew
       x-ms-lease-id:
@@ -129,9 +129,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:13:01 GMT
-      etag: '"0x8D74D0E3B72287D"'
-      last-modified: Wed, 09 Oct 2019 23:13:01 GMT
+      date: Thu, 10 Oct 2019 20:12:29 GMT
+      etag: '"0x8D74DBE2D63B70B"'
+      last-modified: Thu, 10 Oct 2019 20:12:29 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-lease-id: 29e0b239-ecda-4f69-bfa3-95f6af91464c
       x-ms-version: '2019-02-02'

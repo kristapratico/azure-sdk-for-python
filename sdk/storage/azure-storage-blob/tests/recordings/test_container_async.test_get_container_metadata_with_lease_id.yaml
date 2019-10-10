@@ -3,9 +3,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:07:21 GMT
+      - Thu, 10 Oct 2019 20:12:12 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:07:21 GMT
-      etag: '"0x8D74D0D713ED8B6"'
-      last-modified: Wed, 09 Oct 2019 23:07:22 GMT
+      date: Thu, 10 Oct 2019 20:12:12 GMT
+      etag: '"0x8D74DBE236F4C25"'
+      last-modified: Thu, 10 Oct 2019 20:12:12 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -35,9 +35,9 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:07:22 GMT
+      - Thu, 10 Oct 2019 20:12:13 GMT
       x-ms-meta-hello:
       - world
       x-ms-meta-number:
@@ -51,9 +51,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:07:21 GMT
-      etag: '"0x8D74D0D7144967F"'
-      last-modified: Wed, 09 Oct 2019 23:07:22 GMT
+      date: Thu, 10 Oct 2019 20:12:12 GMT
+      etag: '"0x8D74DBE2374E8D4"'
+      last-modified: Thu, 10 Oct 2019 20:12:13 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -71,15 +71,15 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:07:22 GMT
+      - Thu, 10 Oct 2019 20:12:13 GMT
       x-ms-lease-action:
       - acquire
       x-ms-lease-duration:
       - '-1'
       x-ms-proposed-lease-id:
-      - 243a1058-fdeb-4b3e-b6d2-b97bbf9ce7e9
+      - b59a7fb3-0e16-4c30-a4ca-9f62acc62b2c
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -89,11 +89,11 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:07:21 GMT
-      etag: '"0x8D74D0D7144967F"'
-      last-modified: Wed, 09 Oct 2019 23:07:22 GMT
+      date: Thu, 10 Oct 2019 20:12:12 GMT
+      etag: '"0x8D74DBE2374E8D4"'
+      last-modified: Thu, 10 Oct 2019 20:12:13 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
-      x-ms-lease-id: 243a1058-fdeb-4b3e-b6d2-b97bbf9ce7e9
+      x-ms-lease-id: b59a7fb3-0e16-4c30-a4ca-9f62acc62b2c
       x-ms-version: '2019-02-02'
     status:
       code: 201
@@ -110,11 +110,11 @@ interactions:
     body: null
     headers:
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:07:22 GMT
+      - Thu, 10 Oct 2019 20:12:13 GMT
       x-ms-lease-id:
-      - 243a1058-fdeb-4b3e-b6d2-b97bbf9ce7e9
+      - b59a7fb3-0e16-4c30-a4ca-9f62acc62b2c
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -124,10 +124,12 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:07:21 GMT
-      etag: '"0x8D74D0D7144967F"'
-      last-modified: Wed, 09 Oct 2019 23:07:22 GMT
+      date: Thu, 10 Oct 2019 20:12:12 GMT
+      etag: '"0x8D74DBE2374E8D4"'
+      last-modified: Thu, 10 Oct 2019 20:12:13 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-default-encryption-scope: $account-encryption-key
+      x-ms-deny-encryption-scope-override: 'false'
       x-ms-has-immutability-policy: 'false'
       x-ms-has-legal-hold: 'false'
       x-ms-lease-duration: infinite

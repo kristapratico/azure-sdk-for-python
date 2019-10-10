@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:08 GMT
+      - Thu, 10 Oct 2019 16:15:19 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:19 GMT
       etag:
-      - '"0x8D74CFF2A17E865"'
+      - '"0x8D74D9D0C264AE7"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:10 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -51,13 +51,13 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       x-ms-lease-action:
       - acquire
       x-ms-lease-duration:
       - '-1'
       x-ms-proposed-lease-id:
-      - cae4902e-8f90-4232-a7be-12ceb6a68928
+      - 3e671f1a-1f31-4ae5-a4c4-681794eb03a6
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -69,15 +69,15 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:19 GMT
       etag:
-      - '"0x8D74CFF2A17E865"'
+      - '"0x8D74D9D0C264AE7"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:10 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-lease-id:
-      - cae4902e-8f90-4232-a7be-12ceb6a68928
+      - 3e671f1a-1f31-4ae5-a4c4-681794eb03a6
       x-ms-version:
       - '2019-02-02'
     status:
@@ -97,11 +97,11 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       x-ms-lease-action:
       - release
       x-ms-lease-id:
-      - cae4902e-8f90-4232-a7be-12ceb6a68928
+      - 3e671f1a-1f31-4ae5-a4c4-681794eb03a6
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -113,11 +113,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:19 GMT
       etag:
-      - '"0x8D74CFF2A17E865"'
+      - '"0x8D74D9D0C264AE7"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:10 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -139,7 +139,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       x-ms-lease-action:
       - break
       x-ms-version:
@@ -149,14 +149,14 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>LeaseNotPresentWithLeaseOperation</Code><Message>There
-        is currently no lease on the container.\nRequestId:ba37ce1c-201e-00a3-03e8-7e98b5000000\nTime:2019-10-09T21:25:10.5077528Z</Message></Error>"
+        is currently no lease on the container.\nRequestId:a282a6ad-601e-003c-3b85-7f4574000000\nTime:2019-10-10T16:15:20.7606582Z</Message></Error>"
     headers:
       content-length:
       - '247'
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 21:25:09 GMT
+      - Thu, 10 Oct 2019 16:15:19 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:

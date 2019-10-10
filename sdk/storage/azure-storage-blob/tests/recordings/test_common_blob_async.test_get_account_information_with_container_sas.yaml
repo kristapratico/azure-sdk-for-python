@@ -5,7 +5,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:48:10 GMT
+      - Thu, 10 Oct 2019 16:02:31 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:48:11 GMT
-      etag: '"0x8D74D132521C719"'
-      last-modified: Wed, 09 Oct 2019 23:48:11 GMT
+      date: Thu, 10 Oct 2019 16:02:32 GMT
+      etag: '"0x8D74D9B4257B1B7"'
+      last-modified: Thu, 10 Oct 2019 16:02:32 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -37,19 +37,19 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:48:11 GMT
+      - Thu, 10 Oct 2019 16:02:32 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
-    uri: https://pyacrstoragefed91ce5.blob.core.windows.net/utcontainerfed91ce5?restype=account&comp=properties&se=2019-10-10T00:48:11Z&sp=r&sv=2019-02-02&sr=c&sig=%2BDBg4HFBNM0r7RrLhKGb860l5ZJSWHqRkSvWpJ64l6g%3D
+    uri: https://pyacrstoragefed91ce5.blob.core.windows.net/utcontainerfed91ce5?restype=account&comp=properties&se=2019-10-10T17:02:32Z&sp=r&sv=2019-02-02&sr=c&sig=MrE7NnsEPXCtm1ODjKaynbbLdKixPmr2ofctRZZfLcQ%3D
   response:
     body:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:48:11 GMT
+      date: Thu, 10 Oct 2019 16:02:31 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
-      x-ms-account-kind: Storage
+      x-ms-account-kind: StorageV2
       x-ms-sku-name: Standard_LRS
       x-ms-version: '2019-02-02'
     status:
@@ -61,6 +61,6 @@ interactions:
         - https
         - pyacrstoragefed91ce5.blob.core.windows.net
         - /utcontainerfed91ce5
-        - restype=account&comp=properties&se=2019-10-10T00:48:11Z&sp=r&sv=2019-02-02&sr=c&sig=%2BDBg4HFBNM0r7RrLhKGb860l5ZJSWHqRkSvWpJ64l6g%3D
+        - restype=account&comp=properties&se=2019-10-10T17:02:32Z&sp=r&sv=2019-02-02&sr=c&sig=MrE7NnsEPXCtm1ODjKaynbbLdKixPmr2ofctRZZfLcQ%3D
         - ''
 version: 1

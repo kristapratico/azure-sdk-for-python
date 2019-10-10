@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:24:44 GMT
+      - Thu, 10 Oct 2019 16:14:56 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:24:46 GMT
+      - Thu, 10 Oct 2019 16:14:56 GMT
       etag:
-      - '"0x8D74CFF1C524713"'
+      - '"0x8D74D9CFE74F5EC"'
       last-modified:
-      - Wed, 09 Oct 2019 21:24:47 GMT
+      - Thu, 10 Oct 2019 16:14:57 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -51,7 +51,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:24:46 GMT
+      - Thu, 10 Oct 2019 16:14:57 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -59,14 +59,14 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>ContainerAlreadyExists</Code><Message>The
-        specified container already exists.\nRequestId:3ac0bf6f-001e-002c-1ee7-7e7392000000\nTime:2019-10-09T21:24:47.2690859Z</Message></Error>"
+        specified container already exists.\nRequestId:9b529916-601e-0062-6a85-7f77ae000000\nTime:2019-10-10T16:14:57.6400274Z</Message></Error>"
     headers:
       content-length:
       - '230'
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 21:24:47 GMT
+      - Thu, 10 Oct 2019 16:14:56 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:

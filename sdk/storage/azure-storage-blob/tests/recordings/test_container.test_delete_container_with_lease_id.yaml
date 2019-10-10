@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:24:45 GMT
+      - Thu, 10 Oct 2019 16:14:56 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:24:45 GMT
+      - Thu, 10 Oct 2019 16:14:56 GMT
       etag:
-      - '"0x8D74CFF1C11B29C"'
+      - '"0x8D74D9CFE3ABF35"'
       last-modified:
-      - Wed, 09 Oct 2019 21:24:46 GMT
+      - Thu, 10 Oct 2019 16:14:57 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -51,13 +51,13 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:24:46 GMT
+      - Thu, 10 Oct 2019 16:14:57 GMT
       x-ms-lease-action:
       - acquire
       x-ms-lease-duration:
       - '15'
       x-ms-proposed-lease-id:
-      - d34cda5f-0f52-40fb-bc73-413c7aaf88b6
+      - e171d7e5-15f7-463a-a4c9-cbd165433f92
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -69,15 +69,15 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:24:45 GMT
+      - Thu, 10 Oct 2019 16:14:56 GMT
       etag:
-      - '"0x8D74CFF1C11B29C"'
+      - '"0x8D74D9CFE3ABF35"'
       last-modified:
-      - Wed, 09 Oct 2019 21:24:46 GMT
+      - Thu, 10 Oct 2019 16:14:57 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-lease-id:
-      - d34cda5f-0f52-40fb-bc73-413c7aaf88b6
+      - e171d7e5-15f7-463a-a4c9-cbd165433f92
       x-ms-version:
       - '2019-02-02'
     status:
@@ -97,9 +97,9 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:24:46 GMT
+      - Thu, 10 Oct 2019 16:14:57 GMT
       x-ms-lease-id:
-      - d34cda5f-0f52-40fb-bc73-413c7aaf88b6
+      - e171d7e5-15f7-463a-a4c9-cbd165433f92
       x-ms-version:
       - '2019-02-02'
     method: DELETE
@@ -111,7 +111,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:24:45 GMT
+      - Thu, 10 Oct 2019 16:14:56 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -131,7 +131,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:24:46 GMT
+      - Thu, 10 Oct 2019 16:14:57 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -139,14 +139,14 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>ContainerNotFound</Code><Message>The
-        specified container does not exist.\nRequestId:ac583cd6-e01e-0023-28e7-7e65c1000000\nTime:2019-10-09T21:24:47.0139723Z</Message></Error>"
+        specified container does not exist.\nRequestId:057cb1e4-701e-003d-0585-7f3499000000\nTime:2019-10-10T16:14:57.4256146Z</Message></Error>"
     headers:
       content-length:
       - '225'
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 21:24:46 GMT
+      - Thu, 10 Oct 2019 16:14:56 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:

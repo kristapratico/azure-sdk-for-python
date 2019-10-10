@@ -5,7 +5,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:49:23 GMT
+      - Thu, 10 Oct 2019 16:03:54 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -14,11 +14,10 @@ interactions:
     body:
       string: ''
     headers:
-      connection: close
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:49:23 GMT
-      etag: '"0x8D74D13504739BE"'
-      last-modified: Wed, 09 Oct 2019 23:49:24 GMT
+      date: Thu, 10 Oct 2019 16:03:55 GMT
+      etag: '"0x8D74D9B73FE293A"'
+      last-modified: Thu, 10 Oct 2019 16:03:55 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -34,24 +33,24 @@ interactions:
         - ''
 - request:
     body: !!binary |
-      +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
+      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
     headers:
       Content-Length:
       - '1024'
@@ -64,7 +63,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-date:
-      - Wed, 09 Oct 2019 23:49:23 GMT
+      - Thu, 10 Oct 2019 16:03:55 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -74,12 +73,12 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      content-md5: D1YS2I9hjBSjbirynE+Tgw==
-      date: Wed, 09 Oct 2019 23:49:24 GMT
-      etag: '"0x8D74D13505E8ECB"'
-      last-modified: Wed, 09 Oct 2019 23:49:24 GMT
+      content-md5: mWVmPkCbguD+dPD/TYTZvw==
+      date: Thu, 10 Oct 2019 16:03:55 GMT
+      etag: '"0x8D74D9B740877BE"'
+      last-modified: Thu, 10 Oct 2019 16:03:55 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
-      x-ms-content-crc64: bSZ1WwIrEK0=
+      x-ms-content-crc64: GTras596S1Y=
       x-ms-request-server-encrypted: 'true'
       x-ms-version: '2019-02-02'
     status:
@@ -99,7 +98,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:49:23 GMT
+      - Thu, 10 Oct 2019 16:03:55 GMT
       x-ms-meta-UP:
       - UPval
       x-ms-meta-hello:
@@ -115,9 +114,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 23:49:24 GMT
-      etag: '"0x8D74D135065E324"'
-      last-modified: Wed, 09 Oct 2019 23:49:24 GMT
+      date: Thu, 10 Oct 2019 16:03:55 GMT
+      etag: '"0x8D74D9B74106860"'
+      last-modified: Thu, 10 Oct 2019 16:03:55 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-request-server-encrypted: 'true'
       x-ms-version: '2019-02-02'
@@ -138,7 +137,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:49:23 GMT
+      - Thu, 10 Oct 2019 16:03:55 GMT
       x-ms-version:
       - '2019-02-02'
     method: HEAD
@@ -149,14 +148,16 @@ interactions:
     headers:
       accept-ranges: bytes
       content-length: '1024'
-      content-md5: D1YS2I9hjBSjbirynE+Tgw==
+      content-md5: mWVmPkCbguD+dPD/TYTZvw==
       content-type: application/octet-stream
-      date: Wed, 09 Oct 2019 23:49:24 GMT
-      etag: '"0x8D74D135065E324"'
-      last-modified: Wed, 09 Oct 2019 23:49:24 GMT
+      date: Thu, 10 Oct 2019 16:03:55 GMT
+      etag: '"0x8D74D9B74106860"'
+      last-modified: Thu, 10 Oct 2019 16:03:55 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-access-tier: Hot
+      x-ms-access-tier-inferred: 'true'
       x-ms-blob-type: BlockBlob
-      x-ms-creation-time: Wed, 09 Oct 2019 23:49:24 GMT
+      x-ms-creation-time: Thu, 10 Oct 2019 16:03:55 GMT
       x-ms-lease-state: available
       x-ms-lease-status: unlocked
       x-ms-meta-hello: world

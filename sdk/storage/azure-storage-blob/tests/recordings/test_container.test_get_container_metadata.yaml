@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:07 GMT
+      - Thu, 10 Oct 2019 16:15:19 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:10 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       etag:
-      - '"0x8D74CFF2A8A7197"'
+      - '"0x8D74D9D0C51A29A"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:11 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -51,7 +51,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:10 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       x-ms-meta-hello:
       - world
       x-ms-meta-number:
@@ -67,11 +67,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:10 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       etag:
-      - '"0x8D74CFF2A8A7198"'
+      - '"0x8D74D9D0C5FDB66"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:11 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -91,7 +91,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:25:10 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -103,13 +103,17 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:25:10 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       etag:
-      - '"0x8D74CFF2A8A7198"'
+      - '"0x8D74D9D0C5FDB66"'
       last-modified:
-      - Wed, 09 Oct 2019 21:25:11 GMT
+      - Thu, 10 Oct 2019 16:15:20 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-default-encryption-scope:
+      - $account-encryption-key
+      x-ms-deny-encryption-scope-override:
+      - 'false'
       x-ms-has-immutability-policy:
       - 'false'
       x-ms-has-legal-hold:

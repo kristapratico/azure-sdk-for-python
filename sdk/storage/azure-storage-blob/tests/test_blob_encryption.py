@@ -48,7 +48,6 @@ TEST_CONTAINER_PREFIX = 'encryption_container'
 TEST_BLOB_PREFIXES = {'BlockBlob': 'encryption_block_blob',
                       'PageBlob': 'encryption_page_blob',
                       'AppendBlob': 'foo'}
-FILE_PATH = 'blob_input.temp.dat'
 _ERROR_UNSUPPORTED_METHOD_FOR_ENCRYPTION = 'The require_encryption flag is set, but encryption is not supported' + \
                                            ' for this method.'
 
@@ -65,6 +64,13 @@ class StorageBlobEncryptionTest(StorageTestCase):
         if self.is_live:
             container = bsc.get_container_client(self.container_name)
             container.create_container()
+
+    def _teardown(self, file_name):
+        if path.isfile(file_name):
+            try:
+                remove(file_name)
+            except:
+                pass
 
     def _get_container_reference(self):
         return self.get_resource_name(TEST_CONTAINER_PREFIX)
@@ -589,15 +595,16 @@ class StorageBlobEncryptionTest(StorageTestCase):
             with self.assertRaises(ValueError):
                 blob.upload_blob(stream, length=512, blob_type=service)
 
-            FILE_PATH = 'blob_input.temp.dat'
-            with open(FILE_PATH, 'wb') as stream:
+            file_name = 'blob_strict_mode.temp.dat'
+            with open(file_name, 'wb') as stream:
                 stream.write(content)
-            with open(FILE_PATH, 'rb') as stream:
+            with open(file_name, 'rb') as stream:
                 with self.assertRaises(ValueError):
                     blob.upload_blob(stream, blob_type=service)
 
             with self.assertRaises(ValueError):
                 blob.upload_blob('To encrypt', blob_type=service)
+        self._teardown(file_name)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -735,13 +742,14 @@ class StorageBlobEncryptionTest(StorageTestCase):
         stream = BytesIO(self.bytes)
         self._create_blob_from_star(BlobType.BlockBlob, self.bytes, stream, bsc)
 
-        FILE_PATH = 'blob_input.temp.dat'
-        with open(FILE_PATH, 'wb') as stream:
+        file_name = 'block_blob_from_star.temp.dat'
+        with open(file_name, 'wb') as stream:
             stream.write(self.bytes)
-        with open(FILE_PATH, 'rb') as stream:
+        with open(file_name, 'rb') as stream:
             self._create_blob_from_star(BlobType.BlockBlob, self.bytes, stream, bsc)
 
         self._create_blob_from_star(BlobType.BlockBlob, b'To encrypt', 'To encrypt', bsc)
+        self._teardown(file_name)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -755,12 +763,13 @@ class StorageBlobEncryptionTest(StorageTestCase):
         stream = BytesIO(content)
         self._create_blob_from_star(BlobType.PageBlob, content, stream, bsc, length=512)
 
-        FILE_PATH = 'blob_input.temp.dat'
-        with open(FILE_PATH, 'wb') as stream:
+        file_name = 'page_blob_from_star.temp.dat'
+        with open(file_name, 'wb') as stream:
             stream.write(content)
 
-        with open(FILE_PATH, 'rb') as stream:
+        with open(file_name, 'rb') as stream:
             self._create_blob_from_star(BlobType.PageBlob, content, stream, bsc)
+        self._teardown(file_name)
 
     def _create_blob_from_star(self, blob_type, content, data, bsc, **kwargs):
         blob_name = self._get_blob_reference(blob_type)

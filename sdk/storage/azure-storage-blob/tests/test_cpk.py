@@ -280,10 +280,10 @@ class StorageCPKTest(StorageTestCase):
         destination_blob_client, _ = self._create_block_blob(bsc, cpk=TEST_ENCRYPTION_KEY)
 
         # Act part 1: make put block from url calls
-        destination_blob_client.stage_block_from_url(block_id=1, source_url=source_blob_self._account_url(storage_account.name),
+        destination_blob_client.stage_block_from_url(block_id=1, source_url=source_blob_url,
                                                      source_offset=0, source_length=4 * 1024,
                                                      cpk=TEST_ENCRYPTION_KEY)
-        destination_blob_client.stage_block_from_url(block_id=2, source_url=source_blob_self._account_url(storage_account.name),
+        destination_blob_client.stage_block_from_url(block_id=2, source_url=source_blob_url,
                                                      source_offset=4 * 1024, source_length=4 * 1024,
                                                      cpk=TEST_ENCRYPTION_KEY)
 
@@ -383,7 +383,7 @@ class StorageCPKTest(StorageTestCase):
         destination_blob_client = self._create_append_blob(bsc, cpk=TEST_ENCRYPTION_KEY)
 
         # Act
-        append_blob_prop = destination_blob_client.append_block_from_url(source_blob_self._account_url(storage_account.name),
+        append_blob_prop = destination_blob_client.append_block_from_url(source_blob_url,
                                                                          source_offset=0,
                                                                          source_length=4 * 1024,
                                                                          cpk=TEST_ENCRYPTION_KEY)
@@ -517,7 +517,7 @@ class StorageCPKTest(StorageTestCase):
         blob_client = self._create_page_blob(bsc, cpk=TEST_ENCRYPTION_KEY)
 
         # Act
-        page_blob_prop = blob_client.upload_pages_from_url(source_blob_self._account_url(storage_account.name),
+        page_blob_prop = blob_client.upload_pages_from_url(source_blob_url,
                                                            offset=0,
                                                            length=len(self.byte_data),
                                                            source_offset=0,

@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 21:39:19 GMT
+      - Thu, 10 Oct 2019 19:27:38 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,49 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 08 Oct 2019 21:39:19 GMT
+      - Thu, 10 Oct 2019 19:27:39 GMT
       etag:
-      - '"0x8D74C37F9CA08D5"'
+      - '"0x8D74DB7EA00A239"'
       last-modified:
-      - Tue, 08 Oct 2019 21:39:19 GMT
+      - Thu, 10 Oct 2019 19:27:39 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Thu, 10 Oct 2019 19:27:39 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstoragec8ac0c7a.blob.core.windows.net/utcontainersourcec8ac0c7a?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      date:
+      - Thu, 10 Oct 2019 19:27:39 GMT
+      etag:
+      - '"0x8D74DB7EA0D9DBD"'
+      last-modified:
+      - Thu, 10 Oct 2019 19:27:39 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -55,7 +93,7 @@ interactions:
       x-ms-blob-type:
       - PageBlob
       x-ms-date:
-      - Tue, 08 Oct 2019 21:39:19 GMT
+      - Thu, 10 Oct 2019 19:27:39 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -67,11 +105,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 08 Oct 2019 21:39:19 GMT
+      - Thu, 10 Oct 2019 19:27:39 GMT
       etag:
-      - '"0x8D74C37F9E9CCC8"'
+      - '"0x8D74DB7EA1A12DB"'
       last-modified:
-      - Tue, 08 Oct 2019 21:39:19 GMT
+      - Thu, 10 Oct 2019 19:27:39 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-request-server-encrypted:
@@ -93,7 +131,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 21:39:19 GMT
+      - Thu, 10 Oct 2019 19:27:39 GMT
       x-ms-version:
       - '2019-02-02'
     method: HEAD
@@ -109,11 +147,11 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Tue, 08 Oct 2019 21:39:19 GMT
+      - Thu, 10 Oct 2019 19:27:39 GMT
       etag:
-      - '"0x8D74C37F9E9CCC8"'
+      - '"0x8D74DB7EA1A12DB"'
       last-modified:
-      - Tue, 08 Oct 2019 21:39:19 GMT
+      - Thu, 10 Oct 2019 19:27:39 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-blob-sequence-number:
@@ -121,7 +159,7 @@ interactions:
       x-ms-blob-type:
       - PageBlob
       x-ms-creation-time:
-      - Tue, 08 Oct 2019 21:39:19 GMT
+      - Thu, 10 Oct 2019 19:27:39 GMT
       x-ms-lease-state:
       - available
       x-ms-lease-status:

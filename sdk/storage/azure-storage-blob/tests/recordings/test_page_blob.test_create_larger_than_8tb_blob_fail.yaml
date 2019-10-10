@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 21:39:52 GMT
+      - Thu, 10 Oct 2019 19:28:44 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,49 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 08 Oct 2019 21:39:53 GMT
+      - Thu, 10 Oct 2019 19:28:45 GMT
       etag:
-      - '"0x8D74C380E6DE0D0"'
+      - '"0x8D74DB810FF44E1"'
       last-modified:
-      - Tue, 08 Oct 2019 21:39:54 GMT
+      - Thu, 10 Oct 2019 19:28:45 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Thu, 10 Oct 2019 19:28:45 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorage2aa214c8.blob.core.windows.net/utcontainersource2aa214c8?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      date:
+      - Thu, 10 Oct 2019 19:28:45 GMT
+      etag:
+      - '"0x8D74DB8110AB898"'
+      last-modified:
+      - Thu, 10 Oct 2019 19:28:45 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -55,7 +93,7 @@ interactions:
       x-ms-blob-type:
       - PageBlob
       x-ms-date:
-      - Tue, 08 Oct 2019 21:39:54 GMT
+      - Thu, 10 Oct 2019 19:28:45 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -63,14 +101,14 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>InvalidHeaderValue</Code><Message>The
-        value for one of the HTTP headers is not in the correct format.\nRequestId:1ac4ce40-901e-0006-3e20-7e1a7a000000\nTime:2019-10-08T21:39:54.1697518Z</Message><HeaderName>x-ms-blob-content-length</HeaderName><HeaderValue>8796093022209</HeaderValue></Error>"
+        value for one of the HTTP headers is not in the correct format.\nRequestId:fc4e5721-b01e-00b2-47a0-7f53b1000000\nTime:2019-10-10T19:28:45.2471743Z</Message><HeaderName>x-ms-blob-content-length</HeaderName><HeaderValue>8796093022209</HeaderValue></Error>"
     headers:
       content-length:
       - '343'
       content-type:
       - application/xml
       date:
-      - Tue, 08 Oct 2019 21:39:53 GMT
+      - Thu, 10 Oct 2019 19:28:45 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:

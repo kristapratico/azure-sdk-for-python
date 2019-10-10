@@ -57,9 +57,17 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
     async def _setup(self, bsc):
         self.config = bsc._config
         self.container_name = self.get_resource_name('utcontainer')
+        self.source_container_name = self.get_resource_name('utcontainersource')
         if self.is_live:
             await bsc.create_container(self.container_name)
-        self.source_container_name = self.get_resource_name('utcontainersource')
+            await bsc.create_container(self.source_container_name)
+
+    def _teardown(self):
+        if os.path.isfile(FILE_PATH):
+            try:
+                os.remove(FILE_PATH)
+            except:
+                pass
 
     def _get_blob_reference(self, bsc):
         return bsc.get_blob_client(
@@ -109,7 +117,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
     async def assertRangeEqual(self, container_name, blob_name, expected_data, offset, length, bsc):
         blob = bsc.get_blob_client(container_name, blob_name)
-        stream = await blob.download_blob(offset=start_range, length=end_range)
+        stream = await blob.download_blob(offset=offset, length=length)
         actual_data = await stream.content_as_bytes()
         self.assertEqual(actual_data, expected_data)
 
@@ -125,6 +133,9 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
     #--Test cases for page blobs --------------------------------------------
 
+    @ResourceGroupPreparer()
+    @StorageAccountPreparer(name_prefix='pyacrstorage')
+    @AsyncBlobTestCase.await_prepared_test
     async def test_create_blob(self, resource_group, location, storage_account, storage_account_key):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
@@ -137,14 +148,16 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         self.assertIsNotNone(resp.get('etag'))
         self.assertIsNotNone(resp.get('last_modified'))
         self.assertTrue(await blob.get_blob_properties())
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
     @AsyncBlobTestCase.await_prepared_test
     async def test_create_blob_with_metadata(self, resource_group, location, storage_account, storage_account_key):
+        bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         # Arrange
         await self._setup(bsc)
-        blob = self._get_blob_reference()
+        blob = self._get_blob_reference(bsc)
         metadata = {'hello': 'world', 'number': '42'}
 
         # Act
@@ -153,6 +166,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         # Assert
         md = await blob.get_blob_properties()
         self.assertDictEqual(md.metadata, metadata)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -171,6 +185,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         content = await blob.download_blob(lease=lease)
         actual = await content.content_as_bytes()
         self.assertEqual(actual, data)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -189,6 +204,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         self.assertIsNotNone(resp.get('last_modified'))
         self.assertIsNotNone(resp.get('blob_sequence_number'))
         await self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -209,6 +225,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         self.assertIsInstance(props, BlobProperties)
         self.assertEqual(props.size, EIGHT_TB)
         self.assertEqual(0, len(page_ranges))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -221,6 +238,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         # Act
         with self.assertRaises(HttpResponseError):
             await blob.create_page_blob(EIGHT_TB + 1)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -248,6 +266,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         self.assertEqual(1, len(page_ranges))
         self.assertEqual(page_ranges[0]['start'], start_offset)
         self.assertEqual(page_ranges[0]['end'], start_offset + length - 1)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -260,7 +279,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         # Act
         data = self.get_random_bytes(512)
         resp = await blob.upload_page(data, offset=0, length=512, validate_content=True)
-
+        self._teardown()
         # Assert
 
     @ResourceGroupPreparer()
@@ -277,7 +296,8 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         self.assertIsNotNone(resp.get('etag'))
         self.assertIsNotNone(resp.get('last_modified'))
         self.assertIsNotNone(resp.get('blob_sequence_number'))
-        await self.assertBlobEqual(self.container_name, blob.blob_name, b'\x00' * 512)
+        await self.assertBlobEqual(self.container_name, blob.blob_name, b'\x00' * 512, bsc)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -296,6 +316,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert
         await self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -311,6 +332,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         # Act
         with self.assertRaises(HttpResponseError):
             await blob.upload_page(data, offset=0, length=512, if_sequence_number_lt=start_sequence)
+        self._teardown()
 
         # Assert
 
@@ -330,6 +352,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert
         await self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -345,6 +368,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         # Act
         with self.assertRaises(HttpResponseError):
             await blob.upload_page(data, offset=0, length=512, if_sequence_number_lte=start_sequence - 1)
+        self._teardown()
 
         # Assert
 
@@ -364,6 +388,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert
         await self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -379,6 +404,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         # Act
         with self.assertRaises(HttpResponseError):
             await blob.upload_page(data, offset=0, length=512, if_sequence_number_eq=start_sequence - 1)
+        self._teardown()
 
         # Assert
 
@@ -390,12 +416,12 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(
@@ -410,9 +436,10 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.source_container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.source_container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -422,13 +449,13 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         src_md5 = StorageContentValidation.get_content_md5(source_blob_data)
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(source_blob_client.url + "?" + sas,
@@ -441,7 +468,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -452,6 +479,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 0,
                                                                 source_content_md5=StorageContentValidation.get_content_md5(
                                                                     b"POTATO"))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -461,13 +489,13 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         source_properties = await source_blob_client.get_blob_properties()
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(source_blob_client.url + "?" + sas,
@@ -482,7 +510,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -493,6 +521,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 0,
                                                                 source_if_modified_since=source_properties.get(
                                                                     'last_modified'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -502,13 +531,13 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         source_properties = await source_blob_client.get_blob_properties()
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(source_blob_client.url + "?" + sas,
@@ -522,7 +551,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -534,6 +563,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 source_if_unmodified_since=source_properties.get(
                                                                     'last_modified') - timedelta(
                                                                     hours=15))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -543,13 +573,13 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         source_properties = await source_blob_client.get_blob_properties()
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(source_blob_client.url + "?" + sas,
@@ -562,7 +592,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -572,6 +602,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 SOURCE_BLOB_SIZE,
                                                                 0,
                                                                 source_if_match='0x111111111111111')
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -581,13 +612,13 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         source_properties = await source_blob_client.get_blob_properties()
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(source_blob_client.url + "?" + sas,
@@ -600,7 +631,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -610,6 +641,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 SOURCE_BLOB_SIZE,
                                                                 0,
                                                                 source_if_none_match=source_properties.get('etag'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -619,13 +651,13 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         source_properties = await source_blob_client.get_blob_properties()
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(source_blob_client.url + "?" + sas,
@@ -640,7 +672,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.source_container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.source_container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -651,6 +683,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 0,
                                                                 if_modified_since=blob_properties.get(
                                                                     'last_modified'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -660,13 +693,13 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         source_properties = await source_blob_client.get_blob_properties()
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(source_blob_client.url + "?" + sas,
@@ -680,7 +713,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -692,6 +725,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 if_unmodified_since=source_properties.get(
                                                                     'last_modified') - timedelta(
                                                                     minutes=15))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -701,12 +735,12 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
         destination_blob_properties = await destination_blob_client.get_blob_properties()
 
         # Act: make update page from url calls
@@ -720,7 +754,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -730,6 +764,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 SOURCE_BLOB_SIZE,
                                                                 0,
                                                                 if_match='0x111111111111111')
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -739,12 +774,12 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(source_blob_client.url + "?" + sas,
@@ -757,7 +792,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -767,6 +802,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 SOURCE_BLOB_SIZE,
                                                                 0,
                                                                 if_none_match=blob_properties.get('etag'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -777,12 +813,12 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         await self._setup(bsc)
         start_sequence = 10
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE, sequence_number=start_sequence)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(source_blob_client.url + "?" + sas,
@@ -795,7 +831,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -805,6 +841,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 SOURCE_BLOB_SIZE,
                                                                 0,
                                                                 if_sequence_number_lt=start_sequence)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -815,12 +852,12 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         await self._setup(bsc)
         start_sequence = 10
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE, sequence_number=start_sequence)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(source_blob_client.url + "?" + sas,
@@ -833,7 +870,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -843,6 +880,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 SOURCE_BLOB_SIZE,
                                                                 0,
                                                                 if_sequence_number_lte=start_sequence - 1)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -853,12 +891,12 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         await self._setup(bsc)
         start_sequence = 10
         source_blob_data = self.get_random_bytes(SOURCE_BLOB_SIZE)
-        source_blob_client = await self._create_source_blob(source_blob_data, 0, SOURCE_BLOB_SIZE)
+        source_blob_client = await self._create_source_blob(bsc, source_blob_data, 0, SOURCE_BLOB_SIZE)
         sas = source_blob_client.generate_shared_access_signature(
             permission=BlobSasPermissions(read=True, delete=True),
             expiry=datetime.utcnow() + timedelta(hours=1))
 
-        destination_blob_client = await self._create_blob(SOURCE_BLOB_SIZE, sequence_number=start_sequence)
+        destination_blob_client = await self._create_blob(bsc, SOURCE_BLOB_SIZE)
 
         # Act: make update page from url calls
         resp = await destination_blob_client.upload_pages_from_url(source_blob_client.url + "?" + sas,
@@ -871,7 +909,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert the destination blob is constructed correctly
         blob_properties = await destination_blob_client.get_blob_properties()
-        self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data)
+        await self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
 
@@ -881,7 +919,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                                                                 SOURCE_BLOB_SIZE,
                                                                 0,
                                                                 if_sequence_number_eq=start_sequence + 1)
-
+        self._teardown()
     # TODO: FIX THIS TEST
     # @record
     # def test_get_page_ranges_no_pages(self):
@@ -904,6 +942,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         # Assert
         self.assertIsNotNone(resp.get('etag'))
         self.assertIsNotNone(resp.get('last_modified'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -920,6 +959,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         self.assertIsNotNone(ranges)
         self.assertIsInstance(ranges, list)
         self.assertEqual(len(ranges), 0)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -943,6 +983,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         self.assertEqual(ranges[0]['end'], 511)
         self.assertEqual(ranges[1]['start'], 1024)
         self.assertEqual(ranges[1]['end'], 1535)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -981,6 +1022,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         self.assertEqual(len(cleared2), 1)
         self.assertEqual(cleared2[0]['start'], 512)
         self.assertEqual(cleared2[0]['end'], 1023)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1000,6 +1042,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert
         raise Exception('Page range validation failed to throw on failure case')
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1019,6 +1062,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         props = await blob.get_blob_properties()
         self.assertIsInstance(props, BlobProperties)
         self.assertEqual(props.size, 512)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1038,6 +1082,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         props = await blob.get_blob_properties()
         self.assertIsInstance(props, BlobProperties)
         self.assertEqual(props.page_blob_sequence_number, 6)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1064,6 +1109,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                 metadata={'BlobData': 'Data2'})
 
         props = await blob.get_blob_properties()
+        self._teardown()
 
         # Assert
         await self.assertBlobEqual(self.container_name, blob.blob_name, data1, bsc)
@@ -1104,6 +1150,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         self.assertEqual(props.metadata, {'BlobData': 'Data2'})
         self.assertEqual(props.size, LARGE_BLOB_SIZE + 512)
         self.assertEqual(props.blob_type, BlobType.PageBlob)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1126,6 +1173,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         await self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1148,6 +1196,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         await self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1179,6 +1228,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
         self.assert_upload_progress(LARGE_BLOB_SIZE, self.config.max_page_size, progress)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1199,6 +1249,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert
         await self.assertBlobEqual(self.container_name, blob.blob_name, data[1024:], bsc)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1219,6 +1270,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         await self.assertBlobEqual(self.container_name, blob.blob_name, data[index:index + count], bsc)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1245,6 +1297,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         await self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1275,6 +1328,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         # Assert
         await self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
         self.assert_upload_progress(len(data), self.config.max_page_size, progress)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1301,6 +1355,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         await self.assertBlobEqual(self.container_name, blob.blob_name, data[:blob_size], bsc)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1338,6 +1393,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         self.assertEqual(page_ranges[1]['end'], 12287)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1366,6 +1422,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert
         await self.assertBlobEqual(self.container_name, blob.blob_name, data[:blob_size], bsc)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1398,6 +1455,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         # Assert
         await self.assertBlobEqual(self.container_name, blob.blob_name, data[:blob_size], bsc)
         self.assert_upload_progress(len(data), self.config.max_page_size, progress)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1421,6 +1479,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # Assert
         await self.assertBlobEqual(self.container_name, blob.blob_name, data[:blob_size], bsc)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1453,6 +1512,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         # Assert
         await self.assertBlobEqual(self.container_name, blob.blob_name, data[:blob_size], bsc)
         self.assert_upload_progress(blob_size, self.config.max_page_size, progress)
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1467,12 +1527,13 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         await blob.upload_blob(data, validate_content=True, blob_type=BlobType.PageBlob)
 
         # Assert
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
     @AsyncBlobTestCase.await_prepared_test
     async def test_create_blob_with_md5_large(self, resource_group, location, storage_account, storage_account_key):
-        # parallel tests introduce random order of requests, can only run live
+        bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
         if not self.is_live:
             return
@@ -1485,6 +1546,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         await blob.upload_blob(data, validate_content=True, blob_type=BlobType.PageBlob)
 
         # Assert
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1514,6 +1576,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
         # Act
         dest_blob = bsc.get_blob_client(self.container_name, 'dest_blob')
         copy = await dest_blob.start_copy_from_url(sas_blob.url, incremental_copy=True)
+        self._teardown()
 
         # Assert
         self.assertIsNotNone(copy)
@@ -1526,9 +1589,10 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         # strip off protocol
         self.assertTrue(copy_blob.copy.source.endswith(sas_blob.url[5:]))
+        self._teardown()
 
     @ResourceGroupPreparer()
-    @StorageAccountPreparer(name_prefix='pyacrstorage')
+    @StorageAccountPreparer(sku='premium_LRS', name_prefix='pyacrstorage')
     @AsyncBlobTestCase.await_prepared_test
     async def test_blob_tier_on_create(self, resource_group, location, storage_account, storage_account_key):
         # Test can only run live
@@ -1537,8 +1601,8 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
-        url = self._get_premium_account_url()
-        credential = self._get_premium_shared_key_credential()
+        url = self._account_url(storage_account.name)
+        credential = storage_account_key
         pbs = BlobServiceClient(url, credential=credential, transport=AiohttpTestTransport())
 
         try:
@@ -1587,6 +1651,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
         finally:
             await container.delete_container()
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1594,8 +1659,8 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
     async def test_blob_tier_set_tier_api(self, resource_group, location, storage_account, storage_account_key):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
-        url = self._get_premium_account_url()
-        credential = self._get_premium_shared_key_credential()
+        url = self._account_url(storage_account.name)
+        credential = storage_account_key
         pbs = BlobServiceClient(url, credential=credential, transport=AiohttpTestTransport())
 
         try:
@@ -1646,15 +1711,16 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
             self.assertFalse(blobs[0].blob_tier_inferred)
         finally:
             await container.delete_container()
+        self._teardown()
 
     @ResourceGroupPreparer()
-    @StorageAccountPreparer(name_prefix='pyacrstorage')
+    @StorageAccountPreparer(sku='premium_LRS', name_prefix='pyacrstorage')
     @AsyncBlobTestCase.await_prepared_test
     async def test_blob_tier_copy_blob(self, resource_group, location, storage_account, storage_account_key):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, connection_data_block_size=4 * 1024, max_page_size=4 * 1024, transport=AiohttpTestTransport())
         await self._setup(bsc)
-        url = self._get_premium_account_url()
-        credential = self._get_premium_shared_key_credential()
+        url = self._account_url(storage_account.name)
+        credential = storage_account_key
         pbs = BlobServiceClient(url, credential=credential, transport=AiohttpTestTransport())
 
         try:
@@ -1675,7 +1741,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
             # Act
             source_blob_url = '{0}/{1}/{2}'.format(
-                self._get_premium_account_url(), container_name, source_blob.blob_name)
+                self._account_url(storage_account.name), container_name, source_blob.blob_name)
 
             copy_blob = pbs.get_blob_client(container_name, 'blob1copy')
             copy = await copy_blob.start_copy_from_url(source_blob_url, premium_page_blob_tier=PremiumPageBlobTier.P30)
@@ -1694,7 +1760,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
 
             await source_blob2.create_page_blob(1024)
             source_blob2_url = '{0}/{1}/{2}'.format(
-                self._get_premium_account_url(), source_blob2.container_name, source_blob2.blob_name)
+                self._account_url(storage_account.name), source_blob2.container_name, source_blob2.blob_name)
 
             copy_blob2 = pbs.get_blob_client(container_name, 'blob2copy')
             copy2 = await copy_blob2.start_copy_from_url(source_blob2_url, premium_page_blob_tier=PremiumPageBlobTier.P60)
@@ -1717,6 +1783,7 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
             self.assertTrue(copy_ref3.blob_tier_inferred)
         finally:
             await container.delete_container()
+        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1755,5 +1822,6 @@ class StoragePageBlobTestAsync(AsyncBlobTestCase):
                 self.assertEqual(byte, '\x00')
             except:
                 self.assertEqual(byte, 0)
+        self._teardown()
 
 #------------------------------------------------------------------------------

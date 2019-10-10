@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 21:40:38 GMT
+      - Thu, 10 Oct 2019 19:29:37 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,49 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 08 Oct 2019 21:40:39 GMT
+      - Thu, 10 Oct 2019 19:29:36 GMT
       etag:
-      - '"0x8D74C38297EF74D"'
+      - '"0x8D74DB8303120F9"'
       last-modified:
-      - Tue, 08 Oct 2019 21:40:39 GMT
+      - Thu, 10 Oct 2019 19:29:37 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      x-ms-date:
+      - Thu, 10 Oct 2019 19:29:37 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstorageff6a18db.blob.core.windows.net/utcontainersourceff6a18db?restype=container
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      date:
+      - Thu, 10 Oct 2019 19:29:36 GMT
+      etag:
+      - '"0x8D74DB8303BF861"'
+      last-modified:
+      - Thu, 10 Oct 2019 19:29:37 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -57,7 +95,7 @@ interactions:
       x-ms-blob-type:
       - PageBlob
       x-ms-date:
-      - Tue, 08 Oct 2019 21:40:39 GMT
+      - Thu, 10 Oct 2019 19:29:37 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -69,11 +107,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 08 Oct 2019 21:40:39 GMT
+      - Thu, 10 Oct 2019 19:29:36 GMT
       etag:
-      - '"0x8D74C38298B9777"'
+      - '"0x8D74DB83048C806"'
       last-modified:
-      - Tue, 08 Oct 2019 21:40:39 GMT
+      - Thu, 10 Oct 2019 19:29:37 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-request-server-encrypted:
@@ -85,15 +123,15 @@ interactions:
       message: Created
 - request:
     body: !!binary |
-      7NLJiIENSstb+9r88PzKSMcOswvQkE1zUjsKxtDpAfU6wd3kchD9Xdwt1NU1sCLF873QmCozzxgQ
-      odDCX0iFwvHG3DZuzW0FBDLY/NPn3yikQL/6kI8ipmpL+b+OJ7Q8NxHiw5dNFZXUXj1+zjnu7p8t
-      AdGEJpuWzMdvor8mzpZkoDKhYUmn3hHZYpbE12vMHx4GxSKnGxO+O2JN2Xuk/F3fzN/7GK5byvK6
-      +b9Tof6DsFkWWJkgrUGFPErfWKxmkRuE9xKS9am6V6f6Z8qiy5sQek+pK0gYdrFljDcnKCP8Aq/g
-      tDtsoJ2FSvcCMNqEfCIN9R/9XkBMXZ5ufkNRemjQ5GRaDaF34yzu1YJcgAjseXth6cAh06MkxEfu
-      PGLeDQ8zr0k6d6r17dBe7edXlO86OyM9xaSWKi5NdOz+6GgzSz8iRwkhCJoy0yt+225W4Y991kRk
-      4BNvmDsxSScFvfnDFTLFMXnmx3c4rimIeFHDREu3FJP1tp/zhlzovqaleR3x4J1nfutyAbejuTJS
-      ejMJ79hNPNRtCxvGKPk/Fyd31hFV2VmPvQptjV7Yk/iCoIGZXAAEZIp8aYW8h0/XTtF5Wn0Gprpt
-      iyppnvSWD4SglIDsqo0ShiZipT03v+B9yGzw3hj2ZlUBGXJl6G2AYGfNBtWjG5p3AEvja1puVts=
+      Kp6yDsznM/OQJ6Xjw+wKvH5RjQ+aEGs4NquTybh/RwOb+YidymsYpQehjKOoHAEAeHiAukBIzkj4
+      dOQfSpenbilh4D45rmvrQaukrrZpBHmqbFN5Gq9u5hEALxc90fXqKpPitVqf2Rcgjyl+dLngwhkc
+      4IX5u8rdG8dyF3qbHwY+aoJNre1TbTUwceAQTUS3VGCC0UI8oeFRsm/733K9lAS4t3KsH7WupcrX
+      mChZX7UCjZeIc7eSbBPMY/FzIjC9MlUFhXnITvniDkkwxpyGcn26roFu8EN377khqJwTz7wWGs1j
+      dn6NDvWNBQpTd3QgMCC20bhJLq0dvtDBJjsiwHy+y5IUq+kbLx4eUXAO7sLNJT18tNWCzPbISpvX
+      k80pYo6Anw6ySRD1vFWoRpUxSxt5wmMpz+5byjjr5hk5vUSKOMpT4l1wU2udDumqSrR1jNuTlI+5
+      byFxNgdt8cug7IUXPrGvTnaESN8V5KziiBpf4mZ64mKJaoIT4IbpJsy+YyCyPduwzGfEhxrkTsbF
+      8sbUawnhSRS9sdTDnEeG5Q/t+Zn67eO0rwt+dqbjcB1xJyu9IOK3H4ajmRV8ANorJ9qWPW5MTSLi
+      gjWvTOmRM5ladRMysDAjGtnhc89O6Sv8xRQUzmI2kxRcvAz1D/LHea7Agw72d4T0XSv1mhHcHZQ=
     headers:
       Accept:
       - '*/*'
@@ -108,7 +146,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Tue, 08 Oct 2019 21:40:39 GMT
+      - Thu, 10 Oct 2019 19:29:37 GMT
       x-ms-if-sequence-number-lt:
       - '10'
       x-ms-page-write:
@@ -122,14 +160,14 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>SequenceNumberConditionNotMet</Code><Message>The
-        sequence number condition specified was not met.\nRequestId:d381ce16-f01e-00f1-6f21-7e7958000000\nTime:2019-10-08T21:40:39.6092055Z</Message></Error>"
+        sequence number condition specified was not met.\nRequestId:67f80794-f01e-009c-40a1-7fd376000000\nTime:2019-10-10T19:29:37.6313402Z</Message></Error>"
     headers:
       content-length:
       - '250'
       content-type:
       - application/xml
       date:
-      - Tue, 08 Oct 2019 21:40:39 GMT
+      - Thu, 10 Oct 2019 19:29:36 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:

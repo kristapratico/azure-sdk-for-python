@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:34:03 GMT
+      - Thu, 10 Oct 2019 01:02:56 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 23:34:04 GMT
+      - Thu, 10 Oct 2019 01:02:57 GMT
       etag:
-      - '"0x8D74D112C6C44B5"'
+      - '"0x8D74D1D96E62D24"'
       last-modified:
-      - Wed, 09 Oct 2019 23:34:05 GMT
+      - Thu, 10 Oct 2019 01:02:57 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -53,7 +53,7 @@ interactions:
       x-ms-copy-source:
       - http://www.gutenberg.org/files/59466/59466-0.txt
       x-ms-date:
-      - Wed, 09 Oct 2019 23:34:04 GMT
+      - Thu, 10 Oct 2019 01:02:57 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -65,15 +65,15 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 23:34:05 GMT
+      - Thu, 10 Oct 2019 01:02:57 GMT
       etag:
-      - '"0x8D74D112CB721AD"'
+      - '"0x8D74D1D9711E63E"'
       last-modified:
-      - Wed, 09 Oct 2019 23:34:05 GMT
+      - Thu, 10 Oct 2019 01:02:58 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-copy-id:
-      - 63e26ac2-a368-495a-bbf6-95ed0aaa4278
+      - 82c30c85-ab13-454a-939e-4bad4511fbc7
       x-ms-copy-status:
       - pending
       x-ms-version:
@@ -93,7 +93,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:34:05 GMT
+      - Thu, 10 Oct 2019 01:02:57 GMT
       x-ms-version:
       - '2019-02-02'
     method: HEAD
@@ -109,17 +109,17 @@ interactions:
       content-type:
       - text/plain
       date:
-      - Wed, 09 Oct 2019 23:34:05 GMT
+      - Thu, 10 Oct 2019 01:02:57 GMT
       etag:
-      - '"0x8D74D112CB721AD"'
+      - '"0x8D74D1D9711E63E"'
       last-modified:
-      - Wed, 09 Oct 2019 23:34:05 GMT
+      - Thu, 10 Oct 2019 01:02:58 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-blob-type:
       - BlockBlob
       x-ms-copy-id:
-      - 63e26ac2-a368-495a-bbf6-95ed0aaa4278
+      - 82c30c85-ab13-454a-939e-4bad4511fbc7
       x-ms-copy-progress:
       - 0/439274
       x-ms-copy-source:
@@ -127,7 +127,7 @@ interactions:
       x-ms-copy-status:
       - pending
       x-ms-creation-time:
-      - Wed, 09 Oct 2019 23:34:05 GMT
+      - Thu, 10 Oct 2019 01:02:58 GMT
       x-ms-lease-state:
       - available
       x-ms-lease-status:
@@ -151,7 +151,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:34:11 GMT
+      - Thu, 10 Oct 2019 01:03:03 GMT
       x-ms-version:
       - '2019-02-02'
     method: HEAD
@@ -167,19 +167,19 @@ interactions:
       content-type:
       - text/plain
       date:
-      - Wed, 09 Oct 2019 23:34:11 GMT
+      - Thu, 10 Oct 2019 01:03:03 GMT
       etag:
-      - '"0x8D74D112DAB3306"'
+      - '"0x8D74D1D97A262D8"'
       last-modified:
-      - Wed, 09 Oct 2019 23:34:07 GMT
+      - Thu, 10 Oct 2019 01:02:58 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-blob-type:
       - BlockBlob
       x-ms-copy-completion-time:
-      - Wed, 09 Oct 2019 23:34:07 GMT
+      - Thu, 10 Oct 2019 01:02:58 GMT
       x-ms-copy-id:
-      - 63e26ac2-a368-495a-bbf6-95ed0aaa4278
+      - 82c30c85-ab13-454a-939e-4bad4511fbc7
       x-ms-copy-progress:
       - 439274/439274
       x-ms-copy-source:
@@ -187,7 +187,7 @@ interactions:
       x-ms-copy-status:
       - success
       x-ms-creation-time:
-      - Wed, 09 Oct 2019 23:34:05 GMT
+      - Thu, 10 Oct 2019 01:02:58 GMT
       x-ms-lease-state:
       - available
       x-ms-lease-status:

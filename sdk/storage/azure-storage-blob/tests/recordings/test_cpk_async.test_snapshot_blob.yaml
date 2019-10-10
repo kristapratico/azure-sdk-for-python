@@ -5,7 +5,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:15:35 GMT
+      - Thu, 10 Oct 2019 19:14:34 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -15,9 +15,9 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 21:15:36 GMT
-      etag: '"0x8D74CFDD40A3DCC"'
-      last-modified: Wed, 09 Oct 2019 21:15:36 GMT
+      date: Thu, 10 Oct 2019 19:14:36 GMT
+      etag: '"0x8D74DB6175ADAF6"'
+      last-modified: Thu, 10 Oct 2019 19:14:36 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version: '2019-02-02'
     status:
@@ -45,7 +45,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-date:
-      - Wed, 09 Oct 2019 21:15:35 GMT
+      - Thu, 10 Oct 2019 19:14:36 GMT
       x-ms-encryption-algorithm:
       - AES256
       x-ms-encryption-key:
@@ -62,9 +62,9 @@ interactions:
     headers:
       content-length: '0'
       content-md5: Yge131eW6WNBDTvEtqQhiw==
-      date: Wed, 09 Oct 2019 21:15:36 GMT
-      etag: '"0x8D74CFDD416EA4B"'
-      last-modified: Wed, 09 Oct 2019 21:15:36 GMT
+      date: Thu, 10 Oct 2019 19:14:36 GMT
+      etag: '"0x8D74DB617631FBB"'
+      last-modified: Thu, 10 Oct 2019 19:14:36 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-content-crc64: DTngHrtvLQU=
       x-ms-encryption-key-sha256: 3QFFFpRA5+XANHqwwbT4yXDmrT/2JaLt/FKHjzhOdoE=
@@ -87,7 +87,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:15:35 GMT
+      - Thu, 10 Oct 2019 19:14:36 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -96,11 +96,11 @@ interactions:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>BlobUsesCustomerSpecifiedEncryption</Code><Message>The
         blob is encrypted with customer specified encryption, but it was not provided
-        in the request.\nRequestId:f21eae26-801e-0054-0ce6-7e4241000000\nTime:2019-10-09T21:15:36.5283212Z</Message></Error>"
+        in the request.\nRequestId:531920a6-801e-0008-1f9e-7f9d44000000\nTime:2019-10-10T19:14:36.8322046Z</Message></Error>"
     headers:
       content-length: '301'
       content-type: application/xml
-      date: Wed, 09 Oct 2019 21:15:36 GMT
+      date: Thu, 10 Oct 2019 19:14:36 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code: BlobUsesCustomerSpecifiedEncryption
       x-ms-version: '2019-02-02'
@@ -122,7 +122,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:15:35 GMT
+      - Thu, 10 Oct 2019 19:14:36 GMT
       x-ms-encryption-algorithm:
       - AES256
       x-ms-encryption-key:
@@ -138,12 +138,12 @@ interactions:
       string: ''
     headers:
       content-length: '0'
-      date: Wed, 09 Oct 2019 21:15:36 GMT
-      etag: '"0x8D74CFDD416EA4B"'
-      last-modified: Wed, 09 Oct 2019 21:15:36 GMT
+      date: Thu, 10 Oct 2019 19:14:36 GMT
+      etag: '"0x8D74DB617631FBB"'
+      last-modified: Thu, 10 Oct 2019 19:14:36 GMT
       server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-request-server-encrypted: 'false'
-      x-ms-snapshot: '2019-10-09T21:15:36.5673489Z'
+      x-ms-snapshot: '2019-10-10T19:14:36.8663795Z'
       x-ms-version: '2019-02-02'
     status:
       code: 201

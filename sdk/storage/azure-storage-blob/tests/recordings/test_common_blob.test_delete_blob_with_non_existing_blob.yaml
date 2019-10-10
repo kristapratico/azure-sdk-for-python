@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:34:49 GMT
+      - Thu, 10 Oct 2019 15:40:15 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 23:34:51 GMT
+      - Thu, 10 Oct 2019 15:40:15 GMT
       etag:
-      - '"0x8D74D1148567119"'
+      - '"0x8D74D98263FAEBF"'
       last-modified:
-      - Wed, 09 Oct 2019 23:34:51 GMT
+      - Thu, 10 Oct 2019 15:40:16 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -51,7 +51,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 23:34:51 GMT
+      - Thu, 10 Oct 2019 15:40:16 GMT
       x-ms-version:
       - '2019-02-02'
     method: DELETE
@@ -59,14 +59,14 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>BlobNotFound</Code><Message>The
-        specified blob does not exist.\nRequestId:b2ac8e33-701e-0023-6afa-7e9e64000000\nTime:2019-10-09T23:34:52.0692668Z</Message></Error>"
+        specified blob does not exist.\nRequestId:c07b4835-b01e-013e-6681-7f58bf000000\nTime:2019-10-10T15:40:16.9300695Z</Message></Error>"
     headers:
       content-length:
       - '215'
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 23:34:51 GMT
+      - Thu, 10 Oct 2019 15:40:16 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:

@@ -17,7 +17,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 18:58:12 GMT
+      - Thu, 10 Oct 2019 00:27:11 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,15 +25,17 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>InvalidXmlDocument</Code><Message>XML
-        specified is not syntactically valid.\nRequestId:c3ea091f-a01e-00a6-61d3-7e90d5000000\nTime:2019-10-09T18:58:13.1349201Z</Message><LineNumber>2</LineNumber><LinePosition>176</LinePosition><Reason>Retention
+        specified is not syntactically valid.\nRequestId:1c9b31b0-701e-00fe-5901-7f0c13000000\nTime:2019-10-10T00:27:12.5492804Z</Message><LineNumber>2</LineNumber><LinePosition>176</LinePosition><Reason>Retention
         days must be greater than 0 and less than or equal to 365 days.</Reason></Error>"
     headers:
+      connection:
+      - close
       content-length:
       - '376'
       content-type:
       - application/xml
       date:
-      - Wed, 09 Oct 2019 18:58:12 GMT
+      - Thu, 10 Oct 2019 00:27:11 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:

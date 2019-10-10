@@ -13,7 +13,7 @@ interactions:
       User-Agent:
       - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 21:13:29 GMT
+      - Thu, 10 Oct 2019 00:38:37 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 21:13:30 GMT
+      - Thu, 10 Oct 2019 00:38:37 GMT
       etag:
-      - '"0x8D74CFD88C8A5AF"'
+      - '"0x8D74D1A3104D81A"'
       last-modified:
-      - Wed, 09 Oct 2019 21:13:30 GMT
+      - Thu, 10 Oct 2019 00:38:38 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -57,7 +57,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-date:
-      - Wed, 09 Oct 2019 21:13:30 GMT
+      - Thu, 10 Oct 2019 00:38:38 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -71,11 +71,11 @@ interactions:
       content-md5:
       - 1B2M2Y8AsgTpgAmY7PhCfg==
       date:
-      - Wed, 09 Oct 2019 21:13:30 GMT
+      - Thu, 10 Oct 2019 00:38:37 GMT
       etag:
-      - '"0x8D74CFD88D2B886"'
+      - '"0x8D74D1A310DD38F"'
       last-modified:
-      - Wed, 09 Oct 2019 21:13:30 GMT
+      - Thu, 10 Oct 2019 00:38:38 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-content-crc64:
@@ -103,7 +103,7 @@ interactions:
       x-ms-access-tier:
       - Archive
       x-ms-date:
-      - Wed, 09 Oct 2019 21:13:30 GMT
+      - Thu, 10 Oct 2019 00:38:38 GMT
       x-ms-rehydrate-priority:
       - Standard
       x-ms-version:
@@ -112,22 +112,111 @@ interactions:
     uri: https://pyacrstoraged3161fdc.blob.core.windows.net/utcontainerd3161fdc/blobd3161fdc?comp=tier
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>BlobAccessTierNotSupportedForAccountType</Code><Message>Blob
-        access tier is not supported on this storage account type.\nRequestId:147b55db-501e-0056-75e6-7e40bb000000\nTime:2019-10-09T21:13:30.2893359Z</Message></Error>"
+      string: ''
     headers:
       content-length:
-      - '272'
-      content-type:
-      - application/xml
+      - '0'
       date:
-      - Wed, 09 Oct 2019 21:13:30 GMT
+      - Thu, 10 Oct 2019 00:38:37 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
-      x-ms-error-code:
-      - BlobAccessTierNotSupportedForAccountType
       x-ms-version:
       - '2019-02-02'
     status:
-      code: 400
-      message: Blob access tier is not supported on this storage account type.
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      x-ms-access-tier:
+      - Cool
+      x-ms-date:
+      - Thu, 10 Oct 2019 00:38:38 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://pyacrstoraged3161fdc.blob.core.windows.net/utcontainerd3161fdc/blobd3161fdc?comp=tier
+  response:
+    body:
+      string: ''
+    headers:
+      content-length:
+      - '0'
+      date:
+      - Thu, 10 Oct 2019 00:38:38 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 202
+      message: Accepted
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      x-ms-date:
+      - Thu, 10 Oct 2019 00:38:38 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: HEAD
+    uri: https://pyacrstoraged3161fdc.blob.core.windows.net/utcontainerd3161fdc/blobd3161fdc
+  response:
+    body:
+      string: ''
+    headers:
+      accept-ranges:
+      - bytes
+      content-length:
+      - '0'
+      content-md5:
+      - 1B2M2Y8AsgTpgAmY7PhCfg==
+      content-type:
+      - application/octet-stream
+      date:
+      - Thu, 10 Oct 2019 00:38:38 GMT
+      etag:
+      - '"0x8D74D1A310DD38F"'
+      last-modified:
+      - Thu, 10 Oct 2019 00:38:38 GMT
+      server:
+      - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+      x-ms-access-tier:
+      - Archive
+      x-ms-access-tier-change-time:
+      - Thu, 10 Oct 2019 00:38:38 GMT
+      x-ms-archive-status:
+      - rehydrate-pending-to-cool
+      x-ms-blob-type:
+      - BlockBlob
+      x-ms-creation-time:
+      - Thu, 10 Oct 2019 00:38:38 GMT
+      x-ms-lease-state:
+      - available
+      x-ms-lease-status:
+      - unlocked
+      x-ms-server-encrypted:
+      - 'true'
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 200
+      message: OK
 version: 1

@@ -297,7 +297,7 @@ class ServicePropertiesTestAsync(AsyncBlobTestCase):
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
     @AsyncBlobTestCase.await_prepared_test
-    async def test_set_static_web_props_dont_impact_other_props(self, resource_group, location, storage_account, storage_account_key):
+    async def test_set_static_webprops_no_impact_other_props(self, resource_group, location, storage_account, storage_account_key):
         bsc = BlobServiceClient(self._account_url(storage_account.name), credential=storage_account_key, transport=AiohttpTestTransport())
         cors_rule1 = CorsRule(['www.xyz.com'], ['GET'])
 

@@ -8,7 +8,7 @@
 
 import pytest
 
-import os
+from os import path, remove, sys, urandom
 import platform
 import unittest
 from devtools_testutils import ResourceGroupPreparer, StorageAccountPreparer
@@ -19,7 +19,7 @@ from azure.storage.blob import (
     ContentSettings
 )
 
-if os.sys.version_info >= (3,):
+if sys.version_info >= (3,):
     from io import BytesIO
 else:
     from cStringIO import StringIO as BytesIO
@@ -30,7 +30,6 @@ from testcase import (
 
 # ------------------------------------------------------------------------------
 TEST_BLOB_PREFIX = 'largeblob'
-FILE_PATH = 'blob_large_input.temp.dat'
 LARGE_BLOB_SIZE = 12 * 1024 * 1024
 LARGE_BLOCK_SIZE = 6 * 1024 * 1024
 
@@ -54,6 +53,13 @@ class StorageLargeBlockBlobTest(StorageTestCase):
 
         if self.is_live:
             self.bsc.create_container(self.container_name)
+
+    def _teardown(self, file_name):
+        if path.isfile(file_name):
+            try:
+                remove(file_name)
+            except:
+                pass
 
     # --Helpers-----------------------------------------------------------------
     def _get_blob_reference(self):
@@ -83,7 +89,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         # Act
         for i in range(5):
             resp = blob.stage_block(
-                'block {0}'.format(i).encode('utf-8'), os.urandom(LARGE_BLOCK_SIZE))
+                'block {0}'.format(i).encode('utf-8'), urandom(LARGE_BLOCK_SIZE))
             self.assertIsNone(resp)
 
             # Assert
@@ -101,7 +107,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         for i in range(5):
             resp = blob.stage_block(
                 'block {0}'.format(i).encode('utf-8'),
-                os.urandom(LARGE_BLOCK_SIZE),
+                urandom(LARGE_BLOCK_SIZE),
                 validate_content=True)
             self.assertIsNone(resp)
 
@@ -156,7 +162,8 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         self._setup(storage_account.name, storage_account_key)
         blob_name = self._get_blob_reference()
         blob = self.bsc.get_blob_client(self.container_name, blob_name)
-        data = bytearray(os.urandom(LARGE_BLOB_SIZE))
+        data = bytearray(urandom(LARGE_BLOB_SIZE))
+        FILE_PATH = 'large_blob_from_path.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -166,6 +173,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
 
         # Assert
         self.assertBlobEqual(self.container_name, blob_name, data)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -177,7 +185,8 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         self._setup(storage_account.name, storage_account_key)
         blob_name = self._get_blob_reference()
         blob = self.bsc.get_blob_client(self.container_name, blob_name)
-        data = bytearray(os.urandom(LARGE_BLOB_SIZE))
+        data = bytearray(urandom(LARGE_BLOB_SIZE))
+        FILE_PATH = "blob_from_path_with_md5.temp.dat"
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -187,6 +196,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
 
         # Assert
         self.assertBlobEqual(self.container_name, blob_name, data)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -198,6 +208,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         blob_name = self._get_blob_reference()
         blob = self.bsc.get_blob_client(self.container_name, blob_name)
         data = bytearray(self.get_random_bytes(100))
+        FILE_PATH = "blob_from_path_non_parallel.temp.dat"
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -207,6 +218,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
 
         # Assert
         self.assertBlobEqual(self.container_name, blob_name, data)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -218,7 +230,8 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         self._setup(storage_account.name, storage_account_key)
         blob_name = self._get_blob_reference()
         blob = self.bsc.get_blob_client(self.container_name, blob_name)
-        data = bytearray(os.urandom(LARGE_BLOB_SIZE))
+        data = bytearray(urandom(LARGE_BLOB_SIZE))
+        FILE_PATH = "blob_from_path_with_progress.temp.dat"
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -236,6 +249,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         # Assert
         self.assertBlobEqual(self.container_name, blob_name, data)
         self.assert_upload_progress(len(data), self.config.max_block_size, progress)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -247,7 +261,8 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         self._setup(storage_account.name, storage_account_key)
         blob_name = self._get_blob_reference()
         blob = self.bsc.get_blob_client(self.container_name, blob_name)
-        data = bytearray(os.urandom(LARGE_BLOB_SIZE))
+        data = bytearray(urandom(LARGE_BLOB_SIZE))
+        FILE_PATH = 'blob_from_path_with_properties.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -263,6 +278,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         properties = blob.get_blob_properties()
         self.assertEqual(properties.content_settings.content_type, content_settings.content_type)
         self.assertEqual(properties.content_settings.content_language, content_settings.content_language)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -274,7 +290,8 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         self._setup(storage_account.name, storage_account_key)
         blob_name = self._get_blob_reference()
         blob = self.bsc.get_blob_client(self.container_name, blob_name)
-        data = bytearray(os.urandom(LARGE_BLOB_SIZE))
+        data = bytearray(urandom(LARGE_BLOB_SIZE))
+        FILE_PATH = 'blob_from_stream_chunked_upload.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -284,6 +301,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
 
         # Assert
         self.assertBlobEqual(self.container_name, blob_name, data)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -295,7 +313,8 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         self._setup(storage_account.name, storage_account_key)
         blob_name = self._get_blob_reference()
         blob = self.bsc.get_blob_client(self.container_name, blob_name)
-        data = bytearray(os.urandom(LARGE_BLOB_SIZE))
+        data = bytearray(urandom(LARGE_BLOB_SIZE))
+        FILE_PATH = 'stream_w_progress_chnkd_upload.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -313,6 +332,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         # Assert
         self.assertBlobEqual(self.container_name, blob_name, data)
         self.assert_upload_progress(len(data), self.config.max_block_size, progress)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -323,7 +343,8 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         self._setup(storage_account.name, storage_account_key)
         blob_name = self._get_blob_reference()
         blob = self.bsc.get_blob_client(self.container_name, blob_name)
-        data = bytearray(os.urandom(LARGE_BLOB_SIZE))
+        data = bytearray(urandom(LARGE_BLOB_SIZE))
+        FILE_PATH = 'chunked_upload_with_count.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -334,6 +355,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
 
         # Assert
         self.assertBlobEqual(self.container_name, blob_name, data[:blob_size])
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -345,7 +367,8 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         self._setup(storage_account.name, storage_account_key)
         blob_name = self._get_blob_reference()
         blob = self.bsc.get_blob_client(self.container_name, blob_name)
-        data = bytearray(os.urandom(LARGE_BLOB_SIZE))
+        data = bytearray(urandom(LARGE_BLOB_SIZE))
+        FILE_PATH = 'plod_w_count_n_props.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -363,6 +386,7 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         properties = blob.get_blob_properties()
         self.assertEqual(properties.content_settings.content_type, content_settings.content_type)
         self.assertEqual(properties.content_settings.content_language, content_settings.content_language)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -374,7 +398,8 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         self._setup(storage_account.name, storage_account_key)
         blob_name = self._get_blob_reference()
         blob = self.bsc.get_blob_client(self.container_name, blob_name)
-        data = bytearray(os.urandom(LARGE_BLOB_SIZE))
+        data = bytearray(urandom(LARGE_BLOB_SIZE))
+        FILE_PATH = 'creat_lrg_blob.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -390,5 +415,6 @@ class StorageLargeBlockBlobTest(StorageTestCase):
         properties = blob.get_blob_properties()
         self.assertEqual(properties.content_settings.content_type, content_settings.content_type)
         self.assertEqual(properties.content_settings.content_language, content_settings.content_language)
+        self._teardown(FILE_PATH)
 
 # ------------------------------------------------------------------------------

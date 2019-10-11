@@ -7,7 +7,7 @@
 # --------------------------------------------------------------------------
 import pytest
 import base64
-import os
+from os import path, remove, sys, urandom
 import unittest
 import asyncio
 
@@ -66,6 +66,13 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
 
             blob = self.bsc.get_blob_client(self.container_name, self.byte_blob)
             await blob.upload_blob(self.byte_data)
+
+    def _teardown(self, file_name):
+        if path.isfile(file_name):
+            try:
+                remove(file_name)
+            except:
+                pass
 
     def _get_blob_reference(self):
         return self.get_resource_name(TEST_BLOB_PREFIX)

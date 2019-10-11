@@ -644,7 +644,7 @@ class StorageCPKAsyncTest(AsyncBlobTestCase):
         self.assertEqual(blob_props.encryption_key_sha256, TEST_ENCRYPTION_KEY.key_hash)
 
         # Act set blob properties
-        metadata = {'hello': 'world', 'number': '42', 'UP': 'UPval'}
+        metadata = {'hello': 'world', 'number': '42', 'up': 'upval'}
         with self.assertRaises(HttpResponseError):
             await blob_client.set_blob_metadata(
                 metadata=metadata,
@@ -658,8 +658,8 @@ class StorageCPKAsyncTest(AsyncBlobTestCase):
         self.assertEqual(3, len(md))
         self.assertEqual(md['hello'], 'world')
         self.assertEqual(md['number'], '42')
-        self.assertEqual(md['UP'], 'UPval')
-        self.assertFalse('up' in md)
+        self.assertEqual(md['up'], 'upval')
+        self.assertFalse('Up' in md)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')

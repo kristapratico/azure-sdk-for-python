@@ -307,7 +307,7 @@ class StorageLargeBlockBlobTestAsync(AsyncBlobTestCase):
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
     @AsyncBlobTestCase.await_prepared_test
-    async def test_create_large_blob_from_stream_chunked_upload_async(self, resource_group, location, storage_account, storage_account_key):
+    async def test_creat_lrg_blob_frm_stream_chnkd_upload_async(self, resource_group, location, storage_account, storage_account_key):
         # parallel tests introduce random order of requests, can only run live
         if not self.is_live:
             return
@@ -330,7 +330,7 @@ class StorageLargeBlockBlobTestAsync(AsyncBlobTestCase):
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
     @AsyncBlobTestCase.await_prepared_test
-    async def test_create_large_blob_from_stream_with_progress_chunked_upload_async(self, resource_group, location, storage_account, storage_account_key):
+    async def test_creat_lrgblob_frm_strm_w_prgrss_chnkduplod_async(self, resource_group, location, storage_account, storage_account_key):
         # parallel tests introduce random order of requests, can only run live
         if not self.is_live:
             return
@@ -361,7 +361,7 @@ class StorageLargeBlockBlobTestAsync(AsyncBlobTestCase):
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
     @AsyncBlobTestCase.await_prepared_test
-    async def test_create_large_blob_from_stream_chunked_upload_with_count_async(self, resource_group, location, storage_account, storage_account_key):
+    async def test_creat_lrgblob_frm_strm_chnkd_uplod_w_cnt_async(self, resource_group, location, storage_account, storage_account_key):
         # parallel tests introduce random order of requests, can only run live
         if not self.is_live:
             return
@@ -385,7 +385,7 @@ class StorageLargeBlockBlobTestAsync(AsyncBlobTestCase):
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
     @AsyncBlobTestCase.await_prepared_test
-    async def test_create_large_from_stream_chunk_upload_with_cntnprops(self, resource_group, location, storage_account, storage_account_key):
+    async def test_creat_lrg_frm_stream_chnk_upload_w_cntnprops(self, resource_group, location, storage_account, storage_account_key):
         # parallel tests introduce random order of requests, can only run live
         if not self.is_live:
             return

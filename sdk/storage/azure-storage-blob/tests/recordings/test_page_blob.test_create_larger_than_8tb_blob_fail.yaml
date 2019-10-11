@@ -11,9 +11,9 @@ interactions:
       Content-Length:
       - '0'
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Thu, 10 Oct 2019 19:28:44 GMT
+      - Fri, 11 Oct 2019 02:31:18 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Thu, 10 Oct 2019 19:28:45 GMT
+      - Fri, 11 Oct 2019 02:31:18 GMT
       etag:
-      - '"0x8D74DB810FF44E1"'
+      - '"0x8D74DF31964B3E2"'
       last-modified:
-      - Thu, 10 Oct 2019 19:28:45 GMT
+      - Fri, 11 Oct 2019 02:31:19 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -49,9 +49,9 @@ interactions:
       Content-Length:
       - '0'
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-date:
-      - Thu, 10 Oct 2019 19:28:45 GMT
+      - Fri, 11 Oct 2019 02:31:19 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -63,11 +63,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Thu, 10 Oct 2019 19:28:45 GMT
+      - Fri, 11 Oct 2019 02:31:18 GMT
       etag:
-      - '"0x8D74DB8110AB898"'
+      - '"0x8D74DF3196D417B"'
       last-modified:
-      - Thu, 10 Oct 2019 19:28:45 GMT
+      - Fri, 11 Oct 2019 02:31:19 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -87,13 +87,13 @@ interactions:
       Content-Length:
       - '0'
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
       x-ms-blob-content-length:
       - '8796093022209'
       x-ms-blob-type:
       - PageBlob
       x-ms-date:
-      - Thu, 10 Oct 2019 19:28:45 GMT
+      - Fri, 11 Oct 2019 02:31:19 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -101,14 +101,14 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>InvalidHeaderValue</Code><Message>The
-        value for one of the HTTP headers is not in the correct format.\nRequestId:fc4e5721-b01e-00b2-47a0-7f53b1000000\nTime:2019-10-10T19:28:45.2471743Z</Message><HeaderName>x-ms-blob-content-length</HeaderName><HeaderValue>8796093022209</HeaderValue></Error>"
+        value for one of the HTTP headers is not in the correct format.\nRequestId:67c08028-601e-0032-28db-7fbcd8000000\nTime:2019-10-11T02:31:19.5747324Z</Message><HeaderName>x-ms-blob-content-length</HeaderName><HeaderValue>8796093022209</HeaderValue></Error>"
     headers:
       content-length:
       - '343'
       content-type:
       - application/xml
       date:
-      - Thu, 10 Oct 2019 19:28:45 GMT
+      - Fri, 11 Oct 2019 02:31:18 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:

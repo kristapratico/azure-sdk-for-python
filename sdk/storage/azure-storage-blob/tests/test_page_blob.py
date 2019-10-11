@@ -31,7 +31,6 @@ from testcase import (
 
 #------------------------------------------------------------------------------
 TEST_BLOB_PREFIX = 'blob'
-FILE_PATH = 'blob_input.temp.dat'
 LARGE_BLOB_SIZE = 64 * 1024 + 512
 EIGHT_TB = 8 * 1024 * 1024 * 1024 * 1024
 SOURCE_BLOB_SIZE = 8 * 1024
@@ -48,7 +47,7 @@ class StoragePageBlobTest(StorageTestCase):
             bsc.create_container(self.container_name)
             bsc.create_container(self.source_container_name)
 
-    def _teardown(self):
+    def _teardown(self, FILE_PATH):
         if os.path.isfile(FILE_PATH):
             try:
                 os.remove(FILE_PATH)
@@ -75,8 +74,12 @@ class StoragePageBlobTest(StorageTestCase):
     def _create_sparse_page_blob(self, bsc, size=1024*1024, data=''):
         blob_client = self._get_blob_reference(bsc)
         blob_client.create_page_blob(size=size)
-
         range_start = 8*1024 + 512
+
+        # the page blob will be super sparse like this:'                         some data                      '
+        blob_client.upload_page(data, offset=range_start, length=len(data))
+
+        return blob_client
 
     def _wait_for_async_copy(self, blob):
         count = 0
@@ -142,7 +145,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertBlobEqual(self.container_name, destination_blob_client.blob_name, source_blob_data, bsc)
         self.assertEqual(blob_properties.get('etag'), resp.get('etag'))
         self.assertEqual(blob_properties.get('last_modified'), resp.get('last_modified'))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -182,7 +184,6 @@ class StoragePageBlobTest(StorageTestCase):
                                                           source_offset=0,
                                                           source_content_md5=StorageContentValidation.get_content_md5(
                                                               b"POTATO"))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -224,7 +225,6 @@ class StoragePageBlobTest(StorageTestCase):
                                                           source_offset=0,
                                                           source_if_modified_since=source_properties.get(
                                                               'last_modified'))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -265,7 +265,6 @@ class StoragePageBlobTest(StorageTestCase):
                                        source_offset=0,
                                        source_if_unmodified_since=source_properties.get('last_modified') - timedelta(
                                            hours=15))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -305,7 +304,6 @@ class StoragePageBlobTest(StorageTestCase):
                                        length=SOURCE_BLOB_SIZE,
                                        source_offset=0,
                                        source_if_match='0x111111111111111')
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -345,7 +343,6 @@ class StoragePageBlobTest(StorageTestCase):
                                        length=SOURCE_BLOB_SIZE,
                                        source_offset=0,
                                        source_if_none_match=source_properties.get('etag'))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -386,7 +383,6 @@ class StoragePageBlobTest(StorageTestCase):
                                        length=SOURCE_BLOB_SIZE,
                                        source_offset=0,
                                        if_modified_since=blob_properties.get('last_modified'))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -428,7 +424,6 @@ class StoragePageBlobTest(StorageTestCase):
                                        0,
                                        if_unmodified_since=source_properties.get('last_modified') - timedelta(
                                            minutes=15))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -468,7 +463,6 @@ class StoragePageBlobTest(StorageTestCase):
                                        SOURCE_BLOB_SIZE,
                                        0,
                                        if_match='0x111111111111111')
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -508,7 +502,6 @@ class StoragePageBlobTest(StorageTestCase):
                                        SOURCE_BLOB_SIZE,
                                        0,
                                        if_none_match=blob_properties.get('etag'))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -548,7 +541,6 @@ class StoragePageBlobTest(StorageTestCase):
                                        SOURCE_BLOB_SIZE,
                                        0,
                                        if_sequence_number_lt=start_sequence)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -588,7 +580,6 @@ class StoragePageBlobTest(StorageTestCase):
                                        SOURCE_BLOB_SIZE,
                                        0,
                                        if_sequence_number_lte=start_sequence - 1)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -628,7 +619,6 @@ class StoragePageBlobTest(StorageTestCase):
                                        SOURCE_BLOB_SIZE,
                                        0,
                                        if_sequence_number_eq=start_sequence + 1)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -644,7 +634,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertIsNotNone(resp.get('etag'))
         self.assertIsNotNone(resp.get('last_modified'))
         self.assertTrue(blob.get_blob_properties())
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -660,7 +649,6 @@ class StoragePageBlobTest(StorageTestCase):
         # Assert
         md = blob.get_blob_properties()
         self.assertDictEqual(md.metadata, metadata)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -677,7 +665,6 @@ class StoragePageBlobTest(StorageTestCase):
         # Assert
         content = blob.download_blob(lease=lease)
         self.assertEqual(b"".join(list(content)), data)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -695,7 +682,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertIsNotNone(resp.get('last_modified'))
         self.assertIsNotNone(resp.get('blob_sequence_number'))
         self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -715,7 +701,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertIsInstance(props, BlobProperties)
         self.assertEqual(props.size, EIGHT_TB)
         self.assertEqual(0, len(page_ranges))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -727,7 +712,6 @@ class StoragePageBlobTest(StorageTestCase):
         # Act
         with self.assertRaises(HttpResponseError):
             blob.create_page_blob(EIGHT_TB + 1)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -754,7 +738,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertEqual(1, len(page_ranges))
         self.assertEqual(page_ranges[0]['start'], start_offset)
         self.assertEqual(page_ranges[0]['end'], start_offset + length - 1)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -766,7 +749,6 @@ class StoragePageBlobTest(StorageTestCase):
         # Act
         data = self.get_random_bytes(512)
         resp = blob.upload_page(data, offset=0, length=512, validate_content=True)
-        self._teardown()
 
         # Assert
 
@@ -785,7 +767,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertIsNotNone(resp.get('last_modified'))
         self.assertIsNotNone(resp.get('blob_sequence_number'))
         self.assertBlobEqual(self.container_name, blob.blob_name, b'\x00' * 512, bsc)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -803,7 +784,6 @@ class StoragePageBlobTest(StorageTestCase):
 
         # Assert
         self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -818,7 +798,6 @@ class StoragePageBlobTest(StorageTestCase):
         # Act
         with self.assertRaises(HttpResponseError):
             blob.upload_page(data, offset=0, length=512, if_sequence_number_lt=start_sequence)
-        self._teardown()
 
         # Assert
 
@@ -837,7 +816,6 @@ class StoragePageBlobTest(StorageTestCase):
 
         # Assert
         self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -852,7 +830,6 @@ class StoragePageBlobTest(StorageTestCase):
         # Act
         with self.assertRaises(HttpResponseError):
             blob.upload_page(data, offset=0, length=512, if_sequence_number_lte=start_sequence - 1)
-        self._teardown()
 
         # Assert
 
@@ -871,7 +848,6 @@ class StoragePageBlobTest(StorageTestCase):
 
         # Assert
         self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -886,7 +862,6 @@ class StoragePageBlobTest(StorageTestCase):
         # Act
         with self.assertRaises(HttpResponseError):
             blob.upload_page(data, offset=0, length=512, if_sequence_number_eq=start_sequence - 1)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -902,7 +877,6 @@ class StoragePageBlobTest(StorageTestCase):
         # Assert
         self.assertIsNotNone(resp.get('etag'))
         self.assertIsNotNone(resp.get('last_modified'))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -918,7 +892,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertIsNotNone(ranges)
         self.assertIsInstance(ranges, list)
         self.assertEqual(len(ranges), 0)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -941,8 +914,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertEqual(ranges[0]['end'], 511)
         self.assertEqual(ranges[1]['start'], 1024)
         self.assertEqual(ranges[1]['end'], 1535)
-        self._teardown()
-
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -980,7 +951,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertEqual(len(cleared2), 1)
         self.assertEqual(cleared2[0]['start'], 512)
         self.assertEqual(cleared2[0]['end'], 1023)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')   
@@ -997,7 +967,6 @@ class StoragePageBlobTest(StorageTestCase):
         
         # TODO
         # self.assertEqual(str(e), 'end_range must be an integer that aligns with 512 page size')
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1016,7 +985,6 @@ class StoragePageBlobTest(StorageTestCase):
         props = blob.get_blob_properties()
         self.assertIsInstance(props, BlobProperties)
         self.assertEqual(props.size, 512)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1035,7 +1003,6 @@ class StoragePageBlobTest(StorageTestCase):
         props = blob.get_blob_properties()
         self.assertIsInstance(props, BlobProperties)
         self.assertEqual(props.page_blob_sequence_number, 6)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1051,14 +1018,14 @@ class StoragePageBlobTest(StorageTestCase):
             data1,
             overwrite=True,
             blob_type=BlobType.PageBlob,
-            metadata={'BlobData': 'Data1'})
+            metadata={'blobdata': 'data1'})
 
         with self.assertRaises(ResourceExistsError):
             blob.upload_blob(
                 data2,
                 overwrite=False,
                 blob_type=BlobType.PageBlob,
-                metadata={'BlobData': 'Data2'})
+                metadata={'blobdata': 'data2'})
 
         props = blob.get_blob_properties()
 
@@ -1066,10 +1033,9 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertBlobEqual(self.container_name, blob.blob_name, data1, bsc)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
-        self.assertEqual(props.metadata, {'BlobData': 'Data1'})
+        self.assertEqual(props.metadata, {'blobdata': 'data1'})
         self.assertEqual(props.size, LARGE_BLOB_SIZE)
         self.assertEqual(props.blob_type, BlobType.PageBlob)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1085,12 +1051,12 @@ class StoragePageBlobTest(StorageTestCase):
             data1,
             overwrite=True,
             blob_type=BlobType.PageBlob,
-            metadata={'BlobData': 'Data1'})
+            metadata={'blobdata': 'data1'})
         update_resp = blob.upload_blob(
             data2,
             overwrite=True,
             blob_type=BlobType.PageBlob,
-            metadata={'BlobData': 'Data2'})
+            metadata={'blobdata': 'data2'})
 
         props = blob.get_blob_properties()
 
@@ -1098,10 +1064,9 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertBlobEqual(self.container_name, blob.blob_name, data2, bsc)
         self.assertEqual(props.etag, update_resp.get('etag'))
         self.assertEqual(props.last_modified, update_resp.get('last_modified'))
-        self.assertEqual(props.metadata, {'BlobData': 'Data2'})
+        self.assertEqual(props.metadata, {'blobdata': 'data2'})
         self.assertEqual(props.size, LARGE_BLOB_SIZE + 512)
         self.assertEqual(props.blob_type, BlobType.PageBlob)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1123,7 +1088,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1145,7 +1109,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1176,7 +1139,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
         self.assert_upload_progress(LARGE_BLOB_SIZE, self.config.max_page_size, progress)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1196,7 +1158,6 @@ class StoragePageBlobTest(StorageTestCase):
 
         # Assert
         self.assertBlobEqual(self.container_name, blob.blob_name, data[1024:], bsc)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1216,7 +1177,6 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertBlobEqual(self.container_name, blob.blob_name, data[index:index + count], bsc)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1229,7 +1189,7 @@ class StoragePageBlobTest(StorageTestCase):
         self._setup(bsc)          
         blob = self._get_blob_reference(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
-        FILE_PATH = 'blob_input.temp.dat'
+        FILE_PATH = 'create_blob_from_path.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1242,7 +1202,7 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
-        self._teardown()
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1255,6 +1215,7 @@ class StoragePageBlobTest(StorageTestCase):
         self._setup(bsc)          
         blob = self._get_blob_reference(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'create_blob_from_path_with_progress.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1272,7 +1233,7 @@ class StoragePageBlobTest(StorageTestCase):
         # Assert
         self.assertBlobEqual(self.container_name, blob.blob_name, data, bsc)
         self.assert_upload_progress(len(data), self.config.max_page_size, progress)
-        self._teardown()
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1285,6 +1246,7 @@ class StoragePageBlobTest(StorageTestCase):
         self._setup(bsc)          
         blob = self._get_blob_reference(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'st_create_blob_from_stream.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1298,7 +1260,7 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertBlobEqual(self.container_name, blob.blob_name, data[:blob_size], bsc)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
-        self._teardown()
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1314,6 +1276,7 @@ class StoragePageBlobTest(StorageTestCase):
         data = bytearray(LARGE_BLOB_SIZE)
         data[512: 1024] = self.get_random_bytes(512)
         data[8192: 8196] = self.get_random_bytes(4)
+        FILE_PATH = 'create_blob_from_stream_with_empty_pages.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1334,7 +1297,7 @@ class StoragePageBlobTest(StorageTestCase):
         self.assertEqual(page_ranges[1]['end'], 12287)
         self.assertEqual(props.etag, create_resp.get('etag'))
         self.assertEqual(props.last_modified, create_resp.get('last_modified'))
-        self._teardown()
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1347,6 +1310,7 @@ class StoragePageBlobTest(StorageTestCase):
         self._setup(bsc)        
         blob = self._get_blob_reference(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'create_blob_from_stream_non_seekable.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1362,7 +1326,7 @@ class StoragePageBlobTest(StorageTestCase):
 
         # Assert
         self.assertBlobEqual(self.container_name, blob.blob_name, data[:blob_size], bsc)
-        self._teardown()
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1375,6 +1339,7 @@ class StoragePageBlobTest(StorageTestCase):
         self._setup(bsc)
         blob = self._get_blob_reference(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'create_blob_from_stream_with_proge.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1394,7 +1359,7 @@ class StoragePageBlobTest(StorageTestCase):
         # Assert
         self.assertBlobEqual(self.container_name, blob.blob_name, data[:blob_size], bsc)
         self.assert_upload_progress(len(data), self.config.max_page_size, progress)
-        self._teardown()
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1407,6 +1372,7 @@ class StoragePageBlobTest(StorageTestCase):
         self._setup(bsc)         
         blob = self._get_blob_reference(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'create_blob_from_stream_trun.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1417,7 +1383,7 @@ class StoragePageBlobTest(StorageTestCase):
 
         # Assert
         self.assertBlobEqual(self.container_name, blob.blob_name, data[:blob_size], bsc)
-        self._teardown()
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1430,6 +1396,7 @@ class StoragePageBlobTest(StorageTestCase):
         self._setup(bsc)         
         blob = self._get_blob_reference(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = '_blob_from_stream_with_progress_trunca.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1449,7 +1416,7 @@ class StoragePageBlobTest(StorageTestCase):
         # Assert
         self.assertBlobEqual(self.container_name, blob.blob_name, data[:blob_size], bsc)
         self.assert_upload_progress(blob_size, self.config.max_page_size, progress)
-        self._teardown()
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1463,7 +1430,6 @@ class StoragePageBlobTest(StorageTestCase):
         blob.upload_blob(data, validate_content=True, blob_type=BlobType.PageBlob)
 
         # Assert
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1479,7 +1445,6 @@ class StoragePageBlobTest(StorageTestCase):
 
         # Act
         blob.upload_blob(data, validate_content=True, blob_type=BlobType.PageBlob)
-        self._teardown()
 
         # Assert
 
@@ -1522,7 +1487,6 @@ class StoragePageBlobTest(StorageTestCase):
 
         # strip off protocol
         self.assertTrue(copy_blob.copy.source.endswith(sas_blob.url[5:]))
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1559,7 +1523,6 @@ class StoragePageBlobTest(StorageTestCase):
                 self.assertEqual(byte, '\x00')
             except:
                 self.assertEqual(byte, 0)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1577,7 +1540,6 @@ class StoragePageBlobTest(StorageTestCase):
         sparse_page_blob_size = 1024 * 1024
         data = self.get_random_bytes(2048)
         blob_client = self._create_sparse_page_blob(bsc, size=sparse_page_blob_size, data=data)
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(sku='premium_LRS', name_prefix='pyacrstorage')
@@ -1620,6 +1582,7 @@ class StoragePageBlobTest(StorageTestCase):
             # test create_blob_from_path API
             blob3 = self._get_blob_reference(bsc)
             pblob3 = pbs.get_blob_client(container_name, blob3.blob_name)
+            FILE_PATH = '_blob_tier_on_create.temp.dat'
             with open(FILE_PATH, 'wb') as stream:
                 stream.write(byte_data)
             with open(FILE_PATH, 'rb') as stream:
@@ -1635,7 +1598,7 @@ class StoragePageBlobTest(StorageTestCase):
 
         finally:
             container.delete_container()
-        self._teardown()
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(sku='premium_LRS', name_prefix='pyacrstorage')
@@ -1690,7 +1653,6 @@ class StoragePageBlobTest(StorageTestCase):
             self.assertFalse(blobs[0].blob_tier_inferred)
         finally:
             container.delete_container()
-        self._teardown()
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(sku='premium_LRS', name_prefix='pyacrstorage')
@@ -1760,8 +1722,7 @@ class StoragePageBlobTest(StorageTestCase):
             self.assertTrue(copy_ref3.blob_tier_inferred)
         finally:
             container.delete_container()
-        self._teardown()
+
 
 #------------------------------------------------------------------------------
-if __name__ == '__main__':
-    unittest.main()
+

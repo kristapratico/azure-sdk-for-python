@@ -29,7 +29,7 @@ from asyncblobtestcase import (
 
 # ------------------------------------------------------------------------------
 TEST_BLOB_PREFIX = 'blob'
-FILE_PATH = 'blob_output.temp.dat'
+
 
 
 # ------------------------------------------------------------------------------
@@ -62,10 +62,13 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         self.byte_data = self.get_random_bytes(64 * 1024 + 5)
         if self.is_live:
             container = self.bsc.get_container_client(self.container_name)
-            await container.create_container()
+            try:
+                await container.create_container()
+            except:
+                pass
 
             blob = self.bsc.get_blob_client(self.container_name, self.byte_blob)
-            await blob.upload_blob(self.byte_data)
+            await blob.upload_blob(self.byte_data, overwrite=True)
 
     def _teardown(self, file_name):
         if path.isfile(file_name):
@@ -345,6 +348,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         blob = self.bsc.get_blob_client(self.container_name, self.byte_blob)
 
         # Act
+        FILE_PATH = 'get_blob_to_stream_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob()
             properties = await downloader.download_to_stream(stream, max_concurrency=2)
@@ -354,6 +358,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         with open(FILE_PATH, 'rb') as stream:
             actual = stream.read()
             self.assertEqual(self.byte_data, actual)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -374,6 +379,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
             progress.append((current, total))
 
         # Act
+        FILE_PATH = 'blob_to_stream_with_progress_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(raw_response_hook=callback)
             properties = await downloader.download_to_stream(stream, max_concurrency=2)
@@ -387,6 +393,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
             self.config.max_chunk_get_size,
             self.config.max_single_get_size,
             progress)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -403,6 +410,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
             progress.append((current, total))
 
         # Act
+        FILE_PATH = 'blob_to_stream_non_parallel_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(raw_response_hook=callback)
             properties = await downloader.download_to_stream(stream, max_concurrency=1)
@@ -417,6 +425,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
             self.config.max_chunk_get_size,
             self.config.max_single_get_size,
             progress)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -438,6 +447,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
 
 
         # Act
+        FILE_PATH = 'blob_to_stream_small_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(raw_response_hook=callback)
             properties = await downloader.download_to_stream(stream, max_concurrency=2)
@@ -452,6 +462,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
             self.config.max_chunk_get_size,
             self.config.max_single_get_size,
             progress)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -467,6 +478,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
 
         # Act
         end_range = self.config.max_single_get_size
+        FILE_PATH = 'ranged_get_blob_to_path_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(offset=1, length=end_range-1)
             properties = await downloader.download_to_stream(stream, max_concurrency=2)
@@ -476,6 +488,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         with open(FILE_PATH, 'rb') as stream:
             actual = stream.read()
             self.assertEqual(self.byte_data[1:end_range], actual)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -498,6 +511,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         # Act
         start_range = 3
         end_range = self.config.max_single_get_size + 1024
+        FILE_PATH = 'get_blob_to_path_with_progress_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(offset=start_range, length=end_range, raw_response_hook=callback)
             properties = await downloader.download_to_stream(stream, max_concurrency=2)
@@ -512,6 +526,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
             self.config.max_chunk_get_size,
             self.config.max_single_get_size,
             progress)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -522,6 +537,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         blob = self.bsc.get_blob_client(self.container_name, self.byte_blob)
 
         # Act
+        FILE_PATH = 'get_blob_to_path_small_asyncc.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(offset=1, length=4)
             properties = await downloader.download_to_stream(stream, max_concurrency=2)
@@ -531,6 +547,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         with open(FILE_PATH, 'rb') as stream:
             actual = stream.read()
             self.assertEqual(self.byte_data[1:5], actual)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -541,6 +558,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         blob = self.bsc.get_blob_client(self.container_name, self.byte_blob)
 
         # Act
+        FILE_PATH = 'granged_get_blob_to_path_non_parallel_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(offset=1, length=3)
             properties = await downloader.download_to_stream(stream, max_concurrency=1)
@@ -550,6 +568,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         with open(FILE_PATH, 'rb') as stream:
             actual = stream.read()
             self.assertEqual(self.byte_data[1:4], actual)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -568,6 +587,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         await blob.upload_blob(blob_data)
 
         # Act
+        FILE_PATH = 'path_invalid_range_parallel_async.temp.dat'
         end_range = 2 * self.config.max_single_get_size
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(offset=1, length=end_range)
@@ -578,6 +598,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         with open(FILE_PATH, 'rb') as stream:
             actual = stream.read()
             self.assertEqual(blob_data[1:blob_size], actual)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -597,6 +618,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
 
         # Act
         end_range = 2 * self.config.max_single_get_size
+        FILE_PATH = 'path_invalid_range_non_parallel_asy.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(offset=1, length=end_range)
             properties = await downloader.download_to_stream(stream, max_concurrency=2)
@@ -606,7 +628,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         with open(FILE_PATH, 'rb') as stream:
             actual = stream.read()
             self.assertEqual(blob_data[1:blob_size], actual)
-
+        self._teardown(FILE_PATH)
             # Assert
 
     @ResourceGroupPreparer()
@@ -776,6 +798,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         blob = self.bsc.get_blob_client(self.container_name, self.byte_blob)
 
         # Act
+        FILE_PATH = 'get_blob_non_seekable_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             non_seekable_stream = StorageGetBlobTestAsync.NonSeekableFile(stream)
             downloader = await blob.download_blob()
@@ -786,6 +809,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         with open(FILE_PATH, 'rb') as stream:
             actual = stream.read()
             self.assertEqual(self.byte_data, actual)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -800,12 +824,14 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         blob = self.bsc.get_blob_client(self.container_name, self.byte_blob)
 
         # Act
+        FILE_PATH = 'et_blob_non_seekable_parallel_asyn.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             non_seekable_stream = StorageGetBlobTestAsync.NonSeekableFile(stream)
 
             with self.assertRaises(ValueError):
                 downloader = await blob.download_blob()
                 properties = await downloader.download_to_stream(non_seekable_stream, max_concurrency=2)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -826,6 +852,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
             progress.append((current, total))
 
         # Act
+        FILE_PATH = 'stream_exact_get_size_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(raw_response_hook=callback)
             properties = await downloader.download_to_stream(stream, max_concurrency=2)
@@ -839,6 +866,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
             self.config.max_chunk_get_size,
             self.config.max_single_get_size,
             progress)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -917,6 +945,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         blob = self.bsc.get_blob_client(self.container_name, self.byte_blob)
 
         # Act
+        FILE_PATH = 'lob_to_stream_with_md5_asyncc.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(validate_content=True)
             properties = await downloader.download_to_stream(stream, max_concurrency=2)
@@ -926,6 +955,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         with open(FILE_PATH, 'rb') as stream:
             actual = stream.read()
             self.assertEqual(self.byte_data, actual)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -961,6 +991,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         await blob.set_http_headers(props.content_settings)
 
         # Act
+        FILE_PATH = 'range_to_stream_with_overall_md5_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             downloader = await blob.download_blob(offset=0, length=1024, validate_content=True)
             properties = await downloader.download_to_stream(stream, max_concurrency=2)
@@ -969,6 +1000,7 @@ class StorageGetBlobTestAsync(AsyncBlobTestCase):
         self.assertIsInstance(properties, BlobProperties)
         self.assertEqual(b'MDAwMDAwMDA=', properties.content_settings.content_md5)
         self.assertEqual(len(downloader), 1024)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')

@@ -10,7 +10,10 @@ from datetime import datetime, timedelta
 import pytest
 import asyncio
 
-import os
+from os import (
+    path,
+    remove,
+)
 import unittest
 
 from devtools_testutils import ResourceGroupPreparer, StorageAccountPreparer
@@ -63,6 +66,13 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
             try:
                 await bsc.create_container(self.container_name)
                 await bsc.create_container(self.source_container_name)
+            except:
+                pass
+
+    def _teardown(self, file_name):
+        if path.isfile(file_name):
+            try:
+                remove(file_name)
             except:
                 pass
 
@@ -740,13 +750,13 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
             data1,
             overwrite=True,
             blob_type=BlobType.AppendBlob,
-            metadata={'BlobData': 'Data1'})
+            metadata={'blobdata': 'data1'})
 
         update_resp = await blob.upload_blob(
             data2,
             overwrite=False,
             blob_type=BlobType.AppendBlob,
-            metadata={'BlobData': 'Data2'})
+            metadata={'blobdata': 'data2'})
 
         props = await blob.get_blob_properties()
 
@@ -756,7 +766,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         self.assertEqual(props.etag, update_resp.get('etag'))
         self.assertEqual(props.blob_type, BlobType.AppendBlob)
         self.assertEqual(props.last_modified, update_resp.get('last_modified'))
-        self.assertEqual(props.metadata, {'BlobData': 'Data1'})
+        self.assertEqual(props.metadata, {'blobdata': 'data1'})
         self.assertEqual(props.size, LARGE_BLOB_SIZE + LARGE_BLOB_SIZE + 512)
 
     @ResourceGroupPreparer()
@@ -779,12 +789,12 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
             data1,
             overwrite=True,
             blob_type=BlobType.AppendBlob,
-            metadata={'BlobData': 'Data1'})
+            metadata={'blobdata': 'data1'})
         update_resp = await blob.upload_blob(
             data2,
             overwrite=True,
             blob_type=BlobType.AppendBlob,
-            metadata={'BlobData': 'Data2'})
+            metadata={'blobdata': 'data2'})
 
         props = await blob.get_blob_properties()
 
@@ -792,7 +802,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self.assertBlobEqual(blob, data2)
         self.assertEqual(props.etag, update_resp.get('etag'))
         self.assertEqual(props.last_modified, update_resp.get('last_modified'))
-        self.assertEqual(props.metadata, {'BlobData': 'Data2'})
+        self.assertEqual(props.metadata, {'blobdata': 'data2'})
         self.assertEqual(props.blob_type, BlobType.AppendBlob)
         self.assertEqual(props.size, LARGE_BLOB_SIZE + 512)
 
@@ -974,6 +984,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self._setup(bsc)
         blob = await self._create_blob(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'path_chunked_upload_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -987,6 +998,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self.assertBlobEqual(blob, data)
         self.assertEqual(blob_properties.etag, append_resp.get('etag'))
         self.assertEqual(blob_properties.last_modified, append_resp.get('last_modified'))
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -998,6 +1010,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self._setup(bsc)
         blob = await self._create_blob(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'progress_chnked_upload_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1023,6 +1036,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         # Assert
         await self.assertBlobEqual(blob, data)
         self.assert_upload_progress(len(data), bsc._config.max_block_size, progress)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1034,6 +1048,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self._setup(bsc)
         blob = await self._create_blob(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'stream_chunked_upload_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1046,6 +1061,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self.assertBlobEqual(blob, data)
         self.assertEqual(blob_properties.etag, append_resp.get('etag'))
         self.assertEqual(blob_properties.last_modified, append_resp.get('last_modified'))
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1058,6 +1074,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self._setup(bsc)
         blob = await self._create_blob(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'chnkd_upld_knwn_size_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
         blob_size = len(data) - 66
@@ -1069,6 +1086,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
 
         # Assert
         await self.assertBlobEqual(blob, data[:blob_size])
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1081,6 +1099,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self._setup(bsc)
         blob = await self._create_blob(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'nonseek_chnked_upld_unk_size_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1091,6 +1110,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
 
         # Assert
         await self.assertBlobEqual(blob, data)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1102,6 +1122,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self._setup(bsc)
         blob = await self._create_blob(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'stream_with_multiple_appends_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream1:
             stream1.write(data)
         with open(FILE_PATH, 'wb') as stream2:
@@ -1116,6 +1137,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         # Assert
         data = data * 2
         await self.assertBlobEqual(blob, data)
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1127,6 +1149,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self._setup(bsc)
         blob = await self._create_blob(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'hnked_upload_w_count_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1137,6 +1160,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
 
         # Assert
         await self.assertBlobEqual(blob, data[:blob_size])
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')
@@ -1153,6 +1177,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self._setup(bsc)
         blob = await self._create_blob(bsc)
         data = self.get_random_bytes(LARGE_BLOB_SIZE)
+        FILE_PATH = 'upload_w_count_parallel_async.temp.dat'
         with open(FILE_PATH, 'wb') as stream:
             stream.write(data)
 
@@ -1166,6 +1191,7 @@ class StorageAppendBlobTestAsync(AsyncBlobTestCase):
         await self.assertBlobEqual(blob, data[:blob_size])
         self.assertEqual(blob_properties.etag, append_resp.get('etag'))
         self.assertEqual(blob_properties.last_modified, append_resp.get('last_modified'))
+        self._teardown(FILE_PATH)
 
     @ResourceGroupPreparer()
     @StorageAccountPreparer(name_prefix='pyacrstorage')

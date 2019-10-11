@@ -11,9 +11,9 @@ interactions:
       Content-Length:
       - '0'
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 00:34:18 GMT
+      - Fri, 11 Oct 2019 01:00:53 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -25,11 +25,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 00:34:20 GMT
+      - Fri, 11 Oct 2019 01:00:53 GMT
       etag:
-      - '"0x8D74C506D241865"'
+      - '"0x8D74DE67795A73D"'
       last-modified:
-      - Wed, 09 Oct 2019 00:34:20 GMT
+      - Fri, 11 Oct 2019 01:00:54 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -53,11 +53,11 @@ interactions:
       If-None-Match:
       - '*'
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-blob-type:
       - BlockBlob
       x-ms-date:
-      - Wed, 09 Oct 2019 00:34:20 GMT
+      - Fri, 11 Oct 2019 01:00:54 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -71,11 +71,11 @@ interactions:
       content-md5:
       - XrY7u+Ae7tCTyyK7j1rNww==
       date:
-      - Wed, 09 Oct 2019 00:34:20 GMT
+      - Fri, 11 Oct 2019 01:00:53 GMT
       etag:
-      - '"0x8D74C506D2D2D2F"'
+      - '"0x8D74DE677A3196C"'
       last-modified:
-      - Wed, 09 Oct 2019 00:34:20 GMT
+      - Fri, 11 Oct 2019 01:00:54 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-content-crc64:
@@ -99,11 +99,11 @@ interactions:
       Content-Length:
       - '0'
       If-Modified-Since:
-      - Wed, 09 Oct 2019 00:19:18 GMT
+      - Fri, 11 Oct 2019 00:45:53 GMT
       User-Agent:
-      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.18362-SP0)
+      - azsdk-python-storage-blob/12.0.0b4 Python/3.7.3 (Windows-10-10.0.17763-SP0)
       x-ms-date:
-      - Wed, 09 Oct 2019 00:34:20 GMT
+      - Fri, 11 Oct 2019 01:00:54 GMT
       x-ms-version:
       - '2019-02-02'
     method: DELETE
@@ -115,7 +115,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Wed, 09 Oct 2019 00:34:20 GMT
+      - Fri, 11 Oct 2019 01:00:53 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-delete-type-permanent:

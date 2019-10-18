@@ -75,13 +75,13 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         this will be "primary". Options include "primary" and "secondary".
     :param str account_url:
         The URI to the storage account. In order to create a client given the full URI to the container,
-        use the from_container_url classmethod.
+        use the :func:`from_container_url` classmethod.
     :param container_name:
         The name of the container for the blob.
-    :type container_name: str or ~azure.storage.blob.ContainerProperties
+    :type container_name: str
     :param credential:
         The credentials with which to authenticate. This is optional if the
-        account URL already has a SAS token. The value can be a SAS token string, and account
+        account URL already has a SAS token. The value can be a SAS token string, an account
         shared access key, or an instance of a TokenCredentials class from azure.identity.
         If the URL already has a SAS token, specifying an explicit credential will take priority.
 
@@ -129,7 +129,7 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             container as metadata. Example:{'Category':'test'}
         :type metadata: dict[str, str]
         :param ~azure.storage.blob.PublicAccess public_access:
-            Possible values include: container, blob.
+            Possible values include: 'container', 'blob'.
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :rtype: None
@@ -164,10 +164,11 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         Marks the specified container for deletion. The container and any blobs
         contained within it are later deleted during garbage collection.
 
-        :keyword ~azure.storage.blob.aio.LeaseClient lease:
+        :keyword lease:
             If specified, delete_container only succeeds if the
             container's lease is active and matches this ID.
             Required if the container has an active lease.
+        :type lease: ~azure.storage.blob.aio.LeaseClient or str
         :keyword ~datetime.datetime if_modified_since:
             A DateTime value. Azure expects the date value passed in to be UTC.
             If timezone is included, any non-UTC datetimes will be converted to UTC.
@@ -301,9 +302,10 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         """Returns all user-defined metadata and system properties for the specified
         container. The data returned does not include the container's list of blobs.
 
-        :keyword ~azure.storage.blob.aio.LeaseClient lease:
+        :keyword lease:
             If specified, get_container_properties only succeeds if the
             container's lease is active and matches this ID.
+        :type lease: ~azure.storage.blob.aio.LeaseClient or str
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :return: Properties for the specified container within a container object.
@@ -347,9 +349,10 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             A dict containing name-value pairs to associate with the container as
             metadata. Example: {'category':'test'}
         :type metadata: dict[str, str]
-        :keyword str lease:
+        :keyword lease:
             If specified, set_container_metadata only succeeds if the
             container's lease is active and matches this ID.
+        :type lease: ~azure.storage.blob.aio.LeaseClient or str
         :keyword ~datetime.datetime if_modified_since:
             A DateTime value. Azure expects the date value passed in to be UTC.
             If timezone is included, any non-UTC datetimes will be converted to UTC.
@@ -392,9 +395,10 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         """Gets the permissions for the specified container.
         The permissions indicate whether container data may be accessed publicly.
 
-        :keyword str lease:
+        :keyword lease:
             If specified, get_container_access_policy only succeeds if the
             container's lease is active and matches this ID.
+        :type lease: ~azure.storage.blob.aio.LeaseClient or str
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :returns: Access policy information in a dict.
@@ -441,7 +445,7 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             will clear the access policies set on the service.
         :type signed_identifiers: dict[str, ~azure.storage.blob.AccessPolicy]
         :param ~azure.storage.blob.PublicAccess public_access:
-            Possible values include: container, blob.
+            Possible values include: 'container', 'blob'.
         :keyword lease:
             Required if the container has an active lease. Value can be a LeaseClient object
             or the lease ID as a string.
@@ -461,6 +465,7 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :returns: Container-updated property dict (Etag and last modified).
+        :rtype: dict[str, str or ~datetime.datetime]
 
         .. admonition:: Example:
 
@@ -615,18 +620,19 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             Name-value pairs associated with the blob as metadata.
         :type metadata: dict(str, str)
         :keyword bool overwrite: Whether the blob to be uploaded should overwrite the current data.
-            If True, upload_blob will silently overwrite the existing data. If set to False, the
+            If True, upload_blob will overwrite the existing data. If set to False, the
             operation will fail with ResourceExistsError. The exception to the above is with Append
-            blob types. In this case, if data already exists, an error will not be raised and
-            the data will be appended to the existing blob. If you set overwrite=True, then the existing
-            blob will be deleted, and a new one created.
+            blob types: if set to False and the data already exists, an error will not be raised
+            and the data will be appended to the existing blob. If set overwrite=True, then the existing
+            page blob will be deleted, and a new one created. Defaults to False.
         :keyword ~azure.storage.blob.ContentSettings content_settings:
-            ContentSettings object used to set blob properties.
+            ContentSettings object used to set blob properties. Used to set content type, encoding,
+            language, disposition, md5, and cache control.
         :keyword bool validate_content:
             If true, calculates an MD5 hash for each chunk of the blob. The storage
             service checks the hash of the content that has arrived with the hash
             that was sent. This is primarily valuable for detecting bitflips on
-            the wire if using http instead of https as https (the default) will
+            the wire if using http instead of https, as https (the default), will
             already validate. Note that this MD5 hash is not stored with the
             blob. Also note that if enabled, the memory-efficient upload algorithm
             will not be used, because computing the MD5 hash requires buffering

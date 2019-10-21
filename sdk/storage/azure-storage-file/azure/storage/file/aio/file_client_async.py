@@ -5,11 +5,11 @@
 # --------------------------------------------------------------------------
 
 import functools
+import time
 from io import BytesIO
 from typing import Optional, Union, IO, List, Dict, Any, Iterable, TYPE_CHECKING  # pylint: disable=unused-import
 
 import six
-from azure.core.polling import async_poller
 from azure.core.async_paging import AsyncItemPaged
 
 from azure.core.tracing.decorator import distributed_trace
@@ -27,7 +27,6 @@ from .._shared.request_handlers import add_metadata_headers, get_length
 from .._shared.response_handlers import return_response_headers, process_storage_error
 from .._deserialize import deserialize_file_properties, deserialize_file_stream
 from ..file_client import FileClient as FileClientBase
-from ._polling_async import CloseHandlesAsync
 from .models import HandlesPaged
 from .download_async import StorageStreamDownloader
 
@@ -441,6 +440,8 @@ class FileClient(AsyncStorageAccountHostsMixin, FileClientBase):
         :param int length:
             Number of bytes to read from the stream. This is optional, but
             should be supplied for optimal performance.
+        :keyword int max_concurrency:
+            Maximum number of parallel connections to use.
         :keyword bool validate_content:
             If true, calculates an MD5 hash for each chunk of the file. The storage
             service checks the hash of the content that has arrived with the hash
@@ -463,29 +464,27 @@ class FileClient(AsyncStorageAccountHostsMixin, FileClientBase):
                 :dedent: 12
                 :caption: Download a file.
         """
-        validate_content = kwargs.pop('validate_content', False)
-        timeout = kwargs.pop('timeout', None)
         if self.require_encryption or (self.key_encryption_key is not None):
             raise ValueError("Encryption not supported.")
         if length is not None and offset is None:
             raise ValueError("Offset value must not be None if length is set.")
+
         range_end = None
         if length is not None:
             range_end = offset + length - 1  # Service actually uses an end-range inclusive index
         downloader = StorageStreamDownloader(
             client=self._client.file,
             config=self._config,
-            offset=offset,
-            length=range_end,
-            validate_content=validate_content,
+            start_range=offset,
+            end_range=range_end,
             encryption_options=None,
+            name=self.file_name,
+            path='/'.join(self.file_path),
+            share=self.share_name,
             cls=deserialize_file_stream,
-            timeout=timeout,
             **kwargs
         )
-        await downloader.setup(
-            extra_properties={"share": self.share_name, "name": self.file_name, "path": "/".join(self.file_path)}
-        )
+        await downloader._setup()  # pylint: disable=protected-access
         return downloader
 
     @distributed_trace_async
@@ -759,8 +758,8 @@ class FileClient(AsyncStorageAccountHostsMixin, FileClientBase):
         content_range = None
         if offset is not None:
             if length is not None:
-                length = offset + length - 1  # Reformat to an inclusive range index
-                content_range = "bytes={0}-{1}".format(offset, length)
+                end_range = offset + length - 1  # Reformat to an inclusive range index
+                content_range = "bytes={0}-{1}".format(offset, end_range)
             else:
                 content_range = "bytes={0}-".format(offset)
         try:
@@ -864,40 +863,71 @@ class FileClient(AsyncStorageAccountHostsMixin, FileClientBase):
             page_iterator_class=HandlesPaged)
 
     @distributed_trace_async
-    async def close_handles(
-        self,
-        handle=None,  # type: Union[str, HandleItem]
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> int
-        """Close open file handles.
+    async def close_handle(self, handle, **kwargs):
+        # type: (Union[str, HandleItem], Any) -> int
+        """Close an open file handle.
 
         :param handle:
-            Optionally, a specific handle to close. The default value is '*'
-            which will attempt to close all open handles.
+            A specific handle to close.
         :type handle: str or ~azure.storage.file.Handle
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
-        :returns: The number of file handles that were closed.
+        :returns:
+            The total number of handles closed. This could be 0 if the supplied
+            handle was not found.
         :rtype: int
         """
-        timeout = kwargs.pop('timeout', None)
         try:
-            handle_id = handle.id  # type: ignore
+            handle_id = handle.id # type: ignore
         except AttributeError:
-            handle_id = handle or "*"
-        command = functools.partial(
-            self._client.file.force_close_handles,
-            handle_id,
-            timeout=timeout,
-            sharesnapshot=self.snapshot,
-            cls=return_response_headers,
-            **kwargs
-        )
+            handle_id = handle
+        if handle_id == '*':
+            raise ValueError("Handle ID '*' is not supported. Use 'close_all_handles' instead.")
         try:
-            start_close = await command()
+            response = await self._client.file.force_close_handles(
+                handle_id,
+                marker=None,
+                sharesnapshot=self.snapshot,
+                cls=return_response_headers,
+                **kwargs
+            )
+            return response.get('number_of_handles_closed', 0)
         except StorageErrorException as error:
             process_storage_error(error)
 
-        polling_method = CloseHandlesAsync(self._config.copy_polling_interval)
-        return await async_poller(command, start_close, None, polling_method)
+    @distributed_trace_async
+    async def close_all_handles(self, **kwargs):
+        # type: (Any) -> int
+        """Close any open file handles.
+
+        This operation will block until the service has closed all open handles.
+
+        :keyword int timeout:
+            The timeout parameter is expressed in seconds.
+        :returns: The total number of handles closed.
+        :rtype: int
+        """
+        timeout = kwargs.pop('timeout', None)
+        start_time = time.time()
+
+        try_close = True
+        continuation_token = None
+        total_handles = 0
+        while try_close:
+            try:
+                response = await self._client.file.force_close_handles(
+                    handle_id='*',
+                    timeout=timeout,
+                    marker=continuation_token,
+                    sharesnapshot=self.snapshot,
+                    cls=return_response_headers,
+                    **kwargs
+                )
+            except StorageErrorException as error:
+                process_storage_error(error)
+            continuation_token = response.get('marker')
+            try_close = bool(continuation_token)
+            total_handles += response.get('number_of_handles_closed', 0)
+            if timeout:
+                timeout = max(0, timeout - (time.time() - start_time))
+        return total_handles

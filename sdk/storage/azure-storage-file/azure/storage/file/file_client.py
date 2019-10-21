@@ -5,6 +5,7 @@
 # --------------------------------------------------------------------------
 # pylint: disable=too-many-lines
 import functools
+import time
 from io import BytesIO
 from typing import ( # pylint: disable=unused-import
     Optional, Union, IO, List, Dict, Any, Iterable,
@@ -18,7 +19,6 @@ except ImportError:
     from urllib2 import quote, unquote # type: ignore
 
 import six
-from azure.core.polling import LROPoller
 from azure.core.paging import ItemPaged
 from azure.core.tracing.decorator import distributed_trace
 
@@ -32,14 +32,12 @@ from ._shared.response_handlers import return_response_headers, process_storage_
 from ._shared.parser import _str
 from ._parser import _get_file_permission, _datetime_to_str
 from ._deserialize import deserialize_file_properties, deserialize_file_stream
-from ._polling import CloseHandles
 from .models import HandlesPaged, NTFSAttributes  # pylint: disable=unused-import
-from ._shared_access_signature import FileSharedAccessSignature
 from .download import StorageStreamDownloader
 
 if TYPE_CHECKING:
     from datetime import datetime
-    from .models import ShareProperties, FileSasPermissions, ContentSettings, FileProperties
+    from .models import ShareProperties, ContentSettings, FileProperties
     from ._generated.models import HandleItem
 
 
@@ -265,103 +263,6 @@ class FileClient(StorageAccountHostsMixin):
             kwargs['secondary_hostname'] = secondary
         return cls(
             account_url, share_name=share_name, file_path=file_path, snapshot=snapshot, credential=credential, **kwargs)
-
-    def generate_shared_access_signature(
-            self, permission=None,  # type: Optional[Union[FileSasPermissions, str]]
-            expiry=None,  # type: Optional[Union[datetime, str]]
-            start=None,  # type: Optional[Union[datetime, str]]
-            policy_id=None,  # type: Optional[str]
-            ip=None,  # type: Optional[str]
-            **kwargs # type: Any
-        ):
-        # type: (...) -> str
-        """Generates a shared access signature for the file.
-
-        Use the returned signature with the credential parameter of any FileServiceClient,
-        ShareClient, DirectoryClient, or FileClient.
-
-        :param ~azure.storage.file.FileSasPermissions permission:
-            The permissions associated with the shared access signature. The
-            user is restricted to operations allowed by the permissions.
-            Permissions must be ordered read, write, delete, list.
-            Required unless an id is given referencing a stored access policy
-            which contains this field. This field must be omitted if it has been
-            specified in an associated stored access policy.
-        :param expiry:
-            The time at which the shared access signature becomes invalid.
-            Required unless an id is given referencing a stored access policy
-            which contains this field. This field must be omitted if it has
-            been specified in an associated stored access policy. Azure will always
-            convert values to UTC. If a date is passed in without timezone info, it
-            is assumed to be UTC.
-        :type expiry: ~datetime.datetime or str
-        :param start:
-            The time at which the shared access signature becomes valid. If
-            omitted, start time for this call is assumed to be the time when the
-            storage service receives the request. Azure will always convert values
-            to UTC. If a date is passed in without timezone info, it is assumed to
-            be UTC.
-        :type start: ~datetime.datetime or str
-        :param str policy_id:
-            A unique value up to 64 characters in length that correlates to a
-            stored access policy.
-        :param str ip:
-            Specifies an IP address or a range of IP addresses from which to accept requests.
-            If the IP address from which the request originates does not match the IP address
-            or address range specified on the SAS token, the request is not authenticated.
-            For example, specifying sip=168.1.5.65 or sip=168.1.5.60-168.1.5.70 on the SAS
-            restricts the request to those IP addresses.
-        :keyword str protocol:
-            Specifies the protocol permitted for a request made. The default value is https.
-        :keyword str cache_control:
-            Response header value for Cache-Control when resource is accessed
-            using this shared access signature.
-        :keyword str content_disposition:
-            Response header value for Content-Disposition when resource is accessed
-            using this shared access signature.
-        :keyword str content_encoding:
-            Response header value for Content-Encoding when resource is accessed
-            using this shared access signature.
-        :keyword str content_language:
-            Response header value for Content-Language when resource is accessed
-            using this shared access signature.
-        :keyword str content_type:
-            Response header value for Content-Type when resource is accessed
-            using this shared access signature.
-        :keyword str protocol:
-            Specifies the protocol permitted for a request made. The default value is https.
-        :return: A Shared Access Signature (sas) token.
-        :rtype: str
-        """
-        protocol = kwargs.pop('protocol', None)
-        cache_control = kwargs.pop('cache_control', None)
-        content_disposition = kwargs.pop('content_disposition', None)
-        content_encoding = kwargs.pop('content_encoding', None)
-        content_language = kwargs.pop('content_language', None)
-        content_type = kwargs.pop('content_type', None)
-
-        if not hasattr(self.credential, 'account_key') or not self.credential.account_key:
-            raise ValueError("No account SAS key available.")
-        sas = FileSharedAccessSignature(self.credential.account_name, self.credential.account_key)
-        if len(self.file_path) > 1:
-            file_path = '/'.join(self.file_path[:-1])
-        else:
-            file_path = None # type: ignore
-        return sas.generate_file( # type: ignore
-            share_name=self.share_name,
-            directory_name=file_path,
-            file_name=self.file_name,
-            permission=permission,
-            expiry=expiry,
-            start=start,
-            policy_id=policy_id,
-            ip=ip,
-            protocol=protocol,
-            cache_control=cache_control,
-            content_disposition=content_disposition,
-            content_encoding=content_encoding,
-            content_language=content_language,
-            content_type=content_type)
 
     @distributed_trace
     def create_file(  # type: ignore
@@ -659,6 +560,8 @@ class FileClient(StorageAccountHostsMixin):
         :param int length:
             Number of bytes to read from the stream. This is optional, but
             should be supplied for optimal performance.
+        :keyword int max_concurrency:
+            Maximum number of parallel connections to use.
         :keyword bool validate_content:
             If true, calculates an MD5 hash for each chunk of the file. The storage
             service checks the hash of the content that has arrived with the hash
@@ -681,29 +584,24 @@ class FileClient(StorageAccountHostsMixin):
                 :dedent: 12
                 :caption: Download a file.
         """
-        validate_content = kwargs.pop('validate_content', False)
-        timeout = kwargs.pop('timeout', None)
         if self.require_encryption or (self.key_encryption_key is not None):
             raise ValueError("Encryption not supported.")
         if length is not None and offset is None:
             raise ValueError("Offset value must not be None if length is set.")
+
         range_end = None
         if length is not None:
             range_end = offset + length - 1  # Service actually uses an end-range inclusive index
         return StorageStreamDownloader(
             client=self._client.file,
             config=self._config,
-            offset=offset,
-            length=range_end,
-            validate_content=validate_content,
+            start_range=offset,
+            end_range=range_end,
             encryption_options=None,
-            extra_properties={
-                'share': self.share_name,
-                'name': self.file_name,
-                'path': '/'.join(self.file_path),
-            },
+            name=self.file_name,
+            path='/'.join(self.file_path),
+            share=self.share_name,
             cls=deserialize_file_stream,
-            timeout=timeout,
             **kwargs)
 
     @distributed_trace
@@ -1112,45 +1010,70 @@ class FileClient(StorageAccountHostsMixin):
             page_iterator_class=HandlesPaged)
 
     @distributed_trace
-    def close_handles(
-            self, handle=None, # type: Union[str, HandleItem]
-            **kwargs # type: Any
-        ):
-        # type: (...) -> Any
-        """Close open file handles.
-
-        This operation may not finish with a single call, so a long-running poller
-        is returned that can be used to wait until the operation is complete.
+    def close_handle(self, handle, **kwargs):
+        # type: (Union[str, HandleItem], Any) -> int
+        """Close an open file handle.
 
         :param handle:
-            Optionally, a specific handle to close. The default value is '*'
-            which will attempt to close all open handles.
+            A specific handle to close.
         :type handle: str or ~azure.storage.file.Handle
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
-        :returns: A long-running poller to get operation status.
-        :rtype: ~azure.core.polling.LROPoller
+        :returns:
+            The number of handles closed (this may be 0 if the specified handle was not found).
+        :rtype: int
         """
-        timeout = kwargs.pop('timeout', None)
         try:
             handle_id = handle.id # type: ignore
         except AttributeError:
-            handle_id = handle or '*'
-        command = functools.partial(
-            self._client.file.force_close_handles,
-            handle_id,
-            timeout=timeout,
-            sharesnapshot=self.snapshot,
-            cls=return_response_headers,
-            **kwargs)
+            handle_id = handle
+        if handle_id == '*':
+            raise ValueError("Handle ID '*' is not supported. Use 'close_all_handles' instead.")
         try:
-            start_close = command()
+            response = self._client.file.force_close_handles(
+                handle_id,
+                marker=None,
+                sharesnapshot=self.snapshot,
+                cls=return_response_headers,
+                **kwargs
+            )
+            return response.get('number_of_handles_closed', 0)
         except StorageErrorException as error:
             process_storage_error(error)
 
-        polling_method = CloseHandles(self._config.copy_polling_interval)
-        return LROPoller(
-            command,
-            start_close,
-            None,
-            polling_method)
+    @distributed_trace
+    def close_all_handles(self, **kwargs):
+        # type: (Any) -> int
+        """Close any open file handles.
+
+        This operation will block until the service has closed all open handles.
+
+        :keyword int timeout:
+            The timeout parameter is expressed in seconds.
+        :returns: The total number of handles closed.
+        :rtype: int
+        """
+        timeout = kwargs.pop('timeout', None)
+        start_time = time.time()
+
+        try_close = True
+        continuation_token = None
+        total_handles = 0
+        while try_close:
+            try:
+                response = self._client.file.force_close_handles(
+                    handle_id='*',
+                    timeout=timeout,
+                    marker=continuation_token,
+                    sharesnapshot=self.snapshot,
+                    cls=return_response_headers,
+                    **kwargs
+                )
+            except StorageErrorException as error:
+                process_storage_error(error)
+            continuation_token = response.get('marker')
+            try_close = bool(continuation_token)
+            total_handles += response.get('number_of_handles_closed', 0)
+            if timeout:
+                timeout = max(0, timeout - (time.time() - start_time))
+        return total_handles

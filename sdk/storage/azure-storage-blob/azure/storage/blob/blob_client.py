@@ -695,7 +695,7 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
             multiple calls to the Azure service and the timeout will apply to
             each call individually.
         :returns: A iterable data generator (stream)
-        :rtype: ~azure.storage.blob.StorageStreamDownloader
+        :rtype: ~azure.storage.blob._download.StorageStreamDownloader
 
         .. admonition:: Example:
 

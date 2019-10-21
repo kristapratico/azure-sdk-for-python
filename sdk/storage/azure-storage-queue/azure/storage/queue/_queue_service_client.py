@@ -22,14 +22,14 @@ from ._shared.response_handlers import process_storage_error
 from ._generated import AzureQueueStorage
 from ._generated.models import StorageServiceProperties, StorageErrorException
 
-from .models import QueuePropertiesPaged
-from .queue_client import QueueClient
+from ._models import QueuePropertiesPaged
+from ._queue_client import QueueClient
 
 if TYPE_CHECKING:
     from datetime import datetime
     from azure.core.configuration import Configuration
     from azure.core.pipeline.policies import HTTPPolicy
-    from .models import (
+    from ._models import (
         QueueProperties,
         QueueAnalyticsLogging,
         Metrics,

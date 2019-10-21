@@ -36,23 +36,24 @@ from ._generated.models import (
     SignedIdentifier)
 from ._deserialize import deserialize_container_properties
 from ._serialize import get_modify_conditions
-from .models import ( # pylint: disable=unused-import
+from ._models import ( # pylint: disable=unused-import
     ContainerProperties,
     BlobProperties,
     BlobPropertiesPaged,
     BlobType,
     BlobPrefix)
-from .lease import LeaseClient, get_access_conditions
-from .blob_client import BlobClient
+from ._lease import LeaseClient, get_access_conditions
+from ._blob_client import BlobClient
 
 if TYPE_CHECKING:
     from azure.core.pipeline.transport import HttpTransport, HttpResponse  # pylint: disable=ungrouped-imports
     from azure.core.pipeline.policies import HTTPPolicy # pylint: disable=ungrouped-imports
     from datetime import datetime
-    from .models import ( # pylint: disable=unused-import
+    from ._models import (  # pylint: disable=unused-import
         PublicAccess,
         AccessPolicy,
         ContentSettings,
+        StandardBlobTier,
         PremiumPageBlobTier)
 
 
@@ -364,7 +365,7 @@ class ContainerClient(StorageAccountHostsMixin):
         return lease
 
     @distributed_trace
-    def get_account_information(self, **kwargs): # type: ignore
+    def get_account_information(self, **kwargs):
         # type: (**Any) -> Dict[str, str]
         """Gets information related to the storage account.
 
@@ -948,6 +949,9 @@ class ContainerClient(StorageAccountHostsMixin):
             If a date is passed in without timezone info, it is assumed to be UTC.
             Specify this header to perform the operation only if
             the resource has not been modified since the specified date/time.
+        :keyword bool raise_on_any_failure:
+            This is a boolean param which defaults to True. When this is set, an exception
+            is raised even if there is a single operation failure.
         :keyword str etag:
             An ETag value, or the wildcard character (*). Used to check if the resource has changed,
             and act according to the condition specified by the `match_condition` parameter.
@@ -958,9 +962,11 @@ class ContainerClient(StorageAccountHostsMixin):
         :return: An iterator of responses, one for each blob in order
         :rtype: iterator[~azure.core.pipeline.transport.HttpResponse]
         """
+        raise_on_any_failure = kwargs.pop('raise_on_any_failure', True)
         options = BlobClient._generic_delete_blob_options(  # pylint: disable=protected-access
             **kwargs
         )
+        options.update({'raise_on_any_failure': raise_on_any_failure})
         query_parameters, header_parameters = self._generate_delete_blobs_options(**options)
         # To pass kwargs to "_batch_send", we need to remove anything that was
         # in the Autorest signature for Autorest, otherwise transport will be upset
@@ -1041,6 +1047,9 @@ class ContainerClient(StorageAccountHostsMixin):
             Required if the blob has an active lease. Value can be a LeaseClient object
             or the lease ID as a string.
         :type lease: ~azure.storage.blob.LeaseClient or str
+        :keyword bool raise_on_any_failure:
+            This is a boolean param which defaults to True. When this is set, an exception
+            is raised even if there is a single operation failure.
         :return: An iterator of responses, one for each blob in order
         :rtype: iterator[~azure.core.pipeline.transport.HttpResponse]
         """
@@ -1095,6 +1104,9 @@ class ContainerClient(StorageAccountHostsMixin):
             Required if the blob has an active lease. Value can be a LeaseClient object
             or the lease ID as a string.
         :type lease: ~azure.storage.blob.LeaseClient or str
+        :keyword bool raise_on_any_failure:
+            This is a boolean param which defaults to True. When this is set, an exception
+            is raised even if there is a single operation failure.
         :return: An iterator of responses, one for each blob in order
         :rtype: iterator[~azure.core.pipeline.transport.HttpResponse]
         """

@@ -30,19 +30,19 @@ from .._generated.models import (
     SignedIdentifier)
 from .._deserialize import deserialize_container_properties
 from .._serialize import get_modify_conditions
-from ..container_client import ContainerClient as ContainerClientBase
-from ..lease import get_access_conditions
-from ..models import ContainerProperties, BlobProperties, BlobType  # pylint: disable=unused-import
-from .models import BlobPropertiesPaged, BlobPrefix
-from .lease_async import LeaseClient
-from .blob_client_async import BlobClient
+from .._container_client import ContainerClient as ContainerClientBase
+from .._lease import get_access_conditions
+from .._models import ContainerProperties, BlobProperties, BlobType  # pylint: disable=unused-import
+from ._models import BlobPropertiesPaged, BlobPrefix
+from ._lease_async import LeaseClient
+from ._blob_client_async import BlobClient
 
 if TYPE_CHECKING:
     from azure.core.pipeline.transport import HttpTransport
     from azure.core.pipeline.policies import HTTPPolicy
-    from ..models import ContainerSasPermissions, PublicAccess
+    from .._models import ContainerSasPermissions, PublicAccess
     from datetime import datetime
-    from ..models import ( # pylint: disable=unused-import
+    from .._models import ( # pylint: disable=unused-import
         AccessPolicy,
         ContentSettings,
         StandardBlobTier,
@@ -104,7 +104,7 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
     """
     def __init__(
             self, account_url,  # type: str
-            container_name=None,  # type: str
+            container_name,  # type: str
             credential=None,  # type: Optional[Any]
             **kwargs  # type: Any
         ):
@@ -270,7 +270,7 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         return lease
 
     @distributed_trace_async
-    async def get_account_information(self, **kwargs): # type: ignore
+    async def get_account_information(self, **kwargs):
         # type: (**Any) -> Dict[str, str]
         """Gets information related to the storage account.
 
@@ -800,6 +800,10 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             If a date is passed in without timezone info, it is assumed to be UTC.
             Specify this header to perform the operation only if
             the resource has not been modified since the specified date/time.
+        :keyword bool raise_on_any_failure:
+            This is a boolean param which defaults to True. When this is set, an exception
+            is raised even if there is a single operation failure. For optimal performance,
+            this should be set to False
         :keyword str etag:
             An ETag value, or the wildcard character (*). Used to check if the resource has changed,
             and act according to the condition specified by the `match_condition` parameter.
@@ -810,6 +814,7 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         :return: An async iterator of responses, one for each blob in order
         :rtype: asynciterator[~azure.core.pipeline.transport.AsyncHttpResponse]
         """
+        raise_on_any_failure = kwargs.pop('raise_on_any_failure', True)
         timeout = kwargs.pop('timeout', None)
         options = BlobClient._generic_delete_blob_options(  # pylint: disable=protected-access
             delete_snapshots=delete_snapshots,
@@ -817,6 +822,7 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             timeout=timeout,
             **kwargs
         )
+        options.update({'raise_on_any_failure': raise_on_any_failure})
         query_parameters, header_parameters = self._generate_delete_blobs_options(**options)
         # To pass kwargs to "_batch_send", we need to remove anything that was
         # in the Autorest signature for Autorest, otherwise transport will be upset
@@ -863,6 +869,10 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             Required if the blob has an active lease. Value can be a LeaseClient object
             or the lease ID as a string.
         :type lease: ~azure.storage.blob.aio.LeaseClient or str
+        :keyword bool raise_on_any_failure:
+            This is a boolean param which defaults to True. When this is set, an exception
+            is raised even if there is a single operation failure. For optimal performance,
+            this should be set to False.
         :return: An async iterator of responses, one for each blob in order
         :rtype: asynciterator[~azure.core.pipeline.transport.AsyncHttpResponse]
         """
@@ -916,6 +926,10 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             Required if the blob has an active lease. Value can be a LeaseClient object
             or the lease ID as a string.
         :type lease: ~azure.storage.blob.aio.LeaseClient or str
+        :keyword bool raise_on_any_failure:
+            This is a boolean param which defaults to True. When this is set, an exception
+            is raised even if there is a single operation failure. For optimal performance,
+            this should be set to False.
         :return: An async iterator of responses, one for each blob in order
         :rtype: asynciterator[~azure.core.pipeline.transport.AsyncHttpResponse]
         """

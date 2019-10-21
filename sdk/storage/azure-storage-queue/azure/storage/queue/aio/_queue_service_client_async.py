@@ -19,21 +19,21 @@ from azure.core.pipeline import AsyncPipeline
 from azure.core.tracing.decorator_async import distributed_trace_async
 
 from .._shared.policies_async import ExponentialRetry
-from ..queue_service_client import QueueServiceClient as QueueServiceClientBase
+from .._queue_service_client import QueueServiceClient as QueueServiceClientBase
 from .._shared.models import LocationMode
 from .._shared.base_client_async import AsyncStorageAccountHostsMixin, AsyncTransportWrapper
 from .._shared.response_handlers import process_storage_error
 from .._generated.aio import AzureQueueStorage
 from .._generated.models import StorageServiceProperties, StorageErrorException
 
-from .models import QueuePropertiesPaged
-from .queue_client_async import QueueClient
+from ._models import QueuePropertiesPaged
+from ._queue_client_async import QueueClient
 
 if TYPE_CHECKING:
     from datetime import datetime
     from azure.core.configuration import Configuration
     from azure.core.pipeline.policies import HTTPPolicy
-    from ..models import (
+    from .._models import (
         QueueProperties,
         QueueAnalyticsLogging,
         Metrics,
@@ -357,7 +357,7 @@ class QueueServiceClient(AsyncStorageAccountHostsMixin, QueueServiceClientBase):
             The queue. This can either be the name of the queue,
             or an instance of QueueProperties.
         :type queue: str or ~azure.storage.queue.QueueProperties
-        :returns: A :class:`~azure.storage.queue.QueueClient` object.
+        :returns: A :class:`~azure.storage.queue.aio.QueueClient` object.
         :rtype: ~azure.storage.queue.aio.QueueClient
 
         .. admonition:: Example:

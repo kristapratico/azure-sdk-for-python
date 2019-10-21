@@ -143,7 +143,7 @@ class QueueServiceClient(AsyncStorageAccountHostsMixin, QueueServiceClientBase):
             process_storage_error(error)
 
     @distributed_trace_async
-    async def get_service_properties(self, **kwargs): # type: ignore
+    async def get_service_properties(self, **kwargs):
         # type: (Optional[Any]) -> Dict[str, Any]
         """Gets the properties of a storage account's Queue service, including
         Azure Storage Analytics.

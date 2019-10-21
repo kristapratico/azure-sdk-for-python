@@ -149,7 +149,7 @@ class QueueServiceClient(StorageAccountHostsMixin):
         return cls(account_url, credential=credential, **kwargs)
 
     @distributed_trace
-    def get_service_stats(self, **kwargs): # type: ignore
+    def get_service_stats(self, **kwargs):
         # type: (Optional[Any]) -> Dict[str, Any]
         """Retrieves statistics related to replication for the Queue service.
 
@@ -182,7 +182,7 @@ class QueueServiceClient(StorageAccountHostsMixin):
             process_storage_error(error)
 
     @distributed_trace
-    def get_service_properties(self, **kwargs): # type: ignore
+    def get_service_properties(self, **kwargs):
         # type: (Optional[Any]) -> Dict[str, Any]
         """Gets the properties of a storage account's Queue service, including
         Azure Storage Analytics.

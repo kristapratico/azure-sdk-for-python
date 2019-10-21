@@ -611,7 +611,7 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             operation will fail with ResourceExistsError. The exception to the above is with Append
             blob types: if set to False and the data already exists, an error will not be raised
             and the data will be appended to the existing blob. If set overwrite=True, then the existing
-            page blob will be deleted, and a new one created. Defaults to False.
+            append blob will be deleted, and a new one created. Defaults to False.
         :keyword ~azure.storage.blob.ContentSettings content_settings:
             ContentSettings object used to set blob properties. Used to set content type, encoding,
             language, disposition, md5, and cache control.
@@ -781,13 +781,13 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         :param blobs: The blob names with which to interact.
         :type blobs: str
         :param str delete_snapshots:
-            Required if the blob has associated snapshots. Values include:
+            Required if a blob has associated snapshots. Values include:
              - "only": Deletes only the blobs snapshots.
              - "include": Deletes the blob along with all snapshots.
         :param lease:
-            Required if the blob has an active lease. Value can be a Lease object
+            Required if a blob has an active lease. Value can be a Lease object
             or the lease ID as a string.
-        :type lease: ~azure.storage.blob.lease.LeaseClient or str
+        :type lease: ~azure.storage.blob.aio.LeaseClient or str
         :keyword ~datetime.datetime if_modified_since:
             A DateTime value. Azure expects the date value passed in to be UTC.
             If timezone is included, any non-UTC datetimes will be converted to UTC.

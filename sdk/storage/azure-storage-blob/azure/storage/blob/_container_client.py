@@ -142,7 +142,6 @@ class ContainerClient(StorageAccountHostsMixin):
         :param str container_url:
             The full endpoint URL to the Container, including SAS token if used. This could be
             either the primary endpoint, or the secondary endpoint depending on the current `location_mode`.
-        :type container_url: str
         :param credential:
             The credentials with which to authenticate. This is optional if the
             account URL already has a SAS token, or the connection string already has shared
@@ -702,7 +701,7 @@ class ContainerClient(StorageAccountHostsMixin):
             operation will fail with ResourceExistsError. The exception to the above is with Append
             blob types: if set to False and the data already exists, an error will not be raised
             and the data will be appended to the existing blob. If set overwrite=True, then the existing
-            page blob will be deleted, and a new one created. Defaults to False.
+            append blob will be deleted, and a new one created. Defaults to False.
         :keyword ~azure.storage.blob.ContentSettings content_settings:
             ContentSettings object used to set blob properties. Used to set content type, encoding,
             language, disposition, md5, and cache control.

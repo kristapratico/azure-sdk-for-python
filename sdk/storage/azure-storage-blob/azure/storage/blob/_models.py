@@ -702,13 +702,13 @@ class CopyProperties(DictMixin):
     in a Copy Blob operation, or if this blob has been modified after a concluded
     Copy Blob operation, for example, using Set Blob Properties, Upload Blob, or Commit Block List.
 
-    :param str id:
+    :ivar str id:
         String identifier for the last attempted Copy Blob operation where this blob
         was the destination blob.
-    :param str source:
+    :ivar str source:
         URL up to 2 KB in length that specifies the source blob used in the last attempted
         Copy Blob operation where this blob was the destination blob.
-    :param str status:
+    :ivar str status:
         State of the copy operation identified by Copy ID, with these values:
             success:
                 Copy completed successfully.
@@ -719,22 +719,22 @@ class CopyProperties(DictMixin):
                 Copy was ended by Abort Copy Blob.
             failed:
                 Copy failed. See copy_status_description for failure details.
-    :param str progress:
+    :ivar str progress:
         Contains the number of bytes copied and the total bytes in the source in the last
         attempted Copy Blob operation where this blob was the destination blob. Can show
         between 0 and Content-Length bytes copied.
-    :param ~datetime.datetime completion_time:
+    :ivar ~datetime.datetime completion_time:
         Conclusion time of the last attempted Copy Blob operation where this blob was the
         destination blob. This value can specify the time of a completed, aborted, or
         failed copy attempt.
-    :param str status_description:
+    :ivar str status_description:
         Only appears when x-ms-copy-status is failed or pending. Describes cause of fatal
         or non-fatal copy operation failure.
-    :param bool incremental_copy:
+    :ivar bool incremental_copy:
         Copies the snapshot of the source page blob to a destination page blob.
         The snapshot is copied such that only the differential changes between
         the previously copied snapshot are transferred to the destination
-    :param ~datetime.datetime destination_snapshot:
+    :ivar ~datetime.datetime destination_snapshot:
         Included if the blob is incremental copy blob or incremental copy snapshot,
         if x-ms-copy-status is success. Snapshot time of the last successful
         incremental copy snapshot for this blob.
@@ -980,9 +980,9 @@ class CustomerProvidedEncryptionKey(object):
     In both cases, the provided encryption key is securely discarded
     as soon as the encryption or decryption process completes.
 
-    :ivar str key_value:
+    :param str key_value:
         Base64-encoded AES-256 encryption key value.
-    :ivar str key_hash:
+    :param str key_hash:
         Base64-encoded SHA256 of the encryption key.
     :ivar str algorithm:
         Specifies the algorithm to use when encrypting data using the given key. Must be AES256.

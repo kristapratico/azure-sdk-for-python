@@ -263,7 +263,7 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
         )
 
     @distributed_trace
-    def get_account_information(self, **kwargs): # type: ignore
+    def get_account_information(self, **kwargs):
         # type: (**Any) -> Dict[str, str]
         """Gets information related to the storage account in which the blob resides.
 
@@ -388,7 +388,7 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
             operation will fail with ResourceExistsError. The exception to the above is with Append
             blob types: if set to False and the data already exists, an error will not be raised
             and the data will be appended to the existing blob. If set overwrite=True, then the existing
-            page blob will be deleted, and a new one created. Defaults to False.
+            append blob will be deleted, and a new one created. Defaults to False.
         :keyword ~azure.storage.blob.ContentSettings content_settings:
             ContentSettings object used to set blob properties. Used to set content type, encoding,
             language, disposition, md5, and cache control.
@@ -971,9 +971,8 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
         """Creates a new Page Blob of the specified size.
 
         :param int size:
-            This header specifies the maximum size
-            for the page blob, up to 1 TB. The page blob size must be aligned
-            to a 512-byte boundary.
+            This specifies the maximum size for the page blob, up to 1 TB.
+            The page blob size must be aligned to a 512-byte boundary.
         :param ~azure.storage.blob.ContentSettings content_settings:
             ContentSettings object used to set blob properties. Used to set content type, encoding,
             language, disposition, md5, and cache control.
@@ -1988,7 +1987,7 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
             and act according to the condition specified by the `match_condition` parameter.
         :keyword :class:`MatchConditions` match_condition:
             The match condition to use upon the etag.
-        :keyword  int timeout:
+        :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :returns:
             A tuple of two lists of page ranges as dictionaries with 'start' and 'end' keys.
@@ -2058,7 +2057,7 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
             and act according to the condition specified by the `match_condition` parameter.
         :keyword :class:`MatchConditions` match_condition:
             The match condition to use upon the etag.
-        :keyword  int timeout:
+        :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :returns: Blob-updated property dict (Etag and last modified).
         :rtype: dict(str, Any)
@@ -2249,7 +2248,7 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
             and act according to the condition specified by the `match_condition` parameter.
         :keyword :class:`MatchConditions` match_condition:
             The match condition to use upon the etag.
-        :param ~azure.storage.blob.CustomerProvidedEncryptionKey cpk:
+        :keyword ~azure.storage.blob.CustomerProvidedEncryptionKey cpk:
             Encrypts the data on the service-side with the given key.
             Use of customer-provided keys must be done over HTTPS.
             As the encryption key itself is provided in the request,
@@ -2376,8 +2375,9 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
             and act according to the condition specified by the `match_condition` parameter.
         :keyword :class:`MatchConditions` source_match_condition:
             The source match condition to use upon the etag.
-        :keyword str lease:
-            Required if the blob has an active lease.
+        :keyword lease:
+            Required if the blob has an active lease. Value can be a LeaseClient object
+            or the lease ID as a string.
         :type lease: ~azure.storage.blob.LeaseClient or str
         :keyword int if_sequence_number_lte:
             If the blob's sequence number is less than or equal to

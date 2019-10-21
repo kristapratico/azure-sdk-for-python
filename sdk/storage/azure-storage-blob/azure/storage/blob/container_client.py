@@ -611,7 +611,7 @@ class ContainerClient(StorageAccountHostsMixin):
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :returns: Access policy information in a dict.
-        :rtype: dict[str, str]
+        :rtype: dict[str, Any]
 
         .. admonition:: Example:
 
@@ -941,7 +941,7 @@ class ContainerClient(StorageAccountHostsMixin):
         Soft deleted blob or snapshot is accessible through :func:`list_blobs()` specifying `include=["deleted"]`
         option. Soft-deleted blob or snapshot can be restored using :func:`~BlobClient.undelete()`
 
-        :param blob: The blob name with which to interact. If specified, this value will override
+        :param blob: The blob with which to interact. If specified, this value will override
             a blob value specified in the blob URL.
         :type blob: str or ~azure.storage.blob.BlobProperties
         :param str delete_snapshots:
@@ -1063,7 +1063,7 @@ class ContainerClient(StorageAccountHostsMixin):
         Soft-deleted blobs or snapshots can be restored using :func:`~BlobClient.undelete()`
 
         :param blobs: The blob names with which to interact.
-        :type blobs: str or ~azure.storage.blob.BlobProperties
+        :type blobs: str
         :keyword str delete_snapshots:
             Required if a blob has associated snapshots. Values include:
              - "only": Deletes only the blobs snapshots.
@@ -1174,7 +1174,7 @@ class ContainerClient(StorageAccountHostsMixin):
             for at least six months with flexible latency requirements.
         :type standard_blob_tier: str or ~azure.storage.blob.StandardBlobTier
         :param blobs: The blobs with which to interact.
-        :type blobs: str or ~azure.storage.blob.BlobProperties
+        :type blobs: str
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :keyword lease:
@@ -1274,7 +1274,7 @@ class ContainerClient(StorageAccountHostsMixin):
         The blob need not already exist.
 
         :param blob:
-            The blob name with which to interact.
+            The blob with which to interact.
         :type blob: str or ~azure.storage.blob.BlobProperties
         :param str snapshot:
             The optional blob snapshot on which to operate. This can be the snapshot ID string

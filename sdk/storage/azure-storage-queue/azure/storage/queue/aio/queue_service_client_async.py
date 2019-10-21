@@ -50,13 +50,13 @@ class QueueServiceClient(AsyncStorageAccountHostsMixin, QueueServiceClientBase):
 
     :ivar str url:
         The full queue service endpoint URL, including SAS token if used. This could be
-        either the primary endpoint, or the secondard endpint depending on the current `location_mode`.
+        either the primary endpoint, or the secondary endpoint depending on the current `location_mode`.
     :ivar str primary_endpoint:
         The full primary endpoint URL.
     :ivar str primary_hostname:
         The hostname of the primary endpoint.
     :ivar str secondary_endpoint:
-        The full secondard endpoint URL if configured. If not available
+        The full secondary endpoint URL if configured. If not available
         a ValueError will be raised. To explicitly specify a secondary hostname, use the optional
         `secondary_hostname` keyword argument on instantiation.
     :ivar str secondary_hostname:
@@ -72,7 +72,7 @@ class QueueServiceClient(AsyncStorageAccountHostsMixin, QueueServiceClientBase):
         authenticated with a SAS token.
     :param credential:
         The credentials with which to authenticate. This is optional if the
-        account URL already has a SAS token. The value can be a SAS token string, and account
+        account URL already has a SAS token. The value can be a SAS token string, an account
         shared access key, or an instance of a TokenCredentials class from azure.identity.
 
     .. admonition:: Example:
@@ -132,7 +132,7 @@ class QueueServiceClient(AsyncStorageAccountHostsMixin, QueueServiceClientBase):
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :return: The queue service stats.
-        :rtype: ~azure.storage.queue._generated.models._models.StorageServiceStats
+        :rtype: ~azure.storage.queue.StorageServiceStats
         """
         timeout = kwargs.pop('timeout', None)
         try:
@@ -149,7 +149,7 @@ class QueueServiceClient(AsyncStorageAccountHostsMixin, QueueServiceClientBase):
 
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
-        :rtype: ~azure.storage.queue._generated.models._models.StorageServiceProperties
+        :rtype: ~azure.storage.queue.StorageServiceProperties
 
         .. admonition:: Example:
 
@@ -246,7 +246,7 @@ class QueueServiceClient(AsyncStorageAccountHostsMixin, QueueServiceClientBase):
             calls to the service in which case the timeout value specified will be
             applied to each individual call.
         :returns: An iterable (auto-paging) of QueueProperties.
-        :rtype: ~azure.core.paging.AsyncItemPaged[~azure.core.queue.models.QueueProperties]
+        :rtype: ~azure.core.paging.AsyncItemPaged[~azure.storage.queue.QueueProperties]
 
         .. admonition:: Example:
 
@@ -356,7 +356,7 @@ class QueueServiceClient(AsyncStorageAccountHostsMixin, QueueServiceClientBase):
             The queue. This can either be the name of the queue,
             or an instance of QueueProperties.
         :type queue: str or ~azure.storage.queue.QueueProperties
-        :returns: A :class:`~azure.core.queue.queue_client.QueueClient` object.
+        :returns: A :class:`~azure.storage.queue.QueueClient` object.
         :rtype: ~azure.storage.queue.aio.QueueClient
 
         .. admonition:: Example:

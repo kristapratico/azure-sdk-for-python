@@ -48,13 +48,13 @@ class QueueServiceClient(StorageAccountHostsMixin):
 
     :ivar str url:
         The full queue service endpoint URL, including SAS token if used. This could be
-        either the primary endpoint, or the secondard endpint depending on the current `location_mode`.
+        either the primary endpoint, or the secondary endpoint depending on the current `location_mode`.
     :ivar str primary_endpoint:
         The full primary endpoint URL.
     :ivar str primary_hostname:
         The hostname of the primary endpoint.
     :ivar str secondary_endpoint:
-        The full secondard endpoint URL if configured. If not available
+        The full secondary endpoint URL if configured. If not available
         a ValueError will be raised. To explicitly specify a secondary hostname, use the optional
         `secondary_hostname` keyword argument on instantiation.
     :ivar str secondary_hostname:
@@ -70,7 +70,7 @@ class QueueServiceClient(StorageAccountHostsMixin):
         authenticated with a SAS token.
     :param credential:
         The credentials with which to authenticate. This is optional if the
-        account URL already has a SAS token. The value can be a SAS token string, and account
+        account URL already has a SAS token. The value can be a SAS token string, an account
         shared access key, or an instance of a TokenCredentials class from azure.identity.
 
     .. admonition:: Example:
@@ -131,7 +131,7 @@ class QueueServiceClient(StorageAccountHostsMixin):
         :param credential:
             The credentials with which to authenticate. This is optional if the
             account URL already has a SAS token, or the connection string already has shared
-            access key values. The value can be a SAS token string, and account shared access
+            access key values. The value can be a SAS token string, an account shared access
             key, or an instance of a TokenCredentials class from azure.identity.
 
         .. admonition:: Example:
@@ -346,7 +346,7 @@ class QueueServiceClient(StorageAccountHostsMixin):
             calls to the service in which case the timeout value specified will be
             applied to each individual call.
         :returns: An iterable (auto-paging) of QueueProperties.
-        :rtype: ~azure.core.paging.ItemPaged[~azure.core.queue.models.QueueProperties]
+        :rtype: ~azure.core.paging.ItemPaged[~azure.storage.queue.QueueProperties]
 
         .. admonition:: Example:
 
@@ -456,8 +456,8 @@ class QueueServiceClient(StorageAccountHostsMixin):
             The queue. This can either be the name of the queue,
             or an instance of QueueProperties.
         :type queue: str or ~azure.storage.queue.QueueProperties
-        :returns: A :class:`~azure.core.queue.queue_client.QueueClient` object.
-        :rtype: ~azure.core.queue.queue_client.QueueClient
+        :returns: A :class:`~azure.storage.queue.QueueClient` object.
+        :rtype: ~azure.storage.queue.QueueClient
 
         .. admonition:: Example:
 

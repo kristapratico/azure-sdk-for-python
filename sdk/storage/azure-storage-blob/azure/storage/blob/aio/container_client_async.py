@@ -402,7 +402,7 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :returns: Access policy information in a dict.
-        :rtype: dict[str, str]
+        :rtype: dict[str, Any]
 
         .. admonition:: Example:
 
@@ -727,17 +727,17 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
 
         The blob is later deleted during garbage collection.
         Note that in order to delete a blob, you must delete all of its
-        snapshots. You can delete both at the same time with the Delete
-        Blob operation.
+        snapshots. You can delete both at the same time with the delete_blob
+        operation.
 
         If a delete retention policy is enabled for the service, then this operation soft deletes the blob or snapshot
         and retains the blob or snapshot for specified number of days.
         After specified number of days, blob's data is removed from the service during garbage collection.
-        Soft deleted blob or snapshot is accessible through List Blobs API specifying `include="deleted"` option.
-        Soft-deleted blob or snapshot can be restored using Undelete API.
+        Soft deleted blob or snapshot is accessible through :func:`list_blobs()` specifying `include=["deleted"]`
+        option. Soft-deleted blob or snapshot can be restored using :func:`~BlobClient.undelete()`
 
         :param blob: The blob with which to interact. If specified, this value will override
-         a blob value specified in the blob URL.
+            a blob value specified in the blob URL.
         :type blob: str or ~azure.storage.blob.BlobProperties
         :param str delete_snapshots:
             Required if the blob has associated snapshots. Values include:
@@ -789,20 +789,18 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         ) -> AsyncIterator[AsyncHttpResponse]:
         """Marks the specified blobs or snapshots for deletion.
 
-        The blob is later deleted during garbage collection.
-        Note that in order to delete a blob, you must delete all of its
-        snapshots. You can delete both at the same time with the Delete
-        Blob operation.
+        The blobs are later deleted during garbage collection.
+        Note that in order to delete blobs, you must delete all of their
+        snapshots. You can delete both at the same time with the delete_blobs operation.
 
-        If a delete retention policy is enabled for the service, then this operation soft deletes the blob or snapshot
-        and retains the blob or snapshot for specified number of days.
-        After specified number of days, blob's data is removed from the service during garbage collection.
-        Soft deleted blob or snapshot is accessible through List Blobs API specifying `include="deleted"` option.
-        Soft-deleted blob or snapshot can be restored using Undelete API.
+        If a delete retention policy is enabled for the service, then this operation soft deletes the blobs or snapshots
+        and retains the blobs or snapshots for specified number of days.
+        After specified number of days, blobs' data is removed from the service during garbage collection.
+        Soft deleted blobs or snapshots are accessible through :func:`list_blobs()` specifying `include=["deleted"]`
+        Soft-deleted blobs or snapshots can be restored using :func:`~BlobClient.undelete()`
 
-        :param blob: The blob with which to interact. If specified, this value will override
-         a blob value specified in the blob URL.
-        :type blob: str or ~azure.storage.blob.BlobProperties
+        :param blobs: The blob names with which to interact.
+        :type blobs: str
         :param str delete_snapshots:
             Required if the blob has associated snapshots. Values include:
              - "only": Deletes only the blobs snapshots.
@@ -811,10 +809,6 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             Required if the blob has an active lease. Value can be a Lease object
             or the lease ID as a string.
         :type lease: ~azure.storage.blob.lease.LeaseClient or str
-        :param str delete_snapshots:
-            Required if the blob has associated snapshots. Values include:
-             - "only": Deletes only the blobs snapshots.
-             - "include": Deletes the blob along with all snapshots.
         :keyword ~datetime.datetime if_modified_since:
             A DateTime value. Azure expects the date value passed in to be UTC.
             If timezone is included, any non-UTC datetimes will be converted to UTC.
@@ -878,8 +872,6 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         A block blob's tier determines Hot/Cool/Archive storage type.
         This operation does not update the blob's ETag.
 
-        :param blobs: The blobs with which to interact.
-        :type blobs: str or ~azure.storage.blob.BlobProperties
         :param standard_blob_tier:
             Indicates the tier to be set on the blob. Options include 'Hot', 'Cool',
             'Archive'. The hot tier is optimized for storing data that is accessed
@@ -888,12 +880,14 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             tier is optimized for storing data that is rarely accessed and stored
             for at least six months with flexible latency requirements.
         :type standard_blob_tier: str or ~azure.storage.blob.StandardBlobTier
+        :param blobs: The blobs with which to interact.
+        :type blobs: str
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :keyword lease:
             Required if the blob has an active lease. Value can be a LeaseClient object
             or the lease ID as a string.
-        :type lease: ~azure.storage.blob.lease.LeaseClient or str
+        :type lease: ~azure.storage.blob.aio.LeaseClient or str
         :return: An async iterator of responses, one for each blob in order
         :rtype: asynciterator[~azure.core.pipeline.transport.AsyncHttpResponse]
         """
@@ -932,13 +926,13 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
     ) -> AsyncIterator[AsyncHttpResponse]:
         """Sets the page blob tiers on the blobs. This API is only supported for page blobs on premium accounts.
 
-        :param blobs: The blobs with which to interact.
-        :type blobs: str or ~azure.storage.blob.BlobProperties
         :param premium_page_blob_tier:
             A page blob tier value to set the blob to. The tier correlates to the size of the
             blob and number of allowed IOPS. This is only applicable to page blobs on
             premium storage accounts.
         :type premium_page_blob_tier: ~azure.storage.blob.PremiumPageBlobTier
+        :param blobs: The blobs with which to interact.
+        :type blobs: str or ~azure.storage.blob.BlobProperties
         :keyword int timeout:
             The timeout parameter is expressed in seconds. This method may make
             multiple calls to the Azure service and the timeout will apply to
@@ -946,7 +940,7 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
         :keyword lease:
             Required if the blob has an active lease. Value can be a LeaseClient object
             or the lease ID as a string.
-        :type lease: ~azure.storage.blob.lease.LeaseClient or str
+        :type lease: ~azure.storage.blob.aio.LeaseClient or str
         :return: An async iterator of responses, one for each blob in order
         :rtype: asynciterator[~azure.core.pipeline.transport.AsyncHttpResponse]
         """
@@ -989,7 +983,8 @@ class ContainerClient(AsyncStorageAccountHostsMixin, ContainerClientBase):
             The blob with which to interact.
         :type blob: str or ~azure.storage.blob.BlobProperties
         :param str snapshot:
-            The optional blob snapshot on which to operate.
+            The optional blob snapshot on which to operate. This can be the snapshot ID string
+            or the response returned from :func:`~BlobClient.create_snapshot()`.
         :returns: A BlobClient.
         :rtype: ~azure.storage.blob.aio.BlobClient
 

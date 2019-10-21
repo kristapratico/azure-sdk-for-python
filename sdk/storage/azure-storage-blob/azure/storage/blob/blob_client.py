@@ -872,6 +872,7 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
             a secure connection must be established to transfer the key.
         :keyword int timeout:
             The timeout parameter is expressed in seconds.
+        :returns: BlobProperties
         :rtype: ~azure.storage.blob.BlobProperties
 
         .. admonition:: Example:
@@ -1934,7 +1935,7 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
             Required if the blob has an active lease. Value can be a LeaseClient object
             or the lease ID as a string.
         :type lease: ~azure.storage.blob.LeaseClient or str
-        :keyword  int timeout:
+        :keyword int timeout:
             The timeout parameter is expressed in seconds.
         :returns: A tuple of two lists - committed and uncommitted blocks
         :rtype: tuple(list(~azure.storage.blob.BlobBlock), list(~azure.storage.blob.BlobBlock))
@@ -2028,16 +2029,16 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
 
         :param list block_list:
             List of Blockblobs.
-        :keyword lease:
-            Required if the blob has an active lease. Value can be a LeaseClient object
-            or the lease ID as a string.
-        :type lease: ~azure.storage.blob.LeaseClient or str
         :param ~azure.storage.blob.ContentSettings content_settings:
             ContentSettings object used to set blob properties. Used to set content type, encoding,
             language, disposition, md5, and cache control.
         :param metadata:
             Name-value pairs associated with the blob as metadata.
         :type metadata: dict[str, str]
+        :keyword lease:
+            Required if the blob has an active lease. Value can be a LeaseClient object
+            or the lease ID as a string.
+        :type lease: ~azure.storage.blob.LeaseClient or str
         :keyword bool validate_content:
             If true, calculates an MD5 hash of the page content. The storage
             service checks the hash of the content that has arrived
@@ -2066,10 +2067,10 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
             the value specified. Specify the wildcard character (*) to perform
             the operation only if the resource does not exist, and fail the
             operation if it does exist.
-        :param ~azure.storage.blob.StandardBlobTier standard_blob_tier:
+        :keyword ~azure.storage.blob.StandardBlobTier standard_blob_tier:
             A standard blob tier value to set the blob to. For this version of the library,
             this is only applicable to block blobs on standard storage accounts.
-        :param ~azure.storage.blob.CustomerProvidedEncryptionKey cpk:
+        :keyword ~azure.storage.blob.CustomerProvidedEncryptionKey cpk:
             Encrypts the data on the service-side with the given key.
             Use of customer-provided keys must be done over HTTPS.
             As the encryption key itself is provided in the request,
@@ -2103,7 +2104,7 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
             The timeout parameter is expressed in seconds. This method may make
             multiple calls to the Azure service and the timeout will apply to
             each call individually.
-        :param lease:
+        :keyword lease:
             Required if the blob has an active lease. Value can be a LeaseClient object
             or the lease ID as a string.
         :type lease: ~azure.storage.blob.LeaseClient or str
@@ -2181,14 +2182,14 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
             Pages must be aligned with 512-byte boundaries, the start offset
             must be a modulus of 512 and the length must be a modulus of
             512.
-        :param lease:
-            Required if the blob has an active lease. Value can be a LeaseClient object
-            or the lease ID as a string.
-        :type lease: ~azure.storage.blob.LeaseClient or str
         :param str previous_snapshot_diff:
             The snapshot diff parameter that contains an opaque DateTime value that
             specifies a previous blob snapshot to be compared
             against a more recent snapshot or the current blob.
+        :keyword lease:
+            Required if the blob has an active lease. Value can be a LeaseClient object
+            or the lease ID as a string.
+        :type lease: ~azure.storage.blob.LeaseClient or str
         :keyword ~datetime.datetime if_modified_since:
             A DateTime value. Azure expects the date value passed in to be UTC.
             If timezone is included, any non-UTC datetimes will be converted to UTC.
@@ -2339,7 +2340,7 @@ class BlobClient(StorageAccountHostsMixin):  # pylint: disable=too-many-public-m
         :param int size:
             Size used to resize blob. Maximum size for a page blob is up to 1 TB.
             The page blob size must be aligned to a 512-byte boundary.
-        :param lease:
+        :keyword lease:
             Required if the blob has an active lease. Value can be a LeaseClient object
             or the lease ID as a string.
         :type lease: ~azure.storage.blob.LeaseClient or str

@@ -4,12 +4,24 @@
 # license information.
 # --------------------------------------------------------------------------
 
+from typing import (  # pylint: disable=unused-import
+    Union, Optional, Any, List, TYPE_CHECKING
+)
+
 from ._shared import sign_string
 from ._shared.constants import X_MS_VERSION
 from ._shared.models import Services
 from ._shared.shared_access_signature import SharedAccessSignature, _SharedAccessHelper, QueryStringConstants
 from ._shared.parser import _str
 
+if TYPE_CHECKING:
+    from datetime import datetime
+    from azure.storage.file import (
+        ResourceTypes,
+        AccountSasPermissions,
+        ShareSasPermissions,
+        FileSasPermissions
+    )
 
 class FileSharedAccessSignature(SharedAccessSignature):
     '''

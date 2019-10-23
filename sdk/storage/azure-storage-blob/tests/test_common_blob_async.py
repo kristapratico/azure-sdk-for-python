@@ -5,6 +5,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+from enum import Enum
 import pytest
 import asyncio
 import requests
@@ -32,8 +33,6 @@ from azure.storage.blob.aio import (
 )
 
 from azure.storage.blob import (
-    upload_blob_to_url,
-    download_blob_from_url,
     generate_blob_sas,
     generate_account_sas,
     generate_container_sas,
@@ -201,11 +200,9 @@ class StorageCommonBlobTestAsync(StorageTestCase):
     def _generate_oauth_token(self):
         from azure.identity.aio import ClientSecretCredential
 
-        return ClientSecretCredential(
-            self.settings.ACTIVE_DIRECTORY_APPLICATION_ID,
-            self.settings.ACTIVE_DIRECTORY_APPLICATION_SECRET,
-            self.settings.ACTIVE_DIRECTORY_TENANT_ID
-        )
+        return ClientSecretCredential(self.settings.ACTIVE_DIRECTORY_TENANT_ID,
+                                      self.settings.ACTIVE_DIRECTORY_APPLICATION_ID,
+                                      self.settings.ACTIVE_DIRECTORY_APPLICATION_SECRET)
 
     @record
     def test_blob_exists(self):
@@ -1144,6 +1141,7 @@ class StorageCommonBlobTestAsync(StorageTestCase):
         # Assert
         self.assertIsNotNone(copy)
         self.assertEqual(copy['copy_status'], 'success')
+        self.assertFalse(isinstance(copy['copy_status'], Enum))
         self.assertIsNotNone(copy['copy_id'])
 
         copy_content = await (await copyblob.download_blob()).readall()

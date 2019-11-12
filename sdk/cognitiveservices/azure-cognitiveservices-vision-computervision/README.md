@@ -228,7 +228,7 @@ with open("my_thumbnail.jpeg", "wb") as img:
         img.write(byt)
 ```
 
-### 9. Get a bounding box around the most important area of the image.
+### 8. Get a bounding box around the most important area of the image.
 ```python
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 
@@ -245,7 +245,7 @@ print("width: ", result.w)
 print("height: ", result.h)
 ```
 
-### 8. Recognize text in a text heavy image or a batch of images/pdf files (long running operation).
+### 9. Recognize text in a text heavy image or a batch of images/pdf files (long running operation).
 ```python
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 

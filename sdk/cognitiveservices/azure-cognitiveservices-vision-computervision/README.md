@@ -30,9 +30,9 @@ Some parameters move to **kwargs:
 - list_image_tags() returns a `list[ImageTag]` instead of a `TagResult`
 - get_area_of_interest() returns a `BoundingRect` instead of a `AreaOfInterestResult`
 - analyze_image_by_domain() returns a `list[dict{name, confidence}]` instead of a `DomainModelResult`
-- describe_image() will return a `list[ImageCaption]` instead of `ImageDescription`
+- describe_image() returns a `list[ImageCaption]` instead of `ImageDescription`
 
-Improvements to OCR/recognize text operations:
+Improvements to OCR operations:
 * batch_recognize_text() will return a polling object which does the calls to get_read_operation_result() internally. 
     User will check the operation status on the poller object. 
     This will allow batch_recognize_text() to return a `list[TextRecognitionResult]` instead of `ReadOperationResult`.
@@ -255,7 +255,7 @@ client = ComputerVisionClient(
 )
 
 poller = client.batch_recognize_text(image_or_url="https://image_text.jpg")
-read_result = None
+
 while poller.status() in ["NotStarted", "Running", "Succeeded"]:
     if poller.status() == "Succeeded":
         read_result = poller.result()

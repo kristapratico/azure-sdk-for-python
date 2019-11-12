@@ -69,7 +69,7 @@ ComputerVisionClient.generate_thumbnail(image_or_url, width, height, smart_cropp
 ComputerVisionClient.get_area_of_interest(image_or_url, **kwargs)
 
 # Returns an LROPoller. Poller returns list[TextRecognitionResult]
-ComputerVisionClient.batch_read_text(image_or_url, **kwargs)
+ComputerVisionClient.batch_recognize_text(image_or_url, **kwargs)
 ```
 
 ## Scenarios

@@ -30,7 +30,6 @@ Some parameters move to **kwargs:
 - list_image_tags() returns a `list[ImageTag]` instead of a `TagResult`
 - get_area_of_interest() returns a `BoundingRect` instead of a `AreaOfInterestResult`
 - analyze_image_by_domain() returns a `list[dict{name, confidence}]` instead of a `DomainModelResult`
-- describe_image() returns a `list[ImageCaption]` instead of `ImageDescription`
 
 Improvements to OCR operations:
 * batch_recognize_text() will return a polling object which does the calls to get_read_operation_result() internally. 
@@ -50,7 +49,7 @@ ComputerVisionClient.analyze_image(
 # Returns list[dict{name:, confidence:}]
 ComputerVisionClient.analyze_image_by_domain(image_or_url, model, **kwargs)
 
-# Returns list[ImageCaption]
+# Returns ImageDescription
 ComputerVisionClient.describe_image(image_or_url, max_candidates=1, **kwargs)
 
 # Returns list[DetectedObject]
@@ -139,7 +138,7 @@ client = ComputerVisionClient(
 
 resp = client.describe_image(image_or_url="https://image.jpg")
 
-for caption in resp:
+for caption in resp.captions:
     print(caption.text, caption.confidence)
 ```
 

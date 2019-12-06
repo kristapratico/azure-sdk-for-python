@@ -8,11 +8,11 @@ The client includes analysis of batched documents and single text operations for
 text analytics. The client is created with an endpoint and credential. 
 The credential string is the user's cognitive services key.
 
-The batched operations will accept the documents parameter as a `list[str]` or `list[(Multi)LanguageInput]`. 
-If the user passes in a `list[str]` the ID will be set internally (0 based) and the country_hint/language 
-will use the default. Mixing the two types of inputs will be explicitly disallowed. The batched operations will
-return a response consisting of a combined list of the results and errors in the order that the user passed in
-the documents.
+The batched operations will accept the documents parameter as a `list[str]`, `list[DetectLanguageInput]`,
+or `list[TextDocumentInput]`. If the user passes in a `list[str]` the ID will be set internally (0 based) and the 
+country_hint/language will use the default. Mixing the two types of inputs will be explicitly disallowed. 
+The batched operations will return a response consisting of a combined list of the results and errors in the order 
+that the user passed in the documents.
 
 The module level, single text operations do not get assigned an ID and move the request statistics and 
 model_version results to a response hook. The user can pass in a country_hint or language hint as an optional 
@@ -26,22 +26,22 @@ azure.cognitiveservices.language.textanalytics.TextAnalyticsClient(endpoint, cre
 
 ```python
 # Returns list[Union[DocumentLanguage, DocumentError]]
-TextAnalyticsClient.detect_language(documents, model_version=None, show_stats=False, country_hint=None, **kwargs)
+TextAnalyticsClient.detect_language(documents, model_version=None, show_stats=False, country_hint="us", **kwargs)
 
 # Returns list[Union[DocumentEntities, DocumentError]]
-TextAnalyticsClient.recognize_entities(documents, model_version=None, show_stats=False, language=None, **kwargs)
+TextAnalyticsClient.recognize_entities(documents, model_version=None, show_stats=False, language="en", **kwargs)
 
 # Returns list[Union[DocumentEntities, DocumentError]]
-TextAnalyticsClient.recoognize_pii_entities(documents, model_version=None, show_stats=False, language=None, **kwargs)
+TextAnalyticsClient.recoognize_pii_entities(documents, model_version=None, show_stats=False, language="en", **kwargs)
 
 # Returns list[Union[DocumentLinkedEntities, DocumentError]]
-TextAnalyticsClient.recognize_linked_entities(documents, model_version=None, show_stats=False, language=None, **kwargs)
+TextAnalyticsClient.recognize_linked_entities(documents, model_version=None, show_stats=False, language="en", **kwargs)
 
 # Returns list[Union[DocumentKeyPhrases, DocumentError]]
-TextAnalyticsClient.extract_key_phrases(documents, model_version=None, show_stats=False, language=None, **kwargs)
+TextAnalyticsClient.extract_key_phrases(documents, model_version=None, show_stats=False, language="en", **kwargs)
 
 # Returns list[Union[DocumentSentiment, DocumentError]]
-TextAnalyticsClient.analyze_sentiment(documents, model_version=None, show_stats=False, language=None, **kwargs)
+TextAnalyticsClient.analyze_sentiment(documents, model_version=None, show_stats=False, language="en", **kwargs)
 ```
 
 ### Module level operations
@@ -58,27 +58,27 @@ from azure.cognitiveservices.language.textanalytics import (
 
 # Returns DocumentLanguage
 single_detect_language(
-    endpoint, credential, text, country_hint=None, model_version=None, show_stats=False, **kwargs)
+    endpoint, credential, text, country_hint="us", model_version=None, show_stats=False, **kwargs)
 
 # Returns DocumentEntities
 single_recognize_entities(
-    endpoint, credential, text, language=None, model_version=None, show_stats=False, **kwargs)
+    endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns DocumentEntities
 single_recognize_pii_entities(
-    endpoint, credential, text, language=None, model_version=None, show_stats=False, **kwargs)
+    endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns DocumentLinkedEntities
 single_recognize_linked_entities(
-    endpoint, credential, text, language=None, model_version=None, show_stats=False, **kwargs)
+    endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns DocumentKeyPhrases
 single_extract_key_phrases(
-    endpoint, credential, text, language=None, model_version=None, show_stats=False, **kwargs)
+    endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
 
 # Returns DocumentSentiment
 single_analyze_sentiment(
-    endpoint, credential, text, language=None, model_version=None, show_stats=False, **kwargs)
+    endpoint, credential, text, language="en", model_version=None, show_stats=False, **kwargs)
 ```
 
 ## Scenarios
@@ -94,7 +94,7 @@ client = TextAnalyticsClient(
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
 )
 
-# documents can be a list[str] or list[LanguageInput]
+# documents can be a list[str] or list[DetectLanguageInput]
 documents = ["This is written in English", "Este es un document escrito en Español."]
 
 documents = [{"id": "1", "country_hint": "US", "text": "This is written in English"}, 
@@ -106,9 +106,9 @@ response = client.detect_language(documents=documents)  # list[Union[DocumentLan
 docs = [doc for doc in response if not doc.is_error]
 
 for doc in docs:
-    print(doc.detected_language.name)
-    print(doc.detected_language.iso6391_name)
-    print(doc.detected_language.score)
+    print(doc.detected_language[0].name)
+    print(doc.detected_language[0].iso6391_name)
+    print(doc.detected_language[0].score)
 ```
 
 ### 2. Recognize entities in a batch of documents.
@@ -120,7 +120,7 @@ client = TextAnalyticsClient(
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
 )
 
-# documents can be a list[str] or list[MultiLanguageInput]
+# documents can be a list[str] or list[TextDocumentInput]
 documents = ["Satya Nadella is the CEO of Microsoft", "Elon Musk is the CEO of SpaceX and Tesla."]
 
 response = client.recognize_entities(documents=documents)  # list[Union[DocumentEntities, DocumentError]]
@@ -144,7 +144,7 @@ client = TextAnalyticsClient(
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
 )
 
-# documents can be a list[str] or list[MultiLanguageInput]
+# documents can be a list[str] or list[TextDocumentInput]
 documents = ["My SSN is 555-55-5555", "Visa card 4147999933330000"]
 
 response = client.recognize_pii_entities(documents=documents)   # list[Union[DocumentEntities, DocumentError]]
@@ -168,7 +168,7 @@ client = TextAnalyticsClient(
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
 )
 
-# documents can be a list[str] or list[MultiLanguageInput]
+# documents can be a list[str] or list[TextDocumentInput]
 documents = ["Old Faithful is a geyser at Yellowstone Park", "Mount Shasta has lenticular clouds."]
 
 response = client.recognize_linked_entities(documents=documents)  # list[Union[DocumentLinkedEntities, DocumentError]]
@@ -191,7 +191,7 @@ client = TextAnalyticsClient(
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
 )
 
-# documents can be a list[str] or list[MultiLanguageInput]
+# documents can be a list[str] or list[TextDocumentInput]
 documents = ["My cat might need to see a veterinarian", "The pitot tube is used to measure airspeed."]
 
 response = client.extract_key_phrases(documents=documents)  # list[Union[DocumentKeyPhrases, DocumentError]]
@@ -212,7 +212,7 @@ client = TextAnalyticsClient(
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", # cognitive services key
 )
 
-# documents can be a list[str] or list[MultiLanguageInput]
+# documents can be a list[str] or list[TextDocumentInput]
 documents = ["The hotel was dark and unclean.", "The restaurant had amazing gnocci."]
 
 response = client.analyze_sentiment(documents=documents)   # list[Union[DocumentSentiment, DocumentError]]

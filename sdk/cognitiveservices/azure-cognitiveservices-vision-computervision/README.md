@@ -15,31 +15,33 @@ one that takes an `image_or_url` parameter. For example, `analyze_image(url, ...
 Additional design changes described below.
 
 Some methods removed:
-* recognize_text() is being deprecated and won't be included in the SDK.
-* list_models() removed since no new classifiers will be added. 
+* `recognize_text()` is being deprecated and won't be included in the SDK.
+* `get_text_operation_result()` no longer necessary with the removal of `recognize_text()`
+* `get_read_operation_result()` removed since operation will now return a poller object (see below)
+* `list_models()` removed since no new classifiers will be added. 
 
 Renames:
-* tag_image() renamed to list_image_tags()
-* batch_read_file() renamed to batch_recognize_text()
-* analyze_image() parameter `details` renamed to `models`
-* get_area_of_interest() renamed to identify_region_of_interest()
+* `tag_image()` renamed to `list_image_tags()`
+* `batch_read_file()` renamed to `batch_recognize_text()`
+* `analyze_image()` parameter `details` renamed to `models`
+* `get_area_of_interest()` renamed to `identify_region_of_interest()`
 * `BoundingRect` renamed to `BoundingBox`
 
 Some parameters move to **kwargs: 
-* `language` moves to kwargs for analyze_image(), analyze_image_by_domain(), describe_image(), list_image_tags().
-* `description_exclude` move to kwargs for analyze_image() and describe_image().
+* `language` moves to kwargs for `analyze_image()`, `analyze_image_by_domain()`, `describe_image()`, `list_image_tags()`.
+* `description_exclude` move to kwargs for `analyze_image()` and `describe_image()`.
 
-`metadata` and `request_id` relocated to response hook to help simplify the models returned:
-- detect_objects() returns `list[DetectedObject]` instead of `DetectResult`
-- list_image_tags() returns a `list[ImageTag]` instead of a `TagResult`
-- identify_region_of_interest() returns a `BoundingBox` instead of a `AreaOfInterestResult`
-- analyze_image_by_domain() returns a `list[dict{name, confidence}]` instead of a `DomainModelResult`
+Model `metadata` and `request_id` moved to response hook to help simplify the models returned:
+- `detect_objects()` returns `list[DetectedObject]` instead of `DetectResult`
+- `list_image_tags()` returns a `list[ImageTag]` instead of a `TagResult`
+- `identify_region_of_interest()` returns a `BoundingBox` instead of a `AreaOfInterestResult`
+- `analyze_image_by_domain()` returns a `list[dict{name, confidence}]` instead of a `DomainModelResult`
 
 Improvements to OCR operations:
-* batch_recognize_text() will return a polling object which does the calls to get_read_operation_result() internally. 
+* `batch_recognize_text()` will return a polling object which does the calls to `get_read_operation_result()` internally. 
     User will check the operation status on the poller object. 
-    This will allow batch_recognize_text() to return a `list[TextRecognitionResult]` instead of `ReadOperationResult`.
-* recognize_printed_text() and batch_recognize_text() will include an extra param in the returned model 
+    This will allow `batch_recognize_text()` to return a `list[TextRecognitionResult]` instead of `ReadOperationResult`.
+* `recognize_printed_text()` and `batch_recognize_text()` will include an extra param in the returned model 
     called `full_text`. This will contain all the text recognized as a string.
 
 ```python
@@ -296,5 +298,3 @@ resp = client.list_image_tags(image_or_url="https://image.jpg")
 for tag in resp:
     print(tag.name, tag.confidence)
 ```
-
-

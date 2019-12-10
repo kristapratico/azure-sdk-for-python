@@ -4,22 +4,26 @@
 
 The Computer Vision SDK provides a single client that allows you to engage with the Azure Computer Vision API.
 This includes both Computer Vision and OCR operations. The client is created with an `endpoint` and `credential`.
-The `credential` can be the user's cognitive services account key or a token credential from Azure Active Directory.
+The `credential` can be the user's Cognitive Services/Computer Vision account key or a token credential from 
+Azure Active Directory.
 
 To simplify the SDK, methods that accept an image URL and methods that accept an image stream are combined into
-one that takes an `image_or_url` parameter. For example, `analyze_image_in_stream(image, ...)` becomes 
+one that takes an `image_or_url` parameter. For example, `analyze_image(url, ...)` and 
+`analyze_image_in_stream(image, ...)` become 
 `analyze_image(image_or_url, ...)` and passes the input to the correct API call. 
 
 Additional design changes described below.
 
-Some track 1 operations removed:
+Some methods removed:
 * recognize_text() is being deprecated and won't be included in the SDK.
 * list_models() removed since no new classifiers will be added. 
 
 Renames:
-* tag_image() renamed to list_image_tags() since it is more descriptive of what the operation does.
+* tag_image() renamed to list_image_tags()
 * batch_read_file() renamed to batch_recognize_text()
-* analyze_image() parameter `details` renamed to `models` 
+* analyze_image() parameter `details` renamed to `models`
+* get_area_of_interest() renamed to identify_region_of_interest()
+* `BoundingRect` renamed to `BoundingBox`
 
 Some parameters move to **kwargs: 
 * `language` moves to kwargs for analyze_image(), analyze_image_by_domain(), describe_image(), list_image_tags().
@@ -28,7 +32,7 @@ Some parameters move to **kwargs:
 `metadata` and `request_id` relocated to response hook to help simplify the models returned:
 - detect_objects() returns `list[DetectedObject]` instead of `DetectResult`
 - list_image_tags() returns a `list[ImageTag]` instead of a `TagResult`
-- get_area_of_interest() returns a `BoundingRect` instead of a `AreaOfInterestResult`
+- identify_region_of_interest() returns a `BoundingBox` instead of a `AreaOfInterestResult`
 - analyze_image_by_domain() returns a `list[dict{name, confidence}]` instead of a `DomainModelResult`
 
 Improvements to OCR operations:
@@ -46,7 +50,7 @@ azure.cognitiveservices.vision.computervision.ComputerVisionClient(endpoint, cre
 ComputerVisionClient.analyze_image(
     image_or_url, visual_features=None, models=None, **kwargs)
 
-# Returns list[dict{name:, confidence:}]
+# Returns list[dict{name, confidence}]
 ComputerVisionClient.analyze_image_by_domain(image_or_url, model, **kwargs)
 
 # Returns ImageDescription
@@ -64,8 +68,8 @@ ComputerVisionClient.list_image_tags(image_or_url, **kwargs)
 # Returns generator
 ComputerVisionClient.generate_thumbnail(image_or_url, width, height, smart_cropping=False, **kwargs)
 
-# Returns BoundingRect
-ComputerVisionClient.get_area_of_interest(image_or_url, **kwargs)
+# Returns BoundingBox
+ComputerVisionClient.identify_region_of_interest(image_or_url, **kwargs)
 
 # Returns an LROPoller. Poller returns list[TextRecognitionResult]
 ComputerVisionClient.batch_recognize_text(image_or_url, **kwargs)
@@ -236,7 +240,7 @@ client = ComputerVisionClient(
     credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 )
 
-result = client.get_area_of_interest(image_or_url="https://image.jpg")
+result = client.identify_region_of_interest(image_or_url="https://image.jpg")
 
 print("x: ", result.x)
 print("y: ", result.y)
@@ -272,3 +276,25 @@ for image_text in read_result:
     for line in image_text.lines:
         print(line.text)
 ```
+
+### Extra example - retrieve request_id and metadata from response hook
+```python
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+
+client = ComputerVisionClient(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credential="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+
+response_data = []
+def callback(response):
+    response_data.append(response.metadata)
+    response_data.append(response.request_id)
+
+resp = client.list_image_tags(image_or_url="https://image.jpg")
+
+for tag in resp:
+    print(tag.name, tag.confidence)
+```
+
+

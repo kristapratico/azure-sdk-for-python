@@ -58,7 +58,7 @@ your resource and a `credential` that allows you access:
 ```python
 from azure.ai.textanalytics import TextAnalyticsClient
 
-text_analytics = TextAnalyticsClient(endpoint="https://westus2.api.cognitive.microsoft.com/", credential=credential)
+text_analytics_client = TextAnalyticsClient(endpoint="https://westus2.api.cognitive.microsoft.com/", credential=credential)
 ```
 
 Note that if you create a [custom subdomain](https://docs.microsoft.com/azure/cognitive-services/cognitive-services-custom-subdomains) 
@@ -89,7 +89,7 @@ cognitive services.
     Use the key as the credential parameter to authenticate the client:
     ```python
     from azure.ai.textanalytics import TextAnalyticsClient
-    text = TextAnalyticsClient(endpoint="https://westus2.api.cognitive.microsoft.com/", credential="<subscription_key>")
+    text_analytics_client = TextAnalyticsClient(endpoint="https://westus2.api.cognitive.microsoft.com/", credential="<subscription_key>")
     ```
 
 2. To use an [Azure Active Directory (AAD) token credential](https://docs.microsoft.com/azure/cognitive-services/authentication#authenticate-with-azure-active-directory),
@@ -108,7 +108,7 @@ cognitive services.
    can be used to authenticate the client:
 
    Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: 
-   AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_CLIENT_SECRET
+   AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_CLIENT_SECRET.
 
    Use the returned token credential to authenticate the client:
     ```python
@@ -137,7 +137,7 @@ The endpoint and credential are passed in with the desired text and other option
 ```python
 from azure.ai.textanalytics import single_analyze_sentiment
 
-text = "I did not like the restaurant. The food was too spicy."
+text_analytics_client = "I did not like the restaurant. The food was too spicy."
 result = single_analyze_sentiment(endpoint=endpoint, credential=credential, input_text=text, language="en")
 ```
 
@@ -168,7 +168,9 @@ documents = [
 An operation result, such as [AnalyzeSentimentResult](https://aka.ms/azsdk-python-textanalytics-analyzesentimentresult), 
 is the result of a Text Analytics operation and contains a prediction or predictions about a document input.
 With a batching operation, a list is returned containing a collection of operation results and any document errors. 
-These results/errors will be index-matched with the order of the provided documents.
+These results/errors will be index-matched with the order of the provided documents. You can filter for a result
+or error object in the list by using the `is_error` attribute. For a result object this is always `False` and for a 
+[DocumentError](http://aka.ms/azsdk-python-textanalytics-documenterror) this is `True`.
 
 
 ## Examples

@@ -168,7 +168,9 @@ documents = [
 An operation result, such as [AnalyzeSentimentResult](https://aka.ms/azsdk-python-textanalytics-analyzesentimentresult), 
 is the result of a Text Analytics operation and contains a prediction or predictions about a document input.
 With a batching operation, a list is returned containing a collection of operation results and any document errors. 
-These results/errors will be index-matched with the order of the provided documents.
+These results/errors will be index-matched with the order of the provided documents. You can filter for a result
+or error object in the list by using the `is_error` attribute. For a result object this is always `False` and for a 
+[DocumentError](http://aka.ms/azsdk-python-textanalytics-documenterror) this is `True`.
 
 
 ## Examples
@@ -195,8 +197,7 @@ documents = [
     "The food was yummy. :)"
 ]
 
-response = text_analytics_client.analyze_sentiment(documents, language="en")
-result = [doc for doc in response if not doc.is_error]
+result = text_analytics_client.analyze_sentiment(documents, language="en")
 
 for doc in result:
     print("Overall sentiment: {}".format(doc.sentiment))
@@ -223,8 +224,7 @@ documents = [
     "Jeff bought three dozen eggs because there was a 50% discount."
 ]
 
-response = text_analytics_client.recognize_entities(documents, language="en")
-result = [doc for doc in response if not doc.is_error]
+result = text_analytics_client.recognize_entities(documents, language="en")
 
 for doc in result:
     for entity in doc.entities:
@@ -248,8 +248,7 @@ documents = [
     "The employee's phone number is 555-55-5555."
 ]
 
-response = text_analytics_client.recognize_pii_entities(documents, language="en")
-result = [doc for doc in response if not doc.is_error]
+result = text_analytics_client.recognize_pii_entities(documents, language="en")
 
 for doc in result:
     for entity in doc.entities:
@@ -272,8 +271,7 @@ documents = [
     "Easter Island, a Chilean territory, is a remote volcanic island in Polynesia."
 ]
 
-response = text_analytics_client.recognize_linked_entities(documents, language="en")
-result = [doc for doc in response if not doc.is_error]
+result = text_analytics_client.recognize_linked_entities(documents, language="en")
 
 for doc in result:
     for entity in doc.entities:
@@ -303,8 +301,7 @@ documents = [
     "I will travel to South America in the summer."
 ]
 
-response = text_analytics_client.extract_key_phrases(documents, language="en")
-result = [doc for doc in response if not doc.is_error]
+result = text_analytics_client.extract_key_phrases(documents, language="en")
 
 for doc in result:
     print(doc.key_phrases)
@@ -326,8 +323,7 @@ documents = [
     "Dies ist in englischer Sprache verfasst."
 ]
 
-response = text_analytics_client.detect_languages(documents)
-result = [doc for doc in response if not doc.is_error]
+result = text_analytics_client.detect_languages(documents)
 
 for doc in result:
     print("Language detected: {}".format(doc.primary_language.name))

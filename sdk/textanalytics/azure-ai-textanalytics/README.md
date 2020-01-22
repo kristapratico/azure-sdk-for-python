@@ -8,7 +8,7 @@ Text Analytics is a cloud-based service that provides advanced natural language 
 * Language Detection
 * Key Phrase Extraction
 
-[Source code](https://github.com/Azure/azure-sdk-for-python/tree/master/sdk/textanalytics/azure-ai-textanalytics) | [Package (PyPI)](https://pypi.org/project/azure-ai-textanalytics/) | [API reference documentation](https://aka.ms/azsdk-python-textanalytics-ref-docs) | [Product documentation](https://docs.microsoft.com/azure/cognitive-services/text-analytics/overview) | [Samples](https://github.com/Azure/azure-sdk-for-python/tree/master/sdk/textanalytics/azure-ai-textanalytics/samples)
+[Source code](https://github.com/Azure/azure-sdk-for-python/tree/master/sdk/textanalytics/azure-ai-textanalytics) | [Package (PyPI)](https://pypi.org/project/azure-ai-textanalytics/) | [API reference documentation](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics?view=azure-python-preview) | [Product documentation](https://docs.microsoft.com/azure/cognitive-services/text-analytics/overview) | [Samples](https://github.com/Azure/azure-sdk-for-python/tree/master/sdk/textanalytics/azure-ai-textanalytics/samples)
 
 ## Getting started
 
@@ -125,14 +125,14 @@ cognitive services.
 ## Key concepts
 
 ### Client
-The Text Analytics client library provides a [TextAnalyticsClient](https://aka.ms/azsdk-python-textanalytics-textanalyticsclient) to do analysis on batches of documents.
+The Text Analytics client library provides a [TextAnalyticsClient](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.textanalyticsclient?view=azure-python-preview) to do analysis on batches of documents.
 It provides both synchronous and asynchronous operations to access a specific use of Text Analytics, such as language detection or key phrase extraction. 
 
 ### Single text operations
 The Text Analytics client library also provides module-level operations which can be performed on a single string
 rather than a batch of documents. Each synchronous and asynchronous batching operation has a singular counterpart. 
 The endpoint and credential are passed in with the desired text and other optional parameters, e.g. 
-[single_analyze_sentiment()](https://aka.ms/azsdk-python-textanalytics-singleanalyzesentiment):
+[single_analyze_sentiment()](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics?view=azure-python-preview#single-analyze-sentiment-endpoint--credential--input-text--language--en-----kwargs-):
 
 ```python
 from azure.ai.textanalytics import single_analyze_sentiment
@@ -152,8 +152,8 @@ docs = ["I hated the movie. It was so slow!", "The movie made it into my top ten
 ```
 
 or, if you wish to pass in a per-item document `id` or `language`/`country_hint`, they can be passed as a 
-list of [DetectLanguageInput](https://aka.ms/azsdk-python-textanalytics-detectlanguageinput) or 
-[TextDocumentInput](https://aka.ms/azsdk-python-textanalytics-textdocumentinput),
+list of [DetectLanguageInput](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.detectlanguageinput?view=azure-python-preview) or 
+[TextDocumentInput](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.textdocumentinput?view=azure-python-preview),
 or a dict-like representation of the object:
 
 ```python
@@ -165,12 +165,12 @@ documents = [
 ```
 
 ### Operation Result
-An operation result, such as [AnalyzeSentimentResult](https://aka.ms/azsdk-python-textanalytics-analyzesentimentresult), 
+An operation result, such as [AnalyzeSentimentResult](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.analyzesentimentresult?view=azure-python-preview), 
 is the result of a Text Analytics operation and contains a prediction or predictions about a document input.
 With a batching operation, a list is returned containing a collection of operation results and any document errors. 
 These results/errors will be index-matched with the order of the provided documents. You can filter for a result
 or error object in the list by using the `is_error` attribute. For a result object this is always `False` and for a 
-[DocumentError](http://aka.ms/azsdk-python-textanalytics-documenterror) this is `True`.
+[DocumentError](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.documenterror?view=azure-python-preview) this is `True`.
 
 
 ## Examples

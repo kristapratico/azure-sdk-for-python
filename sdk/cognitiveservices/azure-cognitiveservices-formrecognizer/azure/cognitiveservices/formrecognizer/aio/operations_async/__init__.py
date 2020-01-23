@@ -9,20 +9,8 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from msrest.serialization import Model
+from ._form_recognizer_client_operations_async import FormRecognizerClientOperationsMixin
 
-
-class InnerError(Model):
-    """InnerError.
-
-    :param request_id:
-    :type request_id: str
-    """
-
-    _attribute_map = {
-        'request_id': {'key': 'requestId', 'type': 'str'},
-    }
-
-    def __init__(self, **kwargs):
-        super(InnerError, self).__init__(**kwargs)
-        self.request_id = kwargs.get('request_id', None)
+__all__ = [
+    'FormRecognizerClientOperationsMixin',
+]

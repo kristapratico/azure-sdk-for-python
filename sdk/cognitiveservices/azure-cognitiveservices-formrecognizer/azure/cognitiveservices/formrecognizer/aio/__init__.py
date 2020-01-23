@@ -9,5 +9,5 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-VERSION = "2.0-preview"
-
+from ._form_recognizer_client_async import FormRecognizerClient
+__all__ = ['FormRecognizerClient']

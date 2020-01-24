@@ -58,7 +58,7 @@ your resource and a `credential` that allows you access:
 ```python
 from azure.ai.textanalytics import TextAnalyticsClient
 
-text_analytics = TextAnalyticsClient(endpoint="https://westus2.api.cognitive.microsoft.com/", credential=credential)
+text_analytics_client = TextAnalyticsClient(endpoint="https://westus2.api.cognitive.microsoft.com/", credential=credential)
 ```
 
 Note that if you create a [custom subdomain](https://docs.microsoft.com/azure/cognitive-services/cognitive-services-custom-subdomains) 
@@ -124,8 +124,8 @@ cognitive services.
 
 ## Key concepts
 
-### Client
-The Text Analytics client library provides a [TextAnalyticsClient](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.textanalyticsclient?view=azure-python-preview) to do analysis on batches of documents.
+### Client batched operations
+The Text Analytics client library provides a [TextAnalyticsClient](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.textanalyticsclient?view=azure-python-preview) to do analysis on [batches of documents](#Examples "examples").
 It provides both synchronous and asynchronous operations to access a specific use of Text Analytics, such as language detection or key phrase extraction. 
 
 ### Single text operations
@@ -208,6 +208,8 @@ for doc in result:
     ))
 ```
 
+The returned response is a heterogeneous list of result and error objects: list[[AnalyzeSentimentResult](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.analyzesentimentresult?view=azure-python-preview), [DocumentError](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.documenterror?view=azure-python-preview)]
+
 Please refer to the service documentation for a conceptual discussion of [sentiment analysis](https://docs.microsoft.com/azure/cognitive-services/text-analytics/how-tos/text-analytics-how-to-sentiment-analysis).
 
 ### Recognize entities
@@ -232,6 +234,8 @@ for doc in result:
               "\tConfidence Score: \t", entity.score)
 ```
 
+The returned response is a heterogeneous list of result an error objects: list[[RecognizeEntitiesResult](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.recognizeentitiesresult?view=azure-python-preview), [DocumentError](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.documenterror?view=azure-python-preview)]
+
 Please refer to the service documentation for a conceptual discussion of [named entity recognition](https://docs.microsoft.com/azure/cognitive-services/text-analytics/how-tos/text-analytics-how-to-entity-linking)
 and [supported types](https://docs.microsoft.com/azure/cognitive-services/text-analytics/named-entity-types?tabs=general).
 
@@ -255,6 +259,8 @@ for doc in result:
         print("Entity: \t", entity.text, "\tType: \t", entity.type,
               "\tConfidence Score: \t", entity.score)
 ```
+
+The returned response is a heterogeneous list of result an error objects: list[[RecognizePiiEntitiesResult](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.recognizepiientitiesresult?view=azure-python-preview), [DocumentError](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.documenterror?view=azure-python-preview)]
 
 Please refer to the service documentation for [supported PII entity types](https://docs.microsoft.com/azure/cognitive-services/text-analytics/named-entity-types?tabs=personal).
 
@@ -284,6 +290,8 @@ for doc in result:
             print("Length: {}\n".format(match.length))
 ```
 
+The returned response is a heterogeneous list of result an error objects: list[[RecognizeLinkedEntitiesResult](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.recognizelinkedentitiesresult?view=azure-python-preview), [DocumentError](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.documenterror?view=azure-python-preview)]
+
 Please refer to the service documentation for a conceptual discussion of [entity linking](https://docs.microsoft.com/azure/cognitive-services/text-analytics/how-tos/text-analytics-how-to-entity-linking)
 and [supported types](https://docs.microsoft.com/azure/cognitive-services/text-analytics/named-entity-types?tabs=general).
 
@@ -306,6 +314,8 @@ result = text_analytics_client.extract_key_phrases(documents, language="en")
 for doc in result:
     print(doc.key_phrases)
 ```
+
+The returned response is a heterogeneous list of result an error objects: list[[ExtractKeyPhrasesResult](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.extractkeyphrasesresult?view=azure-python-preview), [DocumentError](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.documenterror?view=azure-python-preview)]
 
 Please refer to the service documentation for a conceptual discussion of [key phrase extraction](https://docs.microsoft.com/azure/cognitive-services/text-analytics/how-tos/text-analytics-how-to-keyword-extraction).
 
@@ -330,6 +340,8 @@ for doc in result:
     print("ISO6391 name: {}".format(doc.primary_language.iso6391_name))
     print("Confidence score: {}\n".format(doc.primary_language.score))
 ```
+
+The returned response is a heterogeneous list of result an error objects: list[[DetectLanguageResult](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.detectlanguageresult?view=azure-python-preview), [DocumentError](https://docs.microsoft.com/en-us/python/api/azure-ai-textanalytics/azure.ai.textanalytics.documenterror?view=azure-python-preview)]
 
 Please refer to the service documentation for a conceptual discussion of [language detection](https://docs.microsoft.com/azure/cognitive-services/Text-Analytics/how-tos/text-analytics-how-to-language-detection)
 and [language and regional support](https://docs.microsoft.com/azure/cognitive-services/text-analytics/language-support).

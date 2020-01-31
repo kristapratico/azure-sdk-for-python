@@ -5,7 +5,7 @@
 ```python
 from azure.ai.textanalytics import single_recognize_entities, TextAnalyticsApiKeyCredential
 
-text = "Microsoft was founded by Bill Gates and Paul Allen on April 4, 1975."
+text = "Microsoft was founded by Bill Gates and Paul Allen."
 
 result = single_recognize_entities(
     endpoint=endpoint,

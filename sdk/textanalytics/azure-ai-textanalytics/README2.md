@@ -1,5 +1,7 @@
 ### Single vs. batched method convenience
 
+#### Single text operation
+
 ```python
 from azure.ai.textanalytics import single_recognize_entities, TextAnalyticsApiKeyCredential
 
@@ -8,8 +10,7 @@ text = "Microsoft was founded by Bill Gates and Paul Allen on April 4, 1975."
 result = single_recognize_entities(
     endpoint=endpoint,
     credential=TextAnalyticsApiKeyCredential(key),
-    input_text=text,
-    language="en"
+    input_text=text
 )
 
 for entity in result.entities:
@@ -18,9 +19,11 @@ for entity in result.entities:
     print("Confidence Score: {}\n".format(entity.score))
 ```
 
+#### Batch operation passed with single text
+
 ```python
 from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
-    
+
 text_analytics_client = TextAnalyticsClient(endpoint, TextAnalyticsApiKeyCredential(key))
 
 document = ["Microsoft was founded by Bill Gates and Paul Allen."]
@@ -33,8 +36,7 @@ for entity in result[0].entities:
     print("Confidence Score: {}\n".format(entity.score))
 ```
 
-
-Track 1 
+#### Track 1 batch operation passed with single text
 
 ```python
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient

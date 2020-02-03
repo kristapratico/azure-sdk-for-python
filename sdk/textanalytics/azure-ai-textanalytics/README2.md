@@ -35,24 +35,3 @@ for entity in result[0].entities:
     print("Type: {}".format(entity.type))
     print("Confidence Score: {}\n".format(entity.score))
 ```
-
-#### Track 1 batch operation passed with single text
-
-```python
-from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
-from msrest.authentication import CognitiveServicesCredentials
-    
-text_analytics_client = TextAnalyticsClient(endpoint, CognitiveServicesCredentials(key))
-
-document = [
-    {"id": "1", "text": "Microsoft was founded by Bill Gates and Paul Allen."}
-]
-
-result = text_analytics_client.entities(document)
-
-for document in result.documents:
-    for entity in document.entities:
-        print("Entity: {}".format(entity.text))
-        print("Type: {}".format(entity.type))
-        print("Confidence Score: {}\n".format(entity.score))
-```

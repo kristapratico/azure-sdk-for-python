@@ -130,8 +130,8 @@ text = "Redmond is a city in King County, Washington, United States, located 15 
 text = "I need to take my cat to the veterinarian."
 
 result = single_detect_language(
-    endpoint=self.endpoint,
-    credential=TextAnalyticsApiKeyCredential(self.key),
+    endpoint=endpoint,
+    credential=TextAnalyticsApiKeyCredential(key),
     input_text=text,
     country_hint="US"
 )

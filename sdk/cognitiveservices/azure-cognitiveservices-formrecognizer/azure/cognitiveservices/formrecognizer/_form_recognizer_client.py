@@ -10,11 +10,37 @@
 # --------------------------------------------------------------------------
 
 from azure.core import PipelineClient
+from azure.core.pipeline.policies import (
+    UserAgentPolicy,
+    HeadersPolicy,
+    RequestIdPolicy,
+    ProxyPolicy,
+    NetworkTraceLoggingPolicy,
+    RetryPolicy,
+    RedirectPolicy,
+    SansIOHTTPPolicy,
+ContentDecodePolicy
+)
 from msrest import Serializer, Deserializer
-
 from ._configuration import FormRecognizerClientConfiguration
 from .operations import FormRecognizerClientOperationsMixin
 from . import models
+
+from azure.core.pipeline.transport import RequestsTransport
+from azure.core.pipeline import Pipeline
+
+from .version import VERSION
+
+class CognitiveServicesCredentialPolicy(SansIOHTTPPolicy):
+    def __init__(self, cognitiveservices_key):
+        self.cognitiveservices_key = cognitiveservices_key
+        super(CognitiveServicesCredentialPolicy, self).__init__()
+
+    def on_request(self, request):
+        request.http_request.headers[
+            "Ocp-Apim-Subscription-Key"
+        ] = self.cognitiveservices_key
+
 
 
 class FormRecognizerClient(FormRecognizerClientOperationsMixin):
@@ -34,7 +60,27 @@ class FormRecognizerClient(FormRecognizerClientOperationsMixin):
 
         base_url = '{endpoint}/formrecognizer/v2.0-preview'
         self._config = FormRecognizerClientConfiguration(credentials, endpoint, **kwargs)
-        self._client = PipelineClient(base_url=base_url, config=self._config, **kwargs)
+        self.user_agent_policy = UserAgentPolicy(**kwargs)
+        self.headers_policy = HeadersPolicy(**kwargs)
+        self.proxy_policy = ProxyPolicy(**kwargs)
+        self.logging_policy = NetworkTraceLoggingPolicy(**kwargs)
+        self.retry_policy = RetryPolicy(**kwargs)
+        self.redirect_policy = RedirectPolicy(**kwargs)
+
+        policies = [
+            self.headers_policy,
+            self.user_agent_policy,
+            RequestIdPolicy(**kwargs),
+            self.proxy_policy,
+            self.redirect_policy,
+            self.retry_policy,
+            CognitiveServicesCredentialPolicy("xx"),
+            ContentDecodePolicy(),
+            self.logging_policy
+        ]
+
+        pipeline = Pipeline(RequestsTransport(**kwargs), policies=policies)
+        self._client = PipelineClient(base_url=base_url, config=self._config, pipeline=pipeline, **kwargs)
 
         client_models = {k: v for k, v in models.__dict__.items() if isinstance(v, type)}
         self.api_version = '2.0-preview'

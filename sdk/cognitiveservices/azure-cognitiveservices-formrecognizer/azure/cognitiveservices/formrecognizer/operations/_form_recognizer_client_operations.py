@@ -255,6 +255,7 @@ class FormRecognizerClientOperationsMixin(object):
         self,
         model_id,  # type: str
         include_text_details=None,  # type: Optional[bool]
+        file_stream=None,  # type: Optional["models.SourcePath"]
         cls=None,  # type: ClsType[None]
         **kwargs  # type: Any
     ):
@@ -267,14 +268,14 @@ class FormRecognizerClientOperationsMixin(object):
         :type model_id: str
         :param include_text_details: Include text lines and element references in the result.
         :type include_text_details: bool
+        :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
+        :type file_stream: ~azure.ai.formrecognizer.models.SourcePath
         :param callable cls: A custom type or function that will be passed the direct response
         :return: None or the result of cls(response)
         :rtype: None
         :raises: ~azure.ai.formrecognizer.models.ErrorResponseException:
         """
         error_map = kwargs.pop('error_map', {})
-
-        file_stream = models.SourceDataStream()
 
         # Construct URL
         url = self.analyze_with_custom_model.metadata['url']
@@ -295,7 +296,7 @@ class FormRecognizerClientOperationsMixin(object):
 
         # Construct body
         if file_stream is not None:
-            body_content = self._serialize.body(file_stream, 'SourceDataStream')
+            body_content = self._serialize.body(file_stream, 'SourcePath')
         else:
             body_content = None
 
@@ -375,6 +376,7 @@ class FormRecognizerClientOperationsMixin(object):
     def analyze_receipt_async(
         self,
         include_text_details=None,  # type: Optional[bool]
+        file_stream=None,  # type: Optional["models.SourcePath"]
         cls=None,  # type: ClsType[None]
         **kwargs  # type: Any
     ):
@@ -385,14 +387,14 @@ class FormRecognizerClientOperationsMixin(object):
 
         :param include_text_details: Include text lines and element references in the result.
         :type include_text_details: bool
+        :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
+        :type file_stream: ~azure.ai.formrecognizer.models.SourcePath
         :param callable cls: A custom type or function that will be passed the direct response
         :return: None or the result of cls(response)
         :rtype: None
         :raises: ~azure.ai.formrecognizer.models.ErrorResponseException:
         """
         error_map = kwargs.pop('error_map', {})
-
-        file_stream = models.SourceDataStream()
 
         # Construct URL
         url = self.analyze_receipt_async.metadata['url']
@@ -412,7 +414,7 @@ class FormRecognizerClientOperationsMixin(object):
 
         # Construct body
         if file_stream is not None:
-            body_content = self._serialize.body(file_stream, 'SourceDataStream')
+            body_content = self._serialize.body(file_stream, 'SourcePath')
         else:
             body_content = None
 
@@ -487,6 +489,7 @@ class FormRecognizerClientOperationsMixin(object):
 
     def analyze_layout_async(
         self,
+        file_stream=None,  # type: Optional["models.SourcePath"]
         cls=None,  # type: ClsType[None]
         **kwargs  # type: Any
     ):
@@ -495,14 +498,14 @@ class FormRecognizerClientOperationsMixin(object):
 
         Analyze Layout.
 
+        :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
+        :type file_stream: ~azure.ai.formrecognizer.models.SourcePath
         :param callable cls: A custom type or function that will be passed the direct response
         :return: None or the result of cls(response)
         :rtype: None
         :raises: ~azure.ai.formrecognizer.models.ErrorResponseException:
         """
         error_map = kwargs.pop('error_map', {})
-
-        file_stream = models.SourceDataStream()
 
         # Construct URL
         url = self.analyze_layout_async.metadata['url']
@@ -520,7 +523,7 @@ class FormRecognizerClientOperationsMixin(object):
 
         # Construct body
         if file_stream is not None:
-            body_content = self._serialize.body(file_stream, 'SourceDataStream')
+            body_content = self._serialize.body(file_stream, 'SourcePath')
         else:
             body_content = None
 

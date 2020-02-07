@@ -6,7 +6,7 @@ from azure.ai.formrecognizer import FormRecognizerClient
 client = FormRecognizerClient(endpoint, credential)  # FormRecognizerApiKeyCredential or TokenCredential
 
 # Content-type of document is determined in method
-# Returns LROPoller, AnalyzeResult
+# Returns AnalyzeOperationResult
 client.analyze_receipt(document, include_text_details=False, **kwargs)
 
 # Content-type of document is determined in method

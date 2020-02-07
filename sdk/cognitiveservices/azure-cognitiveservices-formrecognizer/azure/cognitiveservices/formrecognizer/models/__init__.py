@@ -23,7 +23,6 @@ try:
     from ._models_py3 import ModelsSummary
     from ._models_py3 import PageResult
     from ._models_py3 import ReadResult
-    from ._models_py3 import SourceDataStream
     from ._models_py3 import SourcePath
     from ._models_py3 import TextLine
     from ._models_py3 import TextWord
@@ -50,7 +49,6 @@ except (SyntaxError, ImportError):
     from ._models import ModelsSummary  # type: ignore
     from ._models import PageResult  # type: ignore
     from ._models import ReadResult  # type: ignore
-    from ._models import SourceDataStream  # type: ignore
     from ._models import SourcePath  # type: ignore
     from ._models import TextLine  # type: ignore
     from ._models import TextWord  # type: ignore
@@ -87,7 +85,6 @@ __all__ = [
     'ModelsSummary',
     'PageResult',
     'ReadResult',
-    'SourceDataStream',
     'SourcePath',
     'TextLine',
     'TextWord',

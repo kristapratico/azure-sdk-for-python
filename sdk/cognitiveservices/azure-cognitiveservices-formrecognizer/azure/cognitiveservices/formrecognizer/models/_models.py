@@ -764,21 +764,6 @@ class ReadResult(msrestModel):
         self.lines = kwargs.get('lines', None)
 
 
-class SourceDataStream(msrestModel):
-    """A PDF document, image (jpg/png/tiff), or JSON file to analyze.
-
-    """
-
-    _attribute_map = {
-    }
-
-    def __init__(
-        self,
-        **kwargs
-    ):
-        super(SourceDataStream, self).__init__(**kwargs)
-
-
 class SourcePath(msrestModel):
     """Uri or local path to source data.
 

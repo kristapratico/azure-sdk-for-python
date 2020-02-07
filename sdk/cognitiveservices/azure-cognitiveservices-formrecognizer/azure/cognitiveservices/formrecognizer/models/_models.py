@@ -312,9 +312,9 @@ class FieldValue(Model):
     :param value_string: String value.
     :type value_string: str
     :param value_date: Date value.
-    :type value_date: datetime
+    :type value_date: str
     :param value_time: Time value.
-    :type value_time: datetime
+    :type value_time: str
     :param value_phone_number: Phone number value.
     :type value_phone_number: str
     :param value_number: Floating point value.
@@ -348,8 +348,8 @@ class FieldValue(Model):
     _attribute_map = {
         'type': {'key': 'type', 'type': 'FieldValueType'},
         'value_string': {'key': 'valueString', 'type': 'str'},
-        'value_date': {'key': 'valueDate', 'type': 'iso-8601'},
-        'value_time': {'key': 'valueTime', 'type': 'iso-8601'},
+        'value_date': {'key': 'valueDate', 'type': 'str'},
+        'value_time': {'key': 'valueTime', 'type': 'str'},
         'value_phone_number': {'key': 'valuePhoneNumber', 'type': 'str'},
         'value_number': {'key': 'valueNumber', 'type': 'float'},
         'value_integer': {'key': 'valueInteger', 'type': 'int'},

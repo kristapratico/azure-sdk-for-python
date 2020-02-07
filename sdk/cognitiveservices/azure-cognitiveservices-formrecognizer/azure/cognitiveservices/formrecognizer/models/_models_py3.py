@@ -9,11 +9,11 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from msrest.serialization import Model
+from msrest.serialization import Model as msrestModel
 from azure.core.exceptions import HttpResponseError
 
 
-class AnalyzeOperationResult(Model):
+class AnalyzeOperationResult(msrestModel):
     """Status and result of the queued analyze operation.
 
     All required parameters must be populated in order to send to Azure.
@@ -54,7 +54,7 @@ class AnalyzeOperationResult(Model):
         self.analyze_result = analyze_result
 
 
-class AnalyzeResult(Model):
+class AnalyzeResult(msrestModel):
     """Analyze operation result.
 
     All required parameters must be populated in order to send to Azure.
@@ -98,7 +98,7 @@ class AnalyzeResult(Model):
         self.errors = errors
 
 
-class DataTable(Model):
+class DataTable(msrestModel):
     """Information about the extracted table contained in a page.
 
     All required parameters must be populated in order to send to Azure.
@@ -131,7 +131,7 @@ class DataTable(Model):
         self.cells = cells
 
 
-class DataTableCell(Model):
+class DataTableCell(msrestModel):
     """Information about the extracted cell in a table.
 
     All required parameters must be populated in order to send to Azure.
@@ -199,7 +199,7 @@ class DataTableCell(Model):
         self.is_footer = is_footer
 
 
-class DocumentResult(Model):
+class DocumentResult(msrestModel):
     """A set of extracted fields corresponding to the input document.
 
     All required parameters must be populated in order to send to Azure.
@@ -233,7 +233,7 @@ class DocumentResult(Model):
         self.fields = fields
 
 
-class ErrorInformation(Model):
+class ErrorInformation(msrestModel):
     """ErrorInformation.
 
     All required parameters must be populated in order to send to Azure.
@@ -260,7 +260,7 @@ class ErrorInformation(Model):
         self.message = message
 
 
-class ErrorResponse(Model):
+class ErrorResponse(msrestModel):
     """ErrorResponse.
 
     All required parameters must be populated in order to send to Azure.
@@ -299,7 +299,7 @@ class ErrorResponseException(HttpResponseError):
       super(ErrorResponseException, self).__init__(response=response)
 
 
-class FieldValue(Model):
+class FieldValue(msrestModel):
     """Recognized field value.
 
     All required parameters must be populated in order to send to Azure.
@@ -312,9 +312,9 @@ class FieldValue(Model):
     :param value_string: String value.
     :type value_string: str
     :param value_date: Date value.
-    :type value_date: datetime
+    :type value_date: str
     :param value_time: Time value.
-    :type value_time: datetime
+    :type value_time: str
     :param value_phone_number: Phone number value.
     :type value_phone_number: str
     :param value_number: Floating point value.
@@ -348,8 +348,8 @@ class FieldValue(Model):
     _attribute_map = {
         'type': {'key': 'type', 'type': 'FieldValueType'},
         'value_string': {'key': 'valueString', 'type': 'str'},
-        'value_date': {'key': 'valueDate', 'type': 'iso-8601'},
-        'value_time': {'key': 'valueTime', 'type': 'iso-8601'},
+        'value_date': {'key': 'valueDate', 'type': 'str'},
+        'value_time': {'key': 'valueTime', 'type': 'str'},
         'value_phone_number': {'key': 'valuePhoneNumber', 'type': 'str'},
         'value_number': {'key': 'valueNumber', 'type': 'float'},
         'value_integer': {'key': 'valueInteger', 'type': 'int'},
@@ -362,7 +362,7 @@ class FieldValue(Model):
         'page': {'key': 'page', 'type': 'int'},
     }
 
-    def __init__(self, *, type, value_string: str=None, value_date=None, value_time=None, value_phone_number: str=None, value_number: float=None, value_integer: int=None, value_array=None, value_object=None, text: str=None, bounding_box=None, confidence: float=None, elements=None, page: int=None, **kwargs) -> None:
+    def __init__(self, *, type, value_string: str=None, value_date: str=None, value_time: str=None, value_phone_number: str=None, value_number: float=None, value_integer: int=None, value_array=None, value_object=None, text: str=None, bounding_box=None, confidence: float=None, elements=None, page: int=None, **kwargs) -> None:
         super(FieldValue, self).__init__(**kwargs)
         self.type = type
         self.value_string = value_string
@@ -380,7 +380,7 @@ class FieldValue(Model):
         self.page = page
 
 
-class FormFieldsReport(Model):
+class FormFieldsReport(msrestModel):
     """Report for a custom model training field.
 
     All required parameters must be populated in order to send to Azure.
@@ -407,7 +407,7 @@ class FormFieldsReport(Model):
         self.accuracy = accuracy
 
 
-class KeysResult(Model):
+class KeysResult(msrestModel):
     """Keys extracted by the custom model.
 
     All required parameters must be populated in order to send to Azure.
@@ -429,7 +429,7 @@ class KeysResult(Model):
         self.clusters = clusters
 
 
-class KeyValueElement(Model):
+class KeyValueElement(msrestModel):
     """Information about the extracted key or value in a key-value pair.
 
     All required parameters must be populated in order to send to Azure.
@@ -460,7 +460,7 @@ class KeyValueElement(Model):
         self.elements = elements
 
 
-class KeyValuePair(Model):
+class KeyValuePair(msrestModel):
     """Information about the extracted key-value pair.
 
     All required parameters must be populated in order to send to Azure.
@@ -499,7 +499,7 @@ class KeyValuePair(Model):
         self.confidence = confidence
 
 
-class Model(Model):
+class Model(msrestModel):
     """Response to the get custom model operation.
 
     All required parameters must be populated in order to send to Azure.
@@ -530,7 +530,7 @@ class Model(Model):
         self.train_result = train_result
 
 
-class ModelInfo(Model):
+class ModelInfo(msrestModel):
     """Basic custom model information.
 
     All required parameters must be populated in order to send to Azure.
@@ -571,7 +571,7 @@ class ModelInfo(Model):
         self.last_updated_date_time = last_updated_date_time
 
 
-class ModelsModel(Model):
+class ModelsModel(msrestModel):
     """Response to the list custom models operation.
 
     :param summary: Summary of all trained custom models.
@@ -597,7 +597,7 @@ class ModelsModel(Model):
         self.next_link = next_link
 
 
-class ModelsSummary(Model):
+class ModelsSummary(msrestModel):
     """Summary of all trained custom models.
 
     All required parameters must be populated in order to send to Azure.
@@ -631,7 +631,7 @@ class ModelsSummary(Model):
         self.last_updated_date_time = last_updated_date_time
 
 
-class PageResult(Model):
+class PageResult(msrestModel):
     """Extracted information from a single page.
 
     All required parameters must be populated in order to send to Azure.
@@ -668,7 +668,7 @@ class PageResult(Model):
         self.tables = tables
 
 
-class ReadResult(Model):
+class ReadResult(msrestModel):
     """Text extracted from a page in the input document.
 
     All required parameters must be populated in order to send to Azure.
@@ -732,7 +732,7 @@ class ReadResult(Model):
         self.lines = lines
 
 
-class SourcePath(Model):
+class SourcePath(msrestModel):
     """Uri or local path to source data.
 
     :param source: File source path.
@@ -752,7 +752,7 @@ class SourcePath(Model):
         self.source = source
 
 
-class TextLine(Model):
+class TextLine(msrestModel):
     """An object representing an extracted text line.
 
     All required parameters must be populated in order to send to Azure.
@@ -790,7 +790,7 @@ class TextLine(Model):
         self.words = words
 
 
-class TextWord(Model):
+class TextWord(msrestModel):
     """An object representing a word.
 
     All required parameters must be populated in order to send to Azure.
@@ -821,7 +821,7 @@ class TextWord(Model):
         self.confidence = confidence
 
 
-class TrainingDocumentInfo(Model):
+class TrainingDocumentInfo(msrestModel):
     """Report for a custom model training document.
 
     All required parameters must be populated in order to send to Azure.
@@ -861,7 +861,7 @@ class TrainingDocumentInfo(Model):
         self.status = status
 
 
-class TrainRequest(Model):
+class TrainRequest(msrestModel):
     """Request parameter to train a new custom model.
 
     All required parameters must be populated in order to send to Azure.
@@ -894,7 +894,7 @@ class TrainRequest(Model):
         self.use_label_file = use_label_file
 
 
-class TrainResult(Model):
+class TrainResult(msrestModel):
     """Custom model training result.
 
     All required parameters must be populated in order to send to Azure.
@@ -933,7 +933,7 @@ class TrainResult(Model):
         self.errors = errors
 
 
-class TrainSourceFilter(Model):
+class TrainSourceFilter(msrestModel):
     """Filter to apply to the documents in the source path for training.
 
     :param prefix: A case-sensitive prefix string to filter documents in the

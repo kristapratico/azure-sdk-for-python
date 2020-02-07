@@ -74,7 +74,7 @@ class FormRecognizerClient(FormRecognizerClientOperationsMixin):
             self.proxy_policy,
             self.redirect_policy,
             self.retry_policy,
-            CognitiveServicesCredentialPolicy("xx"),
+            CognitiveServicesCredentialPolicy("x"),
             ContentDecodePolicy(),
             self.logging_policy
         ]

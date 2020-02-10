@@ -33,10 +33,6 @@ class AnalyzeSentimentSample(object):
         from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
         text_analytics_client = TextAnalyticsClient(endpoint=self.endpoint, credential=TextAnalyticsApiKeyCredential(self.key))
         documents = [
-            "This library is very powerful. Like big jet on the runway.",
-            "I'm not super excited reading this readme, this readme is boring. I'd rather read a Medium article.",
-            "I found the v3 client to be a solid improvement over v2, it seems to have addressed all of the concerns. I generally liked the design philosophy here; it is a very simple and straightforward experience without suffering from overengineering.",
-            "After the first task it was all like the same pattern across the library, so that’s good",
             "Api is consistent, clean. Documentation is at its worst, fine."
         ]
 
@@ -45,6 +41,8 @@ class AnalyzeSentimentSample(object):
         for idx, doc in enumerate(result):
             print(documents[idx])
             print("Sentiment: {}\n".format(doc.sentiment))
+            for idx, sentence in enumerate(doc.sentences):
+                print("Sentence {} sentiment: {}".format(idx+1, sentence.sentiment))
 
 
 if __name__ == '__main__':

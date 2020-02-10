@@ -4,6 +4,7 @@ import os
 # endpoint = os.getenv("AZURE_FORM_RECOGNIZER_ENDPOINT")
 # key = os.getenv("AZURE_FORM_RECOGNIZER_KEY")
 
+
 def response_handler(response, _, response_headers):
     return response
 
@@ -30,3 +31,6 @@ def testing_receipt():
     poller = LROPoller(client._client, response, AnalyzeOperationResult, poll_method)
     result = poller.result()
     print(result)
+
+    for label, value in result.analyze_result.document_results[0].fields.items():
+        print("{}: {}".format(label, value.value_string))

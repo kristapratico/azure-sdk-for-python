@@ -45,7 +45,6 @@ class FieldValue:
     confidence: float
     page_number: int
     value: str
-    elements: List[str]
 
 class ExtractedPage:
     language: str
@@ -104,9 +103,7 @@ for page in result.text_details:
         print("Line contains: {}").format(line.text)
         for word in line.words:
             print("Word: {}").format(word.text)
-```    
-
-
+```
 
 Prebuilt: Layout Client
 
@@ -122,8 +119,30 @@ client.extract_layout(document: Any, **kwargs) -> LayoutResult
 client.get_layout_result(result_location: str) -> LayoutResult
 ```
 
+Prebuilt: Layout Models
 
+```python
+class LayoutResult:
+    extracted_tables : List[ExtractedTables]
+    text_details : List[ExtractedPage]
 
+class ExtractedTables:
+    cells: List[ExtractedTableCell]
+    columns: int
+    page_number: int
+    rows: int
+
+class ExtractedTableCell:
+    bounding_box: List[int]
+    column_index: int
+    column_span: int
+    confidence: score
+    is_footer: bool
+    is_header: bool
+    row_index: int
+    row_span: int
+    text: str
+```
 
 
 Prebuilt: Layout Sample
@@ -133,8 +152,14 @@ from azure.ai.formrecognizer import LayoutExtractionClient, FormRecognizerApiKey
 
 client = LayoutExtractionClient(endpoint, FormRecognizerApiKeyCredential(credential))
 
-document = ""
+document = "https://i.stack.imgur.com/1FyIg.png"
 result = client.extract_layout(document)
 
-
+for table in result.extracted_tables:
+    for cell in table.cells:
+        print("Cell text: {}".format(cell.text))
+        print("Cell row: {}".format(cell.row_index))
+        print("Cell column: {}".format(cell.column_index))
+        print("Cell row span: {}".format(cell.row_span)) if cell.row_span else None
+        print("Cell column span: {}".format(cell.column_span)) if cell.column_span else None  
 ```

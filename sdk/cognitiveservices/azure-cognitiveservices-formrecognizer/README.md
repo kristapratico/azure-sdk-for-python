@@ -1,19 +1,20 @@
+### Form Recognizer
 
+## Prebuilt
 
-Prebuilt: Receipt Client
+Prebuilt: Form Recognizer Client
 ```python
 # should this come from a different namespace?
 # How will this work with the poller, polls internally?
-from azure.ai.formrecognizer import ReceiptExtractionClient
+from azure.ai.formrecognizer import FormRecognizerClient
 
-client = ReceiptExtractionClient(endpoint, credential)  # FormRecognizerApiKeyCredential or TokenCredential
+client = FormRecognizerClient(endpoint, credential)  # FormRecognizerApiKeyCredential or TokenCredential
 
 # Content-type of document is determined in method
 client.extract_receipt(document: Any, include_text_details: bool=False, **kwargs) -> ReceiptResult
 
-# For getting the cached result without calling extract_receipt() 
-# Does this mean that extract_receipt() needs to return the result location as well?
-client.get_receipt_result(result_location: str) -> ReceiptResult
+# Content-type of document is determined in method
+client.extract_layout(document: Any, **kwargs) -> LayoutResult
 ```
 
 Prebuilt: Receipt Models
@@ -69,9 +70,9 @@ class ExtractedWord:
 
 Prebuilt: Receipt Sample
 ```python
-from azure.ai.formrecognizer import ReceiptExtractionClient, FormRecognizerApiKeyCredential
+from azure.ai.formrecognizer import FormRecognizerClient, FormRecognizerApiKeyCredential
 
-client = ReceiptExtractionClient(endpoint, FormRecognizerApiKeyCredential(credential))
+client = FormRecognizerClient(endpoint, FormRecognizerApiKeyCredential(credential))
 
 document = "https://raw.githubusercontent.com/Azure-Samples/cognitive-services-REST-api-samples/master/curl/form-recognizer/contoso-allinone.jpg"
 result = client.extract_receipt(document)
@@ -105,20 +106,6 @@ for page in result.text_details:
             print("Word: {}").format(word.text)
 ```
 
-Prebuilt: Layout Client
-
-```python
-from azure.ai.formrecognizer import LayoutExtractionClient, FormRecognizerApiKeyCredential
-
-client = LayoutExtractionClient(endpoint, FormRecognizerApiKeyCredential(credential))
-
-# Content-type of document is determined in method
-client.extract_layout(document: Any, **kwargs) -> LayoutResult
-
-# Get cached result without calling extract_layout()
-client.get_layout_result(result_location: str) -> LayoutResult
-```
-
 Prebuilt: Layout Models
 
 ```python
@@ -127,12 +114,12 @@ class LayoutResult:
     text_details : List[ExtractedPage]
 
 class ExtractedTables:
-    cells: List[ExtractedTableCell]
+    cells: List[TableCell]
     columns: int
     page_number: int
     rows: int
 
-class ExtractedTableCell:
+class TableCell:
     bounding_box: List[int]
     column_index: int
     column_span: int
@@ -144,13 +131,12 @@ class ExtractedTableCell:
     text: str
 ```
 
-
 Prebuilt: Layout Sample
 
 ```python
-from azure.ai.formrecognizer import LayoutExtractionClient, FormRecognizerApiKeyCredential
+from azure.ai.formrecognizer import FormRecognizerClient, FormRecognizerApiKeyCredential
 
-client = LayoutExtractionClient(endpoint, FormRecognizerApiKeyCredential(credential))
+client = FormRecognizerClient(endpoint, FormRecognizerApiKeyCredential(credential))
 
 document = "https://i.stack.imgur.com/1FyIg.png"
 result = client.extract_layout(document)
@@ -163,3 +149,15 @@ for table in result.extracted_tables:
         print("Cell row span: {}".format(cell.row_span)) if cell.row_span else None
         print("Cell column span: {}".format(cell.column_span)) if cell.column_span else None  
 ```
+
+## Custom
+
+Custom: Custom Model Client
+
+```python
+from azure.ai.formrecognizer import CustomModelClient
+
+client = CustomModelClient()
+```
+
+

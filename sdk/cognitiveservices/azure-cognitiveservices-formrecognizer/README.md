@@ -20,7 +20,8 @@ client.extract_layout(document: Any, **kwargs) -> LayoutResult
 Prebuilt: Receipt Models
 ```python
 class ReceiptResult:
-    receipt: ExtractedReceipt
+    receipt: Dict{ExtractedReceipt.key: FieldValue.value}
+    receipt_details: ExtractedReceipt
     text_details: List[ExtractedPage]
 
 class ExtractedReceipt:
@@ -80,22 +81,28 @@ result = client.extract_receipt(document)
 # Access the labeled data
 print("Receipt contained the following values: ")
 
-print("ReceiptType: {}").format(result.receipt.receipt_type)
-print("MerchantName: {}").format(result.receipt.merchant_name.value)
-print("MerchantAddress: {}").format(result.receipt.merchant_address.value)
-print("MerchantPhoneNumber: {}").format(result.receipt.merchant_phone_number.value)
-print("TransactionDate: {}").format(result.receipt.transaction_date.value)
-print("TransactionTime: {}").format(result.receipt.transaction_time.value)
+for label, value in result.receipt.items():
+    print("{}: {}".format(label, value))
 
-for item in result.receipt.items:
+# Alternatively
+
+print("Receipt contained the following values: ")
+print("ReceiptType: {}").format(result.receipt_details.receipt_type)
+print("MerchantName: {}").format(result.receipt_details.merchant_name.value)
+print("MerchantAddress: {}").format(result.receipt_details.merchant_address.value)
+print("MerchantPhoneNumber: {}").format(result.receipt_details.merchant_phone_number.value)
+print("TransactionDate: {}").format(result.receipt_details.transaction_date.value)
+print("TransactionTime: {}").format(result.receipt_details.transaction_time.value)
+
+for item in result.receipt_details.items():
     print("Item Name: {}").format(item.name)
     print("Item Quantity: {}").format(item.quantity)
     print("Item Price: {}").format(item.total_price)
 
-print("Subtotal: {}").format(result.receipt.subtotal)
-print("Tax: {}").format(result.receipt.tax)
-print("Tip: {}").format(result.receipt.tip)
-print("Total: {}").format(result.receipt.total)
+print("Subtotal: {}").format(result.receipt_details.subtotal)
+print("Tax: {}").format(result.receipt_details.tax)
+print("Tip: {}").format(result.receipt_details.tip)
+print("Total: {}").format(result.receipt_details.total)
 
 # Access the raw OCR result
 for page in result.text_details:

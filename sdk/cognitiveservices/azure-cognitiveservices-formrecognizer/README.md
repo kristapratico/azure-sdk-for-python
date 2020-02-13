@@ -9,6 +9,7 @@ from azure.ai.formrecognizer import FormRecognizerClient
 client = FormRecognizerClient(endpoint: str, credential: Union[FormRecognizerApiKeyCredential, TokenCredential])
 
 # Content-type of document is determined in method
+# These are LRO, but don't return the poller object to user. Operation will block until result is returned.
 client.extract_receipt(document: Any, include_text_details: bool=False, **kwargs) -> ReceiptResult
 client.extract_layout(document: Any, **kwargs) -> LayoutResult
 ```
@@ -173,7 +174,6 @@ client.list_custom_models() -> ItemPaged[ModelInfo]
 client.get_models_summary() -> ModelsSummary
 
 client.delete_custom_model(model_id: str) -> None
-
 ```
 
 Custom: Custom Models Unlabeled
@@ -184,11 +184,10 @@ class CustomModel:
     created_date_time: ~datetime.datetime
     last_updated_date_time: ~datetime.datetime
     extracted_keys: dict[str, list[str]]
-    training_info: TrainInfo
+    train_result: UnlabeledTrainResult
 
-class TrainInfo:
+class UnlabeledTrainResult:
     training_documents: List[TrainingDocumentInfo]
-    fields_accuracy: List[AccuracyPerField]
     average_model_accuracy: float
     errors: List[ErrorInformation]
 
@@ -198,16 +197,12 @@ class TrainingDocumentInfo:
     errors: List[ErrorInformation]
     status: str
 
-class AccuracyPerField:
-    field_name: str
-    accuracy: float
-
 class ErrorInformation:
     code: str
     message: str
 
-class CustomModelResult:
-    result: List[ExtractedDocument]
+class DocumentResult:
+    fields: List[ExtractedDocument]
     text_details: List[ExtractedPage]
     errors: List[ErrorInformation]
 
@@ -226,59 +221,150 @@ class KeyValuePair:
 class TextValue:
     text: str
     bounding_box: List[float]
-
-class ExtractedTables:
-    cells: List[TableCell]
-    columns: int
-    page_number: int
-    rows: int
-
-class TableCell:
-    bounding_box: List[int]
-    column_index: int
-    column_span: int
-    confidence: float
-    is_footer: bool
-    is_header: bool
-    row_index: int
-    row_span: int
-    text: str
 ```
 
 Custom: Custom Models Labeled
 
 ```python
 class LabeledCustomModel:
-    
+    model_id: str
+    status: str
+    created_date_time: ~datetime.datetime
+    last_updated_date_time: ~datetime.datetime
+    train_result: LabeledTrainResult
 
+class LabeledTrainResult:
+    training_documents: List[TrainingDocumentInfo]
+    fields: List[FieldNames]
+    average_model_accuracy: float
+    errors: List[ErrorInformation]
 
+class TrainingDocumentInfo:
+    document_name: str
+    pages: int
+    status: str
+
+class FieldNames:
+    field_name: str
+    accuracy: float
+
+class ErrorInformation:
+    code: str
+    message: str
+
+class LabeledDocumentResult:
+    fields: List[Dict{"user label": FieldValue}]    # document result
+    tables: List[ExtractedTables]                   # page result
+    text_details: List[ExtractedPage]               # read result
+    errors: List[ErrorInformation]
+
+class FieldValue:
+    bounding_box: List[int]
+    confidence: float
+    page_number: int
+    value: str
 ```
 
-
-
+Custom: List/Get/Delete Models
 ```python
 class ModelInfo:
     model_id: str
     status: str
     created_date_time: ~datetime.datetime
     last_updated_date_time: ~datetime.datetime
+
+class ModelsSummary:
+    count: int
+    limit: int
+    last_updated_date_time: ~datetime.datetime
 ```
 
 
 Custom: Custom Training Samples
 
-Custom: Train with labels
-
 Custom: Train without labels
+```python
+from azure.ai.formrecognizer import FormRecognizerClient
 
-Custom: Analyze with custom model - labeled
+client = FormRecognizerClient(endpoint=endpoint, credential=key)
+
+blob_sas_url = "xxxxx"  # training documents uploaded to blob storage
+poller = client.begin_unlabeled_training(blob_sas_url)
+
+# ...check poller status...
+
+custom_model = poller.result()
+print(custom_model.model_id)
+```
 
 Custom: Analyze with custom model - unlabeled
+```python
+# sample uses above code 
+
+blob_sas_url = "xxxxx"  # document to analyze uploaded to blob storage
+poller = client.analyze_document(blob_sas_url)
+
+# ... check poller status...
+
+response = poller.result()
+
+for form in response.fields:
+    for text, value in form.result.items():
+        print("{}: {}".format(text, value))
+```
+
+Custom: Train with labels
+```python
+from azure.ai.formrecognizer import FormRecognizerClient
+
+client = FormRecognizerClient(endpoint=endpoint, credential=key)
+
+blob_sas_url = "xxxxx"  # training documents uploaded to blob storage
+poller = client.begin_labeled_training(blob_sas_url)
+
+# ...check poller status...
+
+custom_model = poller.result()
+print(custom_model.model_id)
+```
+
+Custom: Analyze with custom model - labeled
+```python
+# sample uses above code 
+
+blob_sas_url = "xxxxx"  # document to analyze uploaded to blob storage
+poller = client.extract_labeled_fields(blob_sas_url)
+
+# ... check poller status...
+
+response = poller.result()
+
+for form in response.fields:
+    for text, value in form.items():
+        print("{}: {}".format(text, value))
+```
 
 Custom: List custom models
+```python
+from azure.ai.formrecognizer import FormRecognizerClient
 
+client = FormRecognizerClient(endpoint=endpoint, credential=key)
+custom_models = list(client.list_custom_models())
+for model in custom_models:
+    print(model.model_id, model.status)
+```
 
+Custom: Get models summary
+```python
+from azure.ai.formrecognizer import FormRecognizerClient
 
+client = FormRecognizerClient(endpoint=endpoint, credential=key)
+summary = client.get_models_summary()
+
+print("Number of models: {}".format(summary.count))
+print("Max number of models that can be trained with this subscription: {}".format(summary.limit))
+print("Datetime when summary was updated: {}".format(summary.last_updated_date_time))
+```
 
 Custom: Delete custom model
 ```python

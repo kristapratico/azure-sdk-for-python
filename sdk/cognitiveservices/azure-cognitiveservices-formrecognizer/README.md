@@ -1,8 +1,8 @@
-### Form Recognizer
+# Form Recognizer
 
 ## Prebuilt
 
-Prebuilt: Form Recognizer Client
+### Prebuilt: Form Recognizer Client
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient
 
@@ -14,7 +14,7 @@ client.extract_receipt(document: Any, include_text_details: bool=False, **kwargs
 client.extract_layout(document: Any, **kwargs) -> LayoutResult
 ```
 
-Prebuilt: Receipt Models
+### Prebuilt: Receipt Models
 ```python
 class ReceiptResult:
     receipt: Dict{ExtractedReceipt.key: FieldValue.value}  # Not returned in API, SDK will produce this
@@ -71,7 +71,7 @@ class ErrorInformation:
     message: str
 ```
 
-Prebuilt: Receipt Sample
+### Prebuilt: Receipt Sample
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient, FormRecognizerApiKeyCredential
 
@@ -95,7 +95,7 @@ for page in result.text_details:
             print("Word: {}").format(word.text)
 ```
 
-Prebuilt: Layout Models
+### Prebuilt: Layout Models
 
 ```python
 class LayoutResult:
@@ -125,7 +125,7 @@ class ErrorInformation:
     message: str
 ```
 
-Prebuilt: Layout Sample
+### Prebuilt: Layout Sample
 
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient, FormRecognizerApiKeyCredential
@@ -146,7 +146,7 @@ for table in result.tables:
 
 ## Custom
 
-Custom: Custom Model Client
+### Custom: Custom Model Client
 
 ```python
 from azure.ai.formrecognizer import CustomModelClient, FormRecognizerApiKeyCredential
@@ -176,7 +176,7 @@ client.get_models_summary() -> ModelsSummary
 client.delete_custom_model(model_id: str) -> None
 ```
 
-Custom: Custom Models Unlabeled
+### Custom: Custom Models Unlabeled
 ```python
 class CustomModel:
     model_id: str
@@ -223,7 +223,7 @@ class TextValue:
     bounding_box: List[float]
 ```
 
-Custom: Custom Models Labeled
+### Custom: Custom Models Labeled
 
 ```python
 class LabeledCustomModel:
@@ -265,7 +265,7 @@ class FieldValue:
     value: str
 ```
 
-Custom: List/Get/Delete Models
+### Custom: List/Get/Delete Models
 ```python
 class ModelInfo:
     model_id: str
@@ -280,9 +280,9 @@ class ModelsSummary:
 ```
 
 
-Custom: Custom Training Samples
+### Custom: Custom Training Samples
 
-Custom: Train without labels
+#### Custom: Train without labels
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient
 
@@ -297,7 +297,7 @@ custom_model = poller.result()
 print(custom_model.model_id)
 ```
 
-Custom: Analyze with custom model - unlabeled
+#### Custom: Analyze with custom model - unlabeled
 ```python
 # sample uses above code 
 
@@ -313,7 +313,7 @@ for form in response.fields:
         print("{}: {}".format(text, value))
 ```
 
-Custom: Train with labels
+#### Custom: Train with labels
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient
 
@@ -328,7 +328,7 @@ custom_model = poller.result()
 print(custom_model.model_id)
 ```
 
-Custom: Analyze with custom model - labeled
+#### Custom: Analyze with custom model - labeled
 ```python
 # sample uses above code 
 
@@ -344,7 +344,7 @@ for form in response.fields:
         print("{}: {}".format(text, value))
 ```
 
-Custom: List custom models
+#### Custom: List custom models
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient
 
@@ -354,7 +354,7 @@ for model in custom_models:
     print(model.model_id, model.status)
 ```
 
-Custom: Get models summary
+#### Custom: Get models summary
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient
 
@@ -366,7 +366,7 @@ print("Max number of models that can be trained with this subscription: {}".form
 print("Datetime when summary was updated: {}".format(summary.last_updated_date_time))
 ```
 
-Custom: Delete custom model
+#### Custom: Delete custom model
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient
 

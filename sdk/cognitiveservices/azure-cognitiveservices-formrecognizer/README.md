@@ -18,8 +18,8 @@ client.extract_layout(document: Any, **kwargs) -> LayoutResult
 ```python
 class ReceiptResult:
     receipt: Dict{ExtractedReceipt.key: FieldValue.value}  # Not returned in API, SDK will produce this
-    receipt_details: ExtractedReceipt
-    text_details: List[ExtractedPage]
+    raw_receipt: ExtractedReceipt
+    raw_page: List[ExtractedPage]
     errors: List[ErrorInformation]
 
 class ExtractedReceipt:
@@ -39,6 +39,8 @@ class ReceiptItem:
     name: str
     quantity: int
     total_price: float
+    bounding_box: List[int]
+    confidence: float
 
 class FieldValue:
     bounding_box: List[int]
@@ -85,9 +87,13 @@ print("Receipt contained the following values: ")
 
 for label, value in result.receipt.items():
     print("{}: {}".format(label, value))
- 
+
+print(result.receipt["merchant_name"])
+print(result.receipt["merchant_address"])
+print(result.receipt["merchant_phone_number"])
+
 # Access the raw OCR result
-for page in result.text_details:
+for page in result.raw_page:
     print("Page number: {}").format(page.page_number)
     for line in page.lines:
         print("Line contains: {}").format(line.text)
@@ -100,7 +106,7 @@ for page in result.text_details:
 ```python
 class LayoutResult:
     tables : List[ExtractedTables]
-    text_details : List[ExtractedPage]
+    raw_page : List[ExtractedPage]
     errors : List[ErrorInformation]
 
 class ExtractedTables:
@@ -147,14 +153,13 @@ for table in result.tables:
 ## Custom
 
 ### Custom: Custom Model Client
-
 ```python
 from azure.ai.formrecognizer import CustomModelClient, FormRecognizerApiKeyCredential
 
 client = CustomModelClient(endpoint: str, credential: Union[FormRecognizerApiKeyCredential, TokenCredential])
 
 client.begin_labeled_training(
-    source: str, source_prefix_filter: str, include_sub_folders: bool=False, use_label_file: bool=True
+    source: str, source_prefix_filter: str, include_sub_folders: bool=False
 ) -> LROPoller -> LabeledCustomModel
 
 client.begin_unlabeled_training(
@@ -162,7 +167,9 @@ client.begin_unlabeled_training(
 ) -> LROPoller -> CustomModel
 
 # Content-type determined in method
-client.analyze_document(document: Any, model_id: str, include_text_details: bool=False) -> LROPoller -> DocumentResult
+client.analyze_document(
+    document: Any, model_id: str, include_text_details: bool=False
+) -> LROPoller -> DocumentResult
 
 # Content-type determined in method
 client.extract_labeled_fields(
@@ -203,7 +210,7 @@ class ErrorInformation:
 
 class DocumentResult:
     fields: List[ExtractedDocument]
-    text_details: List[ExtractedPage]
+    raw_page: List[ExtractedPage]
     errors: List[ErrorInformation]
 
 class ExtractedDocument:
@@ -213,7 +220,7 @@ class ExtractedDocument:
     page_number: int
     cluster_id: int
 
-class KeyValuePair:
+class KeyValuePair:  # Sometimes only a value, no key found on form. Gives back key = __Tokens__#
     key: TextValue
     value: TextValue
     confidence: float
@@ -224,7 +231,6 @@ class TextValue:
 ```
 
 ### Custom: Custom Models Labeled
-
 ```python
 class LabeledCustomModel:
     model_id: str
@@ -255,7 +261,7 @@ class ErrorInformation:
 class LabeledDocumentResult:
     fields: List[Dict{"user label": FieldValue}]    # document result
     tables: List[ExtractedTables]                   # page result
-    text_details: List[ExtractedPage]               # read result
+    raw_page: List[ExtractedPage]                   # read result
     errors: List[ErrorInformation]
 
 class FieldValue:
@@ -302,7 +308,7 @@ print(custom_model.model_id)
 # sample uses above code 
 
 blob_sas_url = "xxxxx"  # document to analyze uploaded to blob storage
-poller = client.analyze_document(blob_sas_url)
+poller = client.analyze_document(blob_sas_url, model_id="xxx")
 
 # ... check poller status...
 
@@ -333,7 +339,7 @@ print(custom_model.model_id)
 # sample uses above code 
 
 blob_sas_url = "xxxxx"  # document to analyze uploaded to blob storage
-poller = client.extract_labeled_fields(blob_sas_url)
+poller = client.extract_labeled_fields(blob_sas_url, model_id="xxx")
 
 # ... check poller status...
 

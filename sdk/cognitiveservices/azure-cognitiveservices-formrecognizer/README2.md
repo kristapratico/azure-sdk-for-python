@@ -319,7 +319,7 @@ for form in result.key_value_pairs:
     print(form.key.text, form.value.text)
 ```
 
-#### Custom: Train with labels
+#### Custom: Train and Analyze with labels
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient
 

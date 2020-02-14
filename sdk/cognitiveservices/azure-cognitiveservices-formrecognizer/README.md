@@ -190,7 +190,7 @@ class CustomModel:
     status: str
     created_date_time: ~datetime.datetime
     last_updated_date_time: ~datetime.datetime
-    extracted_keys: dict[str, list[str]]
+    extracted_fields: dict[str, list[str]]
     train_result: UnlabeledTrainResult
 
 class UnlabeledTrainResult:
@@ -301,6 +301,7 @@ poller = client.begin_unlabeled_training(blob_sas_url)
 
 custom_model = poller.result()
 print(custom_model.model_id)
+print(custom_model.extracted_fields) # list of fields OCR found on the from form
 ```
 
 #### Custom: Analyze with custom model - unlabeled

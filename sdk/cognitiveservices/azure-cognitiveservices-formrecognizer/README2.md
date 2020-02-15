@@ -131,7 +131,7 @@ client = FormRecognizerClient(endpoint, FormRecognizerApiKeyCredential(credentia
 document = "https://i.stack.imgur.com/1FyIg.png"
 result = client.extract_layout(document)
 
-dftable = pd.DataFrame(result.table)
+dftable = pd.DataFrame(result[0].table)
 print(dftable)
 ```
 
@@ -154,18 +154,16 @@ client.begin_unlabeled_training(
 ) -> LROPoller -> CustomModel
 
 # Content-type determined in method
-client.analyze_document(document: Any, model_id: str,) -> LROPoller -> ExtractedDocument
+client.analyze_document(document: Any, model_id: str,) -> LROPoller -> List[ExtractedDocument]
 
 # Content-type determined in method
-client.extract_labeled_fields(document: Any, model_id: str) -> LROPoller -> LabeledExtractedDocument
+client.extract_labeled_fields(document: Any, model_id: str) -> LROPoller -> List[LabeledExtractedDocument]
 
 client.list_custom_models() -> ItemPaged[ModelInfo]
 
 client.get_models_summary() -> ModelsSummary
 
 client.delete_custom_model(model_id: str) -> None
-
-# analyze form methods might need to return lists if capable of analyzing more than one page
 ```
 
 ### Custom: Custom Models Unlabeled
@@ -315,7 +313,7 @@ poller = client.analyze_document(blob_sas_url, model_id="xxx")
 
 result = poller.result()
 
-for form in result.key_value_pairs:
+for form in result[0].key_value_pairs:
     print(form.key.text, form.value.text)
 ```
 
@@ -341,7 +339,7 @@ poller = client.extract_labeled_fields(blob_sas_url, model_id="xxx")
 
 result = poller.result()
 
-for form in result.labels:
+for form in result[0].labels:
     for label, text in form.items():
         print("{}: {}".format(label, text.value))
 ```

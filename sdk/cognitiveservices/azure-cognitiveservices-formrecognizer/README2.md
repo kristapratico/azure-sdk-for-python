@@ -1,27 +1,27 @@
 # Form Recognizer Design Overview
 
 The Form Recognizer client library provides two clients to interact with the service: `FormRecognizerClient` and 
-`CustomFormClient`, which both can be imported from the `azure.ai.formrecognizer` namespace. The asynchronous clients 
+`CustomFormClient`, which can be imported from the `azure.ai.formrecognizer` namespace. The asynchronous clients 
 can be imported from the `azure.ai.formrecognizer.aio` namespace.
 
-`FormRecognizerClient` provides methods for interacting with the prebuilt models and
+`FormRecognizerClient` provides methods for interacting with the prebuilt models (receipt and layout).
 `CustomFormClient` provides the methods for training custom models to analyze forms.
 
-Authentication is achieved by passing an instance of `CognitiveKeyCredential("<api_key>")` to the client
-or by providing a token credential from Azure Active Directory.
+Authentication is achieved by passing an instance of `CognitiveKeyCredential("<api_key>")` to the client,
+or by providing a token credential from `azure.identity` to use Azure Active Directory.
 
 ## Prebuilt
 
 The prebuilt models are accessed through the `FormRecognizerClient`. The input form or document can be passed as a 
-string url to the image, or as a file stream with format pdf, jpeg, png or tiff. The SDK will determine 
+string url to the image, or as a file stream with supported formats: pdf, jpeg, png or tiff. The SDK will determine 
 content-type and send the appropriate header. 
 
 The `extract_receipt` method returns an `ExtractedReceipt` with hardcoded receipt fields.
 The `extract_layout` method returns the extracted tables in a tabular format such that the user can
-index into a specific row or column and easily integrate into a `Dataframe`.
+index into a specific row or column and easily integrate into a Dataframe.
 
-If the keyword argument `include_text_details=True` is passed, the `raw_fields` attributes will be populated for each
-value/cell.
+If the keyword argument `include_text_details=True` is passed in, the `raw_fields` attributes will be populated with the
+raw OCR result for each value/cell.
 
 ### Prebuilt: Form Recognizer Client
 ```python
@@ -33,6 +33,7 @@ client = FormRecognizerClient(endpoint: str, credential: Union[CognitiveKeyCrede
 # Content-type of document is determined in method
 # These are LRO, but don't return the poller object to user. Operation will block until result is returned.
 client.extract_receipt(document: Any, **kwargs) -> ExtractedReceipt
+
 client.extract_layout(document: Any, **kwargs) -> List[ExtractedTables]
 ```
 
@@ -90,11 +91,11 @@ result = client.extract_receipt(document)
 # Access the labeled data
 print("Receipt contained the following values: ")
 print("ReceiptType: {}").format(result.receipt_type)
-print("MerchantName: {}").format(result.merchant_name.value)
-print("MerchantAddress: {}").format(result.merchant_address.value)
-print("MerchantPhoneNumber: {}").format(result.merchant_phone_number.value)
-print("TransactionDate: {}").format(result.transaction_date.value)
-print("TransactionTime: {}").format(result.transaction_time.value)
+print("MerchantName: {}").format(result.merchant_name)
+print("MerchantAddress: {}").format(result.merchant_address)
+print("MerchantPhoneNumber: {}").format(result.merchant_phone_number)
+print("TransactionDate: {}").format(result.transaction_date)
+print("TransactionTime: {}").format(result.transaction_time)
 for item in result.receipt_items:
     print("Item Name: {}").format(item.name)
     print("Item Quantity: {}").format(item.quantity)
@@ -162,10 +163,10 @@ The `CustomFormClient` provides all the operations necessary for training a cust
 custom model, and managing a user's custom models on their account.
 
 The user can choose to train with or without labels using the methods `begin_labeled_training` or `begin_training`. 
-Both methods take as input a blob sas url to the documents to use for training. Each training method will return a
-poller object which is used to get the eventual training result.
+Both methods take as input a blob SAS url to the documents to use for training. Each training method will return a
+poller object which is used to get the training result.
 
-A custom model can then be used to analyze custom forms using the `analyze_form` or `extract_labeled_fields` methods.
+A custom model can be used to analyze forms using the `analyze_form` or `extract_labeled_fields` methods.
 The `model_id` from the training result is passed into the methods, along with the input form to analyze (content-type
 is determined internally). Both methods return a poller object which is used to get the result object.
 

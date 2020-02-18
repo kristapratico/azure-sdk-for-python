@@ -1,6 +1,27 @@
-# Form Recognizer
+# Form Recognizer Design Overview
+
+The Form Recognizer client library provides two clients to interact with the service: FormRecognizerClient and 
+CustomFormClient, which both can be imported from the azure.ai.formrecognizer namespace. The asynchronous clients 
+can be imported from the azure.ai.formrecognizer.aio namespace.
+
+FormRecognizerClient provides methods for interacting with the prebuilt models and
+CustomFormClient provides the methods for training custom models to analyze forms.
+
+Authentication is achieved by passing an instance of FormRecognizerApiKeyCredential("<api_key>") to the client
+or by providing a token credential from Azure Active Directory.
 
 ## Prebuilt
+
+The prebuilt models are accessed through the FormRecognizerClient. The input form or document can be passed as a 
+string url to the image, or as a file stream with format pdf, jpeg, png or tiff. The SDK will determine 
+content-type and send the appropriate header. 
+
+The extract_receipt method returns an ExtractedReceipt with hardcoded receipt fields.
+The extract_layout method returns the extracted tables in a tabular format such that the user can
+index into a specific row or column and easily integrate into a Dataframe.
+
+If the keyword argument include_text_details=True is passed, the raw_fields attributes will be populated for each
+value/cell.
 
 ### Prebuilt: Form Recognizer Client
 ```python
@@ -8,6 +29,7 @@ from azure.ai.formrecognizer import FormRecognizerClient
 
 client = FormRecognizerClient(endpoint: str, credential: Union[FormRecognizerApiKeyCredential, TokenCredential])
 
+# include_text_details moves to kwargs
 # Content-type of document is determined in method
 # These are LRO, but don't return the poller object to user. Operation will block until result is returned.
 client.extract_receipt(document: Any, **kwargs) -> ExtractedReceipt
@@ -16,7 +38,6 @@ client.extract_layout(document: Any, **kwargs) -> List[ExtractedTables]
 
 ### Prebuilt: Receipt Models
 ```python
-# doesn't include errors list -- need to understand that story
 class ExtractedReceipt:
     receipt_items: List[ReceiptItem]
     merchant_address: FieldValue
@@ -42,7 +63,7 @@ class FieldValue:
     bounding_box: List[int]
     confidence: float
     page_number: int
-    value: str
+    value: Union[str, float, int]
     raw_fields: List[ExtractedLine]
 
 class ExtractedLine:
@@ -137,27 +158,41 @@ print(dftable)
 
 ## Custom
 
-### Custom: Custom Model Client
+The CustomFormClient provides all the operations necessary for training a custom model, analyzing a form with a 
+custom model, and managing a user's custom models on their account.
+
+The user can choose to train with or without labels using the methods begin_labeled_training or begin_training. 
+Both methods take as input a blob sas url to the documents to use for training. Each training method will return a
+poller object which is used to get the eventual training result.
+
+A custom model can then be used to analyze custom forms using the analyze_form or extract_labeled_fields methods.
+The model_id from the training result is passed into the methods, along with the input form to analyze (content-type
+is determined internally). Both methods return a poller object which is used to get the result object.
+
+In order for the user to manage their custom models, a few methods are available to list custom models, delete a model,
+and get a models summary for the account.
+
+### Custom: Custom Form Client
 ```python
-from azure.ai.formrecognizer import CustomModelClient, FormRecognizerApiKeyCredential
+from azure.ai.formrecognizer import CustomFormClient, FormRecognizerApiKeyCredential
 
-client = CustomModelClient(endpoint: str, credential: Union[FormRecognizerApiKeyCredential, TokenCredential])
+client = CustomFormClient(endpoint: str, credential: Union[FormRecognizerApiKeyCredential, TokenCredential])
 
-# include_text_details: True moves to kwargs
+# include_text_details moves to kwargs
 
 client.begin_labeled_training(
     source: str, source_prefix_filter: str, include_sub_folders: bool=False
 ) -> LROPoller -> LabeledCustomModel
 
-client.begin_unlabeled_training(
+client.begin_training(
     source: str, source_prefix_filter: str, include_sub_folders: bool=False
 ) -> LROPoller -> CustomModel
 
 # Content-type determined in method
-client.analyze_document(document: Any, model_id: str,) -> LROPoller -> List[ExtractedDocument]
+client.analyze_form(form: Any, model_id: str,) -> LROPoller -> List[ExtractedForm]
 
 # Content-type determined in method
-client.extract_labeled_fields(document: Any, model_id: str) -> LROPoller -> List[LabeledExtractedDocument]
+client.extract_labeled_fields(form: Any, model_id: str) -> LROPoller -> List[LabeledExtractedForm]
 
 client.list_custom_models() -> ItemPaged[ModelInfo]
 
@@ -180,12 +215,12 @@ class CustomModel:
 class UnlabeledTrainResult:
     training_documents: List[TrainingDocumentInfo]
     average_model_accuracy: float
-    errors: List[ErrorInformation]
+    training_errors: List[ErrorInformation]
 
 class TrainingDocumentInfo:
     document_name: str
     pages: int
-    errors: List[ErrorInformation]
+    document_errors: List[ErrorInformation]
     status: str
 
 class ErrorInformation:
@@ -193,7 +228,7 @@ class ErrorInformation:
     message: str
 
 # Analyze ---------------------------------------------------
-class ExtractedDocument:
+class ExtractedForm:
     key_value_pairs: List[KeyValuePair]
     tables: List[ExtractedTables]
     page_number: int
@@ -235,7 +270,7 @@ class LabeledTrainResult:
     training_documents: List[TrainingDocumentInfo]
     fields: List[FieldNames]
     average_model_accuracy: float
-    errors: List[ErrorInformation]
+    training_errors: List[ErrorInformation]
 
 class TrainingDocumentInfo:
     document_name: str
@@ -251,7 +286,7 @@ class ErrorInformation:
     message: str
 
 # Analyze ---------------------------------------------------
-class LabeledExtractedDocument:
+class LabeledExtractedForm:
     labels: List[Dict{"user label": FieldValue}]
     tables: List[ExtractedTables]
     page_number: int
@@ -293,12 +328,12 @@ class ModelsSummary:
 
 #### Custom: Train and Analyze without labels
 ```python
-from azure.ai.formrecognizer import FormRecognizerClient
+from azure.ai.formrecognizer import CustomFormClient
 
-client = FormRecognizerClient(endpoint=endpoint, credential=key)
+client = CustomFormClient(endpoint=endpoint, credential=key)
 
 blob_sas_url = "xxxxx"  # training documents uploaded to blob storage
-poller = client.begin_unlabeled_training(blob_sas_url)
+poller = client.begin_training(blob_sas_url)
 
 # ...check poller status...
 
@@ -306,8 +341,8 @@ custom_model = poller.result()
 print(custom_model.model_id)
 print(custom_model.extracted_fields) # list of fields OCR found on the from form
 
-blob_sas_url = "xxxxx"  # document to analyze uploaded to blob storage
-poller = client.analyze_document(blob_sas_url, model_id="xxx")
+blob_sas_url = "xxxxx"  # form to analyze uploaded to blob storage
+poller = client.analyze_form(blob_sas_url, model_id="xxx")
 
 # ... check poller status...
 
@@ -319,9 +354,9 @@ for form in result[0].key_value_pairs:
 
 #### Custom: Train and Analyze with labels
 ```python
-from azure.ai.formrecognizer import FormRecognizerClient
+from azure.ai.formrecognizer import CustomFormClient
 
-client = FormRecognizerClient(endpoint=endpoint, credential=key)
+client = CustomFormClient(endpoint=endpoint, credential=key)
 
 blob_sas_url = "xxxxx"  # training documents uploaded to blob storage
 poller = client.begin_labeled_training(blob_sas_url)
@@ -332,7 +367,7 @@ custom_model = poller.result()
 print(custom_model.model_id)
 print(custom_model.train_result.fields)  # list of fields / accuracy
 
-blob_sas_url = "xxxxx"  # document to analyze uploaded to blob storage
+blob_sas_url = "xxxxx"  # form to analyze uploaded to blob storage
 poller = client.extract_labeled_fields(blob_sas_url, model_id="xxx")
 
 # ... check poller status...
@@ -346,9 +381,9 @@ for form in result[0].labels:
 
 #### Custom: List custom models
 ```python
-from azure.ai.formrecognizer import FormRecognizerClient
+from azure.ai.formrecognizer import CustomFormClient
 
-client = FormRecognizerClient(endpoint=endpoint, credential=key)
+client = CustomFormClient(endpoint=endpoint, credential=key)
 custom_models = list(client.list_custom_models())
 for model in custom_models:
     print(model.model_id, model.status)
@@ -356,9 +391,9 @@ for model in custom_models:
 
 #### Custom: Get models summary
 ```python
-from azure.ai.formrecognizer import FormRecognizerClient
+from azure.ai.formrecognizer import CustomFormClient
 
-client = FormRecognizerClient(endpoint=endpoint, credential=key)
+client = CustomFormClient(endpoint=endpoint, credential=key)
 summary = client.get_models_summary()
 
 print("Number of models: {}".format(summary.count))
@@ -368,8 +403,8 @@ print("Datetime when summary was updated: {}".format(summary.last_updated_date_t
 
 #### Custom: Delete custom model
 ```python
-from azure.ai.formrecognizer import FormRecognizerClient
+from azure.ai.formrecognizer import CustomFormClient
 
-client = FormRecognizerClient(endpoint=endpoint, credential=key)
+client = CustomFormClient(endpoint=endpoint, credential=key)
 client.delete_custom_model(model_id="xxxxx")
 ```

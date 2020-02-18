@@ -1,33 +1,33 @@
 # Form Recognizer Design Overview
 
-The Form Recognizer client library provides two clients to interact with the service: FormRecognizerClient and 
-CustomFormClient, which both can be imported from the azure.ai.formrecognizer namespace. The asynchronous clients 
-can be imported from the azure.ai.formrecognizer.aio namespace.
+The Form Recognizer client library provides two clients to interact with the service: `FormRecognizerClient` and 
+`CustomFormClient`, which both can be imported from the `azure.ai.formrecognizer` namespace. The asynchronous clients 
+can be imported from the `azure.ai.formrecognizer.aio` namespace.
 
-FormRecognizerClient provides methods for interacting with the prebuilt models and
-CustomFormClient provides the methods for training custom models to analyze forms.
+`FormRecognizerClient` provides methods for interacting with the prebuilt models and
+`CustomFormClient` provides the methods for training custom models to analyze forms.
 
-Authentication is achieved by passing an instance of FormRecognizerApiKeyCredential("<api_key>") to the client
+Authentication is achieved by passing an instance of `CognitiveKeyCredential("<api_key>")` to the client
 or by providing a token credential from Azure Active Directory.
 
 ## Prebuilt
 
-The prebuilt models are accessed through the FormRecognizerClient. The input form or document can be passed as a 
+The prebuilt models are accessed through the `FormRecognizerClient`. The input form or document can be passed as a 
 string url to the image, or as a file stream with format pdf, jpeg, png or tiff. The SDK will determine 
 content-type and send the appropriate header. 
 
-The extract_receipt method returns an ExtractedReceipt with hardcoded receipt fields.
-The extract_layout method returns the extracted tables in a tabular format such that the user can
-index into a specific row or column and easily integrate into a Dataframe.
+The `extract_receipt` method returns an `ExtractedReceipt` with hardcoded receipt fields.
+The `extract_layout` method returns the extracted tables in a tabular format such that the user can
+index into a specific row or column and easily integrate into a `Dataframe`.
 
-If the keyword argument include_text_details=True is passed, the raw_fields attributes will be populated for each
+If the keyword argument `include_text_details=True` is passed, the `raw_fields` attributes will be populated for each
 value/cell.
 
 ### Prebuilt: Form Recognizer Client
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient
 
-client = FormRecognizerClient(endpoint: str, credential: Union[FormRecognizerApiKeyCredential, TokenCredential])
+client = FormRecognizerClient(endpoint: str, credential: Union[CognitiveKeyCredential, TokenCredential])
 
 # include_text_details moves to kwargs
 # Content-type of document is determined in method
@@ -80,9 +80,9 @@ class ExtractedWord:
 
 ### Prebuilt: Receipt Sample
 ```python
-from azure.ai.formrecognizer import FormRecognizerClient, FormRecognizerApiKeyCredential
+from azure.ai.formrecognizer import FormRecognizerClient
 
-client = FormRecognizerClient(endpoint, FormRecognizerApiKeyCredential(credential))
+client = FormRecognizerClient(endpoint, credential)
 
 document = "https://raw.githubusercontent.com/Azure-Samples/cognitive-services-REST-api-samples/master/curl/form-recognizer/contoso-allinone.jpg"
 result = client.extract_receipt(document)
@@ -145,9 +145,9 @@ class ExtractedWord:
 
 ```python
 import pandas as pd
-from azure.ai.formrecognizer import FormRecognizerClient, FormRecognizerApiKeyCredential
+from azure.ai.formrecognizer import FormRecognizerClient
 
-client = FormRecognizerClient(endpoint, FormRecognizerApiKeyCredential(credential))
+client = FormRecognizerClient(endpoint, credential)
 
 document = "https://i.stack.imgur.com/1FyIg.png"
 result = client.extract_layout(document)
@@ -158,15 +158,15 @@ print(dftable)
 
 ## Custom
 
-The CustomFormClient provides all the operations necessary for training a custom model, analyzing a form with a 
+The `CustomFormClient` provides all the operations necessary for training a custom model, analyzing a form with a 
 custom model, and managing a user's custom models on their account.
 
-The user can choose to train with or without labels using the methods begin_labeled_training or begin_training. 
+The user can choose to train with or without labels using the methods `begin_labeled_training` or `begin_training`. 
 Both methods take as input a blob sas url to the documents to use for training. Each training method will return a
 poller object which is used to get the eventual training result.
 
-A custom model can then be used to analyze custom forms using the analyze_form or extract_labeled_fields methods.
-The model_id from the training result is passed into the methods, along with the input form to analyze (content-type
+A custom model can then be used to analyze custom forms using the `analyze_form` or `extract_labeled_fields` methods.
+The `model_id` from the training result is passed into the methods, along with the input form to analyze (content-type
 is determined internally). Both methods return a poller object which is used to get the result object.
 
 In order for the user to manage their custom models, a few methods are available to list custom models, delete a model,
@@ -174,9 +174,9 @@ and get a models summary for the account.
 
 ### Custom: Custom Form Client
 ```python
-from azure.ai.formrecognizer import CustomFormClient, FormRecognizerApiKeyCredential
+from azure.ai.formrecognizer import CustomFormClient
 
-client = CustomFormClient(endpoint: str, credential: Union[FormRecognizerApiKeyCredential, TokenCredential])
+client = CustomFormClient(endpoint: str, credential: Union[CognitiveKeyCredential, TokenCredential])
 
 # include_text_details moves to kwargs
 
@@ -330,7 +330,7 @@ class ModelsSummary:
 ```python
 from azure.ai.formrecognizer import CustomFormClient
 
-client = CustomFormClient(endpoint=endpoint, credential=key)
+client = CustomFormClient(endpoint=endpoint, credential=credential)
 
 blob_sas_url = "xxxxx"  # training documents uploaded to blob storage
 poller = client.begin_training(blob_sas_url)
@@ -356,7 +356,7 @@ for form in result[0].key_value_pairs:
 ```python
 from azure.ai.formrecognizer import CustomFormClient
 
-client = CustomFormClient(endpoint=endpoint, credential=key)
+client = CustomFormClient(endpoint=endpoint, credential=credential)
 
 blob_sas_url = "xxxxx"  # training documents uploaded to blob storage
 poller = client.begin_labeled_training(blob_sas_url)
@@ -383,7 +383,7 @@ for form in result[0].labels:
 ```python
 from azure.ai.formrecognizer import CustomFormClient
 
-client = CustomFormClient(endpoint=endpoint, credential=key)
+client = CustomFormClient(endpoint=endpoint, credential=credential)
 custom_models = list(client.list_custom_models())
 for model in custom_models:
     print(model.model_id, model.status)
@@ -393,7 +393,7 @@ for model in custom_models:
 ```python
 from azure.ai.formrecognizer import CustomFormClient
 
-client = CustomFormClient(endpoint=endpoint, credential=key)
+client = CustomFormClient(endpoint=endpoint, credential=credential)
 summary = client.get_models_summary()
 
 print("Number of models: {}".format(summary.count))
@@ -405,6 +405,6 @@ print("Datetime when summary was updated: {}".format(summary.last_updated_date_t
 ```python
 from azure.ai.formrecognizer import CustomFormClient
 
-client = CustomFormClient(endpoint=endpoint, credential=key)
+client = CustomFormClient(endpoint=endpoint, credential=credential)
 client.delete_custom_model(model_id="xxxxx")
 ```

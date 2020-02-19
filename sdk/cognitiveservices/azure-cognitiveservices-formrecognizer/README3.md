@@ -103,9 +103,10 @@ from azure.ai.formrecognizer import FormRecognizerClient
 client = FormRecognizerClient(endpoint, credential)
 
 document = "https://raw.githubusercontent.com/Azure-Samples/cognitive-services-REST-api-samples/master/curl/form-recognizer/contoso-allinone.jpg"
-result = client.begin_extract_receipt(document)
+poller = client.begin_extract_receipt(document)
+receipt = poller.result()
+result = receipt[0]
 
-# Access the labeled data
 print("Receipt contained the following values: ")
 print("ReceiptType: {}").format(result.receipt_type)
 print("MerchantName: {}").format(result.merchant_name)
@@ -117,6 +118,10 @@ for item in result.receipt_items:
     print("Item Name: {}").format(item.name)
     print("Item Quantity: {}").format(item.quantity)
     print("Item Price: {}").format(item.total_price)
+print("Subtotal: {}").format(result.subtotal)
+print("Tax: {}").format(result.tax)
+print("Tip: {}").format(result.tip)
+print("Total: {}").format(result.total)
 ```
 
 ### Prebuilt: Layout Models
@@ -127,7 +132,7 @@ class ExtractedPage:
     page_number: int
 
 class ExtractedTable: 
-    List[List[TableCell]]  # result[0].tables[0][1, 2]
+    List[List[TableCell]]  # tables[0][1, 2]
     column_count: int
     row_count: int
 
@@ -224,7 +229,7 @@ class CustomModel:
     status: str
     created_date_time: ~datetime.datetime
     last_updated_date_time: ~datetime.datetime
-    extracted_fields: dict[str, list[str]]
+    form_clusters: dict[str, list[str]]
     train_result: TrainResult
 
 class TrainResult:
@@ -363,8 +368,10 @@ blob_sas_url = "xxxxx"  # form to analyze uploaded to blob storage
 poller = client.begin_analyze_form(blob_sas_url, model_id=custom_model.model_id)
 result = poller.result()
 
-for field in result[0].fields:
-    print(field.name.text, field.value.text)
+for page in result:
+    print("Page: {}".format(page.page_number))
+    for field in page.fields:
+        print(field.name.text, field.value.text)
 ```
 
 #### Custom: Train and Analyze with labels
@@ -384,8 +391,10 @@ blob_sas_url = "xxxxx"  # form to analyze uploaded to blob storage
 poller = client.begin_extract_labeled_fields(blob_sas_url, model_id=custom_model.model_id)
 result = poller.result()
 
-for field in result[0].fields:
-    print(field.name, field.value.text)
+for page in result:
+    print("Page: {}".format(page.page_number))
+    for field in page.fields:
+        print(field.name, field.value.text)
 ```
 
 #### Custom: List custom models

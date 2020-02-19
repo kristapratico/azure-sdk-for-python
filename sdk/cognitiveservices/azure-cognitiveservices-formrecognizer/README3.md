@@ -167,7 +167,7 @@ document = "https://i.stack.imgur.com/1FyIg.png"
 poller = client.begin_extract_layout(document)
 result = poller.result()
 
-dftable = pd.DataFrame(result[0].table[0])
+dftable = pd.DataFrame(result[0].tables[0])
 print(dftable)
 ```
 
@@ -225,9 +225,9 @@ class CustomModel:
     created_date_time: ~datetime.datetime
     last_updated_date_time: ~datetime.datetime
     extracted_fields: dict[str, list[str]]
-    train_result: UnlabeledTrainResult
+    train_result: TrainResult
 
-class UnlabeledTrainResult:
+class TrainResult:
     training_documents: List[TrainingDocumentInfo]
     average_model_accuracy: float
     training_errors: List[ErrorInformation]
@@ -244,14 +244,13 @@ class ErrorInformation:
 
 # Analyze ---------------------------------------------------
 class ExtractedPage:
-    extracted_fields: List[tuple(ExtractedField.field.text, ExtractedField.value.text)]
-    raw_fields: List[ExtractedField]
+    fields: List[ExtractedField]
     tables: List[ExtractedTable]
     page_number: int
     cluster_id: int
 
 class ExtractedField:
-    field: TextValue
+    name: TextValue
     value: TextValue
     confidence: float
 
@@ -304,8 +303,7 @@ class ErrorInformation:
 
 # Analyze ---------------------------------------------------
 class LabeledExtractedPage:
-    labels: List[tuple(ExtractedLabel.name, ExtractedLabel.value.text)]
-    raw_labeled_data: List[ExtractedLabel]
+    fields: List[ExtractedLabel]
     tables: List[ExtractedTable]
     page_number: int
 
@@ -356,18 +354,17 @@ client = CustomFormClient(endpoint=endpoint, credential=credential)
 
 blob_sas_url = "xxxxx"  # training documents uploaded to blob storage
 poller = client.begin_training(blob_sas_url)
-
 custom_model = poller.result()
+
 print(custom_model.model_id)
 print(custom_model.extracted_fields) # list of fields OCR found on the from form
 
 blob_sas_url = "xxxxx"  # form to analyze uploaded to blob storage
-poller = client.begin_analyze_form(blob_sas_url, model_id="xxx")
-
+poller = client.begin_analyze_form(blob_sas_url, model_id=custom_model.model_id)
 result = poller.result()
 
-for form in result[0].key_value_pairs:
-    print(form.key.text, form.value.text)
+for field in result[0].fields:
+    print(field.name.text, field.value.text)
 ```
 
 #### Custom: Train and Analyze with labels
@@ -378,19 +375,17 @@ client = CustomFormClient(endpoint=endpoint, credential=credential)
 
 blob_sas_url = "xxxxx"  # training documents uploaded to blob storage
 poller = client.begin_labeled_training(blob_sas_url)
-
 custom_model = poller.result()
+
 print(custom_model.model_id)
 print(custom_model.train_result.fields)  # list of fields / accuracy
 
 blob_sas_url = "xxxxx"  # form to analyze uploaded to blob storage
-poller = client.begin_extract_labeled_fields(blob_sas_url, model_id="xxx")
-
+poller = client.begin_extract_labeled_fields(blob_sas_url, model_id=custom_model.model_id)
 result = poller.result()
 
-for form in result[0].labels:
-    for label, text in form.items():
-        print("{}: {}".format(label, text.value))
+for field in result[0].fields:
+    print(field.name, field.value.text)
 ```
 
 #### Custom: List custom models

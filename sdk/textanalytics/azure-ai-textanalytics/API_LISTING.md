@@ -6,11 +6,11 @@ The Text Analytics SDK provides a single client that allows you to engage with t
 The client includes analysis of batched documents and is created with an endpoint and credential. 
 The credential can be a `TextAnalyticsApiKeyCredential(<"api_key">)` or a token credential from azure.identity.
 
-The batched operations will accept the documents parameter as a `list[str]`, `list[DetectLanguageInput]`, 
+The batched operations will accept as input a `list[str]`, `list[DetectLanguageInput]`, 
 `list[TextDocumentInput]`, or dict-like representation of the objects. If the user passes in a `list[str]` the ID 
 will be set internally (0 based) and the country_hint/language will use the default. Mixing the two types of inputs 
-will be explicitly disallowed. The batched operations will return a response consisting of a combined list of 
-the results and errors in the order that the user passed in the documents.
+will be explicitly disallowed. The batched operations will return a response consisting of a heterogeneous list of 
+result and error objects in the order that the user passed in the documents.
 
 
 ## TextAnalyticsClient
@@ -18,29 +18,29 @@ the results and errors in the order that the user passed in the documents.
 azure.ai.textanalytics.TextAnalyticsClient(endpoint, credential)
 ```
 
-The client accepts keyword arguments `default_language_hint` and `default_country_hint` to specify the default
+The client accepts keyword arguments `default_language` and `default_country_hint` to specify the default
 hint for all operations.
 
 ### Client operations
 
 ```python
 # Returns list[Union[DetectLanguageResult, DocumentError]]
-TextAnalyticsClient.detect_language(documents, country_hint=None, **kwargs)
+TextAnalyticsClient.detect_language(inputs, country_hint=None, **kwargs)
 
 # Returns list[Union[RecognizeEntitiesResult, DocumentError]]
-TextAnalyticsClient.recognize_entities(documents, language=None, **kwargs)
+TextAnalyticsClient.recognize_entities(inputs, language=None, **kwargs)
 
 # Returns list[Union[RecognizePiiEntitiesResult, DocumentError]]
-TextAnalyticsClient.recognize_pii_entities(documents, language=None, **kwargs)
+TextAnalyticsClient.recognize_pii_entities(inputs, language=None, **kwargs)
 
 # Returns list[Union[RecognizeLinkedEntitiesResult, DocumentError]]
-TextAnalyticsClient.recognize_linked_entities(documents, language=None, **kwargs)
+TextAnalyticsClient.recognize_linked_entities(inputs, language=None, **kwargs)
 
 # Returns list[Union[ExtractKeyPhrasesResult, DocumentError]]
-TextAnalyticsClient.extract_key_phrases(documents, language=None, **kwargs)
+TextAnalyticsClient.extract_key_phrases(inputs, language=None, **kwargs)
 
 # Returns list[Union[AnalyzeSentimentResult, DocumentError]]
-TextAnalyticsClient.analyze_sentiment(documents, language=None, **kwargs)
+TextAnalyticsClient.analyze_sentiment(inputs, language=None, **kwargs)
 ```
 
 Keyword arguments `model_version` and `show_stats` can be passed per-operation to specify the model version to use 
@@ -60,7 +60,7 @@ client = TextAnalyticsClient(
 
 # documents can be a list[str], list[DetectLanguageInput], or dict-like representation of object
 documents = ["This is written in English", "Este es un document escrito en Español."]
-
+# or
 documents = [{"id": "1", "country_hint": "US", "text": "This is written in English"}, 
              {"id": "2", "country_hint": "ES", "text": "Este es un document escrito en Español."}]
 
@@ -136,6 +136,10 @@ for doc in result:
         print("Entity: {}".format(entity.name))
         print("Url: {}".format(entity.url))
         print("Data Source: {}".format(entity.data_source))
+        for match in entity.matches:
+            print("Score: {}".format(match.score))
+            print("Offset: {}".format(match.offset))
+            print("Length: {}\n".format(match.length))
 ```
 
 ### 5. Extract key phrases in a batch of documents.
@@ -174,8 +178,15 @@ result = [doc for doc in response if not doc.is_error]
 for doc in result:
     print("Overall sentiment: {}".format(doc.sentiment))
     print("Overall scores: positive={}; neutral={}; negative={} \n".format(
-        doc.sentiment_scores.positive,
-        doc.sentiment_scores.neutral,
-        doc.sentiment_scores.negative,
+        doc.confidence_scores.positive,
+        doc.confidence_scores.neutral,
+        doc.confidence_scores.negative,
     ))
+    for sentence in doc.sentences:
+        print("Sentence sentiment: {}".format(sentence.sentiment))
+        print("Sentence score: positive={}; neutral={}; negative={}".format(
+            sentence.confidence_scores.positive,
+            sentence.confidence_scores.neutral,
+            sentence.confidence_scores.negative,
+        ))
 ```

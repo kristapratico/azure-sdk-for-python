@@ -13,12 +13,11 @@ or by providing a token credential from `azure.identity` to use Azure Active Dir
 ## Prebuilt
 
 The prebuilt models are accessed through the `FormRecognizerClient`. The input form or document can be passed as a 
-string url to the image, or as a file stream with supported formats: pdf, jpeg, png or tiff. The SDK will determine 
-content-type and send the appropriate header. 
+string url to the image, or as a file stream. The SDK will determine content-type and send the appropriate header. 
 
 The `begin_extract_receipt` method returns an `ExtractedReceipt` with hardcoded receipt fields.
 The `begin_extract_layout` method returns the extracted tables in a tabular format such that the user can
-index into a specific row or column and easily integrate into a Dataframe.
+index into a specific row or column and easily integrate with other Python libraries.
 
 If the keyword argument `include_text_details=True` is passed in, the `raw_` attributes will be populated with the
 raw OCR result for each value/cell.
@@ -29,7 +28,6 @@ from azure.ai.formrecognizer import FormRecognizerClient
 
 client = FormRecognizerClient(endpoint: str, credential: Union[CognitiveKeyCredential, TokenCredential])
 
-# include_text_details moves to kwargs
 # Content-type of document is determined in method
 client.begin_extract_receipt(document: Any, **kwargs) -> LROPoller -> List[ExtractedReceipt]
 
@@ -50,7 +48,7 @@ class ExtractedReceipt:
     total: float
     transaction_date: str
     transaction_time: str
-    raw_receipt: RawReceiptData
+    fields: RawReceiptData
 
 class ReceiptItem:
     name: str
@@ -76,13 +74,13 @@ class RawReceiptItem:
     total_price: float
     bounding_box: List[float]
     confidence: float
-    raw_fields: List[ExtractedLine]
+    raw_field: List[ExtractedLine]
 
 class FieldValue:
     value: Union[str, float, int]
     bounding_box: List[float]
     confidence: float
-    raw_fields: List[ExtractedLine]
+    raw_field: List[ExtractedLine]
 
 class ExtractedLine:
     text: str
@@ -132,9 +130,9 @@ class ExtractedPage:
     page_number: int
 
 class ExtractedTable: 
-    List[List[TableCell]]  # tables[0][1, 2]
-    column_count: int
+    List[List[TableCell]]
     row_count: int
+    column_count: int
 
 class TableCell:
     text: str
@@ -146,7 +144,7 @@ class TableCell:
     row_index: int
     row_span: int
     bounding_box: List[float]
-    raw_fields: List[ExtractedLine]
+    raw_field: List[ExtractedLine]
 
 class ExtractedLine:
     text: str
@@ -197,8 +195,6 @@ and get a models summary for the account.
 from azure.ai.formrecognizer import CustomFormClient
 
 client = CustomFormClient(endpoint: str, credential: Union[CognitiveKeyCredential, TokenCredential])
-
-# include_text_details moves to kwargs
 
 client.begin_labeled_training(
     source: str, source_prefix_filter: str, include_sub_folders: bool=False
@@ -262,7 +258,7 @@ class ExtractedField:
 class TextValue:
     text: str
     bounding_box: List[float]
-    raw_text: List[ExtractedLine]
+    raw_field: List[ExtractedLine]
 
 class ExtractedLine:
     text: str
@@ -320,7 +316,7 @@ class LabelValue:
     text: str
     bounding_box: List[float]
     confidence: float
-    raw_text: List[ExtractedLine]
+    raw_field: List[ExtractedLine]
 
 class ExtractedLine:
     text: str
@@ -362,7 +358,7 @@ poller = client.begin_training(blob_sas_url)
 custom_model = poller.result()
 
 print(custom_model.model_id)
-print(custom_model.extracted_fields) # list of fields OCR found on the from form
+print(custom_model.form_clusters) # extracted fields / clustered
 
 blob_sas_url = "xxxxx"  # form to analyze uploaded to blob storage
 poller = client.begin_analyze_form(blob_sas_url, model_id=custom_model.model_id)

@@ -15,6 +15,7 @@ or by providing a token credential from `azure.identity` to use Azure Active Dir
 The prebuilt models are accessed through the `FormRecognizerClient`. The input form or document can be passed as a 
 string url/path to the image, or as a file stream. The SDK will determine content-type and send the appropriate header. 
 
+Both prebuilt methods return poller objects which are used to get the result.
 The `begin_extract_receipt` method returns an `ExtractedReceipt` with hardcoded receipt fields.
 The `begin_extract_layout` method returns the extracted tables in a tabular format such that the user can
 index into a specific row or column and easily integrate with other Python libraries.

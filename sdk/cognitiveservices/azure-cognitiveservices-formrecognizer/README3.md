@@ -355,7 +355,7 @@ poller = client.begin_training(blob_sas_url)
 custom_model = poller.result()
 
 print("Model ID: {}".format(custom_model.model_id))
-print(custom_model.form_clusters) # extracted fields / clustered
+print("Extracted fields/clustered: {}".format(custom_model.form_clusters))
 
 # Check the training results
 for document in custom_model.train_result.documents:
@@ -385,7 +385,7 @@ poller = client.begin_labeled_training(blob_sas_url)
 custom_model = poller.result()
 
 print("Model ID: {}".format(custom_model.model_id))
-print(custom_model.train_result.fields)  # list of fields / accuracy
+print("List of fields/accuracy: {}".format(custom_model.train_result.fields))
 
 # Check the training results
 for document in custom_model.train_result.documents:

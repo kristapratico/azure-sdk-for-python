@@ -2,7 +2,7 @@
 
 The Form Recognizer client library provides two clients to interact with the service: `FormRecognizerClient` and 
 `CustomFormClient`, which can be imported from the `azure.ai.formrecognizer` namespace. The asynchronous clients 
-can be imported from the `azure.ai.formrecognizer.aio` namespace.
+can be imported from `azure.ai.formrecognizer.aio`.
 
 `FormRecognizerClient` provides methods for interacting with the prebuilt models (receipt and layout).
 `CustomFormClient` provides the methods for training custom models to analyze forms.
@@ -28,7 +28,6 @@ from azure.ai.formrecognizer import FormRecognizerClient
 
 client = FormRecognizerClient(endpoint: str, credential: Union[CognitiveKeyCredential, TokenCredential])
 
-# Content-type of form is determined in method
 client.begin_extract_receipt(form: Any, **kwargs) -> LROPoller -> List[ExtractedReceipt]
 
 client.begin_extract_layout(form: Any, **kwargs) -> LROPoller -> List[ExtractedLayoutPage]
@@ -56,7 +55,7 @@ class ReceiptItem:
     total_price: float
 
 class ReceiptFields:
-    receipt_items: List[ReceiptItemData]
+    receipt_items: List[ReceiptItemField]
     merchant_address: FieldValue
     merchant_name: FieldValue
     merchant_phone_number: FieldValue
@@ -68,7 +67,7 @@ class ReceiptFields:
     transaction_date: FieldValue
     transaction_time: FieldValue
 
-class ReceiptItemFields:
+class ReceiptItemField:
     name: str
     quantity: int
     total_price: float
@@ -204,10 +203,8 @@ client.begin_training(
     source: str, source_prefix_filter: str, include_sub_folders: bool=False
 ) -> LROPoller -> CustomModel
 
-# Content-type determined in method
 client.begin_extract_form(form: Any, model_id: str,) -> LROPoller -> List[ExtractedPage]
 
-# Content-type determined in method
 client.begin_extract_labeled_fields(form: Any, model_id: str) -> LROPoller -> List[LabeledExtractedPage]
 
 client.list_custom_models() -> ItemPaged[ModelInfo]

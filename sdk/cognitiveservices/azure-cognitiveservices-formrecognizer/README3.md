@@ -22,7 +22,7 @@ index into a specific row or column and easily integrate with other Python libra
 If the keyword argument `include_text_details=True` is passed in, the `raw_` attributes will be populated with the
 raw OCR result for each value/cell.
 
-### Prebuilt: Form Recognizer Client
+### Form Recognizer Client
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient
 
@@ -33,7 +33,7 @@ client.begin_extract_receipt(form: Any, **kwargs) -> LROPoller -> List[Extracted
 client.begin_extract_layout(form: Any, **kwargs) -> LROPoller -> List[ExtractedLayoutPage]
 ```
 
-### Prebuilt: Receipt Models
+### Receipt Models
 ```python
 class ExtractedReceipt:
     receipt_items: List[ReceiptItem]
@@ -93,7 +93,7 @@ class ExtractedWord:
     confidence: float
 ```
 
-### Prebuilt: Receipt Sample
+### Receipt Sample
 ```python
 from azure.ai.formrecognizer import FormRecognizerClient
 
@@ -121,7 +121,7 @@ print("Tip: {}").format(result.tip)
 print("Total: {}").format(result.total)
 ```
 
-### Prebuilt: Layout Models
+### Layout Models
 
 ```python
 class ExtractedLayoutPage:
@@ -157,7 +157,7 @@ class ExtractedWord:
     confidence: float
 ```
 
-### Prebuilt: Layout Sample
+### Layout Sample
 
 ```python
 import pandas as pd
@@ -189,7 +189,7 @@ is determined internally). Both methods return a poller object which is used to 
 In order for the user to manage their custom models, a few methods are available to list custom models, delete a model,
 and get a models summary for the account.
 
-### Custom: Custom Form Client
+### Custom Form Client
 ```python
 from azure.ai.formrecognizer import CustomFormClient
 
@@ -214,7 +214,7 @@ client.get_models_summary() -> ModelsSummary
 client.delete_custom_model(model_id: str) -> None
 ```
 
-### Custom: Custom Models Unlabeled
+### Custom Models Unlabeled
 ```python
 # Training ---------------------------------------------------
 class CustomModel:
@@ -269,7 +269,7 @@ class ExtractedWord:
     confidence: float
 ```
 
-### Custom: Custom Models Labeled
+### Custom Models Labeled
 ```python
 # Training ---------------------------------------------------
 class LabeledCustomModel:
@@ -327,7 +327,7 @@ class ExtractedWord:
     confidence: float
 ```
 
-### Custom: List/Get/Delete Models
+### List/Get/Delete Models
 ```python
 class ModelInfo:
     model_id: str
@@ -342,7 +342,7 @@ class ModelsSummary:
 ```
 
 
-### Custom: Custom Training Samples
+### Custom Training Samples
 
 #### Custom: Train and Analyze without labels
 ```python
@@ -374,7 +374,7 @@ for page in result:
         print(field.name.text, field.value.text)
 ```
 
-#### Custom: Train and Analyze with labels
+#### Train and Analyze with labels
 ```python
 from azure.ai.formrecognizer import CustomFormClient
 
@@ -404,7 +404,7 @@ for page in result:
         print(field.name, field.value.text)
 ```
 
-#### Custom: List custom models
+#### List custom models
 ```python
 from azure.ai.formrecognizer import CustomFormClient
 
@@ -414,7 +414,7 @@ for model in custom_models:
     print(model.model_id, model.status)
 ```
 
-#### Custom: Get models summary
+#### Get models summary
 ```python
 from azure.ai.formrecognizer import CustomFormClient
 
@@ -426,7 +426,7 @@ print("Max number of models that can be trained with this subscription: {}".form
 print("Datetime when summary was updated: {}".format(summary.last_updated_date_time))
 ```
 
-#### Custom: Delete custom model
+#### Delete custom model
 ```python
 from azure.ai.formrecognizer import CustomFormClient
 

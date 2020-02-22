@@ -4,6 +4,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
+import functools
 from typing import (  # pylint: disable=unused-import
     Union,
     Optional,
@@ -13,6 +14,7 @@ from typing import (  # pylint: disable=unused-import
     TYPE_CHECKING,
 )
 from azure.core.tracing.decorator import distributed_trace
+from azure.core.paging import ItemPaged
 from ._generated.models import TextAnalyticsErrorException
 from ._generated._text_analytics_client import TextAnalyticsClient as TextAnalytics
 from ._base_client import TextAnalyticsClientBase
@@ -26,6 +28,7 @@ from ._response_handlers import (
     language_result,
     pii_entities_result
 )
+from ._models import LanguagesPaged
 
 if TYPE_CHECKING:
     from azure.core.credentials import TokenCredential
@@ -143,16 +146,19 @@ class TextAnalyticsClient(TextAnalyticsClientBase):
         docs = _validate_batch_input(inputs, "country_hint", country_hint)
         model_version = kwargs.pop("model_version", None)
         show_stats = kwargs.pop("show_stats", False)
-        try:
-            return self._client.languages(
-                documents=docs,
-                model_version=model_version,
-                show_stats=show_stats,
-                cls=language_result,
-                **kwargs
-            )
-        except TextAnalyticsErrorException as error:
-            process_batch_error(error)
+        command = functools.partial(
+            self._client.languages,
+            documents=docs,
+            model_version=model_version,
+            show_stats=show_stats,
+            **kwargs
+        )
+        return ItemPaged(
+            command,
+            model_version=model_version,
+            show_stats=show_stats,
+            page_iterator_class=LanguagesPaged
+        )
 
     @distributed_trace
     def recognize_entities(  # type: ignore

@@ -4,8 +4,55 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
+from azure.core.paging import PageIterator
 from ._generated.models._models import LanguageInput
 from ._generated.models._models import MultiLanguageInput
+from ._generated.models import TextAnalyticsErrorException
+
+from azure.core.pipeline.policies import ContentDecodePolicy
+from azure.core.exceptions import (
+    HttpResponseError,
+    ClientAuthenticationError,
+    DecodeError,
+)
+
+
+def process_batch_error(error):
+    """Raise detailed error message for HttpResponseErrors
+    """
+    raise_error = HttpResponseError
+    if error.status_code == 401:
+        raise_error = ClientAuthenticationError
+    error_message = error.message
+    error_code = error.status_code
+    error_body, error_target = None, None
+
+    try:
+        error_body = ContentDecodePolicy.deserialize_from_http_generics(error.response)
+    except DecodeError:
+        pass
+
+    try:
+        if error_body is not None:
+            error_resp = error_body["error"]
+            if "innerError" in error_resp:
+                error_resp = error_resp["innerError"]
+
+            error_message = error_resp["message"]
+            error_code = error_resp["code"]
+            error_target = error_resp.get("target", None)
+            if error_target:
+                error_message += "\nErrorCode:{}\nTarget:{}".format(error_code, error_target)
+            else:
+                error_message += "\nErrorCode:{}".format(error_code)
+    except KeyError:
+        raise HttpResponseError(message="There was an unknown error with the request.")
+
+    error = raise_error(message=error_message, response=error.response)
+    error.error_code = error_code
+    error.target = error_target
+    raise error
+
 
 
 class DictMixin(object):
@@ -737,3 +784,57 @@ class SentimentConfidenceScorePerLabel(DictMixin):
     def __repr__(self):
         return "SentimentConfidenceScorePerLabel(positive={}, neutral={}, negative={})" \
             .format(self.positive, self.neutral, self.negative)[:1024]
+
+
+
+def return_deserialized(response, deserialized, response_headers):
+    return response, deserialized
+
+from ._response_handlers import language_result, order_results
+
+
+class LanguagesPaged(PageIterator):
+
+    def __init__(self, command, model_version=None, show_stats=None, continuation_token=None):
+        super(LanguagesPaged, self).__init__(
+            get_next=self._get_next_cb,
+            extract_data=self._extract_data_cb,
+            continuation_token=continuation_token or ""
+        )
+        self._command = command
+        self.show_stats = show_stats
+        self.model_version = model_version
+        self.current_page = []
+
+    def _get_next_cb(self, continuation_token):
+        try:
+            return self._command(
+                model_version=self.model_version,
+                show_stats=self.show_stats,
+                cls=return_deserialized,
+            )
+        except TextAnalyticsErrorException as error:
+            process_batch_error(error)
+
+    def _extract_data_cb(self, get_next_return):
+        self._response, self._deserialized = get_next_return
+        self.statistics = self._deserialized.statistics
+        self.model_version = self._deserialized.model_version
+        if self._deserialized.errors:
+            combined = self._deserialized.documents + self._deserialized.errors
+            results = order_results(self._response, combined)
+        else:
+            results = self._deserialized.documents
+        self.current_page = [self._build_item(item) for item in results]
+
+        return None, self.current_page
+
+    @staticmethod
+    def _build_item(item):
+        if hasattr(item, "error"):
+            return DocumentError(id=item.id, error=TextAnalyticsError._from_generated(item.error))  # pylint: disable=protected-access
+        return DetectLanguageResult(
+            id=item.id,
+            primary_language=DetectedLanguage._from_generated(item.detected_languages[0]), # pylint: disable=protected-access
+            statistics=TextDocumentStatistics._from_generated(item.statistics),  # pylint: disable=protected-access
+        )

@@ -1,5 +1,5 @@
 
-## Design
+## Text Analytics Design Overview
 
 The Text Analytics SDK provides a single client that allows you to engage with the Azure Text Analytics API.
 
@@ -62,18 +62,21 @@ client = TextAnalyticsClient(
 )
 
 # documents can be a list[str], dict, list[DetectLanguageInput]
+
 documents = ["This is written in English", "Este es un document escrito en Español."]
-# or
+
 documents = [{"id": "1", "country_hint": "US", "text": "This is written in English"}, 
              {"id": "2", "country_hint": "ES", "text": "Este es un document escrito en Español."}]
-# or
+
 documents = [DetectLanguageInput(id="1", country_hint="US", text="This is written in English")]
 
 
-response = client.detect_language(documents)  # list[Union[DetectLanguageResult, DocumentError]]
+response = client.detect_language(documents, show_stats=True)  # list[Union[DetectLanguageResult, DocumentError]]
 result = [doc for doc in response if not doc.is_error]
 
 for doc in result:
+    print("Number chars: {}".format(doc.statistics.character_count))
+    print("Number transactions: {}".format(doc.statistics.transaction_count))
     print("Language detected: {}".format(doc.primary_language.name))
     print("ISO6391 name: {}".format(doc.primary_language.iso6391_name))
     print("Confidence score: {}\n".format(doc.primary_language.score))
@@ -113,9 +116,9 @@ client = TextAnalyticsClient(
     credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
 )
 
-documents = ["My SSN is 555-55-5555", "Visa card 4147999933330000"]
+documents = ["My SSN is 555-55-5555", "Visa card 414799999999999"]
 
-response = client.recognize_pii_entities(documents)   # list[Union[RecognizePiiEntitiesResult, DocumentError]]
+response = client.recognize_pii_entities(documents)  # list[Union[RecognizePiiEntitiesResult, DocumentError]]
 result = [doc for doc in response if not doc.is_error]
 
 for doc in result:
@@ -145,10 +148,12 @@ for doc in result:
         print("Entity: {}".format(entity.name))
         print("Url: {}".format(entity.url))
         print("Data Source: {}".format(entity.data_source))
+        print("Data Source entity ID: {}".format(entity.data_source_entity_id))
         for match in entity.matches:
             print("Score: {}".format(match.score))
             print("Offset: {}".format(match.offset))
             print("Length: {}\n".format(match.length))
+            print("Entity in text: {}\n".format(match.text))
 ```
 
 ### 5. Extract key phrases in a batch of documents.
@@ -160,7 +165,7 @@ client = TextAnalyticsClient(
     credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
 )
 
-documents = ["My cat might need to see a veterinarian", "The pitot tube is used to measure airspeed."]
+documents = ["The food was delicious and there were wonderful staff.", "The pitot tube is used to measure airspeed."]
 
 response = client.extract_key_phrases(documents)  # list[Union[ExtractKeyPhrasesResult, DocumentError]]
 result = [doc for doc in response if not doc.is_error]
@@ -200,6 +205,13 @@ for doc in result:
         ))
 ```
 
+
+
+
+
+
+
+
 ### Extra samples
 
 #### Using a response hook to get statistics and model version
@@ -213,17 +225,23 @@ client = TextAnalyticsClient(
 
 documents = ["The hotel was dark and unclean.", "The restaurant had amazing gnocci."]
 
-extras = []
+data = []
 
 def callback(resp):
-    extras.append(resp.statistics)
-    extras.append(resp.model_version)
+    data.append(resp.statistics)
+    data.append(resp.model_version)
 
 result = client.analyze_sentiment(
     documents,
     model_version="latest",
     response_hook=callback
 )
+
+print(data[0].statistics.document_count)
+print(data[0].statistics.valid_document_count)
+print(data[0].statistics.erroneous_document_count)
+print(data[0].statistics.transaction_count)
+print(data[1].model_version)
 ```
 
 ### Single vs Batched comparison

@@ -25,27 +25,30 @@ hint for all operations.
 
 ```python
 # Returns list[Union[DetectLanguageResult, DocumentError]]
-TextAnalyticsClient.detect_language(inputs, country_hint=None, **kwargs)
+TextAnalyticsClient.detect_language(inputs, **kwargs)
 
 # Returns list[Union[RecognizeEntitiesResult, DocumentError]]
-TextAnalyticsClient.recognize_entities(inputs, language=None, **kwargs)
+TextAnalyticsClient.recognize_entities(inputs, **kwargs)
 
 # Returns list[Union[RecognizePiiEntitiesResult, DocumentError]]
-TextAnalyticsClient.recognize_pii_entities(inputs, language=None, **kwargs)
+TextAnalyticsClient.recognize_pii_entities(inputs, **kwargs)
 
 # Returns list[Union[RecognizeLinkedEntitiesResult, DocumentError]]
-TextAnalyticsClient.recognize_linked_entities(inputs, language=None, **kwargs)
+TextAnalyticsClient.recognize_linked_entities(inputs, **kwargs)
 
 # Returns list[Union[ExtractKeyPhrasesResult, DocumentError]]
-TextAnalyticsClient.extract_key_phrases(inputs, language=None, **kwargs)
+TextAnalyticsClient.extract_key_phrases(inputs, **kwargs)
 
 # Returns list[Union[AnalyzeSentimentResult, DocumentError]]
-TextAnalyticsClient.analyze_sentiment(inputs, language=None, **kwargs)
+TextAnalyticsClient.analyze_sentiment(inputs, **kwargs)
 ```
 
-Keyword arguments `model_version` and `show_stats` can be passed per-operation to specify the model version to use 
-for analysis and whether to include document level statistics.
+Per-operation keyword arguments:
 
+* `model_version` - specifies the model version to use for analysis
+* `show_stats` - indicates whether to return document/request statistics with the response
+* `country_hint` - passed into `detect_language` to use a country hint for language detection
+* `language` - passed into all other methods to indicate the language of the input documents
 
 ## Scenarios
 
@@ -58,11 +61,14 @@ client = TextAnalyticsClient(
     credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
 )
 
-# documents can be a list[str], list[DetectLanguageInput], or dict-like representation of object
+# documents can be a list[str], dict, list[DetectLanguageInput]
 documents = ["This is written in English", "Este es un document escrito en Español."]
 # or
 documents = [{"id": "1", "country_hint": "US", "text": "This is written in English"}, 
              {"id": "2", "country_hint": "ES", "text": "Este es un document escrito en Español."}]
+# or
+documents = [DetectLanguageInput(id="1", country_hint="US", text="This is written in English")]
+
 
 response = client.detect_language(documents)  # list[Union[DetectLanguageResult, DocumentError]]
 result = [doc for doc in response if not doc.is_error]
@@ -85,9 +91,12 @@ client = TextAnalyticsClient(
 documents = ["Satya Nadella is the CEO of Microsoft", "Elon Musk is the CEO of SpaceX and Tesla."]
 
 response = client.recognize_entities(documents)  # list[Union[RecognizeEntitiesResult, DocumentError]]
-result = [doc for doc in response if not doc.is_error]
+doc_errors = []
 
-for doc in result:
+for doc in response:
+    if doc.is_error:
+        doc_errors.append(doc.id, doc.error)
+        continue
     for entity in doc.entities:
         print("Entity: {}".format(entity.text))
         print("Category: {}".format(entity.category))
@@ -170,7 +179,7 @@ client = TextAnalyticsClient(
     credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
 )
 
-documents = ["The hotel was dark and unclean.", "The restaurant had amazing gnocci."]
+documents = ["The hotel was dark and unclean. I won't go back there.", "The restaurant had amazing gnocci. Yummy!"]
 
 response = client.analyze_sentiment(documents)   # list[Union[AnalyzeSentimentResult, DocumentError]]
 result = [doc for doc in response if not doc.is_error]
@@ -190,3 +199,32 @@ for doc in result:
             sentence.confidence_scores.negative,
         ))
 ```
+
+### Extra samples
+
+#### Using a response hook to get statistics and model version
+```python
+from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
+
+client = TextAnalyticsClient(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+)
+
+documents = ["The hotel was dark and unclean.", "The restaurant had amazing gnocci."]
+
+extras = []
+
+def callback(resp):
+    extras.append(resp.statistics)
+    extras.append(resp.model_version)
+
+result = client.analyze_sentiment(
+    documents,
+    model_version="latest",
+    response_hook=callback
+)
+```
+
+### Single vs Batched comparison
+https://github.com/kristapratico/azure-sdk-for-python/blob/ta-comparison/sdk/textanalytics/azure-ai-textanalytics/README2.md

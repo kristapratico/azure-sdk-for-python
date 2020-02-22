@@ -165,7 +165,10 @@ client = TextAnalyticsClient(
     credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
 )
 
-documents = ["The food was delicious and there were wonderful staff.", "The pitot tube is used to measure airspeed."]
+documents = [
+    "The food was delicious and there were wonderful staff.", 
+    "The pitot tube is used to measure airspeed."
+]
 
 response = client.extract_key_phrases(documents)  # list[Union[ExtractKeyPhrasesResult, DocumentError]]
 result = [doc for doc in response if not doc.is_error]
@@ -184,7 +187,10 @@ client = TextAnalyticsClient(
     credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
 )
 
-documents = ["The hotel was dark and unclean. I won't go back there.", "The restaurant had amazing gnocci. Yummy!"]
+documents = [
+    "The hotel was dark and unclean. I won't go back there.", 
+    "The restaurant had amazing gnocci. Yummy!"
+]
 
 response = client.analyze_sentiment(documents)   # list[Union[AnalyzeSentimentResult, DocumentError]]
 result = [doc for doc in response if not doc.is_error]
@@ -206,15 +212,10 @@ for doc in result:
 ```
 
 
-
-
-
-
-
-
 ### Extra samples
 
-#### Using a response hook to get statistics and model version
+
+#### Using a response hook to get batch/request statistics and model version
 ```python
 from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
 

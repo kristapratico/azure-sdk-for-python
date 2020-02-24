@@ -245,7 +245,11 @@ documents = [
     "The pitot tube is used to measure airspeed."
 ]
 
-response = client.extract_key_phrases(documents, language="en")  # list[Union[ExtractKeyPhrasesResult, DocumentError]]
+response = client.extract_key_phrases(
+    documents,
+    language="en"
+)  # list[Union[ExtractKeyPhrasesResult, DocumentError]]
+
 result = [doc for doc in response if not doc.is_error]
 
 for doc in result:

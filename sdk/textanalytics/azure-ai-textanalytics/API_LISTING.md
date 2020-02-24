@@ -24,23 +24,23 @@ hint for all operations.
 ### Client operations
 
 ```python
+# Returns list[Union[AnalyzeSentimentResult, DocumentError]]
+TextAnalyticsClient.analyze_sentiment(inputs, **kwargs)
+
 # Returns list[Union[DetectLanguageResult, DocumentError]]
 TextAnalyticsClient.detect_language(inputs, **kwargs)
 
 # Returns list[Union[RecognizeEntitiesResult, DocumentError]]
 TextAnalyticsClient.recognize_entities(inputs, **kwargs)
 
-# Returns list[Union[RecognizePiiEntitiesResult, DocumentError]]
-TextAnalyticsClient.recognize_pii_entities(inputs, **kwargs)
-
 # Returns list[Union[RecognizeLinkedEntitiesResult, DocumentError]]
 TextAnalyticsClient.recognize_linked_entities(inputs, **kwargs)
 
+# Returns list[Union[RecognizePiiEntitiesResult, DocumentError]]
+TextAnalyticsClient.recognize_pii_entities(inputs, **kwargs)
+
 # Returns list[Union[ExtractKeyPhrasesResult, DocumentError]]
 TextAnalyticsClient.extract_key_phrases(inputs, **kwargs)
-
-# Returns list[Union[AnalyzeSentimentResult, DocumentError]]
-TextAnalyticsClient.analyze_sentiment(inputs, **kwargs)
 ```
 
 Per-operation keyword arguments:

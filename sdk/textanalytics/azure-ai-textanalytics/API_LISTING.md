@@ -52,7 +52,77 @@ Per-operation keyword arguments:
 
 ## Scenarios
 
-### 1. Detect language for a batch of documents.
+### 1. Analyze sentiment in a batch of documents.
+```python
+from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
+
+client = TextAnalyticsClient(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+)
+
+# documents can be a list[str], dict, list[TextDocumentInput]
+
+documents = [
+    {"id": "1", "language": "en", "text": "The hotel was dark and unclean. I wouldn't recommend staying there."}, 
+    {"id": "2", "language": "en", "text": "The restaurant had amazing gnocchi! The waiters were excellent."}
+]
+
+documents = [
+    TextDocumentInput(id="1", language="en", text="The hotel was dark and unclean. I wouldn't recommend staying there."),
+    TextDocumentInput(id="2", language="en", text="The restaurant had amazing gnocchi! The waiters were excellent.")
+]
+
+documents = [
+    "The hotel was dark and unclean. I wouldn't recommend staying there.", 
+    "The restaurant had amazing gnocchi! The waiters were excellent."
+]
+
+def callback(response):
+    print("Model version: {}".format(response.model_version))
+    print("Request/Batch statistics:")
+    print(response.statistics.document_count)
+    print(response.statistics.valid_document_count)
+    print(response.statistics.erroneous_document_count)
+    print(response.statistics.transaction_count)
+
+
+result = client.analyze_sentiment(
+    documents,
+    show_stats=True,
+    model_version="latest",
+    response_hook=callback
+)   # list[Union[AnalyzeSentimentResult, DocumentError]]
+
+
+for doc in result:
+    if doc.is_error:
+        print("Cannot analyze sentiment. Document id {}: {}".format(doc.id, doc.error.message))
+        continue
+
+    print("Document statistics:")
+    print("Number chars: {}".format(doc.statistics.character_count))
+    print("Number transactions: {}".format(doc.statistics.transaction_count))
+
+    print("Document sentiment: {}".format(doc.sentiment))
+    print("Document confidence scores: positive={}; neutral={}; negative={} \n".format(
+        doc.confidence_scores.positive,
+        doc.confidence_scores.neutral,
+        doc.confidence_scores.negative,
+    ))
+    for sentence in doc.sentences:
+        print("Sentence sentiment: {}".format(sentence.sentiment))
+        print("Sentence confidence scores: positive={}; neutral={}; negative={}; \
+                length of sentence: {}; offset: {}".format(
+            sentence.confidence_scores.positive,
+            sentence.confidence_scores.neutral,
+            sentence.confidence_scores.negative,
+            sentence.length,
+            sentence.offset
+        ))
+```
+
+### 2. Detect language for a batch of documents.
 ```python
 from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
 
@@ -62,27 +132,20 @@ client = TextAnalyticsClient(
 )
 
 # documents can be a list[str], dict, list[DetectLanguageInput]
-
-documents = ["This is written in English", "Este es un document escrito en Español."]
-
 documents = [{"id": "1", "country_hint": "US", "text": "This is written in English"}, 
              {"id": "2", "country_hint": "ES", "text": "Este es un document escrito en Español."}]
 
-documents = [DetectLanguageInput(id="1", country_hint="US", text="This is written in English")]
 
-
-response = client.detect_language(documents, show_stats=True)  # list[Union[DetectLanguageResult, DocumentError]]
+response = client.detect_language(documents)  # list[Union[DetectLanguageResult, DocumentError]]
 result = [doc for doc in response if not doc.is_error]
 
 for doc in result:
-    print("Number chars: {}".format(doc.statistics.character_count))
-    print("Number transactions: {}".format(doc.statistics.transaction_count))
     print("Language detected: {}".format(doc.primary_language.name))
     print("ISO6391 name: {}".format(doc.primary_language.iso6391_name))
     print("Confidence score: {}\n".format(doc.primary_language.score))
 ```
 
-### 2. Recognize entities in a batch of documents.
+### 3. Recognize entities in a batch of documents.
 ```python
 from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
 
@@ -93,39 +156,19 @@ client = TextAnalyticsClient(
 
 documents = ["Satya Nadella is the CEO of Microsoft", "Elon Musk is the CEO of SpaceX and Tesla."]
 
-response = client.recognize_entities(documents)  # list[Union[RecognizeEntitiesResult, DocumentError]]
+result = client.recognize_entities(documents, language="en")  # list[Union[RecognizeEntitiesResult, DocumentError]]
 doc_errors = []
 
-for doc in response:
+for doc in result:
     if doc.is_error:
-        doc_errors.append(doc.id, doc.error)
+        doc_errors.append(doc.id, doc.error.message)
         continue
     for entity in doc.entities:
         print("Entity: {}".format(entity.text))
         print("Category: {}".format(entity.category))
         print("Subcategory: {}".format(entity.subcategory))
-        print("Confidence score: {}".format(entity.score))
-```
-
-### 3. Recognize personally identifiable information in a batch of documents.
-```python
-from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
-
-client = TextAnalyticsClient(
-    endpoint="https://westus2.api.cognitive.microsoft.com/",
-    credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
-)
-
-documents = ["My SSN is 555-55-5555", "Visa card 414799999999999"]
-
-response = client.recognize_pii_entities(documents)  # list[Union[RecognizePiiEntitiesResult, DocumentError]]
-result = [doc for doc in response if not doc.is_error]
-
-for doc in result:
-    for entity in doc.entities:
-        print("Entity: {}".format(entity.text))
-        print("Category: {}".format(entity.category))
-        print("Subcategory: {}".format(entity.subcategory))
+        print("Entity length: {}".format(entity.length))
+        print("Entity offset: {}".format(entity.offset))
         print("Confidence score: {}".format(entity.score))
 ```
 
@@ -140,23 +183,55 @@ client = TextAnalyticsClient(
 
 documents = ["Old Faithful is a geyser at Yellowstone Park", "Mount Shasta has lenticular clouds."]
 
-response = client.recognize_linked_entities(documents)  # list[Union[RecognizeLinkedEntitiesResult, DocumentError]]
+response = client.recognize_linked_entities(
+    documents,
+    language="en"
+)  # list[Union[RecognizeLinkedEntitiesResult, DocumentError]]
+
 result = [doc for doc in response if not doc.is_error]
 
 for doc in result:
     for entity in doc.entities:
         print("Entity: {}".format(entity.name))
         print("Url: {}".format(entity.url))
-        print("Data Source: {}".format(entity.data_source))
-        print("Data Source entity ID: {}".format(entity.data_source_entity_id))
+        print("Data source: {}".format(entity.data_source))
+        print("Data source entity ID: {}".format(entity.data_source_entity_id))
         for match in entity.matches:
+            print("Entity in text: {}\n".format(match.text))
             print("Score: {}".format(match.score))
             print("Offset: {}".format(match.offset))
             print("Length: {}\n".format(match.length))
-            print("Entity in text: {}\n".format(match.text))
 ```
 
-### 5. Extract key phrases in a batch of documents.
+### 5. Recognize personally identifiable information in a batch of documents.
+```python
+from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
+
+client = TextAnalyticsClient(
+    endpoint="https://westus2.api.cognitive.microsoft.com/",
+    credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+)
+
+documents = ["My SSN is 555-55-5555", "Visa card 4111 1111 1111 1111"]
+
+response = client.recognize_pii_entities(
+    documents,
+    language="en"
+)  # list[Union[RecognizePiiEntitiesResult, DocumentError]]
+
+result = [doc for doc in response if not doc.is_error]
+
+for doc in result:
+    for entity in doc.entities:
+        print("Entity: {}".format(entity.text))
+        print("Category: {}".format(entity.category))
+        print("Subcategory: {}".format(entity.subcategory))
+        print("Entity length: {}".format(entity.length))
+        print("Entity offset: {}".format(entity.offset))
+        print("Confidence score: {}".format(entity.score))
+```
+
+### 6. Extract key phrases in a batch of documents.
 ```python
 from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
 
@@ -170,80 +245,10 @@ documents = [
     "The pitot tube is used to measure airspeed."
 ]
 
-response = client.extract_key_phrases(documents)  # list[Union[ExtractKeyPhrasesResult, DocumentError]]
+response = client.extract_key_phrases(documents, language="en")  # list[Union[ExtractKeyPhrasesResult, DocumentError]]
 result = [doc for doc in response if not doc.is_error]
 
 for doc in result:
     for phrase in doc.key_phrases:
         print(phrase)
 ```
-
-### 6. Analyze sentiment in a batch of documents.
-```python
-from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
-
-client = TextAnalyticsClient(
-    endpoint="https://westus2.api.cognitive.microsoft.com/",
-    credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
-)
-
-documents = [
-    "The hotel was dark and unclean. I won't go back there.", 
-    "The restaurant had amazing gnocci. Yummy!"
-]
-
-response = client.analyze_sentiment(documents)   # list[Union[AnalyzeSentimentResult, DocumentError]]
-result = [doc for doc in response if not doc.is_error]
-
-for doc in result:
-    print("Overall sentiment: {}".format(doc.sentiment))
-    print("Overall scores: positive={}; neutral={}; negative={} \n".format(
-        doc.confidence_scores.positive,
-        doc.confidence_scores.neutral,
-        doc.confidence_scores.negative,
-    ))
-    for sentence in doc.sentences:
-        print("Sentence sentiment: {}".format(sentence.sentiment))
-        print("Sentence score: positive={}; neutral={}; negative={}".format(
-            sentence.confidence_scores.positive,
-            sentence.confidence_scores.neutral,
-            sentence.confidence_scores.negative,
-        ))
-```
-
-
-### Extra samples
-
-
-#### Using a response hook to get batch/request statistics and model version
-```python
-from azure.ai.textanalytics import TextAnalyticsClient, TextAnalyticsApiKeyCredential
-
-client = TextAnalyticsClient(
-    endpoint="https://westus2.api.cognitive.microsoft.com/",
-    credential=TextAnalyticsApiKeyCredential("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
-)
-
-documents = ["The hotel was dark and unclean.", "The restaurant had amazing gnocci."]
-
-data = []
-
-def callback(resp):
-    data.append(resp.statistics)
-    data.append(resp.model_version)
-
-result = client.analyze_sentiment(
-    documents,
-    model_version="latest",
-    response_hook=callback
-)
-
-print(data[0].statistics.document_count)
-print(data[0].statistics.valid_document_count)
-print(data[0].statistics.erroneous_document_count)
-print(data[0].statistics.transaction_count)
-print(data[1].model_version)
-```
-
-### Single vs Batched comparison
-https://github.com/kristapratico/azure-sdk-for-python/blob/ta-comparison/sdk/textanalytics/azure-ai-textanalytics/README2.md

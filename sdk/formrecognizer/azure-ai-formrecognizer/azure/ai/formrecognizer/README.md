@@ -74,4 +74,48 @@ class SelectionMark(FormContent):
 Another rename we might want to consider is that of `text_content` as this now would return `SelectionMark`... this also
 has naming implications for the parameter `include_text_content`.
 
+Mapping:
+How I believe the selection mark properties will map to FormField
+
+For a checkbox like this:
+
+Pizza? [x]
+
+How this would look for unsupervised:
+
+```python
+# form_field is a FormField
+
+print(form_field.name)  # "field-0"
+print(form_field.value) # "selected"
+print(form_field.confidence)  # 1.0
+print(form_field.label_data.text)  # "Pizza?"
+print(form_field.label_data.bounding_box)  # BoundingBox
+print(form_field.label_data.page_number) # 1
+print(form_field.label_data.text_content)  # FormWord
+print(form_field.value_data.text)  # "selected"
+print(form_field.value_data.bounding_box)  # BoundingBox
+print(form_field.value_data.page_number)  # 1
+print(form_field.value_data.text_content)  # SelectionMark
+```
+
+How this would look for supervised:
+
+```python
+# form_field is a FormField. Training-label "Pizza" was assigned to the checkbox using the labeling tool
+
+print(form_field.name)  # "Pizza"
+print(form_field.value) # "selected"
+print(form_field.confidence)  # 1.0
+print(form_field.label_data.text) # None
+print(form_field.label_data.bounding_box)  # None
+print(form_field.label_data.page_number) # None
+print(form_field.label_data.text_content)  # None
+print(form_field.value_data.text)  # "selected"
+print(form_field.value_data.bounding_box)  # BoundingBox
+print(form_field.value_data.page_number)  # 1
+print(form_field.value_data.text_content)  # SelectionMark
+```
+
+
 Link to swagger: https://github.com/Azure/azure-rest-api-specs/blob/8d87a7c7caf59182943b890e7576c04d26642f6f/specification/cognitiveservices/data-plane/FormRecognizer/preview/v2.1-preview.1/FormRecognizer.json

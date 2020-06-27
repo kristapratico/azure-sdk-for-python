@@ -3,7 +3,7 @@ v2.1 introduces SelectionMark which looks like this...
 
 ```python
 class SelectionMark:
-    bounding_box: list[str]
+    bounding_box: list[Point]
     confidence: float
     state: SelectionMarkState enum = "selected", "unselected"
 ```
@@ -50,6 +50,7 @@ In `FormField` we could rename `text` references to `data` or something generic
 class FormField:
     label_data: FieldData (was FieldText)
     value_data: FieldData (was FieldText)
+    type: str
     name: str
     confidence: float
     value: typed value (python) or FieldValue
@@ -97,6 +98,7 @@ print(form_field.value_data.text)  # "selected"
 print(form_field.value_data.bounding_box)  # BoundingBox
 print(form_field.value_data.page_number)  # 1
 print(form_field.value_data.text_content)  # SelectionMark
+print(form_field.type)  # "selectionMark"
 ```
 
 How this would look for supervised:
@@ -115,6 +117,7 @@ print(form_field.value_data.text)  # "selected"
 print(form_field.value_data.bounding_box)  # BoundingBox
 print(form_field.value_data.page_number)  # 1
 print(form_field.value_data.text_content)  # SelectionMark
+print(form_field.type)  # "selectionMark"
 ```
 
 

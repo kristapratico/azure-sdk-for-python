@@ -60,7 +60,7 @@ class FormField:
 
 ```python
 class FieldData(FormContent):
-    text_content: Union[FormWord, FormLine, SelectionMark] or IReadOnlyList<FormContent>
+    field_element: Union[FormWord, FormLine, SelectionMark] or IReadOnlyList<FormContent>
 
 class FormContent:
     page_number: int
@@ -72,8 +72,8 @@ class SelectionMark(FormContent):
     state: SelectionMarkState enum = "selected", "unselected"
 ```
 
-Another rename we might want to consider is that of `text_content` as this now would return `SelectionMark`... this also
-has naming implications for the parameter `include_text_content`.
+Another rename we needed to consider is that of `text_content` and `include_text_content` as this now would return 
+`SelectionMark`... Suggested renames are `field_elements` and `include_field_elements` to be more general.
 
 Mapping:
 How I believe the selection mark properties will map to FormField
@@ -85,39 +85,67 @@ Pizza? [x]
 How this would look for unsupervised:
 
 ```python
-# form_field is a FormField
+from azure.core.credentials import AzureKeyCredential
+from azure.ai.formrecognizer import FormRecognizerClient
 
-print(form_field.name)  # "field-0"
-print(form_field.value) # "selected"
-print(form_field.confidence)  # 1.0
-print(form_field.label_data.text)  # "Pizza?"
-print(form_field.label_data.bounding_box)  # BoundingBox
-print(form_field.label_data.page_number) # 1
-print(form_field.label_data.text_content)  # FormWord
-print(form_field.value_data.text)  # "selected"
-print(form_field.value_data.bounding_box)  # BoundingBox
-print(form_field.value_data.page_number)  # 1
-print(form_field.value_data.text_content)  # SelectionMark
-print(form_field.type)  # "selectionMark"
+form_recognizer_client = FormRecognizerClient(
+    endpoint="<endpoint>", credential=AzureKeyCredential("<key>")
+)
+
+
+poller = form_recognizer_client.begin_recognize_custom_forms_from_url(
+    model_id=model_id, form_url="https://myform.com", include_field_elements=True
+)
+forms = poller.result()
+form = forms[0]
+
+for label, field in form.fields.items():
+    print(field.name)  # "field-0"
+    print(field.value) # "selected"
+    print(field.confidence)  # 1.0
+    print(field.label_data.text)  # None
+    print(field.label_data.bounding_box)  # None
+    print(field.label_data.page_number) # None
+    print(field.label_data.field_element)  # None
+    print(field.value_data.text)  # "selected"
+    print(field.value_data.bounding_box)  # BoundingBox
+    print(field.value_data.page_number)  # 1
+    print(field.value_data.field_element)  # SelectionMark
+    print(field.type)  # "selectionMark"
 ```
 
 How this would look for supervised:
 
 ```python
-# form_field is a FormField. Training-label "Pizza" was assigned to the checkbox using the labeling tool
+# Training-label "Pizza" was assigned to the checkbox using the labeling tool
 
-print(form_field.name)  # "Pizza"
-print(form_field.value) # "selected"
-print(form_field.confidence)  # 1.0
-print(form_field.label_data.text) # None
-print(form_field.label_data.bounding_box)  # None
-print(form_field.label_data.page_number) # None
-print(form_field.label_data.text_content)  # None
-print(form_field.value_data.text)  # "selected"
-print(form_field.value_data.bounding_box)  # BoundingBox
-print(form_field.value_data.page_number)  # 1
-print(form_field.value_data.text_content)  # SelectionMark
-print(form_field.type)  # "selectionMark"
+from azure.core.credentials import AzureKeyCredential
+from azure.ai.formrecognizer import FormRecognizerClient
+
+form_recognizer_client = FormRecognizerClient(
+    endpoint="<endpoint>", credential=AzureKeyCredential("<key>")
+)
+
+
+poller = form_recognizer_client.begin_recognize_custom_forms_from_url(
+    model_id=model_id, form_url="https://myform.com", include_field_elements=True
+)
+forms = poller.result()
+form = forms[0]
+
+for label, field in form.fields.items():
+    print(field.name)  # "Pizza"
+    print(field.value) # "selected"
+    print(field.confidence)  # 1.0
+    print(field.label_data.text) # None
+    print(field.label_data.bounding_box)  # None
+    print(field.label_data.page_number) # None
+    print(field.label_data.field_element)  # None
+    print(field.value_data.text)  # "selected"
+    print(field.value_data.bounding_box)  # BoundingBox
+    print(field.value_data.page_number)  # 1
+    print(field.value_data.field_element)  # SelectionMark
+    print(field.type)  # "selectionMark"
 ```
 
 

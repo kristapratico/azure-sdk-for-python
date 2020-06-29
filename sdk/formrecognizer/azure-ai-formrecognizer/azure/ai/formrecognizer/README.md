@@ -107,7 +107,7 @@ for label, field in form.fields.items():
     print(field.label_data.bounding_box)  # None
     print(field.label_data.page_number) # None
     print(field.label_data.field_element)  # None
-    print(field.value_data.text)  # "selected"
+    print(field.value_data.text)  # None
     print(field.value_data.bounding_box)  # BoundingBox
     print(field.value_data.page_number)  # 1
     print(field.value_data.field_element)  # SelectionMark
@@ -141,7 +141,7 @@ for label, field in form.fields.items():
     print(field.label_data.bounding_box)  # None
     print(field.label_data.page_number) # None
     print(field.label_data.field_element)  # None
-    print(field.value_data.text)  # "selected"
+    print(field.value_data.text)  # None
     print(field.value_data.bounding_box)  # BoundingBox
     print(field.value_data.page_number)  # 1
     print(field.value_data.field_element)  # SelectionMark

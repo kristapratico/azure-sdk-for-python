@@ -44,23 +44,23 @@ class FieldValueSelectionMark(str, Enum):
     unselected = "unselected"
 ```
 
-In `FormField` we could rename `text` references to `data` or something generic
+In `FormField` we'd rename `text` references to `data`
 
 ```python
 class FormField:
-    label_data: FieldData (was FieldText)
-    value_data: FieldData (was FieldText)
+    label_data (was labelText): FieldData (was FieldText)
+    value_data (was valueText): FieldData (was FieldText)
     type: str
     name: str
     confidence: float
     value: typed value (python) or FieldValue
 ```
 
-`FieldData` supports our union type or FormContent base type (.NET style heterogeneous list)
+`FieldData` supports the union type or FormContent base type (.NET style heterogeneous list)
 
 ```python
 class FieldData(FormContent):
-    field_element: Union[FormWord, FormLine, SelectionMark] or IReadOnlyList<FormContent>
+    field_element (was textContent): Union[FormWord, FormLine, SelectionMark] or IReadOnlyList<FormContent>
 
 class FormContent:
     page_number: int
@@ -73,7 +73,7 @@ class SelectionMark(FormContent):
 ```
 
 Another rename we needed to consider is that of `text_content` and `include_text_content` as this now would return 
-`SelectionMark`... Suggested renames are `field_elements` and `include_field_elements` to be more general.
+`SelectionMark`... Suggested renames are `field_element` and `include_field_elements` to be more general.
 
 Mapping:
 How I believe the selection mark properties will map to FormField
@@ -107,7 +107,7 @@ for label, field in form.fields.items():
     print(field.label_data.bounding_box)  # None
     print(field.label_data.page_number) # None
     print(field.label_data.field_element)  # None
-    print(field.value_data.text)  # None
+    print(field.value_data.text)  # "selected"
     print(field.value_data.bounding_box)  # BoundingBox
     print(field.value_data.page_number)  # 1
     print(field.value_data.field_element)  # SelectionMark
@@ -141,7 +141,7 @@ for label, field in form.fields.items():
     print(field.label_data.bounding_box)  # None
     print(field.label_data.page_number) # None
     print(field.label_data.field_element)  # None
-    print(field.value_data.text)  # None
+    print(field.value_data.text)  # "selected"
     print(field.value_data.bounding_box)  # BoundingBox
     print(field.value_data.page_number)  # 1
     print(field.value_data.field_element)  # SelectionMark

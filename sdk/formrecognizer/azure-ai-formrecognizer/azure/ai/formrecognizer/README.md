@@ -18,8 +18,41 @@ class Model:
     model_info: ModelInfo       # (where model_id, status, training_started_on, training_completed_on come from)
     keys: KeysResult            # (where submodels comes from if unsupervised)
     train_result: TrainResult   # (where submodels, errors, and training_documents come from)
-    composed_train_results: Dict[str, TrainResult]  # (this is added in 2.1, a TrainResult per model_id(?))
+    composed_train_results: Dict[str, TrainResult]  # (this is added in 2.1)
 ```
+
+Design after syncing with Anne:
+
+`CustomFormModel` does not change - we just re-adjust mapping for a composed model.
+
+```python
+class CustomFormModel:
+    model_id: str
+    status: CustomFormModelStatus
+    training_started_on: datetime
+    training_completed_on: datetime
+    submodels: List[CustomFormSubModel]
+    errors: List[FormRecognizerError]               # union of all errors from submodels, or just don't return for composed model
+    training_documents: List[TrainingDocumentInfo]  # union of all training documents from submodels, or just don't return for composed model
+```
+
+`model_id` property is added to `CustomFormSubmodel` to help associate the submodel with the original model
+in a composed model, otherwise is None/null.
+
+```python
+class CustomFormSubmodel:
+    model_id: str
+    accuracy: float
+    fields: Dict[str, CustomFormModelField]
+    form_type: str
+
+class CustomFormModelField:
+    label: str
+    name: str
+    accuracy: float
+```
+
+-----------------------------------------------------------------------------------------------------------------------
 
 To get the new composed train result to fit into our existing design, I think we have two reasonable choices:
 
@@ -64,4 +97,3 @@ This aligns more with the swagger type, and doesn't necessarily favor a "normal"
 clear up some confusion since there wouldn't be many None/null properties at the top-level for the composed model.
 However, this would make the fields and errors harder to reach in all scenarios and require a breaking change during 
 preview 5 before we GA.
-

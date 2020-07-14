@@ -21,7 +21,7 @@ class Model:
     composed_train_results: Dict[str, TrainResult]  # (this is added in 2.1)
 ```
 
-Design after syncing with Anne:
+#### After syncing with Anne:
 
 `CustomFormModel` does not change - we just re-adjust mapping for a composed model.
 

@@ -28,7 +28,8 @@ also be populated with any selection marks found on the page
 numbers to analyze
 - Added property `bounding_box` to `FormTable`
 - Content-type `image/bmp` now supported by all recognize methods
-
+- Added keyword argument `language` to `begin_recognize_content` and `begin_recognize_content_from_url` to specify
+which language to process document in
 
 **Dependency updates**
 

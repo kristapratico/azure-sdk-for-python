@@ -117,6 +117,7 @@ class FormRecognizerClientOperationsMixin(object):
     async def begin_analyze_layout_async(
         self,
         pages: Optional[List[str]] = None,
+        language: Optional[Union[str, "models.Enum5"]] = None,
         file_stream: Optional[Union[IO, "models.SourcePath"]] = None,
         **kwargs
     ) -> AsyncLROPoller[None]:
@@ -131,6 +132,13 @@ class FormRecognizerClientOperationsMixin(object):
          pages you want to get OCR result. For a range of pages, use a hyphen. Separate each page or
          range with a comma or space.
         :type pages: list[str]
+        :param language: The BCP-47 language code of the text in the document. Currently, only English
+         ('en'), Dutch (‘nl’), French (‘fr’), German (‘de’), Italian (‘it’), Portuguese (‘pt'),
+         simplified Chinese ('zh-Hans') and Spanish ('es') are supported (print – nine languages and
+         handwritten – English only). Layout supports auto language identification and multilanguage
+         documents, so only provide a language code if you would like to force the documented to be
+         processed as that specific language.
+        :type language: str or ~azure.ai.formrecognizer.models.Enum5
         :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
         :type file_stream: IO or ~azure.ai.formrecognizer.models.SourcePath
         :keyword str content_type: Media type of the body sent to the API. Default value is "application/json".
@@ -162,7 +170,7 @@ class FormRecognizerClientOperationsMixin(object):
         if api_version == '2.0':
             return await mixin_instance.begin_analyze_layout_async(file_stream, **kwargs)
         elif api_version == '2.1-preview.2':
-            return await mixin_instance.begin_analyze_layout_async(pages, file_stream, **kwargs)
+            return await mixin_instance.begin_analyze_layout_async(pages, language, file_stream, **kwargs)
 
     async def begin_analyze_receipt_async(
         self,

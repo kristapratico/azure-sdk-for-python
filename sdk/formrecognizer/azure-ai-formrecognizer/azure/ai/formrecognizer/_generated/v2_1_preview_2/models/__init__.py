@@ -79,6 +79,7 @@ except (SyntaxError, ImportError):
 
 from ._form_recognizer_client_enums import (
     ContentType,
+    Enum5,
     FieldValueSelectionMark,
     FieldValueType,
     KeyValueType,
@@ -127,6 +128,7 @@ __all__ = [
     'TrainSourceFilter',
     'TrainingDocumentInfo',
     'ContentType',
+    'Enum5',
     'FieldValueSelectionMark',
     'FieldValueType',
     'KeyValueType',

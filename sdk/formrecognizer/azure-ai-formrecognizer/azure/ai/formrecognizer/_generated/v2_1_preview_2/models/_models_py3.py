@@ -1062,8 +1062,8 @@ class ReadResult(msrest.serialization.Model):
      images, the unit is "pixel". For PDF, the unit is "inch". Possible values include: "pixel",
      "inch".
     :type unit: str or ~azure.ai.formrecognizer.models.LengthUnit
-    :param language: The detected language on the page overall. Possible values include: "en",
-     "es".
+    :param language: The detected language on the page overall. Possible values include: "de",
+     "en", "es", "fr", "it", "nl", "pt", "zh-Hans".
     :type language: str or ~azure.ai.formrecognizer.models.Language
     :param lines: When includeTextDetails is set to true, a list of recognized text lines. The
      maximum number of lines returned is 300 per page. The lines are sorted top to bottom, left to
@@ -1227,7 +1227,7 @@ class TextLine(msrest.serialization.Model):
     :param bounding_box: Required. Bounding box of an extracted line.
     :type bounding_box: list[float]
     :param language: The detected language of this line, if different from the overall page
-     language. Possible values include: "en", "es".
+     language. Possible values include: "de", "en", "es", "fr", "it", "nl", "pt", "zh-Hans".
     :type language: str or ~azure.ai.formrecognizer.models.Language
     :param words: Required. List of words in the text line.
     :type words: list[~azure.ai.formrecognizer.models.TextWord]

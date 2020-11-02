@@ -36,17 +36,6 @@ class ContentType(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
     IMAGE_PNG = "image/png"  #: Content Type 'image/png'.
     IMAGE_TIFF = "image/tiff"  #: Content Type 'image/tiff'.
 
-class Enum5(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
-
-    DE = "de"
-    EN = "en"
-    ES = "es"
-    FR = "fr"
-    IT = "it"
-    NL = "nl"
-    PT = "pt"
-    ZH_HANS = "zh-Hans"
-
 class FieldValueSelectionMark(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
     """Selection mark value.
     """
@@ -79,9 +68,9 @@ class Language(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
     """Language code
     """
 
-    DE = "de"
     EN = "en"
     ES = "es"
+    DE = "de"
     FR = "fr"
     IT = "it"
     NL = "nl"
@@ -95,6 +84,14 @@ class LengthUnit(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
 
     PIXEL = "pixel"
     INCH = "inch"
+
+class Locale(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
+
+    EN_AU = "en-AU"
+    EN_CA = "en-CA"
+    EN_GB = "en-GB"
+    EN_IN = "en-IN"
+    EN_US = "en-US"
 
 class ModelStatus(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
     """Status of the model.

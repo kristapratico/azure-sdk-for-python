@@ -29,7 +29,7 @@ class FormRecognizerClientOperationsMixin(object):
     def begin_analyze_business_card_async(
         self,
         include_text_details=False,  # type: Optional[bool]
-        locale=None,  # type: Optional[str]
+        locale=None,  # type: Optional[Union[str, "models.Locale"]]
         file_stream=None,  # type: Optional[Union[IO, "models.SourcePath"]]
         **kwargs  # type: Any
     ):
@@ -42,9 +42,9 @@ class FormRecognizerClientOperationsMixin(object):
 
         :param include_text_details: Include text lines and element references in the result.
         :type include_text_details: bool
-        :param locale: Locale of the business card. Supported locales include: en-AU, en-CA, en-GB, en-
-         IN, en-US(default).
-        :type locale: str
+        :param locale: Locale of the input document. Supported locales include: en-AU, en-CA, en-GB,
+         en-IN, en-US(default).
+        :type locale: str or ~azure.ai.formrecognizer.models.Locale
         :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
         :type file_stream: IO or ~azure.ai.formrecognizer.models.SourcePath
         :keyword str content_type: Media type of the body sent to the API. Default value is "application/json".
@@ -75,7 +75,7 @@ class FormRecognizerClientOperationsMixin(object):
     def begin_analyze_invoice_async(
         self,
         include_text_details=False,  # type: Optional[bool]
-        locale=None,  # type: Optional[str]
+        locale=None,  # type: Optional[Union[str, "models.Locale"]]
         file_stream=None,  # type: Optional[Union[IO, "models.SourcePath"]]
         **kwargs  # type: Any
     ):
@@ -88,9 +88,9 @@ class FormRecognizerClientOperationsMixin(object):
 
         :param include_text_details: Include text lines and element references in the result.
         :type include_text_details: bool
-        :param locale: Locale of the invoice. Supported locales include: en-AU, en-CA, en-GB, en-IN,
-         en-US(default).
-        :type locale: str
+        :param locale: Locale of the input document. Supported locales include: en-AU, en-CA, en-GB,
+         en-IN, en-US(default).
+        :type locale: str or ~azure.ai.formrecognizer.models.Locale
         :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
         :type file_stream: IO or ~azure.ai.formrecognizer.models.SourcePath
         :keyword str content_type: Media type of the body sent to the API. Default value is "application/json".
@@ -120,8 +120,8 @@ class FormRecognizerClientOperationsMixin(object):
 
     def begin_analyze_layout_async(
         self,
+        language=None,  # type: Optional[Union[str, "models.Language"]]
         pages=None,  # type: Optional[List[str]]
-        language=None,  # type: Optional[Union[str, "models.Enum5"]]
         file_stream=None,  # type: Optional[Union[IO, "models.SourcePath"]]
         **kwargs  # type: Any
     ):
@@ -132,17 +132,17 @@ class FormRecognizerClientOperationsMixin(object):
         'image/bmp'. Alternatively, use 'application/json' type to specify the location (Uri or local
         path) of the document to be analyzed.
 
+        :param language: The BCP-47 language code of the text in the document. Currently, only English
+         ('en'), Dutch (‘nl’), French (‘fr’), German (‘de’), Italian (‘it’), Portuguese (‘pt'),
+         simplified Chinese ('zh-Hans') and Spanish ('es') are supported (print – nine languages and
+         handwritten – English only). Layout supports auto language identification and multi language
+         documents, so only provide a language code if you would like to force the documented to be
+         processed as that specific language.
+        :type language: str or ~azure.ai.formrecognizer.models.Language
         :param pages: Custom page numbers for multi-page documents(PDF/TIFF), input the number of the
          pages you want to get OCR result. For a range of pages, use a hyphen. Separate each page or
          range with a comma or space.
         :type pages: list[str]
-        :param language: The BCP-47 language code of the text in the document. Currently, only English
-         ('en'), Dutch (‘nl’), French (‘fr’), German (‘de’), Italian (‘it’), Portuguese (‘pt'),
-         simplified Chinese ('zh-Hans') and Spanish ('es') are supported (print – nine languages and
-         handwritten – English only). Layout supports auto language identification and multilanguage
-         documents, so only provide a language code if you would like to force the documented to be
-         processed as that specific language.
-        :type language: str or ~azure.ai.formrecognizer.models.Enum5
         :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
         :type file_stream: IO or ~azure.ai.formrecognizer.models.SourcePath
         :keyword str content_type: Media type of the body sent to the API. Default value is "application/json".
@@ -174,12 +174,12 @@ class FormRecognizerClientOperationsMixin(object):
         if api_version == '2.0':
             return mixin_instance.begin_analyze_layout_async(file_stream, **kwargs)
         elif api_version == '2.1-preview.2':
-            return mixin_instance.begin_analyze_layout_async(pages, language, file_stream, **kwargs)
+            return mixin_instance.begin_analyze_layout_async(language, pages, file_stream, **kwargs)
 
     def begin_analyze_receipt_async(
         self,
         include_text_details=False,  # type: Optional[bool]
-        locale=None,  # type: Optional[str]
+        locale=None,  # type: Optional[Union[str, "models.Locale"]]
         file_stream=None,  # type: Optional[Union[IO, "models.SourcePath"]]
         **kwargs  # type: Any
     ):
@@ -192,9 +192,9 @@ class FormRecognizerClientOperationsMixin(object):
 
         :param include_text_details: Include text lines and element references in the result.
         :type include_text_details: bool
-        :param locale: Locale of the receipt. Supported locales include: en-AU, en-CA, en-GB, en-IN,
-         en-US(default).
-        :type locale: str
+        :param locale: Locale of the input document. Supported locales include: en-AU, en-CA, en-GB,
+         en-IN, en-US(default).
+        :type locale: str or ~azure.ai.formrecognizer.models.Locale
         :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
         :type file_stream: IO or ~azure.ai.formrecognizer.models.SourcePath
         :keyword str content_type: Media type of the body sent to the API. Default value is "application/json".

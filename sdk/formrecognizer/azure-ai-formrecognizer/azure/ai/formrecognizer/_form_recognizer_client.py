@@ -83,7 +83,7 @@ class FormRecognizerClient(FormRecognizerClientBase):
         :type receipt: bytes or IO[bytes]
         :keyword bool include_field_elements:
             Whether or not to include field elements such as lines and words in addition to form fields.
-        :keyword content_type: Media type of the body sent to the API. Content-type is
+        :keyword content_type: Content-type of the body sent to the API. Content-type is
             auto-detected, but can be overridden by passing this keyword argument. For options,
             see :class:`~azure.ai.formrecognizer.FormContentType`.
         :paramtype content_type: str or ~azure.ai.formrecognizer.FormContentType
@@ -207,7 +207,7 @@ class FormRecognizerClient(FormRecognizerClientBase):
             and en-IN.
         :keyword bool include_field_elements:
             Whether or not to include field elements such as lines and words in addition to form fields.
-        :keyword content_type: Media type of the body sent to the API. Content-type is
+        :keyword content_type: Content-type of the body sent to the API. Content-type is
             auto-detected, but can be overridden by passing this keyword argument. For options,
             see :class:`~azure.ai.formrecognizer.FormContentType`.
         :paramtype content_type: str or ~azure.ai.formrecognizer.FormContentType
@@ -322,7 +322,7 @@ class FormRecognizerClient(FormRecognizerClientBase):
         :keyword str locale: Locale of the invoice. Supported locales include: en-US
         :keyword bool include_field_elements:
             Whether or not to include field elements such as lines and words in addition to form fields.
-        :keyword content_type: Media type of the body sent to the API. Content-type is
+        :keyword content_type: Content-type of the body sent to the API. Content-type is
             auto-detected, but can be overridden by passing this keyword argument. For options,
             see :class:`~azure.ai.formrecognizer.FormContentType`.
         :paramtype content_type: str or ~azure.ai.formrecognizer.FormContentType
@@ -345,7 +345,7 @@ class FormRecognizerClient(FormRecognizerClientBase):
         """
         content_type = kwargs.pop("content_type", None)
         if content_type == "application/json":
-            raise TypeError("Call begin_recognize_invoice_from_url() to analyze a invoice from a URL.")
+            raise TypeError("Call begin_recognize_invoice_from_url() to analyze an invoice from a URL.")
 
         include_field_elements = kwargs.pop("include_field_elements", False)
 
@@ -435,7 +435,7 @@ class FormRecognizerClient(FormRecognizerClientBase):
             handwritten – English only). Layout supports auto language identification and multilanguage
             documents, so only provide a language code if you would like to force the documented to be
             processed as that specific language.
-        :keyword content_type: Media type of the body sent to the API. Content-type is
+        :keyword content_type: Content-type of the body sent to the API. Content-type is
             auto-detected, but can be overridden by passing this keyword argument. For options,
             see :class:`~azure.ai.formrecognizer.FormContentType`.
         :paramtype content_type: str or ~azure.ai.formrecognizer.FormContentType
@@ -553,7 +553,7 @@ class FormRecognizerClient(FormRecognizerClientBase):
         :type form: bytes or IO[bytes]
         :keyword bool include_field_elements:
             Whether or not to include field elements such as lines and words in addition to form fields.
-        :keyword content_type: Media type of the body sent to the API. Content-type is
+        :keyword content_type: Content-type of the body sent to the API. Content-type is
             auto-detected, but can be overridden by passing this keyword argument. For options,
             see :class:`~azure.ai.formrecognizer.FormContentType`.
         :paramtype content_type: str or ~azure.ai.formrecognizer.FormContentType

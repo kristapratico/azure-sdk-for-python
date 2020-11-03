@@ -129,7 +129,6 @@ class FormRecognizerTest(AzureTestCase):
         self.multipage_table_pdf = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "./sample_forms/forms/multipagelayout.pdf"))
         self.multipage_vendor_pdf = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "./sample_forms/forms/multi1.pdf"))
         self.selection_form_pdf = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "./sample_forms/forms/selection_mark_form.pdf"))
-        self.form_bmp = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "./sample_forms/forms/Form_1.bmp"))
 
     def get_oauth_endpoint(self):
         return self.get_settings_value("FORM_RECOGNIZER_AAD_ENDPOINT")
@@ -203,9 +202,7 @@ class FormRecognizerTest(AzureTestCase):
             self.assertEqual(page.height, expected_page.height)
             self.assertEqual(page.unit, expected_page.unit)
 
-            if not page.lines and not expected_page.lines:
-                continue
-            for line, expected_line in zip(page.lines, expected_page.lines):
+            for line, expected_line in zip(page.lines or [], expected_page.lines or []):
                 self.assertFormLineTransformCorrect(line, expected_line)
 
             for selection_mark, expected_selection_mark in zip(page.selection_marks or [], expected_page.selection_marks or []):

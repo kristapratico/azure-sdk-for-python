@@ -294,7 +294,7 @@ class FormRecognizerClientOperationsMixin(object):
         header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
 
         body_content_kwargs = {}  # type: Dict[str, Any]
-        if header_parameters['Content-Type'].split(";")[0] in ['application/pdf', 'image/bmp', 'image/jpeg', 'image/png', 'image/tiff']:
+        if header_parameters['Content-Type'].split(";")[0] in ['application/pdf', 'image/jpeg', 'image/png', 'image/tiff']:
             body_content_kwargs['stream_content'] = file_stream
         elif header_parameters['Content-Type'].split(";")[0] in ['application/json']:
             if file_stream is not None:
@@ -305,7 +305,7 @@ class FormRecognizerClientOperationsMixin(object):
         else:
             raise ValueError(
                 "The content_type '{}' is not one of the allowed values: "
-                "['application/pdf', 'image/bmp', 'image/jpeg', 'image/png', 'image/tiff', 'application/json']".format(header_parameters['Content-Type'])
+                "['application/pdf', 'image/jpeg', 'image/png', 'image/tiff', 'application/json']".format(header_parameters['Content-Type'])
             )
         request = self._client.post(url, query_parameters, header_parameters, **body_content_kwargs)
         pipeline_response = self._client._pipeline.run(request, stream=False, **kwargs)
@@ -346,7 +346,7 @@ class FormRecognizerClientOperationsMixin(object):
         :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
         :type file_stream: IO or ~azure.ai.formrecognizer.models.SourcePath
         :keyword str content_type: Media type of the body sent to the API. Default value is "application/json".
-         Allowed values are: "application/pdf", "image/bmp", "image/jpeg", "image/png", "image/tiff", "application/json".
+         Allowed values are: "application/pdf", "image/jpeg", "image/png", "image/tiff", "application/json".
         :keyword callable cls: A custom type or function that will be passed the direct response
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
         :keyword polling: True for ARMPolling, False for no polling, or a

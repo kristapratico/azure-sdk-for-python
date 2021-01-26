@@ -25,7 +25,7 @@ stages:
             # This is a specific request from the formrecognizer service team
             # their claim is that the full matrix ends up stress-testing their service.
             # As such, the canary test runs should run on a reduced matrix.
-            - script: "echo ${{ parameters.RunFilter }}"
+            script: "echo ${{ parameters.RunFilter }}"
             ${{ if eq(cloud.key, 'AzureCloud') }}:
               ${{ or(eq(parameters.RunFilter, 'both'), eq(parameters.RunFilter, 'prod')) }}:
                 Matrix:

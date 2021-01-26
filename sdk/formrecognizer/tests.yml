@@ -111,4 +111,3 @@ stages:
               TEST_MODE: 'RunLiveNoRecord'
               AZURE_SKIP_LIVE_RECORDING: 'True'
               AZURE_TEST_RUN_LIVE: 'true'
-              REGION: $(cloud.key['Location'])

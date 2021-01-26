@@ -35,7 +35,7 @@ from azure_devtools.scenario_tests.utilities import is_text_payload
 
 LOGGING_FORMAT = '%(asctime)s %(name)-20s %(levelname)-5s %(message)s'
 ENABLE_LOGGER = os.getenv('ENABLE_LOGGER', "False")
-REGION = os.getenv('REGION', 'centraluseuap')
+REGION = os.getenv('Location', 'centraluseuap')
 ENDPOINT = os.getenv('ENDPOINT', 'None')
 NAME = os.getenv('NAME', 'None')
 RESOURCE_GROUP = os.getenv('RESOURCE_GROUP', 'None')

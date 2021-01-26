@@ -47,7 +47,7 @@ parameters:
 
 jobs:
   - ${{ each cloudConfig in parameters.CloudConfigurations }}:
-    - job:
+    - job: ${{ parameters.JobName }}
       variables:
         skipComponentGovernanceDetection: true
 

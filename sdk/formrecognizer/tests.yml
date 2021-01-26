@@ -12,7 +12,7 @@ parameters:
       Location: 'centraluseuap'
 - name: RunFilter
   type: string
-  default: 'canary'
+  default: 'both'
 
 stages:
 - ${{ each cloud in parameters.CloudConfigurations }}:
@@ -29,7 +29,7 @@ stages:
             # their claim is that the full matrix ends up stress-testing their service.
             # As such, the canary test runs should run on a reduced matrix.
 #            ${{ if eq(cloud.key, 'AzureCloud') }}:
-            ${{ or(eq(parameters.RunFilter, 'both'), eq(parameters.RunFilter, 'prod')) }}:
+            ${{ if eq(parameters.RunFilter, 'both') }}:
               Matrix:
                 Linux_Python35:
                   Pool: Azure Pipelines

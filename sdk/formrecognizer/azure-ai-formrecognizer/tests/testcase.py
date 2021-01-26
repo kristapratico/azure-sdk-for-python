@@ -742,7 +742,7 @@ def form_recognizer_account():
             name_prefix='pycog',
             location=REGION
         )
-
+        assert REGION == "centraluseuap"
         try:
             rg_name, rg_kwargs = rg_preparer._prepare_create_resource(test_case)
             FormRecognizerTest._RESOURCE_GROUP = rg_kwargs['resource_group']

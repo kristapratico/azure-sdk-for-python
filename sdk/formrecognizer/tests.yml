@@ -7,12 +7,6 @@ jobs:
       ServiceDirectory: formrecognizer
       TestTimeoutInMinutes: 200
       TestSamples: true
-      CloudConfigurations:
-        AzureCloud:
-          SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
-        Canary:
-          SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
-          Location: 'centraluseuap'
       # This is a specific request from the formrecognizer service team
       # their claim is that the full matrix ends up stress-testing their service.
       # As such, the canary test runs should run on a reduced matrix.
@@ -60,6 +54,12 @@ jobs:
             OSVmImage: MMSUbuntu18.04
             PythonVersion: '3.9'
             CoverageArg: ''
+      CloudConfigurations:
+        AzureCloud:
+          SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
+        Canary:
+          SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
+          Location: 'centraluseuap'
       EnvVars:
         AZURE_FORM_RECOGNIZER_PYTHON_CANARY_API_KEY: $(python-formrecognizer-test-canary-api-key)
         AZURE_FORM_RECOGNIZER_PYTHON_API_KEY: $(python-formrecognizer-test-api-key)

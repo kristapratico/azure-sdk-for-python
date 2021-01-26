@@ -11,7 +11,13 @@ parameters:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
       Location: 'centraluseuap'
 - name: RunFilter
-  default: $(RunFilter)
+  displayName: RunFilter
+  type: string
+  default: 'both'
+  values:
+    - 'both'
+    - 'canary'
+    - 'prod'
 
 stages:
 - ${{ each cloud in parameters.CloudConfigurations }}:

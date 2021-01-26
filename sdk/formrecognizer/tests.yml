@@ -4,10 +4,10 @@ parameters:
 - name: CloudConfigurations
   type: object
   default:
-    AzureCloud:
+    prod:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
       Location: $(Region)
-    Canary:
+    canary:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
       Location: 'centraluseuap'
 - name: RunFilter
@@ -15,62 +15,62 @@ parameters:
 
 stages:
 - ${{ each cloud in parameters.CloudConfigurations }}:
-    ${{ or(eq(cloud.key, parameters.RunFilter), eq(cloud.key, 'both')) }}:
-      - stage: ${{ cloud.key }}
-        jobs:
-          - template: ../../eng/pipelines/templates/jobs/archetype-sdk-tests.yml
-            parameters:
-              BuildTargetingString: azure-ai-formrecognizer
-              ServiceDirectory: formrecognizer
-              TestTimeoutInMinutes: 200
-              TestSamples: true
-              # This is a specific request from the formrecognizer service team
-              # their claim is that the full matrix ends up stress-testing their service.
-              # As such, the canary test runs should run on a reduced matrix.
-              ${{ if eq(cloud.key, 'AzureCloud') }}:
-                Matrix:
-                  Linux_Python35:
-                    Pool: Azure Pipelines
-                    OSVmImage: 'ubuntu-18.04'
-                    PythonVersion: '3.5'
-                    CoverageArg: '--disablecov'
-                  MacOs_Python37:
-                    Pool: Azure Pipelines
-                    OSVmImage: 'macOS-10.15'
-                    PythonVersion: '3.7'
-                    CoverageArg: '--disablecov'
-                  Windows_Python27:
-                    Pool: Azure Pipelines
-                    OSVmImage: 'windows-2019'
-                    PythonVersion: '2.7'
-                    CoverageArg: '--disablecov'
-                  Linux_PyPy3:
-                    Pool: Azure Pipelines
-                    OSVmImage: 'ubuntu-18.04'
-                    PythonVersion: 'pypy3'
-                    CoverageArg: '--disablecov'
-                  Linux_Python39:
-                    Pool: Azure Pipelines
-                    OSVmImage: 'ubuntu-18.04'
-                    PythonVersion: '3.9'
-                    CoverageArg: ''
-              ${{ if eq(cloud.key, 'Canary') }}:
-                Matrix:
-                  Linux_Python35:
-                    Pool: Azure Pipelines
-                    OSVmImage: 'ubuntu-18.04'
-                    PythonVersion: '3.5'
-                    CoverageArg: '--disablecov'
-                  Windows_Python27:
-                    Pool: Azure Pipelines
-                    OSVmImage: 'windows-2019'
-                    PythonVersion: '2.7'
-                    CoverageArg: '--disablecov'
-                  Linux_Python39:
-                    Pool: Azure Pipelines
-                    OSVmImage: 'ubuntu-18.04'
-                    PythonVersion: '3.9'
-                    CoverageArg: ''
+    - stage: ${{ cloud.key }}
+      condition: or(eq(parameters.RunFilter, 'both'), eq(parameters.RunFilter, cloud.key))
+      jobs:
+        - template: ../../eng/pipelines/templates/jobs/archetype-sdk-tests.yml
+          parameters:
+            BuildTargetingString: azure-ai-formrecognizer
+            ServiceDirectory: formrecognizer
+            TestTimeoutInMinutes: 200
+            TestSamples: true
+            # This is a specific request from the formrecognizer service team
+            # their claim is that the full matrix ends up stress-testing their service.
+            # As such, the canary test runs should run on a reduced matrix.
+            ${{ if eq(cloud.key, 'prod') }}:
+              Matrix:
+                Linux_Python35:
+                  Pool: Azure Pipelines
+                  OSVmImage: 'ubuntu-18.04'
+                  PythonVersion: '3.5'
+                  CoverageArg: '--disablecov'
+                MacOs_Python37:
+                  Pool: Azure Pipelines
+                  OSVmImage: 'macOS-10.15'
+                  PythonVersion: '3.7'
+                  CoverageArg: '--disablecov'
+                Windows_Python27:
+                  Pool: Azure Pipelines
+                  OSVmImage: 'windows-2019'
+                  PythonVersion: '2.7'
+                  CoverageArg: '--disablecov'
+                Linux_PyPy3:
+                  Pool: Azure Pipelines
+                  OSVmImage: 'ubuntu-18.04'
+                  PythonVersion: 'pypy3'
+                  CoverageArg: '--disablecov'
+                Linux_Python39:
+                  Pool: Azure Pipelines
+                  OSVmImage: 'ubuntu-18.04'
+                  PythonVersion: '3.9'
+                  CoverageArg: ''
+            ${{ if eq(cloud.key, 'canary') }}:
+              Matrix:
+                Linux_Python35:
+                  Pool: Azure Pipelines
+                  OSVmImage: 'ubuntu-18.04'
+                  PythonVersion: '3.5'
+                  CoverageArg: '--disablecov'
+                Windows_Python27:
+                  Pool: Azure Pipelines
+                  OSVmImage: 'windows-2019'
+                  PythonVersion: '2.7'
+                  CoverageArg: '--disablecov'
+                Linux_Python39:
+                  Pool: Azure Pipelines
+                  OSVmImage: 'ubuntu-18.04'
+                  PythonVersion: '3.9'
+                  CoverageArg: ''
               EnvVars:
                 AZURE_FORM_RECOGNIZER_PYTHON_CANARY_API_KEY: $(python-formrecognizer-test-canary-api-key)
                 AZURE_FORM_RECOGNIZER_PYTHON_API_KEY: $(python-formrecognizer-test-api-key)

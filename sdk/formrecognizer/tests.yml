@@ -1,6 +1,7 @@
 trigger: none
 
 parameters:
+- RunFilter: $(RUN_FILTER)  # canary, prod, both
 - name: CloudConfigurations
   type: object
   default:
@@ -21,12 +22,11 @@ stages:
             ServiceDirectory: formrecognizer
             TestTimeoutInMinutes: 200
             TestSamples: true
-            RunFilter: $(RUN_FILTER)  # canary, prod, both
             # This is a specific request from the formrecognizer service team
             # their claim is that the full matrix ends up stress-testing their service.
             # As such, the canary test runs should run on a reduced matrix.
             ${{ if eq(cloud.key, 'AzureCloud') }}:
-              ${{ if in(parameters.RunFilter, 'both', 'prod') }}:
+              ${{ if in(parameters['RunFilter'], 'both', 'prod') }}:
                 Matrix:
                   Linux_Python35:
                     Pool: Azure Pipelines
@@ -54,7 +54,7 @@ stages:
                     PythonVersion: '3.9'
                     CoverageArg: ''
             ${{ if eq(cloud.key, 'Canary') }}:
-              ${{ if in(parameters.RunFilter, 'both', 'canary') }}:
+              ${{ if in(parameters['RunFilter'], 'both', 'canary') }}:
                 Matrix:
                   Linux_Python35:
                     Pool: Azure Pipelines

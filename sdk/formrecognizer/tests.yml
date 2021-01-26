@@ -26,7 +26,7 @@ stages:
             # their claim is that the full matrix ends up stress-testing their service.
             # As such, the canary test runs should run on a reduced matrix.
             ${{ if eq(cloud.key, 'AzureCloud') }}:
-              ${{ if in(RunFilter, 'both', 'prod') }}:
+              ${{ if in(parameters.RunFilter, 'both', 'prod') }}:
                 Matrix:
                   Linux_Python35:
                     Pool: Azure Pipelines
@@ -54,7 +54,7 @@ stages:
                     PythonVersion: '3.9'
                     CoverageArg: ''
             ${{ if eq(cloud.key, 'Canary') }}:
-              ${{ if in(RunFilter, 'both', 'canary') }}:
+              ${{ if in(parameters.RunFilter, 'both', 'canary') }}:
                 Matrix:
                   Linux_Python35:
                     Pool: Azure Pipelines

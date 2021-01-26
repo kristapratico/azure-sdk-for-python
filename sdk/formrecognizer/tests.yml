@@ -1,7 +1,9 @@
 trigger: none
 
 parameters:
-  CloudConfigurations:
+- name: CloudConfigurations
+  type: object
+  default:
     AzureCloud:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
     Canary:

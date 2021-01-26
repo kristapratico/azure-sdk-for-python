@@ -60,6 +60,7 @@ jobs:
         Canary:
           SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
           Location: 'centraluseuap'
+          JobName: Canary
       EnvVars:
         AZURE_FORM_RECOGNIZER_PYTHON_CANARY_API_KEY: $(python-formrecognizer-test-canary-api-key)
         AZURE_FORM_RECOGNIZER_PYTHON_API_KEY: $(python-formrecognizer-test-api-key)

@@ -21,10 +21,11 @@ stages:
             ServiceDirectory: formrecognizer
             TestTimeoutInMinutes: 200
             TestSamples: true
+            RunFilter: $(RUN_FILTER)  # canary, prod, both
             # This is a specific request from the formrecognizer service team
             # their claim is that the full matrix ends up stress-testing their service.
             # As such, the canary test runs should run on a reduced matrix.
-            ${{ if contains(${{ cloud.key }}, 'AzureCloud') }}:
+            ${{ if contains(${{ cloud.key }}, 'AzureCloud'), and(in(${{ RunFilter }}, 'both', 'prod'))}}:
               Matrix:
                 Linux_Python35:
                   Pool: Azure Pipelines
@@ -51,7 +52,7 @@ stages:
                   OSVmImage: 'ubuntu-18.04'
                   PythonVersion: '3.9'
                   CoverageArg: ''
-            ${{ if contains(${{ cloud.key }}, 'Canary') }}:
+            ${{ if contains(${{ cloud.key }}, 'Canary'), and(in(${{ RunFilter }}, 'both', 'canary'))}}:
               Matrix:
                 Linux_Python35:
                   Pool: Azure Pipelines

@@ -10,13 +10,11 @@ parameters:
     Canary:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
       Location: 'centraluseuap'
-- name: RunFilter
-  type: string
-  default: $(RunFilter)
+- RunFilter: $(RunFilter)
 
 stages:
 - ${{ each cloud in parameters.CloudConfigurations }}:
-    ${{ in(cloud.key, parameters.RunFilter, 'both') }}:
+    ${{ or(eq(cloud.key, parameters.RunFilter), eq(cloud.key, 'both')) }}:
       - stage: ${{ cloud.key }}
         jobs:
           - template: ../../eng/pipelines/templates/jobs/archetype-sdk-tests.yml

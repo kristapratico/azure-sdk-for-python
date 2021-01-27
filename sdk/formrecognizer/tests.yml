@@ -6,7 +6,7 @@ parameters:
   default:
     prod:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
-      Location: $(REGION)
+      Location: $(LOCATION)
     canary:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
       Location: 'centraluseuap'
@@ -111,4 +111,4 @@ stages:
               TEST_MODE: 'RunLiveNoRecord'
               AZURE_SKIP_LIVE_RECORDING: 'True'
               AZURE_TEST_RUN_LIVE: 'true'
-              LOCATION: '${{cloud.value.Location}}'
+              REGION: '${{cloud.value.Location}}'

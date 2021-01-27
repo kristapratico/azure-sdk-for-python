@@ -30,6 +30,7 @@ stages:
             ServiceDirectory: formrecognizer
             TestTimeoutInMinutes: 200
             TestSamples: false
+            Location: ${{cloud.value.Location}}
             # This is a specific request from the formrecognizer service team
             # their claim is that the full matrix ends up stress-testing their service.
             # As such, the canary test runs should run on a reduced matrix.
@@ -111,4 +112,4 @@ stages:
               TEST_MODE: 'RunLiveNoRecord'
               AZURE_SKIP_LIVE_RECORDING: 'True'
               AZURE_TEST_RUN_LIVE: 'true'
-              LOCATION: $(cloud.value.Location)
+              LOCATION: $(parameters.Location)

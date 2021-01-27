@@ -112,4 +112,4 @@ stages:
               TEST_MODE: 'RunLiveNoRecord'
               AZURE_SKIP_LIVE_RECORDING: 'True'
               AZURE_TEST_RUN_LIVE: 'true'
-              LOCATION: ${{parameters.Location}}
+              LOCATION: $(parameters.Location)

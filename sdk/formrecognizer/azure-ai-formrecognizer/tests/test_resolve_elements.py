@@ -43,4 +43,4 @@ class TestResolveElements(FormRecognizerTest):
 
     def test_region(self):
         # assert REGION == "canadacentral"
-        assert self._FORM_RECOGNIZER_ACCOUNT.find("centraluseuap") != -1
+        assert self._FORM_RECOGNIZER_ACCOUNT.find("canadacentral") != -1

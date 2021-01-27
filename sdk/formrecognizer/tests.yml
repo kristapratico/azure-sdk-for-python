@@ -21,7 +21,7 @@ parameters:
 
 stages:
 - ${{ each cloud in parameters.CloudConfigurations }}:
-    - stage: ${{ cloud.key }}
+    - stage: ${{cloud.value.Location}}
       condition: or(eq('${{parameters.RunFilter}}', 'both'), eq('${{parameters.RunFilter}}', '${{cloud.key}}'))
       jobs:
         - template: ../../eng/pipelines/templates/jobs/archetype-sdk-tests.yml

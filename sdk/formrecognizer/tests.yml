@@ -21,7 +21,7 @@ parameters:
 
 stages:
 - ${{ each cloud in parameters.CloudConfigurations }}:
-    - stage: ${{cloud.value.Location}}
+    - stage: ${{ cloud.key }}
       condition: or(eq('${{parameters.RunFilter}}', 'both'), eq('${{parameters.RunFilter}}', '${{cloud.key}}'))
       jobs:
         - template: ../../eng/pipelines/templates/jobs/archetype-sdk-tests.yml
@@ -112,4 +112,4 @@ stages:
               TEST_MODE: 'RunLiveNoRecord'
               AZURE_SKIP_LIVE_RECORDING: 'True'
               AZURE_TEST_RUN_LIVE: 'true'
-              LOCATION: $(parameters.Location)
+              LOCATION: 'centraluseuap'

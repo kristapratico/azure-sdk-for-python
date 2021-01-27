@@ -734,8 +734,6 @@ def form_recognizer_account():
         FormRecognizerTest._RESOURCE_GROUP = ResourceGroup(name=RESOURCE_GROUP)
         yield
     else:
-        # assert REGION is None
-        # assert REGION == "centraluseuap"
         test_case = AzureTestCase("__init__")
         rg_preparer = ResourceGroupPreparer(random_name_enabled=True, name_prefix='pycog', location=REGION)
         form_recognizer_preparer = CognitiveServicesAccountPreparer(

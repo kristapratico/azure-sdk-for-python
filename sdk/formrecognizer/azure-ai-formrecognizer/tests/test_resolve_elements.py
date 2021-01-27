@@ -40,7 +40,3 @@ class TestResolveElements(FormRecognizerTest):
 
         bad_ref3 = "#/analyzeResult/readResults/100"
         assert get_element_type(bad_ref3) is None
-
-    def test_region(self):
-        # assert REGION == "canadacentral"
-        assert self._FORM_RECOGNIZER_ACCOUNT.find("canadacentral") != -1

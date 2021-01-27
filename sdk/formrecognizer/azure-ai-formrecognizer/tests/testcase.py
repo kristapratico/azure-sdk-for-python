@@ -742,7 +742,7 @@ def form_recognizer_account():
             name_prefix='pycog',
             location=REGION
         )
-        assert REGION == "canadacentral"
+        # assert REGION == "canadacentral"
         assert REGION == "centraluseuap"
 
         try:

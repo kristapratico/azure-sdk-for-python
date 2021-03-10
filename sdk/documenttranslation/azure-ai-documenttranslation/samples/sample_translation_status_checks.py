@@ -35,23 +35,15 @@ def sample_translation_status_checks():
         ]
     )  # type: JobStatusDetail
 
+    completed_docs = []
+    running_state = ["NotStarted", "Running"]
 
-    doc_statuses = client.list_documents_statuses(job.id)  # type: ItemPaged[DocumentStatusDetail]
-
-    pending = []
-    for doc in doc_statuses:
-        if doc.status in ["NotStarted", "Running"]:
-            pending.append(doc.id)
-        else:
-            print("Document at {} completed with status: {}".format(doc.url, doc.status))
-
-    while pending:
+    while client.get_job_status(job.id) in running_state:
         time.sleep(30)
-        for idx, doc_id in reversed(list(enumerate(pending))):
-            doc_status = client.get_document_status(job.id, doc_id)
-            if doc_status not in ["NotStarted", "Running"]:
-                print("Document at {} completed with status: {}".format(doc_status.url, doc_status.status))
-                del pending[idx]
+        for doc in client.list_documents_statuses(job.id):
+            if doc.id not in completed_docs and doc.status not in running_state:
+                completed_docs.append(doc.id)
+                print("Document at {} completed with status: {}".format(doc.url, doc.status))
 
 
 if __name__ == '__main__':

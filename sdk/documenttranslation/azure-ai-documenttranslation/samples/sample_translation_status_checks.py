@@ -45,6 +45,7 @@ def sample_translation_status_checks():
                 completed_docs.append(doc.id)
                 print("Document at {} completed with status: {}".format(doc.url, doc.status))
 
+    print("Translation job completed.")
 
 if __name__ == '__main__':
     sample_translation_status_checks()

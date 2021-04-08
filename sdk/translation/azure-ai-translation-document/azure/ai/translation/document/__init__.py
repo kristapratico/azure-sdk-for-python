@@ -19,6 +19,7 @@ from ._models import (
     DocumentTranslationInput,
     FileFormat
 )
+from ._polling import DocumentTranslationPoller
 
 __VERSION__ = VERSION
 
@@ -34,4 +35,5 @@ __all__ = [
     "JobStatusResult",
     "DocumentStatusResult",
     "DocumentTranslationError",
+    "DocumentTranslationPoller"
 ]

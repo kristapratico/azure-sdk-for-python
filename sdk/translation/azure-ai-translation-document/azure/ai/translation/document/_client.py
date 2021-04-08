@@ -19,7 +19,7 @@ from ._models import (
     FileFormat
 )
 from ._user_agent import USER_AGENT
-from ._polling import TranslationPolling
+from ._polling import TranslationPolling, DocumentTranslationPoller
 if TYPE_CHECKING:
     from azure.core.paging import ItemPaged
 
@@ -84,6 +84,39 @@ class DocumentTranslationClient(object):  # pylint: disable=r0205
         # type: () -> None
         """Close the :class:`~azure.ai.translation.document.DocumentTranslationClient` session."""
         return self._client.close()
+
+    @distributed_trace
+    def begin_translation(self, inputs, **kwargs):
+        # type: (List[DocumentTranslationInput], **Any) -> DocumentTranslationPoller[ItemPaged[DocumentStatusResult]]
+        """Begin translating the document(s) in your source container
+        to your TranslationTarget(s) in the given language.
+
+        For supported languages and document formats, see the service documentation:
+        https://docs.microsoft.com/azure/cognitive-services/translator/document-translation/overview
+
+        :param inputs: A list of translation inputs. Each individual input has a single
+            source URL to documents and can contain multiple TranslationTargets (one for each language)
+            for the destination to write translated documents.
+        :type inputs: List[~azure.ai.translation.document.DocumentTranslationInput]
+        :return: DocumentTranslationPoller
+        :rtype: DocumentTranslationPoller[ItemPaged[:class:`~azure.ai.translation.document.DocumentStatusResult`]]
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+        def callback(raw_response, _, headers):
+            detail = self._client._deserialize(_BatchStatusDetail, raw_response)  # pylint: disable=protected-access
+            return self.list_all_document_statuses(detail.id)
+
+        return self._client.document_translation.begin_submit_batch_request(
+            inputs=DocumentTranslationInput._to_generated_list(inputs),  # pylint: disable=protected-access
+            polling=LROBasePolling(
+                timeout=self._client._config.polling_interval,  # pylint: disable=protected-access
+                lro_algorithms=[TranslationPolling()],
+                **kwargs
+            ),
+            cls=kwargs.pop("cls", callback),
+            **kwargs
+        )
 
     @distributed_trace
     def create_translation_job(self, inputs, **kwargs):

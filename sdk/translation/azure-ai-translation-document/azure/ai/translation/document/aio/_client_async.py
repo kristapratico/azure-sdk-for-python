@@ -216,7 +216,7 @@ class DocumentTranslationClient(object):
         """List all the submitted translation jobs under the Document Translation resource.
 
         :return: ~azure.core.paging.AsyncItemPaged[:class:`~azure.ai.translation.document.JobStatusResult`]
-        :rtype: ~azure.core.paging.AsyncItemPaged
+        :rtype: ~azure.core.paging.AsyncItemPaged[JobStatusResult]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         .. admonition:: Example:
@@ -250,7 +250,7 @@ class DocumentTranslationClient(object):
 
         :param str job_id: The translation job ID.
         :return: ~azure.core.paging.AsyncItemPaged[:class:`~azure.ai.translation.document.DocumentStatusResult`]
-        :rtype: ~azure.core.paging.AsyncItemPaged
+        :rtype: ~azure.core.paging.AsyncItemPaged[DocumentStatusResult]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         .. admonition:: Example:

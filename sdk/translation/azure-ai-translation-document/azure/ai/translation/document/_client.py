@@ -99,7 +99,7 @@ class DocumentTranslationClient(object):  # pylint: disable=r0205
             for the destination to write translated documents.
         :type inputs: List[~azure.ai.translation.document.DocumentTranslationInput]
         :return: DocumentTranslationPoller
-        :rtype: DocumentTranslationPoller[ItemPaged[:class:`~azure.ai.translation.document.DocumentStatusResult`]]
+        :rtype: DocumentTranslationPoller[ItemPaged[DocumentStatusResult]]
         :raises ~azure.core.exceptions.HttpResponseError:
         """
 
@@ -248,7 +248,7 @@ class DocumentTranslationClient(object):  # pylint: disable=r0205
         """List all the submitted translation jobs under the Document Translation resource.
 
         :return: ~azure.core.paging.ItemPaged[:class:`~azure.ai.translation.document.JobStatusResult`]
-        :rtype: ~azure.core.paging.ItemPaged
+        :rtype: ~azure.core.paging.ItemPaged[JobStatusResult]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         .. admonition:: Example:
@@ -282,7 +282,7 @@ class DocumentTranslationClient(object):  # pylint: disable=r0205
 
         :param str job_id: The translation job ID.
         :return: ~azure.core.paging.ItemPaged[:class:`~azure.ai.translation.document.DocumentStatusResult`]
-        :rtype: ~azure.core.paging.ItemPaged
+        :rtype: ~azure.core.paging.ItemPaged[DocumentStatusResult]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         .. admonition:: Example:

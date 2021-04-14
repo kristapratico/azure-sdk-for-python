@@ -44,7 +44,7 @@ def sample_document_status_checks():
 
     client = DocumentTranslationClient(endpoint, AzureKeyCredential(key))
 
-    poller = client.begin_translation(inputs=[
+    job_result = client.create_translation_job(inputs=[
             DocumentTranslationInput(
                 source_url=source_container_url,
                 targets=[
@@ -55,29 +55,20 @@ def sample_document_status_checks():
                 ]
             )
         ]
-    )
+    )  # type: JobStatusResult
 
-    completed_docs = []
-    while poller.status() in ["NotStarted", "Running"]:
-        time.sleep(30)
+    job_result = client.wait_until_done(status="Running")  # rename to wait_for_job?
 
-        doc_statuses = client.list_all_document_statuses(poller.job_id)
-        for document in doc_statuses:
-            if document.id not in completed_docs:
-                if document.status == "Succeeded":
-                    print("Document at {} was translated to {} language. You can find translated document at {}".format(
-                        document.source_document_url, document.translate_to, document.translated_document_url
-                    ))
-                    completed_docs.append(document.id)
-                if document.status == "Failed":
-                    print("Document ID: {}, Error Code: {}, Message: {}".format(
-                        document.id, document.error.code, document.error.message
-                    ))
-                    completed_docs.append(document.id)
-                if document.status == "Running":
-                    print("Document ID: {}, translation progress is {} percent".format(
-                        document.id, document.translation_progress * 100
-                    ))
+    doc_statuses = client.wait_for_document_statuses(job_result.id)
+    for document in doc_statuses:
+        if document.status == "Succeeded":
+            print("Document at {} was translated to {} language. You can find translated document at {}".format(
+                document.source_document_url, document.translate_to, document.translated_document_url
+            ))
+        if document.status == "Failed":
+            print("Document ID: {}, Error Code: {}, Message: {}".format(
+                document.id, document.error.code, document.error.message
+            ))
 
     print("\nTranslation job completed.")
 

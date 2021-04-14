@@ -4,6 +4,15 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
+import datetime
+from typing import TYPE_CHECKING
+import warnings
+
+from azure.core.exceptions import ClientAuthenticationError, HttpResponseError, ResourceExistsError, ResourceNotFoundError, map_error
+from azure.core.paging import ItemPaged
+from ._generated import models as _models
+from azure.core.pipeline import PipelineResponse
+from azure.core.pipeline.transport import HttpRequest, HttpResponse
 from typing import Any, TYPE_CHECKING, List
 from azure.core.tracing.decorator import distributed_trace
 from azure.core.polling import LROPoller
@@ -275,6 +284,141 @@ class DocumentTranslationClient(object):  # pylint: disable=r0205
             **kwargs
         )
 
+    def _get_operation_documents_status(
+        self,
+        id,  # type: str
+        top=None,  # type: Optional[int]
+        skip=0,  # type: Optional[int]
+        maxpagesize=2,  # type: Optional[int]
+        ids=None,  # type: Optional[List[str]]
+        statuses=None,  # type: Optional[List[str]]
+        created_date_time_utc_start=None,  # type: Optional[datetime.datetime]
+        created_date_time_utc_end=None,  # type: Optional[datetime.datetime]
+        order_by=None,  # type: Optional[List[str]]
+        **kwargs  # type: Any
+    ):
+        # type: (...) -> Iterable["_models.DocumentStatusResponse"]
+
+        cls = kwargs.pop('cls', None)  # type: ClsType["_models.DocumentStatusResponse"]
+        error_map = {
+            409: ResourceExistsError,
+            400: lambda response: HttpResponseError(response=response, model=self._deserialize(_models.ErrorResponseV2, response)),
+            401: lambda response: ClientAuthenticationError(response=response, model=self._deserialize(_models.ErrorResponseV2, response)),
+            404: lambda response: ResourceNotFoundError(response=response, model=self._deserialize(_models.ErrorResponseV2, response)),
+            429: lambda response: HttpResponseError(response=response, model=self._deserialize(_models.ErrorResponseV2, response)),
+            500: lambda response: HttpResponseError(response=response, model=self._deserialize(_models.ErrorResponseV2, response)),
+            503: lambda response: HttpResponseError(response=response, model=self._deserialize(_models.ErrorResponseV2, response)),
+        }
+        error_map.update(kwargs.pop('error_map', {}))
+        accept = "application/json"
+
+        def prepare_request(next_link=None):
+            # Construct headers
+            header_parameters = {}  # type: Dict[str, Any]
+            header_parameters['Accept'] = self._client._serialize.header("accept", accept, 'str')
+
+            if not next_link:
+                # Construct URL
+                url = self._get_operation_documents_status.metadata['url']  # type: ignore
+                path_format_arguments = {
+                    'endpoint': self._client._serialize.url("self._client._config.endpoint", self._client._config.endpoint, 'str', skip_quote=True),
+                    'id': self._client._serialize.url("id", id, 'str'),
+                }
+                url = self._client._client.format_url(url, **path_format_arguments)
+                # Construct parameters
+                query_parameters = {}  # type: Dict[str, Any]
+                if top is not None:
+                    query_parameters['$top'] = self._client._serialize.query("top", top, 'int', maximum=2147483647, minimum=0)
+                if skip is not None:
+                    query_parameters['$skip'] = self._client._serialize.query("skip", skip, 'int', maximum=2147483647, minimum=0)
+                if maxpagesize is not None:
+                    query_parameters['$maxpagesize'] = self._client._serialize.query("maxpagesize", maxpagesize, 'int', maximum=100, minimum=1)
+                if ids is not None:
+                    query_parameters['ids'] = self._client._serialize.query("ids", ids, '[str]', div=',')
+                if statuses is not None:
+                    query_parameters['statuses'] = self._client._serialize.query("statuses", statuses, '[str]', div=',')
+                if created_date_time_utc_start is not None:
+                    query_parameters['createdDateTimeUtcStart'] = self._client._serialize.query("created_date_time_utc_start", created_date_time_utc_start, 'iso-8601')
+                if created_date_time_utc_end is not None:
+                    query_parameters['createdDateTimeUtcEnd'] = self._client._serialize.query("created_date_time_utc_end", created_date_time_utc_end, 'iso-8601')
+                if order_by is not None:
+                    query_parameters['$orderBy'] = self._client._serialize.query("order_by", order_by, '[str]', div=',')
+
+                request = self._client._client.get(url, query_parameters, header_parameters)
+            else:
+                url = next_link
+                query_parameters = {}  # type: Dict[str, Any]
+                path_format_arguments = {
+                    'endpoint': self._client._serialize.url("self._client._config.endpoint", self._client._config.endpoint, 'str', skip_quote=True),
+                    'id': self._client._serialize.url("id", id, 'str'),
+                }
+                url = self._client._client.format_url(url, **path_format_arguments)
+                request = self._client._client.get(url, query_parameters, header_parameters)
+            return request
+
+        def extract_data(pipeline_response):
+            deserialized = self._client._deserialize('DocumentStatusResponse', pipeline_response)
+            list_of_elem = deserialized.value
+            if cls:
+                list_of_elem = cls(list_of_elem)
+            return deserialized.next_link or None, iter(list_of_elem)
+
+        def get_next(next_link=None):
+            request = prepare_request(next_link)
+
+            pipeline_response = self._client._client._pipeline.run(request, stream=False, **kwargs)
+            response = pipeline_response.http_response
+
+            if response.status_code not in [200]:
+                map_error(status_code=response.status_code, response=response, error_map=error_map)
+                raise HttpResponseError(response=response)
+
+            return pipeline_response
+
+        from ._paging import DocumentsPageIterator
+        return ItemPaged(
+            get_next,
+            extract_data,
+            page_iterator_class=DocumentsPageIterator,
+            transport=self._client._client._pipeline._transport,
+            polling_interval=self._client._config.polling_interval
+        )
+    _get_operation_documents_status.metadata = {'url': '/batches/{id}/documents'}  # type: ignore
+
+    def _wait_docs(self, job_id, **kwargs):
+        def callback(list_of_elem):
+            return [DocumentStatusResult._from_generated(generated_model) for generated_model in list_of_elem]
+
+        model_conversion_function = kwargs.pop(
+            "cls",
+            callback
+        )
+        completed_docs = []
+        while True:
+            result = self._get_operation_documents_status(
+                id=job_id,
+                cls=model_conversion_function,
+                **kwargs
+            )
+
+            total_doc_count = 0
+            for doc in result:
+                total_doc_count += 1
+                if doc.id not in completed_docs and doc.status in \
+                        ["Succeeded", "Failed", "Cancelled", "ValidationFailed"]:
+                    completed_docs.append(doc.id)
+                    yield doc
+
+            if len(completed_docs) == total_doc_count:
+                break
+
+            # retry_after = response[-1].http_response.headers.get("Retry-After", None)
+            # transport = self._client._client._pipeline._transport
+            # if retry_after:
+            #     transport.sleep(int(retry_after))
+            # else:
+            #     transport.sleep(self._client._config.polling_interval)
+
     @distributed_trace
     def list_all_document_statuses(self, job_id, **kwargs):
         # type: (str, **Any) -> ItemPaged[DocumentStatusResult]
@@ -303,12 +447,21 @@ class DocumentTranslationClient(object):  # pylint: disable=r0205
             lambda doc_statuses: [
                 _convert_from_generated_model(doc_status) for doc_status in doc_statuses
             ])
+        wait = kwargs.pop("wait", None)
 
-        return self._client.document_translation.get_operation_documents_status(
-            id=job_id,
-            cls=model_conversion_function,
-            **kwargs
-        )
+        if wait:
+            return self._wait_docs(job_id, **kwargs)
+            # return self._get_operation_documents_status(
+            #     id=job_id,
+            #     cls=model_conversion_function,
+            #     **kwargs
+            # )
+        else:
+            return self._client.document_translation.get_operation_documents_status(
+                id=job_id,
+                cls=model_conversion_function,
+                **kwargs
+            )
 
     @distributed_trace
     def get_document_status(self, job_id, document_id, **kwargs):

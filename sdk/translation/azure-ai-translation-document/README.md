@@ -114,54 +114,6 @@ To create a translation job, pass a list of `DocumentTranslationInput` into the 
 Constructing a `DocumentTranslationInput` requires that you pass the SAS URLs to your source and target containers (or files)
 and the target language(s) for translation.
 
-A single source container with documents can be translated to many different languages:
-
-```python
-from azure.ai.translation.document import DocumentTranslationInput, TranslationTarget
-
-my_input = [
-    DocumentTranslationInput(
-        source_url="<sas_url_to_source>",
-        targets=[
-            TranslationTarget(target_url="<sas_url_to_target_fr>", language_code="fr"),
-            TranslationTarget(target_url="<sas_url_to_target_de>", language_code="de")
-        ]
-    )
-]
-```
-
-Or multiple different sources can be provided each with their own targets.
-
-```python
-from azure.ai.translation.document import DocumentTranslationInput, TranslationTarget
-
-my_input = [
-    DocumentTranslationInput(
-        source_url="<sas_url_to_source_A>",
-        targets=[
-            TranslationTarget(target_url="<sas_url_to_target_fr>", language_code="fr"),
-            TranslationTarget(target_url="<sas_url_to_target_de>", language_code="de")
-        ]
-    ),
-    DocumentTranslationInput(
-        source_url="<sas_url_to_source_B>",
-        targets=[
-            TranslationTarget(target_url="<sas_url_to_target_fr>", language_code="fr"),
-            TranslationTarget(target_url="<sas_url_to_target_de>", language_code="de")
-        ]
-    ),
-    DocumentTranslationInput(
-        source_url="<sas_url_to_source_C>",
-        targets=[
-            TranslationTarget(target_url="<sas_url_to_target_fr>", language_code="fr"),
-            TranslationTarget(target_url="<sas_url_to_target_de>", language_code="de")
-        ]
-    )
-]
-```
-
-> Note: the target_url for each target language must be unique.
-
 See the service documentation for all [supported languages][supported_languages].
 
 ### Return value

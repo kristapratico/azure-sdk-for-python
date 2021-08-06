@@ -179,8 +179,15 @@ the information (page number, confidence, etc) to populate our existing model ty
 
 
 ### 7) v3.0 will support cross-page elements leading to bounding regions instead of bounding boxes
-We could add this property next to bounding box, but will probably lead to a lot of confusion for which to use.
+A cross-page element might be something like a table that spans across two pages like this:
 
+![img_7.png](img_7.png)
+
+Our FormTable type that represents a table in a document has only a bounding box property:
+
+![img_8.png](img_8.png)
+
+We could add bounding_region next to bounding box, but will probably lead to a lot of confusion for which to use.
 
 ```json
 {
@@ -192,6 +199,10 @@ We could add this property next to bounding box, but will probably lead to a lot
     ]
 }
 ```
+
+Additionally, since we put `tables` under pages it calls into question which page the table should fall under?
+
+![img_9.png](img_9.png)
 
 ### 7a) Cross page elements mean that pages can't be accurately tied to documents
 In our design we'd take the page range of a document result and then populate the corresponding pages under the `pages`

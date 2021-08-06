@@ -228,3 +228,5 @@ the `fields` property on `RecognizedForm`. Previously there was a difference bet
 we could massage one or the other into `fields`. In v3.0+ if _both_ key value pairs and document fields were returned we 
 would need to decide which would get populated as `fields` and possibly add a new `key_value_pair` property on
 `RecognizedForm`.
+
+### 10) v3.0 makes the field schema programmatically accessible and SDK can leverage this to strongly type prebuilt/custom model fields

@@ -48,41 +48,31 @@ class RecognizeContentSample(object):
 
         form_recognizer_client = FormRecognizerClient(endpoint=endpoint, credential=AzureKeyCredential(key))
         with open(path_to_sample_forms, "rb") as f:
-            poller = form_recognizer_client.begin_recognize_content(form=f)
-        form_pages = poller.result()
+            poller = form_recognizer_client.begin_analyze_document(model_id="prebuilt-layout", document=f)
+        layout = poller.result()
 
-        for idx, content in enumerate(form_pages):
+        for idx, layout in enumerate(layout.pages):
             print("----Recognizing content from page #{}----".format(idx+1))
             print("Page has width: {} and height: {}, measured with unit: {}".format(
-                content.width,
-                content.height,
-                content.unit
+                layout.width,
+                layout.height,
+                layout.unit
             ))
-            for table_idx, table in enumerate(content.tables):
-                print("Table # {} has {} rows and {} columns".format(table_idx, table.row_count, table.column_count))
-                print("Table # {} location on page: {}".format(table_idx, format_bounding_box(table.bounding_box)))
-                for cell in table.cells:
-                    print("...Cell[{}][{}] has text '{}' within bounding box '{}'".format(
-                        cell.row_index,
-                        cell.column_index,
-                        cell.text,
-                        format_bounding_box(cell.bounding_box)
-                    ))
 
-            for line_idx, line in enumerate(content.lines):
+            for line_idx, line in enumerate(layout.lines):
                 print("Line # {} has word count '{}' and text '{}' within bounding box '{}'".format(
                     line_idx,
-                    len(line.words),
-                    line.text,
+                    len(line.words),  # we'd need to create this type on FormLine
+                    line.content,
                     format_bounding_box(line.bounding_box)
                 ))
-                if line.appearance:
+                if line.appearance:  # we'd need to create this type on FormLine
                     if line.appearance.style_name == "handwriting" and line.appearance.style_confidence > 0.8:
                         print("Text line '{}' is handwritten and might be a signature.".format(line.text))
                 for word in line.words:
                     print("...Word '{}' has a confidence of {}".format(word.text, word.confidence))
 
-            for selection_mark in content.selection_marks:
+            for selection_mark in layout.selection_marks:
                 print("Selection mark is '{}' within bounding box '{}' and has a confidence of {}".format(
                     selection_mark.state,
                     format_bounding_box(selection_mark.bounding_box),
@@ -90,6 +80,16 @@ class RecognizeContentSample(object):
                 ))
             print("----------------------------------------")
 
+        for table_idx, table in enumerate(layout.tables):
+            print("Table # {} has {} rows and {} columns".format(table_idx, table.row_count, table.column_count))
+            print("Table # {} location on page: {}".format(table_idx, format_bounding_box(table.bounding_region)))
+            for cell in table.cells:
+                print("...Cell[{}][{}] has text '{}' within bounding box '{}'".format(
+                    cell.row_index,
+                    cell.column_index,
+                    cell.content,
+                    format_bounding_box(cell.bounding_region)
+                ))
         # [END recognize_content]
 
 

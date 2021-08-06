@@ -43,10 +43,10 @@ class RecognizeInvoiceSample(object):
             endpoint=endpoint, credential=AzureKeyCredential(key)
         )
         with open(path_to_sample_forms, "rb") as f:
-            poller = form_recognizer_client.begin_recognize_invoices(invoice=f, locale="en-US")
-        invoices = poller.result()
+            poller = form_recognizer_client.begin_analyze_document(model_id="prebuilt-invoice", document=f)
+        invoice = poller.result()
 
-        for idx, invoice in enumerate(invoices):
+        for idx, invoice in enumerate(invoice.documents):
             print("--------Recognizing invoice #{}--------".format(idx+1))
             vendor_name = invoice.fields.get("VendorName")
             if vendor_name:

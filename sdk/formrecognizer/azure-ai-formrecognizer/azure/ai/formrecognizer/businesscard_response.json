@@ -1,0 +1,2356 @@
+{
+    "status": "succeeded",
+    "createdDateTime": "2021-08-04T23:33:29Z",
+    "lastUpdatedDateTime": "2021-08-04T23:33:31Z",
+    "analyzeResult": {
+        "apiVersion": "2021-07-30-preview",
+        "modelId": "prebuilt-businessCard",
+        "stringIndexType": "textElements",
+        "content": "Dr. Avery Smith\nSenior Researcher\nCloud & Al Department\navery.smith@contoso.com\nhttps://www.contoso.com/\nmob: +44 (0) 7911 123456\ntel: +44 (0) 20 9876 5432\nfax: +44 (0) 20 6789 2345\nContoso\n2 Kingdom Street\nPaddington, London, W2 6BD\nDr. Avery Smith\nSenior Researcher\nCloud & Al Department\navery.smith@contoso.com\nhttps://www.contoso.com/\nmob: +44 (0) 7911 123456\ntel: +44 (0) 20 9876 5432\nfax: +44 (0) 20 6789 2345\nContoso\n2 Kingdom Street\nPaddington, London, W2 6BD",
+        "pages": [
+            {
+                "pageNumber": 1,
+                "angle": -16.7986,
+                "width": 754,
+                "height": 929,
+                "unit": "pixel",
+                "words": [
+                    {
+                        "text": "Dr.",
+                        "boundingBox": [
+                            127,
+                            165,
+                            163,
+                            156,
+                            166,
+                            175,
+                            130,
+                            182
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 0,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "Avery",
+                        "boundingBox": [
+                            166,
+                            155,
+                            235,
+                            139,
+                            239,
+                            159,
+                            170,
+                            174
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 4,
+                            "length": 5
+                        }
+                    },
+                    {
+                        "text": "Smith",
+                        "boundingBox": [
+                            244,
+                            137,
+                            306,
+                            122,
+                            309,
+                            142,
+                            247,
+                            157
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 10,
+                            "length": 5
+                        }
+                    },
+                    {
+                        "text": "Senior",
+                        "boundingBox": [
+                            132,
+                            187,
+                            180,
+                            176,
+                            184,
+                            190,
+                            136,
+                            201
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 16,
+                            "length": 6
+                        }
+                    },
+                    {
+                        "text": "Researcher",
+                        "boundingBox": [
+                            183,
+                            176,
+                            267,
+                            154,
+                            270,
+                            168,
+                            186,
+                            189
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 23,
+                            "length": 10
+                        }
+                    },
+                    {
+                        "text": "Cloud",
+                        "boundingBox": [
+                            135,
+                            203,
+                            178,
+                            192,
+                            182,
+                            207,
+                            139,
+                            217
+                        ],
+                        "confidence": 0.995,
+                        "span": {
+                            "offset": 34,
+                            "length": 5
+                        }
+                    },
+                    {
+                        "text": "&",
+                        "boundingBox": [
+                            183,
+                            191,
+                            192,
+                            189,
+                            195,
+                            204,
+                            186,
+                            206
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 40,
+                            "length": 1
+                        }
+                    },
+                    {
+                        "text": "Al",
+                        "boundingBox": [
+                            200,
+                            187,
+                            217,
+                            183,
+                            221,
+                            198,
+                            204,
+                            202
+                        ],
+                        "confidence": 0.866,
+                        "span": {
+                            "offset": 42,
+                            "length": 2
+                        }
+                    },
+                    {
+                        "text": "Department",
+                        "boundingBox": [
+                            220,
+                            182,
+                            308,
+                            160,
+                            312,
+                            174,
+                            223,
+                            197
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 45,
+                            "length": 10
+                        }
+                    },
+                    {
+                        "text": "avery.smith@contoso.com",
+                        "boundingBox": [
+                            388,
+                            129,
+                            513,
+                            93,
+                            516,
+                            104,
+                            391,
+                            139
+                        ],
+                        "confidence": 0.991,
+                        "span": {
+                            "offset": 56,
+                            "length": 23
+                        }
+                    },
+                    {
+                        "text": "https://www.contoso.com/",
+                        "boundingBox": [
+                            391,
+                            141,
+                            525,
+                            102,
+                            528,
+                            113,
+                            394,
+                            152
+                        ],
+                        "confidence": 0.951,
+                        "span": {
+                            "offset": 80,
+                            "length": 24
+                        }
+                    },
+                    {
+                        "text": "mob:",
+                        "boundingBox": [
+                            409,
+                            155,
+                            437,
+                            147,
+                            439,
+                            158,
+                            412,
+                            166
+                        ],
+                        "confidence": 0.992,
+                        "span": {
+                            "offset": 105,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "+44",
+                        "boundingBox": [
+                            439,
+                            146,
+                            457,
+                            141,
+                            459,
+                            152,
+                            442,
+                            157
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 110,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "(0)",
+                        "boundingBox": [
+                            459,
+                            140,
+                            474,
+                            136,
+                            477,
+                            147,
+                            462,
+                            151
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 114,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "7911",
+                        "boundingBox": [
+                            476,
+                            135,
+                            500,
+                            128,
+                            503,
+                            139,
+                            479,
+                            146
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 118,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "123456",
+                        "boundingBox": [
+                            503,
+                            127,
+                            538,
+                            116,
+                            540,
+                            128,
+                            505,
+                            138
+                        ],
+                        "confidence": 0.995,
+                        "span": {
+                            "offset": 123,
+                            "length": 6
+                        }
+                    },
+                    {
+                        "text": "tel:",
+                        "boundingBox": [
+                            424,
+                            164,
+                            442,
+                            159,
+                            446,
+                            170,
+                            427,
+                            176
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 130,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "+44",
+                        "boundingBox": [
+                            444,
+                            158,
+                            463,
+                            153,
+                            466,
+                            164,
+                            448,
+                            170
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 135,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "(0)",
+                        "boundingBox": [
+                            465,
+                            152,
+                            480,
+                            148,
+                            483,
+                            159,
+                            469,
+                            164
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 139,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "20",
+                        "boundingBox": [
+                            482,
+                            147,
+                            494,
+                            143,
+                            497,
+                            155,
+                            486,
+                            159
+                        ],
+                        "confidence": 0.999,
+                        "span": {
+                            "offset": 143,
+                            "length": 2
+                        }
+                    },
+                    {
+                        "text": "9876",
+                        "boundingBox": [
+                            496,
+                            142,
+                            521,
+                            135,
+                            524,
+                            146,
+                            500,
+                            154
+                        ],
+                        "confidence": 0.991,
+                        "span": {
+                            "offset": 146,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "5432",
+                        "boundingBox": [
+                            523,
+                            134,
+                            547,
+                            126,
+                            550,
+                            138,
+                            526,
+                            146
+                        ],
+                        "confidence": 0.993,
+                        "span": {
+                            "offset": 151,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "fax:",
+                        "boundingBox": [
+                            429,
+                            177,
+                            450,
+                            171,
+                            454,
+                            183,
+                            433,
+                            189
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 156,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "+44",
+                        "boundingBox": [
+                            453,
+                            170,
+                            471,
+                            164,
+                            475,
+                            177,
+                            457,
+                            182
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 161,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "(0)",
+                        "boundingBox": [
+                            473,
+                            164,
+                            488,
+                            159,
+                            492,
+                            171,
+                            477,
+                            176
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 165,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "20",
+                        "boundingBox": [
+                            490,
+                            158,
+                            503,
+                            154,
+                            506,
+                            167,
+                            494,
+                            170
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 169,
+                            "length": 2
+                        }
+                    },
+                    {
+                        "text": "6789",
+                        "boundingBox": [
+                            505,
+                            154,
+                            530,
+                            146,
+                            534,
+                            158,
+                            509,
+                            166
+                        ],
+                        "confidence": 0.986,
+                        "span": {
+                            "offset": 172,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "2345",
+                        "boundingBox": [
+                            532,
+                            145,
+                            557,
+                            137,
+                            561,
+                            148,
+                            536,
+                            157
+                        ],
+                        "confidence": 0.985,
+                        "span": {
+                            "offset": 177,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "Contoso",
+                        "boundingBox": [
+                            238,
+                            281,
+                            409,
+                            223,
+                            421,
+                            257,
+                            250,
+                            314
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 182,
+                            "length": 7
+                        }
+                    },
+                    {
+                        "text": "2",
+                        "boundingBox": [
+                            254,
+                            316,
+                            262,
+                            314,
+                            265,
+                            330,
+                            258,
+                            332
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 190,
+                            "length": 1
+                        }
+                    },
+                    {
+                        "text": "Kingdom",
+                        "boundingBox": [
+                            265,
+                            313,
+                            326,
+                            292,
+                            329,
+                            307,
+                            269,
+                            329
+                        ],
+                        "confidence": 0.995,
+                        "span": {
+                            "offset": 192,
+                            "length": 7
+                        }
+                    },
+                    {
+                        "text": "Street",
+                        "boundingBox": [
+                            333,
+                            290,
+                            378,
+                            275,
+                            381,
+                            289,
+                            337,
+                            305
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 200,
+                            "length": 6
+                        }
+                    },
+                    {
+                        "text": "Paddington,",
+                        "boundingBox": [
+                            258,
+                            335,
+                            348,
+                            304,
+                            354,
+                            321,
+                            264,
+                            352
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 207,
+                            "length": 11
+                        }
+                    },
+                    {
+                        "text": "London,",
+                        "boundingBox": [
+                            351,
+                            303,
+                            406,
+                            284,
+                            411,
+                            299,
+                            357,
+                            319
+                        ],
+                        "confidence": 0.995,
+                        "span": {
+                            "offset": 219,
+                            "length": 7
+                        }
+                    },
+                    {
+                        "text": "W2",
+                        "boundingBox": [
+                            409,
+                            283,
+                            431,
+                            275,
+                            436,
+                            290,
+                            415,
+                            298
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 227,
+                            "length": 2
+                        }
+                    },
+                    {
+                        "text": "6BD",
+                        "boundingBox": [
+                            434,
+                            274,
+                            460,
+                            264,
+                            466,
+                            279,
+                            439,
+                            289
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 230,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "Dr.",
+                        "boundingBox": [
+                            126,
+                            592,
+                            162,
+                            584,
+                            167,
+                            603,
+                            131,
+                            611
+                        ],
+                        "confidence": 0.993,
+                        "span": {
+                            "offset": 234,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "Avery",
+                        "boundingBox": [
+                            165,
+                            583,
+                            235,
+                            567,
+                            240,
+                            586,
+                            170,
+                            602
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 238,
+                            "length": 5
+                        }
+                    },
+                    {
+                        "text": "Smith",
+                        "boundingBox": [
+                            243,
+                            565,
+                            306,
+                            549,
+                            310,
+                            569,
+                            248,
+                            584
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 244,
+                            "length": 5
+                        }
+                    },
+                    {
+                        "text": "Senior",
+                        "boundingBox": [
+                            131,
+                            615,
+                            179,
+                            604,
+                            182,
+                            618,
+                            134,
+                            630
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 250,
+                            "length": 6
+                        }
+                    },
+                    {
+                        "text": "Researcher",
+                        "boundingBox": [
+                            182,
+                            604,
+                            267,
+                            584,
+                            269,
+                            596,
+                            185,
+                            617
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 257,
+                            "length": 10
+                        }
+                    },
+                    {
+                        "text": "Cloud",
+                        "boundingBox": [
+                            136,
+                            630,
+                            178,
+                            620,
+                            182,
+                            635,
+                            139,
+                            645
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 268,
+                            "length": 5
+                        }
+                    },
+                    {
+                        "text": "&",
+                        "boundingBox": [
+                            183,
+                            619,
+                            192,
+                            617,
+                            195,
+                            632,
+                            187,
+                            634
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 274,
+                            "length": 1
+                        }
+                    },
+                    {
+                        "text": "Al",
+                        "boundingBox": [
+                            200,
+                            615,
+                            217,
+                            610,
+                            221,
+                            626,
+                            203,
+                            630
+                        ],
+                        "confidence": 0.862,
+                        "span": {
+                            "offset": 276,
+                            "length": 2
+                        }
+                    },
+                    {
+                        "text": "Department",
+                        "boundingBox": [
+                            220,
+                            610,
+                            310,
+                            589,
+                            313,
+                            602,
+                            224,
+                            625
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 279,
+                            "length": 10
+                        }
+                    },
+                    {
+                        "text": "avery.smith@contoso.com",
+                        "boundingBox": [
+                            387,
+                            557,
+                            513,
+                            522,
+                            516,
+                            532,
+                            390,
+                            567
+                        ],
+                        "confidence": 0.968,
+                        "span": {
+                            "offset": 290,
+                            "length": 23
+                        }
+                    },
+                    {
+                        "text": "https://www.contoso.com/",
+                        "boundingBox": [
+                            391,
+                            568,
+                            526,
+                            530,
+                            529,
+                            540,
+                            394,
+                            579
+                        ],
+                        "confidence": 0.936,
+                        "span": {
+                            "offset": 314,
+                            "length": 24
+                        }
+                    },
+                    {
+                        "text": "mob:",
+                        "boundingBox": [
+                            409,
+                            583,
+                            437,
+                            575,
+                            440,
+                            586,
+                            412,
+                            594
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 339,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "+44",
+                        "boundingBox": [
+                            439,
+                            574,
+                            457,
+                            569,
+                            459,
+                            580,
+                            442,
+                            585
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 344,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "(0)",
+                        "boundingBox": [
+                            459,
+                            568,
+                            474,
+                            563,
+                            477,
+                            575,
+                            462,
+                            579
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 348,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "7911",
+                        "boundingBox": [
+                            476,
+                            563,
+                            500,
+                            555,
+                            503,
+                            567,
+                            479,
+                            574
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 352,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "123456",
+                        "boundingBox": [
+                            502,
+                            555,
+                            538,
+                            544,
+                            540,
+                            556,
+                            505,
+                            566
+                        ],
+                        "confidence": 0.995,
+                        "span": {
+                            "offset": 357,
+                            "length": 6
+                        }
+                    },
+                    {
+                        "text": "tel:",
+                        "boundingBox": [
+                            425,
+                            592,
+                            442,
+                            587,
+                            446,
+                            598,
+                            429,
+                            604
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 364,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "+44",
+                        "boundingBox": [
+                            444,
+                            586,
+                            462,
+                            581,
+                            466,
+                            592,
+                            448,
+                            598
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 369,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "(0)",
+                        "boundingBox": [
+                            465,
+                            580,
+                            480,
+                            575,
+                            483,
+                            587,
+                            468,
+                            592
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 373,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "20",
+                        "boundingBox": [
+                            482,
+                            575,
+                            494,
+                            571,
+                            498,
+                            582,
+                            486,
+                            586
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 377,
+                            "length": 2
+                        }
+                    },
+                    {
+                        "text": "9876",
+                        "boundingBox": [
+                            496,
+                            570,
+                            521,
+                            563,
+                            524,
+                            574,
+                            500,
+                            582
+                        ],
+                        "confidence": 0.991,
+                        "span": {
+                            "offset": 380,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "5432",
+                        "boundingBox": [
+                            523,
+                            562,
+                            548,
+                            555,
+                            551,
+                            566,
+                            526,
+                            574
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 385,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "fax:",
+                        "boundingBox": [
+                            429,
+                            605,
+                            450,
+                            599,
+                            454,
+                            611,
+                            433,
+                            617
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 390,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "+44",
+                        "boundingBox": [
+                            453,
+                            598,
+                            471,
+                            592,
+                            475,
+                            604,
+                            456,
+                            610
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 395,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "(0)",
+                        "boundingBox": [
+                            473,
+                            592,
+                            489,
+                            587,
+                            492,
+                            599,
+                            477,
+                            604
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 399,
+                            "length": 3
+                        }
+                    },
+                    {
+                        "text": "20",
+                        "boundingBox": [
+                            491,
+                            586,
+                            504,
+                            582,
+                            507,
+                            594,
+                            494,
+                            598
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 403,
+                            "length": 2
+                        }
+                    },
+                    {
+                        "text": "6789",
+                        "boundingBox": [
+                            506,
+                            581,
+                            531,
+                            574,
+                            534,
+                            586,
+                            510,
+                            594
+                        ],
+                        "confidence": 0.992,
+                        "span": {
+                            "offset": 406,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "2345",
+                        "boundingBox": [
+                            533,
+                            573,
+                            557,
+                            566,
+                            561,
+                            577,
+                            536,
+                            585
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 411,
+                            "length": 4
+                        }
+                    },
+                    {
+                        "text": "Contoso",
+                        "boundingBox": [
+                            242,
+                            709,
+                            410,
+                            655,
+                            420,
+                            686,
+                            253,
+                            740
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 416,
+                            "length": 7
+                        }
+                    },
+                    {
+                        "text": "2",
+                        "boundingBox": [
+                            253,
+                            744,
+                            261,
+                            741,
+                            266,
+                            757,
+                            258,
+                            760
+                        ],
+                        "confidence": 0.997,
+                        "span": {
+                            "offset": 424,
+                            "length": 1
+                        }
+                    },
+                    {
+                        "text": "Kingdom",
+                        "boundingBox": [
+                            264,
+                            740,
+                            325,
+                            720,
+                            330,
+                            735,
+                            269,
+                            756
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 426,
+                            "length": 7
+                        }
+                    },
+                    {
+                        "text": "Street",
+                        "boundingBox": [
+                            333,
+                            718,
+                            378,
+                            702,
+                            381,
+                            716,
+                            337,
+                            732
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 434,
+                            "length": 6
+                        }
+                    },
+                    {
+                        "text": "Paddington,",
+                        "boundingBox": [
+                            259,
+                            763,
+                            348,
+                            732,
+                            353,
+                            749,
+                            264,
+                            780
+                        ],
+                        "confidence": 0.994,
+                        "span": {
+                            "offset": 441,
+                            "length": 11
+                        }
+                    },
+                    {
+                        "text": "London,",
+                        "boundingBox": [
+                            351,
+                            731,
+                            406,
+                            712,
+                            411,
+                            728,
+                            357,
+                            748
+                        ],
+                        "confidence": 0.995,
+                        "span": {
+                            "offset": 453,
+                            "length": 7
+                        }
+                    },
+                    {
+                        "text": "W2",
+                        "boundingBox": [
+                            409,
+                            711,
+                            431,
+                            703,
+                            436,
+                            718,
+                            414,
+                            726
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 461,
+                            "length": 2
+                        }
+                    },
+                    {
+                        "text": "6BD",
+                        "boundingBox": [
+                            434,
+                            702,
+                            460,
+                            693,
+                            465,
+                            707,
+                            439,
+                            717
+                        ],
+                        "confidence": 0.996,
+                        "span": {
+                            "offset": 464,
+                            "length": 3
+                        }
+                    }
+                ],
+                "lines": [
+                    {
+                        "content": "Dr. Avery Smith",
+                        "boundingBox": [
+                            126,
+                            164,
+                            314,
+                            120,
+                            318,
+                            139,
+                            130,
+                            183
+                        ],
+                        "spans": [
+                            {
+                                "offset": 0,
+                                "length": 15
+                            }
+                        ]
+                    },
+                    {
+                        "content": "Senior Researcher",
+                        "boundingBox": [
+                            131,
+                            187,
+                            267,
+                            154,
+                            270,
+                            168,
+                            134,
+                            201
+                        ],
+                        "spans": [
+                            {
+                                "offset": 16,
+                                "length": 17
+                            }
+                        ]
+                    },
+                    {
+                        "content": "Cloud & Al Department",
+                        "boundingBox": [
+                            134,
+                            202,
+                            309,
+                            160,
+                            312,
+                            175,
+                            138,
+                            217
+                        ],
+                        "spans": [
+                            {
+                                "offset": 34,
+                                "length": 21
+                            }
+                        ]
+                    },
+                    {
+                        "content": "avery.smith@contoso.com",
+                        "boundingBox": [
+                            387,
+                            128,
+                            518,
+                            91,
+                            521,
+                            102,
+                            390,
+                            139
+                        ],
+                        "spans": [
+                            {
+                                "offset": 56,
+                                "length": 23
+                            }
+                        ]
+                    },
+                    {
+                        "content": "https://www.contoso.com/",
+                        "boundingBox": [
+                            390,
+                            140,
+                            525,
+                            102,
+                            528,
+                            113,
+                            393,
+                            152
+                        ],
+                        "spans": [
+                            {
+                                "offset": 80,
+                                "length": 24
+                            }
+                        ]
+                    },
+                    {
+                        "content": "mob: +44 (0) 7911 123456",
+                        "boundingBox": [
+                            408,
+                            155,
+                            540,
+                            115,
+                            544,
+                            126,
+                            411,
+                            166
+                        ],
+                        "spans": [
+                            {
+                                "offset": 105,
+                                "length": 24
+                            }
+                        ]
+                    },
+                    {
+                        "content": "tel: +44 (0) 20 9876 5432",
+                        "boundingBox": [
+                            423,
+                            164,
+                            548,
+                            125,
+                            551,
+                            137,
+                            427,
+                            176
+                        ],
+                        "spans": [
+                            {
+                                "offset": 130,
+                                "length": 25
+                            }
+                        ]
+                    },
+                    {
+                        "content": "fax: +44 (0) 20 6789 2345",
+                        "boundingBox": [
+                            429,
+                            177,
+                            557,
+                            136,
+                            561,
+                            148,
+                            433,
+                            189
+                        ],
+                        "spans": [
+                            {
+                                "offset": 156,
+                                "length": 25
+                            }
+                        ]
+                    },
+                    {
+                        "content": "Contoso",
+                        "boundingBox": [
+                            238,
+                            280,
+                            419,
+                            219,
+                            430,
+                            253,
+                            249,
+                            313
+                        ],
+                        "spans": [
+                            {
+                                "offset": 182,
+                                "length": 7
+                            }
+                        ]
+                    },
+                    {
+                        "content": "2 Kingdom Street",
+                        "boundingBox": [
+                            253,
+                            316,
+                            377,
+                            275,
+                            382,
+                            288,
+                            257,
+                            332
+                        ],
+                        "spans": [
+                            {
+                                "offset": 190,
+                                "length": 16
+                            }
+                        ]
+                    },
+                    {
+                        "content": "Paddington, London, W2 6BD",
+                        "boundingBox": [
+                            258,
+                            335,
+                            460,
+                            263,
+                            466,
+                            279,
+                            263,
+                            352
+                        ],
+                        "spans": [
+                            {
+                                "offset": 207,
+                                "length": 26
+                            }
+                        ]
+                    },
+                    {
+                        "content": "Dr. Avery Smith",
+                        "boundingBox": [
+                            125,
+                            591,
+                            312,
+                            547,
+                            316,
+                            567,
+                            130,
+                            611
+                        ],
+                        "spans": [
+                            {
+                                "offset": 234,
+                                "length": 15
+                            }
+                        ]
+                    },
+                    {
+                        "content": "Senior Researcher",
+                        "boundingBox": [
+                            130,
+                            615,
+                            268,
+                            583,
+                            271,
+                            596,
+                            133,
+                            629
+                        ],
+                        "spans": [
+                            {
+                                "offset": 250,
+                                "length": 17
+                            }
+                        ]
+                    },
+                    {
+                        "content": "Cloud & Al Department",
+                        "boundingBox": [
+                            135,
+                            630,
+                            309,
+                            588,
+                            313,
+                            602,
+                            139,
+                            645
+                        ],
+                        "spans": [
+                            {
+                                "offset": 268,
+                                "length": 21
+                            }
+                        ]
+                    },
+                    {
+                        "content": "avery.smith@contoso.com",
+                        "boundingBox": [
+                            386,
+                            556,
+                            518,
+                            520,
+                            521,
+                            530,
+                            389,
+                            567
+                        ],
+                        "spans": [
+                            {
+                                "offset": 290,
+                                "length": 23
+                            }
+                        ]
+                    },
+                    {
+                        "content": "https://www.contoso.com/",
+                        "boundingBox": [
+                            390,
+                            567,
+                            526,
+                            529,
+                            529,
+                            541,
+                            393,
+                            579
+                        ],
+                        "spans": [
+                            {
+                                "offset": 314,
+                                "length": 24
+                            }
+                        ]
+                    },
+                    {
+                        "content": "mob: +44 (0) 7911 123456",
+                        "boundingBox": [
+                            409,
+                            582,
+                            539,
+                            543,
+                            543,
+                            554,
+                            412,
+                            594
+                        ],
+                        "spans": [
+                            {
+                                "offset": 339,
+                                "length": 24
+                            }
+                        ]
+                    },
+                    {
+                        "content": "tel: +44 (0) 20 9876 5432",
+                        "boundingBox": [
+                            424,
+                            592,
+                            549,
+                            554,
+                            553,
+                            565,
+                            428,
+                            603
+                        ],
+                        "spans": [
+                            {
+                                "offset": 364,
+                                "length": 25
+                            }
+                        ]
+                    },
+                    {
+                        "content": "fax: +44 (0) 20 6789 2345",
+                        "boundingBox": [
+                            429,
+                            605,
+                            558,
+                            565,
+                            562,
+                            576,
+                            432,
+                            617
+                        ],
+                        "spans": [
+                            {
+                                "offset": 390,
+                                "length": 25
+                            }
+                        ]
+                    },
+                    {
+                        "content": "Contoso",
+                        "boundingBox": [
+                            241,
+                            705,
+                            420,
+                            652,
+                            431,
+                            682,
+                            251,
+                            740
+                        ],
+                        "spans": [
+                            {
+                                "offset": 416,
+                                "length": 7
+                            }
+                        ]
+                    },
+                    {
+                        "content": "2 Kingdom Street",
+                        "boundingBox": [
+                            251,
+                            744,
+                            378,
+                            701,
+                            383,
+                            715,
+                            257,
+                            759
+                        ],
+                        "spans": [
+                            {
+                                "offset": 424,
+                                "length": 16
+                            }
+                        ]
+                    },
+                    {
+                        "content": "Paddington, London, W2 6BD",
+                        "boundingBox": [
+                            258,
+                            762,
+                            461,
+                            691,
+                            468,
+                            707,
+                            263,
+                            780
+                        ],
+                        "spans": [
+                            {
+                                "offset": 441,
+                                "length": 26
+                            }
+                        ]
+                    }
+                ],
+                "spans": [
+                    {
+                        "offset": 0,
+                        "length": 467
+                    }
+                ]
+            }
+        ],
+        "documents": [
+            {
+                "docType": "prebuilt:businesscard",
+                "boundingRegions": [
+                    {
+                        "pageNumber": 1,
+                        "boundingBox": [
+                            0,
+                            0,
+                            754,
+                            0,
+                            754,
+                            929,
+                            0,
+                            929
+                        ]
+                    }
+                ],
+                "fields": {
+                    "Addresses": {
+                        "type": "array",
+                        "valueArray": [
+                            {
+                                "type": "string",
+                                "valueString": "2 Kingdom Street Paddington, London, W2 6BD",
+                                "content": "2 Kingdom Street Paddington, London, W2 6BD",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            251.5,
+                                            316.9,
+                                            453.9,
+                                            245,
+                                            466.7,
+                                            281,
+                                            264.3,
+                                            352.9
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.97,
+                                "spans": [
+                                    {
+                                        "offset": 190,
+                                        "length": 43
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "string",
+                                "valueString": "2 Kingdom Street Paddington, London, W2 6BD",
+                                "content": "2 Kingdom Street Paddington, London, W2 6BD",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            251.2,
+                                            744.5,
+                                            452.5,
+                                            672.1,
+                                            465.7,
+                                            708.9,
+                                            264.5,
+                                            781.3
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.971,
+                                "spans": [
+                                    {
+                                        "offset": 424,
+                                        "length": 43
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "CompanyNames": {
+                        "type": "array",
+                        "valueArray": [
+                            {
+                                "type": "string",
+                                "valueString": "Contoso",
+                                "content": "Contoso",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            238,
+                                            281,
+                                            409,
+                                            223,
+                                            421,
+                                            257,
+                                            250,
+                                            314
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.199,
+                                "spans": [
+                                    {
+                                        "offset": 182,
+                                        "length": 7
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "ContactNames": {
+                        "type": "array",
+                        "valueArray": [
+                            {
+                                "type": "object",
+                                "valueObject": {
+                                    "FirstName": {
+                                        "type": "string",
+                                        "valueString": "Avery",
+                                        "content": "Avery",
+                                        "boundingRegions": [
+                                            {
+                                                "pageNumber": 1,
+                                                "boundingBox": [
+                                                    166,
+                                                    155,
+                                                    235,
+                                                    139,
+                                                    239,
+                                                    159,
+                                                    170,
+                                                    174
+                                                ]
+                                            }
+                                        ],
+                                        "spans": [
+                                            {
+                                                "offset": 4,
+                                                "length": 5
+                                            }
+                                        ]
+                                    },
+                                    "LastName": {
+                                        "type": "string",
+                                        "valueString": "Smith",
+                                        "content": "Smith",
+                                        "boundingRegions": [
+                                            {
+                                                "pageNumber": 1,
+                                                "boundingBox": [
+                                                    244,
+                                                    137,
+                                                    306,
+                                                    122,
+                                                    309,
+                                                    142,
+                                                    247,
+                                                    157
+                                                ]
+                                            }
+                                        ],
+                                        "spans": [
+                                            {
+                                                "offset": 10,
+                                                "length": 5
+                                            }
+                                        ]
+                                    }
+                                },
+                                "content": "Dr. Avery Smith",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            125.6,
+                                            162.5,
+                                            306,
+                                            122,
+                                            310.7,
+                                            142.9,
+                                            130.3,
+                                            183.4
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.982,
+                                "spans": [
+                                    {
+                                        "offset": 0,
+                                        "length": 15
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "Departments": {
+                        "type": "array",
+                        "valueArray": [
+                            {
+                                "type": "string",
+                                "valueString": "Cloud & Al Department",
+                                "content": "Cloud & Al Department",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            134.5,
+                                            200.8,
+                                            308.7,
+                                            159.8,
+                                            312.6,
+                                            176.5,
+                                            138.4,
+                                            217.4
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.989,
+                                "spans": [
+                                    {
+                                        "offset": 34,
+                                        "length": 21
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "string",
+                                "valueString": "Cloud & Al Department",
+                                "content": "Cloud & Al Department",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            135.3,
+                                            629.2,
+                                            309.8,
+                                            588.2,
+                                            313.6,
+                                            604.2,
+                                            139.1,
+                                            645.3
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.989,
+                                "spans": [
+                                    {
+                                        "offset": 268,
+                                        "length": 21
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "Emails": {
+                        "type": "array",
+                        "valueArray": [
+                            {
+                                "type": "string",
+                                "valueString": "avery.smith@contoso.com",
+                                "content": "avery.smith@contoso.com",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            388,
+                                            129,
+                                            513,
+                                            93,
+                                            516,
+                                            104,
+                                            391,
+                                            139
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.99,
+                                "spans": [
+                                    {
+                                        "offset": 56,
+                                        "length": 23
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "string",
+                                "valueString": "avery.smith@contoso.com",
+                                "content": "avery.smith@contoso.com",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            387,
+                                            557,
+                                            513,
+                                            522,
+                                            516,
+                                            532,
+                                            390,
+                                            567
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.99,
+                                "spans": [
+                                    {
+                                        "offset": 290,
+                                        "length": 23
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "Faxes": {
+                        "type": "array",
+                        "valueArray": [
+                            {
+                                "type": "phoneNumber",
+                                "content": "+44 (0) 20 6789 2345",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            452.9,
+                                            169.8,
+                                            557.3,
+                                            136.4,
+                                            561.4,
+                                            149.3,
+                                            457.1,
+                                            182.7
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.99,
+                                "spans": [
+                                    {
+                                        "offset": 161,
+                                        "length": 20
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "phoneNumber",
+                                "content": "+44 (0) 20 6789 2345",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            452.2,
+                                            597.6,
+                                            557.4,
+                                            565.2,
+                                            561.4,
+                                            578.2,
+                                            456.2,
+                                            610.6
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.99,
+                                "spans": [
+                                    {
+                                        "offset": 395,
+                                        "length": 20
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "JobTitles": {
+                        "type": "array",
+                        "valueArray": [
+                            {
+                                "type": "string",
+                                "valueString": "Senior Researcher",
+                                "content": "Senior Researcher",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            131.6,
+                                            185,
+                                            267,
+                                            154,
+                                            270.7,
+                                            170.1,
+                                            135.2,
+                                            201.2
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.99,
+                                "spans": [
+                                    {
+                                        "offset": 16,
+                                        "length": 17
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "string",
+                                "valueString": "Senior Researcher",
+                                "content": "Senior Researcher",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            130.4,
+                                            615.1,
+                                            266.6,
+                                            582.5,
+                                            270.2,
+                                            597.4,
+                                            134,
+                                            630
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.99,
+                                "spans": [
+                                    {
+                                        "offset": 250,
+                                        "length": 17
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "MobilePhones": {
+                        "type": "array",
+                        "valueArray": [
+                            {
+                                "type": "phoneNumber",
+                                "content": "+44 (0) 7911 123456",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            438.4,
+                                            144.5,
+                                            538,
+                                            116,
+                                            541.6,
+                                            128.5,
+                                            442,
+                                            157
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.99,
+                                "spans": [
+                                    {
+                                        "offset": 110,
+                                        "length": 19
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "phoneNumber",
+                                "content": "+44 (0) 7911 123456",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            438.5,
+                                            573.2,
+                                            537.9,
+                                            543.8,
+                                            541.5,
+                                            555.9,
+                                            442.1,
+                                            585.3
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.99,
+                                "spans": [
+                                    {
+                                        "offset": 344,
+                                        "length": 19
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "Websites": {
+                        "type": "array",
+                        "valueArray": [
+                            {
+                                "type": "string",
+                                "valueString": "https://www.contoso.com/",
+                                "content": "https://www.contoso.com/",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            391,
+                                            141,
+                                            525,
+                                            102,
+                                            528,
+                                            113,
+                                            394,
+                                            152
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.99,
+                                "spans": [
+                                    {
+                                        "offset": 80,
+                                        "length": 24
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "string",
+                                "valueString": "https://www.contoso.com/",
+                                "content": "https://www.contoso.com/",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            391,
+                                            568,
+                                            526,
+                                            530,
+                                            529,
+                                            540,
+                                            394,
+                                            579
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.99,
+                                "spans": [
+                                    {
+                                        "offset": 314,
+                                        "length": 24
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "WorkPhones": {
+                        "type": "array",
+                        "valueArray": [
+                            {
+                                "type": "phoneNumber",
+                                "content": "+44 (0) 20 9876 5432",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            444,
+                                            158,
+                                            547,
+                                            126,
+                                            551,
+                                            138.8,
+                                            448,
+                                            170.8
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.989,
+                                "spans": [
+                                    {
+                                        "offset": 135,
+                                        "length": 20
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "phoneNumber",
+                                "content": "+44 (0) 20 9876 5432",
+                                "boundingRegions": [
+                                    {
+                                        "pageNumber": 1,
+                                        "boundingBox": [
+                                            444,
+                                            585.9,
+                                            547.7,
+                                            554.2,
+                                            551.5,
+                                            566.4,
+                                            447.7,
+                                            598.2
+                                        ]
+                                    }
+                                ],
+                                "confidence": 0.989,
+                                "spans": [
+                                    {
+                                        "offset": 369,
+                                        "length": 20
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "confidence": 1,
+                "spans": [
+                    {
+                        "offset": 0,
+                        "length": 467
+                    }
+                ]
+            }
+        ]
+    }
+}

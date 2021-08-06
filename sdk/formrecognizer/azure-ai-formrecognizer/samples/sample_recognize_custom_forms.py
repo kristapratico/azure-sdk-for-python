@@ -52,56 +52,43 @@ class RecognizeCustomForms(object):
 
         # Make sure your form's type is included in the list of form types the custom model can recognize
         with open(path_to_sample_forms, "rb") as f:
-            poller = form_recognizer_client.begin_recognize_custom_forms(
-                model_id=model_id, form=f, include_field_elements=True
-            )
-        forms = poller.result()
+            poller = form_recognizer_client.begin_analyze_document(model_id=model_id, document=f)
+        form = poller.result()
 
-        for idx, form in enumerate(forms):
+        for idx, form in enumerate(form.documents):
             print("--------Recognizing Form #{}--------".format(idx+1))
-            print("Form has type {}".format(form.form_type))
-            print("Form has form type confidence {}".format(form.form_type_confidence))
+            print("Document has type {}".format(form.doc_type))
+            print("Document has confidence {}".format(form.confidence))
             print("Form was analyzed with model with ID {}".format(form.model_id))
             for name, field in form.fields.items():
-                # each field is of type FormField
-                # label_data is populated if you are using a model trained without labels,
-                # since the service needs to make predictions for labels if not explicitly given to it.
-                if field.label_data:
-                    print("...Field '{}' has label '{}' with a confidence score of {}".format(
-                        name,
-                        field.label_data.text,
-                        field.confidence
-                    ))
-
-                print("...Label '{}' has value '{}' with a confidence score of {}".format(
-                    field.label_data.text if field.label_data else name, field.value, field.confidence
+                print("...Field '{}' has value '{}' with a confidence score of {}".format(
+                    name,
+                    field.value,
+                    field.confidence
                 ))
 
-            # iterate over tables, lines, and selection marks on each page
-            for page in form.pages:
-                for i, table in enumerate(page.tables):
-                    print("\nTable {} on page {}".format(i+1, table.page_number))
-                    for cell in table.cells:
-                        print("...Cell[{}][{}] has text '{}' with confidence {}".format(
-                            cell.row_index, cell.column_index, cell.text, cell.confidence
-                        ))
-                print("\nLines found on page {}".format(page.page_number))
-                for line in page.lines:
-                    print("...Line '{}' is made up of the following words: ".format(line.text))
-                    for word in line.words:
-                        print("......Word '{}' has a confidence of {}".format(
-                            word.text,
-                            word.confidence
-                        ))
-                if page.selection_marks:
-                    print("\nSelection marks found on page {}".format(page.page_number))
-                    for selection_mark in page.selection_marks:
-                        print("......Selection mark is '{}' and has a confidence of {}".format(
-                            selection_mark.state,
-                            selection_mark.confidence
-                        ))
+        for i, table in enumerate(form.tables):
+            print("\nTable {} on page {}".format(i+1, table.page_number))
+            for cell in table.cells:
+                print("...Cell[{}][{}] has text '{}' with confidence {}".format(
+                    cell.row_index, cell.column_index, cell.text, cell.confidence
+                ))
 
-            print("-----------------------------------")
+        for page in form.pages:
+            for line in page.lines:
+                print("...Line '{}' is made up of the following words: ".format(line.text))
+                for word in line.words:  # SDK would need to create this type
+                    print("......Word '{}' has a confidence of {}".format(
+                        word.text,
+                        word.confidence
+                    ))
+
+            for selection_mark in page.selection_marks:
+                print("......Selection mark is '{}' and has a confidence of {}".format(
+                    selection_mark.state,
+                    selection_mark.confidence
+                ))
+
         # [END recognize_custom_forms]
 
 

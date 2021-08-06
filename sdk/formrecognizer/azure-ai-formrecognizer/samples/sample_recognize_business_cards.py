@@ -42,10 +42,10 @@ class RecognizeBusinessCardSample(object):
             endpoint=endpoint, credential=AzureKeyCredential(key)
         )
         with open(path_to_sample_forms, "rb") as f:
-            poller = form_recognizer_client.begin_recognize_business_cards(business_card=f, locale="en-US")
-        business_cards = poller.result()
+            poller = form_recognizer_client.begin_analyze_document(model_id="prebuilt-businessCard", document=f)
+        business_card = poller.result()
 
-        for idx, business_card in enumerate(business_cards):
+        for idx, business_card in enumerate(business_card.documents):
             print("--------Recognizing business card #{}--------".format(idx+1))
             contact_names = business_card.fields.get("ContactNames")
             if contact_names:

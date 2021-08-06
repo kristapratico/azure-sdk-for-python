@@ -67,18 +67,22 @@ class ContentType(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
     #: Content Type 'image/tiff'.
     IMAGE_TIFF = "image/tiff"
 
-class ContentType1(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
-    """Content type for upload
+class DocumentFieldType(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
+    """Semantic data type of the field value.
     """
 
-    #: Content Type 'application/pdf'.
-    APPLICATION_PDF = "application/pdf"
-    #: Content Type 'image/jpeg'.
-    IMAGE_JPEG = "image/jpeg"
-    #: Content Type 'image/png'.
-    IMAGE_PNG = "image/png"
-    #: Content Type 'image/tiff'.
-    IMAGE_TIFF = "image/tiff"
+    STRING = "string"
+    DATE = "date"
+    TIME = "time"
+    PHONE_NUMBER = "phoneNumber"
+    NUMBER = "number"
+    INTEGER = "integer"
+    SELECTION_MARK = "selectionMark"
+    COUNTRY_REGION = "countryRegion"
+    CURRENCY = "currency"
+    SIGNATURE = "signature"
+    ARRAY = "array"
+    OBJECT = "object"
 
 class DocumentModelBuildTechnique(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
     """Technique for building a custom model.
@@ -94,6 +98,8 @@ class DocumentSignatureType(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum))
     UNSIGNED = "unsigned"
 
 class DocumentTableCellKind(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
+    """Table cell kind.
+    """
 
     CONTENT = "content"
     ROW_HEADER = "rowHeader"
@@ -118,45 +124,13 @@ class FieldTypeSchemaType(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
     ARRAY = "array"
     OBJECT = "object"
 
-class FieldValueType(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
-    """Semantic data type of the field value.
-    """
-
-    STRING = "string"
-    DATE = "date"
-    TIME = "time"
-    PHONE_NUMBER = "phoneNumber"
-    NUMBER = "number"
-    INTEGER = "integer"
-    ARRAY = "array"
-    OBJECT = "object"
-    SELECTION_MARK = "selectionMark"
-    COUNTRY_REGION = "countryRegion"
-    CURRENCY = "currency"
-    SIGNATURE = "signature"
-
-class Language(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
-    """Language code
-    """
-
-    EN = "en"
-    ES = "es"
-
 class LengthUnit(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
-    """The unit used by the width, height and boundingBox properties. For images, the unit is "pixel".
-    For PDF, the unit is "inch".
+    """The unit used by the width, height, and boundingBox properties. For images, the unit is
+    "pixel". For PDF, the unit is "inch".
     """
 
     PIXEL = "pixel"
     INCH = "inch"
-
-class ModelStatus(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
-    """Status of the model.
-    """
-
-    CREATING = "creating"
-    READY = "ready"
-    INVALID = "invalid"
 
 class OperationInfoKind(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
     """Type of operation.
@@ -167,13 +141,13 @@ class OperationInfoKind(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
     DOCUMENT_MODEL_COPY_TO = "documentModelCopyTo"
 
 class OperationStatus(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
-    """Status of the queued operation.
+    """Operation status.
     """
 
     NOT_STARTED = "notStarted"
     RUNNING = "running"
-    SUCCEEDED = "succeeded"
     FAILED = "failed"
+    SUCCEEDED = "succeeded"
     CANCELED = "canceled"
 
 class SelectionMarkState(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
@@ -190,11 +164,3 @@ class StringIndexType(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
     TEXT_ELEMENTS = "textElements"
     UNICODE_CODE_POINT = "unicodeCodePoint"
     UTF16_CODE_UNIT = "utf16CodeUnit"
-
-class TrainStatus(with_metaclass(_CaseInsensitiveEnumMeta, str, Enum)):
-    """Status of the training operation.
-    """
-
-    SUCCEEDED = "succeeded"
-    PARTIALLY_SUCCEEDED = "partiallySucceeded"
-    FAILED = "failed"

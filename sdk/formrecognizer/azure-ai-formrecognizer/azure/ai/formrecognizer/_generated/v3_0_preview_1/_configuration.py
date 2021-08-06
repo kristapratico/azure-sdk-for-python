@@ -27,7 +27,8 @@ class FormRecognizerClientConfiguration(Configuration):
 
     :param credential: Credential needed for the client to connect to Azure.
     :type credential: ~azure.core.credentials.TokenCredential
-    :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for example: https://westus2.api.cognitive.microsoft.com).
+    :param endpoint: Supported Cognitive Services endpoints (protocol and hostname, for
+example: https://westus2.api.cognitive.microsoft.com).
     :type endpoint: str
     """
 
@@ -46,6 +47,7 @@ class FormRecognizerClientConfiguration(Configuration):
 
         self.credential = credential
         self.endpoint = endpoint
+        self.api_version = "2021-07-30-preview"
         self.credential_scopes = kwargs.pop('credential_scopes', ['https://cognitiveservices.azure.com/.default'])
         kwargs.setdefault('sdk_moniker', 'ai-formrecognizer/{}'.format(VERSION))
         self._configure(**kwargs)

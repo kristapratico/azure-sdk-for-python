@@ -28,7 +28,7 @@ class FormRecognizerClientOperationsMixin:
         pages: Optional[List[str]] = None,
         locale: Optional[str] = None,
         string_index_type: Optional[Union[str, "_models.StringIndexType"]] = None,
-        analyze_request: Optional[Union[IO, "_models.PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema"]] = None,
+        analyze_request: Optional[Union[IO, "_models.ContentSource"]] = None,
         **kwargs: Any
     ) -> None:
         cls = kwargs.pop('cls', None)  # type: ClsType[None]
@@ -55,7 +55,7 @@ class FormRecognizerClientOperationsMixin:
         if locale is not None:
             query_parameters['locale'] = self._serialize.query("locale", locale, 'str')
         if string_index_type is not None:
-            query_parameters['StringIndexType'] = self._serialize.query("string_index_type", string_index_type, 'str')
+            query_parameters['stringIndexType'] = self._serialize.query("string_index_type", string_index_type, 'str')
         query_parameters['api-version'] = self._serialize.query("api_version", api_version, 'str')
 
         # Construct headers
@@ -68,7 +68,7 @@ class FormRecognizerClientOperationsMixin:
             body_content_kwargs['stream_content'] = analyze_request
         elif header_parameters['Content-Type'].split(";")[0] in ['application/json']:
             if analyze_request is not None:
-                body_content = self._serialize.body(analyze_request, 'PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema')
+                body_content = self._serialize.body(analyze_request, 'ContentSource')
             else:
                 body_content = None
             body_content_kwargs['content'] = body_content
@@ -100,7 +100,7 @@ class FormRecognizerClientOperationsMixin:
         pages: Optional[List[str]] = None,
         locale: Optional[str] = None,
         string_index_type: Optional[Union[str, "_models.StringIndexType"]] = None,
-        analyze_request: Optional[Union[IO, "_models.PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema"]] = None,
+        analyze_request: Optional[Union[IO, "_models.ContentSource"]] = None,
         **kwargs: Any
     ) -> AsyncLROPoller[None]:
         """Analyze document.
@@ -115,9 +115,9 @@ class FormRecognizerClientOperationsMixin:
          the language code (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").
         :type locale: str
         :param string_index_type: Method used to compute string offset and length.
-        :type string_index_type: str or ~azure.ai.formrecognizer.models.StringIndexType
+        :type string_index_type: str or ~azure.ai.formrecognizer.v3_0_preview_1.models.StringIndexType
         :param analyze_request: Analyze request parameters.
-        :type analyze_request: IO or ~azure.ai.formrecognizer.models.PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema
+        :type analyze_request: IO or ~azure.ai.formrecognizer.v3_0_preview_1.models.ContentSource
         :keyword str content_type: Media type of the body sent to the API. Default value is "application/json".
          Allowed values are: "application/octet-stream", "application/pdf", "image/bmp", "image/jpeg", "image/png", "image/tiff", "application/json".
         :keyword callable cls: A custom type or function that will be passed the direct response
@@ -174,7 +174,7 @@ class FormRecognizerClientOperationsMixin:
             return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
     begin_analyze_document.metadata = {'url': '/documentModels/{modelId}:analyze'}  # type: ignore
 
-    async def get_analyze_result(
+    async def get_analyze_document_result(
         self,
         model_id: str,
         result_id: str,
@@ -190,7 +190,7 @@ class FormRecognizerClientOperationsMixin:
         :type result_id: str
         :keyword callable cls: A custom type or function that will be passed the direct response
         :return: AnalyzeResultOperation, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.AnalyzeResultOperation
+        :rtype: ~azure.ai.formrecognizer.v3_0_preview_1.models.AnalyzeResultOperation
         :raises: ~azure.core.exceptions.HttpResponseError
         """
         cls = kwargs.pop('cls', None)  # type: ClsType["_models.AnalyzeResultOperation"]
@@ -202,7 +202,7 @@ class FormRecognizerClientOperationsMixin:
         accept = "application/json"
 
         # Construct URL
-        url = self.get_analyze_result.metadata['url']  # type: ignore
+        url = self.get_analyze_document_result.metadata['url']  # type: ignore
         path_format_arguments = {
             'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
             'modelId': self._serialize.url("model_id", model_id, 'str'),
@@ -233,11 +233,11 @@ class FormRecognizerClientOperationsMixin:
             return cls(pipeline_response, deserialized, {})
 
         return deserialized
-    get_analyze_result.metadata = {'url': '/documentModels/{modelId}/analyzeResults/{resultId}'}  # type: ignore
+    get_analyze_document_result.metadata = {'url': '/documentModels/{modelId}/analyzeResults/{resultId}'}  # type: ignore
 
-    async def _build_model_initial(
+    async def _build_document_model_initial(
         self,
-        build_request: "_models.Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema",
+        build_request: "_models.BuildDocumentModelRequest",
         **kwargs: Any
     ) -> None:
         cls = kwargs.pop('cls', None)  # type: ClsType[None]
@@ -250,7 +250,7 @@ class FormRecognizerClientOperationsMixin:
         accept = "application/json"
 
         # Construct URL
-        url = self._build_model_initial.metadata['url']  # type: ignore
+        url = self._build_document_model_initial.metadata['url']  # type: ignore
         path_format_arguments = {
             'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
         }
@@ -266,7 +266,7 @@ class FormRecognizerClientOperationsMixin:
         header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
 
         body_content_kwargs = {}  # type: Dict[str, Any]
-        body_content = self._serialize.body(build_request, 'Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema')
+        body_content = self._serialize.body(build_request, 'BuildDocumentModelRequest')
         body_content_kwargs['content'] = body_content
         request = self._client.post(url, query_parameters, header_parameters, **body_content_kwargs)
         pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
@@ -283,11 +283,11 @@ class FormRecognizerClientOperationsMixin:
         if cls:
             return cls(pipeline_response, None, response_headers)
 
-    _build_model_initial.metadata = {'url': '/documentModels:build'}  # type: ignore
+    _build_document_model_initial.metadata = {'url': '/documentModels:build'}  # type: ignore
 
-    async def begin_build_model(
+    async def begin_build_document_model(
         self,
-        build_request: "_models.Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema",
+        build_request: "_models.BuildDocumentModelRequest",
         **kwargs: Any
     ) -> AsyncLROPoller[None]:
         """Build model.
@@ -295,7 +295,7 @@ class FormRecognizerClientOperationsMixin:
         Builds a custom document analysis model.
 
         :param build_request: Building request parameters.
-        :type build_request: ~azure.ai.formrecognizer.models.Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema
+        :type build_request: ~azure.ai.formrecognizer.v3_0_preview_1.models.BuildDocumentModelRequest
         :keyword callable cls: A custom type or function that will be passed the direct response
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
         :keyword polling: By default, your polling method will be AsyncLROBasePolling.
@@ -314,7 +314,7 @@ class FormRecognizerClientOperationsMixin:
         )
         cont_token = kwargs.pop('continuation_token', None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._build_model_initial(
+            raw_result = await self._build_document_model_initial(
                 build_request=build_request,
                 cls=lambda x,y,z: x,
                 **kwargs
@@ -343,11 +343,11 @@ class FormRecognizerClientOperationsMixin:
             )
         else:
             return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
-    begin_build_model.metadata = {'url': '/documentModels:build'}  # type: ignore
+    begin_build_document_model.metadata = {'url': '/documentModels:build'}  # type: ignore
 
-    async def _compose_model_initial(
+    async def _compose_document_model_initial(
         self,
-        compose_request: "_models.Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema",
+        compose_request: "_models.ComposeDocumentModelRequest",
         **kwargs: Any
     ) -> None:
         cls = kwargs.pop('cls', None)  # type: ClsType[None]
@@ -360,7 +360,7 @@ class FormRecognizerClientOperationsMixin:
         accept = "application/json"
 
         # Construct URL
-        url = self._compose_model_initial.metadata['url']  # type: ignore
+        url = self._compose_document_model_initial.metadata['url']  # type: ignore
         path_format_arguments = {
             'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
         }
@@ -376,7 +376,7 @@ class FormRecognizerClientOperationsMixin:
         header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
 
         body_content_kwargs = {}  # type: Dict[str, Any]
-        body_content = self._serialize.body(compose_request, 'Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema')
+        body_content = self._serialize.body(compose_request, 'ComposeDocumentModelRequest')
         body_content_kwargs['content'] = body_content
         request = self._client.post(url, query_parameters, header_parameters, **body_content_kwargs)
         pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
@@ -393,11 +393,11 @@ class FormRecognizerClientOperationsMixin:
         if cls:
             return cls(pipeline_response, None, response_headers)
 
-    _compose_model_initial.metadata = {'url': '/documentModels:compose'}  # type: ignore
+    _compose_document_model_initial.metadata = {'url': '/documentModels:compose'}  # type: ignore
 
-    async def begin_compose_model(
+    async def begin_compose_document_model(
         self,
-        compose_request: "_models.Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema",
+        compose_request: "_models.ComposeDocumentModelRequest",
         **kwargs: Any
     ) -> AsyncLROPoller[None]:
         """Compose model.
@@ -405,7 +405,7 @@ class FormRecognizerClientOperationsMixin:
         Creates a new model from document types of existing models.
 
         :param compose_request:
-        :type compose_request: ~azure.ai.formrecognizer.models.Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema
+        :type compose_request: ~azure.ai.formrecognizer.v3_0_preview_1.models.ComposeDocumentModelRequest
         :keyword callable cls: A custom type or function that will be passed the direct response
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
         :keyword polling: By default, your polling method will be AsyncLROBasePolling.
@@ -424,7 +424,7 @@ class FormRecognizerClientOperationsMixin:
         )
         cont_token = kwargs.pop('continuation_token', None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._compose_model_initial(
+            raw_result = await self._compose_document_model_initial(
                 compose_request=compose_request,
                 cls=lambda x,y,z: x,
                 **kwargs
@@ -453,11 +453,11 @@ class FormRecognizerClientOperationsMixin:
             )
         else:
             return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
-    begin_compose_model.metadata = {'url': '/documentModels:compose'}  # type: ignore
+    begin_compose_document_model.metadata = {'url': '/documentModels:compose'}  # type: ignore
 
-    async def authorize_copy(
+    async def authorize_copy_document_model(
         self,
-        authorize_copy_request: "_models.Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema",
+        authorize_copy_request: "_models.AuthorizeCopyRequest",
         **kwargs: Any
     ) -> "_models.CopyAuthorization":
         """Generate copy authorization.
@@ -466,10 +466,10 @@ class FormRecognizerClientOperationsMixin:
         description.
 
         :param authorize_copy_request:
-        :type authorize_copy_request: ~azure.ai.formrecognizer.models.Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema
+        :type authorize_copy_request: ~azure.ai.formrecognizer.v3_0_preview_1.models.AuthorizeCopyRequest
         :keyword callable cls: A custom type or function that will be passed the direct response
         :return: CopyAuthorization, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.CopyAuthorization
+        :rtype: ~azure.ai.formrecognizer.v3_0_preview_1.models.CopyAuthorization
         :raises: ~azure.core.exceptions.HttpResponseError
         """
         cls = kwargs.pop('cls', None)  # type: ClsType["_models.CopyAuthorization"]
@@ -482,7 +482,7 @@ class FormRecognizerClientOperationsMixin:
         accept = "application/json"
 
         # Construct URL
-        url = self.authorize_copy.metadata['url']  # type: ignore
+        url = self.authorize_copy_document_model.metadata['url']  # type: ignore
         path_format_arguments = {
             'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
         }
@@ -498,7 +498,7 @@ class FormRecognizerClientOperationsMixin:
         header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
 
         body_content_kwargs = {}  # type: Dict[str, Any]
-        body_content = self._serialize.body(authorize_copy_request, 'Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema')
+        body_content = self._serialize.body(authorize_copy_request, 'AuthorizeCopyRequest')
         body_content_kwargs['content'] = body_content
         request = self._client.post(url, query_parameters, header_parameters, **body_content_kwargs)
         pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
@@ -515,9 +515,9 @@ class FormRecognizerClientOperationsMixin:
             return cls(pipeline_response, deserialized, {})
 
         return deserialized
-    authorize_copy.metadata = {'url': '/documentModels:authorizeCopy'}  # type: ignore
+    authorize_copy_document_model.metadata = {'url': '/documentModels:authorizeCopy'}  # type: ignore
 
-    async def _copy_model_initial(
+    async def _copy_document_model_to_initial(
         self,
         model_id: str,
         copy_to_request: "_models.CopyAuthorization",
@@ -533,7 +533,7 @@ class FormRecognizerClientOperationsMixin:
         accept = "application/json"
 
         # Construct URL
-        url = self._copy_model_initial.metadata['url']  # type: ignore
+        url = self._copy_document_model_to_initial.metadata['url']  # type: ignore
         path_format_arguments = {
             'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
             'modelId': self._serialize.url("model_id", model_id, 'str'),
@@ -567,9 +567,9 @@ class FormRecognizerClientOperationsMixin:
         if cls:
             return cls(pipeline_response, None, response_headers)
 
-    _copy_model_initial.metadata = {'url': '/documentModels/{modelId}:copyTo'}  # type: ignore
+    _copy_document_model_to_initial.metadata = {'url': '/documentModels/{modelId}:copyTo'}  # type: ignore
 
-    async def begin_copy_model(
+    async def begin_copy_document_model_to(
         self,
         model_id: str,
         copy_to_request: "_models.CopyAuthorization",
@@ -582,7 +582,7 @@ class FormRecognizerClientOperationsMixin:
         :param model_id: Unique model name.
         :type model_id: str
         :param copy_to_request:
-        :type copy_to_request: ~azure.ai.formrecognizer.models.CopyAuthorization
+        :type copy_to_request: ~azure.ai.formrecognizer.v3_0_preview_1.models.CopyAuthorization
         :keyword callable cls: A custom type or function that will be passed the direct response
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
         :keyword polling: By default, your polling method will be AsyncLROBasePolling.
@@ -601,7 +601,7 @@ class FormRecognizerClientOperationsMixin:
         )
         cont_token = kwargs.pop('continuation_token', None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._copy_model_initial(
+            raw_result = await self._copy_document_model_to_initial(
                 model_id=model_id,
                 copy_to_request=copy_to_request,
                 cls=lambda x,y,z: x,
@@ -632,22 +632,22 @@ class FormRecognizerClientOperationsMixin:
             )
         else:
             return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
-    begin_copy_model.metadata = {'url': '/documentModels/{modelId}:copyTo'}  # type: ignore
+    begin_copy_document_model_to.metadata = {'url': '/documentModels/{modelId}:copyTo'}  # type: ignore
 
-    def list_operations(
+    def get_operations(
         self,
         **kwargs: Any
-    ) -> AsyncIterable["_models.PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema"]:
+    ) -> AsyncIterable["_models.GetOperationsResponse"]:
         """List operations.
 
         Lists all operations.
 
         :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: An iterator like instance of either PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema or the result of cls(response)
-        :rtype: ~azure.core.async_paging.AsyncItemPaged[~azure.ai.formrecognizer.models.PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema]
+        :return: An iterator like instance of either GetOperationsResponse or the result of cls(response)
+        :rtype: ~azure.core.async_paging.AsyncItemPaged[~azure.ai.formrecognizer.v3_0_preview_1.models.GetOperationsResponse]
         :raises: ~azure.core.exceptions.HttpResponseError
         """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema"]
+        cls = kwargs.pop('cls', None)  # type: ClsType["_models.GetOperationsResponse"]
         error_map = {
             401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
         }
@@ -662,7 +662,7 @@ class FormRecognizerClientOperationsMixin:
 
             if not next_link:
                 # Construct URL
-                url = self.list_operations.metadata['url']  # type: ignore
+                url = self.get_operations.metadata['url']  # type: ignore
                 path_format_arguments = {
                     'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
                 }
@@ -683,7 +683,7 @@ class FormRecognizerClientOperationsMixin:
             return request
 
         async def extract_data(pipeline_response):
-            deserialized = self._deserialize('PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema', pipeline_response)
+            deserialized = self._deserialize('GetOperationsResponse', pipeline_response)
             list_of_elem = deserialized.value
             if cls:
                 list_of_elem = cls(list_of_elem)
@@ -705,13 +705,13 @@ class FormRecognizerClientOperationsMixin:
         return AsyncItemPaged(
             get_next, extract_data
         )
-    list_operations.metadata = {'url': '/operations'}  # type: ignore
+    get_operations.metadata = {'url': '/operations'}  # type: ignore
 
-    async def get_operation_info(
+    async def get_operation(
         self,
         operation_id: str,
         **kwargs: Any
-    ) -> "_models.Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema":
+    ) -> "_models.GetOperationResponse":
         """Get operation.
 
         Gets operation info.
@@ -719,11 +719,11 @@ class FormRecognizerClientOperationsMixin:
         :param operation_id: Unique operation ID.
         :type operation_id: str
         :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema
+        :return: GetOperationResponse, or the result of cls(response)
+        :rtype: ~azure.ai.formrecognizer.v3_0_preview_1.models.GetOperationResponse
         :raises: ~azure.core.exceptions.HttpResponseError
         """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema"]
+        cls = kwargs.pop('cls', None)  # type: ClsType["_models.GetOperationResponse"]
         error_map = {
             401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
         }
@@ -732,7 +732,7 @@ class FormRecognizerClientOperationsMixin:
         accept = "application/json"
 
         # Construct URL
-        url = self.get_operation_info.metadata['url']  # type: ignore
+        url = self.get_operation.metadata['url']  # type: ignore
         path_format_arguments = {
             'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
             'operationId': self._serialize.url("operation_id", operation_id, 'str'),
@@ -756,28 +756,28 @@ class FormRecognizerClientOperationsMixin:
             error = self._deserialize.failsafe_deserialize(_models.ErrorResponse, response)
             raise HttpResponseError(response=response, model=error)
 
-        deserialized = self._deserialize('Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema', pipeline_response)
+        deserialized = self._deserialize('GetOperationResponse', pipeline_response)
 
         if cls:
             return cls(pipeline_response, deserialized, {})
 
         return deserialized
-    get_operation_info.metadata = {'url': '/operations/{operationId}'}  # type: ignore
+    get_operation.metadata = {'url': '/operations/{operationId}'}  # type: ignore
 
-    def list_all_models(
+    def get_models(
         self,
         **kwargs: Any
-    ) -> AsyncIterable["_models.Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema"]:
+    ) -> AsyncIterable["_models.GetModelsResponse"]:
         """List models.
 
         List all models.
 
         :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: An iterator like instance of either Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema or the result of cls(response)
-        :rtype: ~azure.core.async_paging.AsyncItemPaged[~azure.ai.formrecognizer.models.Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema]
+        :return: An iterator like instance of either GetModelsResponse or the result of cls(response)
+        :rtype: ~azure.core.async_paging.AsyncItemPaged[~azure.ai.formrecognizer.v3_0_preview_1.models.GetModelsResponse]
         :raises: ~azure.core.exceptions.HttpResponseError
         """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema"]
+        cls = kwargs.pop('cls', None)  # type: ClsType["_models.GetModelsResponse"]
         error_map = {
             401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
         }
@@ -792,7 +792,7 @@ class FormRecognizerClientOperationsMixin:
 
             if not next_link:
                 # Construct URL
-                url = self.list_all_models.metadata['url']  # type: ignore
+                url = self.get_models.metadata['url']  # type: ignore
                 path_format_arguments = {
                     'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
                 }
@@ -813,7 +813,7 @@ class FormRecognizerClientOperationsMixin:
             return request
 
         async def extract_data(pipeline_response):
-            deserialized = self._deserialize('Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema', pipeline_response)
+            deserialized = self._deserialize('GetModelsResponse', pipeline_response)
             list_of_elem = deserialized.value
             if cls:
                 list_of_elem = cls(list_of_elem)
@@ -835,7 +835,7 @@ class FormRecognizerClientOperationsMixin:
         return AsyncItemPaged(
             get_next, extract_data
         )
-    list_all_models.metadata = {'url': '/documentModels'}  # type: ignore
+    get_models.metadata = {'url': '/documentModels'}  # type: ignore
 
     async def get_model(
         self,
@@ -850,7 +850,7 @@ class FormRecognizerClientOperationsMixin:
         :type model_id: str
         :keyword callable cls: A custom type or function that will be passed the direct response
         :return: ModelInfo, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.ModelInfo
+        :rtype: ~azure.ai.formrecognizer.v3_0_preview_1.models.ModelInfo
         :raises: ~azure.core.exceptions.HttpResponseError
         """
         cls = kwargs.pop('cls', None)  # type: ClsType["_models.ModelInfo"]
@@ -951,17 +951,17 @@ class FormRecognizerClientOperationsMixin:
     async def get_info(
         self,
         **kwargs: Any
-    ) -> "_models.Paths1Ep1Fe8InfoGetResponses200ContentApplicationJsonSchema":
+    ) -> "_models.GetInfoResponse":
         """Get info.
 
         Return basic info about the current resource.
 
         :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: Paths1Ep1Fe8InfoGetResponses200ContentApplicationJsonSchema, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.Paths1Ep1Fe8InfoGetResponses200ContentApplicationJsonSchema
+        :return: GetInfoResponse, or the result of cls(response)
+        :rtype: ~azure.ai.formrecognizer.v3_0_preview_1.models.GetInfoResponse
         :raises: ~azure.core.exceptions.HttpResponseError
         """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.Paths1Ep1Fe8InfoGetResponses200ContentApplicationJsonSchema"]
+        cls = kwargs.pop('cls', None)  # type: ClsType["_models.GetInfoResponse"]
         error_map = {
             401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
         }
@@ -993,1106 +993,10 @@ class FormRecognizerClientOperationsMixin:
             error = self._deserialize.failsafe_deserialize(_models.ErrorResponse, response)
             raise HttpResponseError(response=response, model=error)
 
-        deserialized = self._deserialize('Paths1Ep1Fe8InfoGetResponses200ContentApplicationJsonSchema', pipeline_response)
+        deserialized = self._deserialize('GetInfoResponse', pipeline_response)
 
         if cls:
             return cls(pipeline_response, deserialized, {})
 
         return deserialized
     get_info.metadata = {'url': '/info'}  # type: ignore
-
-    async def train_custom_model_async(
-        self,
-        train_request: "_models.TrainRequest",
-        **kwargs: Any
-    ) -> None:
-        """Train Custom Model.
-
-        Create and train a custom model. The request must include a source parameter that is either an
-        externally accessible Azure storage blob container Uri (preferably a Shared Access Signature
-        Uri) or valid path to a data folder in a locally mounted drive. When local paths are specified,
-        they must follow the Linux/Unix path format and be an absolute path rooted to the input mount
-        configuration setting value e.g., if '{Mounts:Input}' configuration setting value is '/input'
-        then a valid source path would be '/input/contosodataset'. All data to be trained is expected
-        to be under the source folder or sub folders under it. Models are trained using documents that
-        are of the following content type - 'application/pdf', 'image/jpeg', 'image/png', 'image/tiff'.
-        Other type of content is ignored.
-
-        :param train_request: Training request parameters.
-        :type train_request: ~azure.ai.formrecognizer.models.TrainRequest
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: None, or the result of cls(response)
-        :rtype: None
-        :raises: ~azure.core.exceptions.HttpResponseError
-        """
-        cls = kwargs.pop('cls', None)  # type: ClsType[None]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        content_type = kwargs.pop("content_type", "application/json")
-        accept = "application/json"
-
-        # Construct URL
-        url = self.train_custom_model_async.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Content-Type'] = self._serialize.header("content_type", content_type, 'str')
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        body_content_kwargs = {}  # type: Dict[str, Any]
-        body_content = self._serialize.body(train_request, 'TrainRequest')
-        body_content_kwargs['content'] = body_content
-        request = self._client.post(url, query_parameters, header_parameters, **body_content_kwargs)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [201]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        response_headers = {}
-        response_headers['Location']=self._deserialize('str', response.headers.get('Location'))
-
-        if cls:
-            return cls(pipeline_response, None, response_headers)
-
-    train_custom_model_async.metadata = {'url': '/custom/models'}  # type: ignore
-
-    async def get_custom_model(
-        self,
-        model_id: str,
-        include_keys: Optional[bool] = False,
-        **kwargs: Any
-    ) -> "_models.Model":
-        """Get Custom Model.
-
-        Get detailed information about a custom model.
-
-        :param model_id: Model identifier.
-        :type model_id: str
-        :param include_keys: Include list of extracted keys in model information.
-        :type include_keys: bool
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: Model, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.Model
-        :raises: ~azure.core.exceptions.HttpResponseError
-        """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.Model"]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        accept = "application/json"
-
-        # Construct URL
-        url = self.get_custom_model.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-            'modelId': self._serialize.url("model_id", model_id, 'str'),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-        if include_keys is not None:
-            query_parameters['includeKeys'] = self._serialize.query("include_keys", include_keys, 'bool')
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        request = self._client.get(url, query_parameters, header_parameters)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [200]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        deserialized = self._deserialize('Model', pipeline_response)
-
-        if cls:
-            return cls(pipeline_response, deserialized, {})
-
-        return deserialized
-    get_custom_model.metadata = {'url': '/custom/models/{modelId}'}  # type: ignore
-
-    async def delete_custom_model(
-        self,
-        model_id: str,
-        **kwargs: Any
-    ) -> None:
-        """Delete Custom Model.
-
-        Mark model for deletion. Model artifacts will be permanently removed within a predetermined
-        period.
-
-        :param model_id: Model identifier.
-        :type model_id: str
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: None, or the result of cls(response)
-        :rtype: None
-        :raises: ~azure.core.exceptions.HttpResponseError
-        """
-        cls = kwargs.pop('cls', None)  # type: ClsType[None]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        accept = "application/json"
-
-        # Construct URL
-        url = self.delete_custom_model.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-            'modelId': self._serialize.url("model_id", model_id, 'str'),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        request = self._client.delete(url, query_parameters, header_parameters)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [204]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        if cls:
-            return cls(pipeline_response, None, {})
-
-    delete_custom_model.metadata = {'url': '/custom/models/{modelId}'}  # type: ignore
-
-    async def _analyze_with_custom_model_initial(
-        self,
-        model_id: str,
-        include_text_details: Optional[bool] = False,
-        file_stream: Optional[Union[IO, "_models.SourcePath"]] = None,
-        **kwargs: Any
-    ) -> None:
-        cls = kwargs.pop('cls', None)  # type: ClsType[None]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        content_type = kwargs.pop("content_type", "application/json")
-        accept = "application/json"
-
-        # Construct URL
-        url = self._analyze_with_custom_model_initial.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-            'modelId': self._serialize.url("model_id", model_id, 'str'),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-        if include_text_details is not None:
-            query_parameters['includeTextDetails'] = self._serialize.query("include_text_details", include_text_details, 'bool')
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Content-Type'] = self._serialize.header("content_type", content_type, 'str')
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        body_content_kwargs = {}  # type: Dict[str, Any]
-        if header_parameters['Content-Type'].split(";")[0] in ['application/pdf', 'image/jpeg', 'image/png', 'image/tiff']:
-            body_content_kwargs['stream_content'] = file_stream
-        elif header_parameters['Content-Type'].split(";")[0] in ['application/json']:
-            if file_stream is not None:
-                body_content = self._serialize.body(file_stream, 'SourcePath')
-            else:
-                body_content = None
-            body_content_kwargs['content'] = body_content
-        else:
-            raise ValueError(
-                "The content_type '{}' is not one of the allowed values: "
-                "['application/pdf', 'image/jpeg', 'image/png', 'image/tiff', 'application/json']".format(header_parameters['Content-Type'])
-            )
-        request = self._client.post(url, query_parameters, header_parameters, **body_content_kwargs)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [202]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        response_headers = {}
-        response_headers['Operation-Location']=self._deserialize('str', response.headers.get('Operation-Location'))
-
-        if cls:
-            return cls(pipeline_response, None, response_headers)
-
-    _analyze_with_custom_model_initial.metadata = {'url': '/custom/models/{modelId}/analyze'}  # type: ignore
-
-    async def begin_analyze_with_custom_model(
-        self,
-        model_id: str,
-        include_text_details: Optional[bool] = False,
-        file_stream: Optional[Union[IO, "_models.SourcePath"]] = None,
-        **kwargs: Any
-    ) -> AsyncLROPoller[None]:
-        """Analyze Form.
-
-        Extract key-value pairs, tables, and semantic values from a given document. The input document
-        must be of one of the supported content types - 'application/pdf', 'image/jpeg', 'image/png' or
-        'image/tiff'. Alternatively, use 'application/json' type to specify the location (Uri or local
-        path) of the document to be analyzed.
-
-        :param model_id: Model identifier.
-        :type model_id: str
-        :param include_text_details: Include text lines and element references in the result.
-        :type include_text_details: bool
-        :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
-        :type file_stream: IO or ~azure.ai.formrecognizer.models.SourcePath
-        :keyword str content_type: Media type of the body sent to the API. Default value is "application/json".
-         Allowed values are: "application/pdf", "image/jpeg", "image/png", "image/tiff", "application/json".
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling.
-         Pass in False for this operation to not poll, or pass in your own initialized polling object for a personal polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
-        :keyword int polling_interval: Default waiting time between two polls for LRO operations if no Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns either None or the result of cls(response)
-        :rtype: ~azure.core.polling.AsyncLROPoller[None]
-        :raises ~azure.core.exceptions.HttpResponseError:
-        """
-        polling = kwargs.pop('polling', True)  # type: Union[bool, AsyncPollingMethod]
-        cls = kwargs.pop('cls', None)  # type: ClsType[None]
-        lro_delay = kwargs.pop(
-            'polling_interval',
-            self._config.polling_interval
-        )
-        cont_token = kwargs.pop('continuation_token', None)  # type: Optional[str]
-        if cont_token is None:
-            raw_result = await self._analyze_with_custom_model_initial(
-                model_id=model_id,
-                include_text_details=include_text_details,
-                file_stream=file_stream,
-                cls=lambda x,y,z: x,
-                **kwargs
-            )
-
-        kwargs.pop('error_map', None)
-        kwargs.pop('content_type', None)
-
-        def get_long_running_output(pipeline_response):
-            if cls:
-                return cls(pipeline_response, None, {})
-
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-            'modelId': self._serialize.url("model_id", model_id, 'str'),
-        }
-
-        if polling is True: polling_method = AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments,  **kwargs)
-        elif polling is False: polling_method = AsyncNoPolling()
-        else: polling_method = polling
-        if cont_token:
-            return AsyncLROPoller.from_continuation_token(
-                polling_method=polling_method,
-                continuation_token=cont_token,
-                client=self._client,
-                deserialization_callback=get_long_running_output
-            )
-        else:
-            return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
-    begin_analyze_with_custom_model.metadata = {'url': '/custom/models/{modelId}/analyze'}  # type: ignore
-
-    async def get_analyze_form_result(
-        self,
-        model_id: str,
-        result_id: str,
-        **kwargs: Any
-    ) -> "_models.AnalyzeOperationResult":
-        """Get Analyze Form Result.
-
-        Obtain current status and the result of the analyze form operation.
-
-        :param model_id: Model identifier.
-        :type model_id: str
-        :param result_id: Analyze operation result identifier.
-        :type result_id: str
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: AnalyzeOperationResult, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.AnalyzeOperationResult
-        :raises: ~azure.core.exceptions.HttpResponseError
-        """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.AnalyzeOperationResult"]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        accept = "application/json"
-
-        # Construct URL
-        url = self.get_analyze_form_result.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-            'modelId': self._serialize.url("model_id", model_id, 'str'),
-            'resultId': self._serialize.url("result_id", result_id, 'str'),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        request = self._client.get(url, query_parameters, header_parameters)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [200]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        deserialized = self._deserialize('AnalyzeOperationResult', pipeline_response)
-
-        if cls:
-            return cls(pipeline_response, deserialized, {})
-
-        return deserialized
-    get_analyze_form_result.metadata = {'url': '/custom/models/{modelId}/analyzeResults/{resultId}'}  # type: ignore
-
-    async def _copy_custom_model_initial(
-        self,
-        model_id: str,
-        copy_request: "_models.CopyRequest",
-        **kwargs: Any
-    ) -> None:
-        cls = kwargs.pop('cls', None)  # type: ClsType[None]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        content_type = kwargs.pop("content_type", "application/json")
-        accept = "application/json"
-
-        # Construct URL
-        url = self._copy_custom_model_initial.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-            'modelId': self._serialize.url("model_id", model_id, 'str'),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Content-Type'] = self._serialize.header("content_type", content_type, 'str')
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        body_content_kwargs = {}  # type: Dict[str, Any]
-        body_content = self._serialize.body(copy_request, 'CopyRequest')
-        body_content_kwargs['content'] = body_content
-        request = self._client.post(url, query_parameters, header_parameters, **body_content_kwargs)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [202]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        response_headers = {}
-        response_headers['Operation-Location']=self._deserialize('str', response.headers.get('Operation-Location'))
-
-        if cls:
-            return cls(pipeline_response, None, response_headers)
-
-    _copy_custom_model_initial.metadata = {'url': '/custom/models/{modelId}/copy'}  # type: ignore
-
-    async def begin_copy_custom_model(
-        self,
-        model_id: str,
-        copy_request: "_models.CopyRequest",
-        **kwargs: Any
-    ) -> AsyncLROPoller[None]:
-        """Copy Custom Model.
-
-        Copy custom model stored in this resource (the source) to user specified target Form Recognizer
-        resource.
-
-        :param model_id: Model identifier.
-        :type model_id: str
-        :param copy_request: Copy request parameters.
-        :type copy_request: ~azure.ai.formrecognizer.models.CopyRequest
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling.
-         Pass in False for this operation to not poll, or pass in your own initialized polling object for a personal polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
-        :keyword int polling_interval: Default waiting time between two polls for LRO operations if no Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns either None or the result of cls(response)
-        :rtype: ~azure.core.polling.AsyncLROPoller[None]
-        :raises ~azure.core.exceptions.HttpResponseError:
-        """
-        polling = kwargs.pop('polling', True)  # type: Union[bool, AsyncPollingMethod]
-        cls = kwargs.pop('cls', None)  # type: ClsType[None]
-        lro_delay = kwargs.pop(
-            'polling_interval',
-            self._config.polling_interval
-        )
-        cont_token = kwargs.pop('continuation_token', None)  # type: Optional[str]
-        if cont_token is None:
-            raw_result = await self._copy_custom_model_initial(
-                model_id=model_id,
-                copy_request=copy_request,
-                cls=lambda x,y,z: x,
-                **kwargs
-            )
-
-        kwargs.pop('error_map', None)
-        kwargs.pop('content_type', None)
-
-        def get_long_running_output(pipeline_response):
-            if cls:
-                return cls(pipeline_response, None, {})
-
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-            'modelId': self._serialize.url("model_id", model_id, 'str'),
-        }
-
-        if polling is True: polling_method = AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments,  **kwargs)
-        elif polling is False: polling_method = AsyncNoPolling()
-        else: polling_method = polling
-        if cont_token:
-            return AsyncLROPoller.from_continuation_token(
-                polling_method=polling_method,
-                continuation_token=cont_token,
-                client=self._client,
-                deserialization_callback=get_long_running_output
-            )
-        else:
-            return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
-    begin_copy_custom_model.metadata = {'url': '/custom/models/{modelId}/copy'}  # type: ignore
-
-    async def get_custom_model_copy_result(
-        self,
-        model_id: str,
-        result_id: str,
-        **kwargs: Any
-    ) -> "_models.CopyOperationResult":
-        """Get Custom Model Copy Result.
-
-        Obtain current status and the result of a custom model copy operation.
-
-        :param model_id: Model identifier.
-        :type model_id: str
-        :param result_id: Copy operation result identifier.
-        :type result_id: str
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: CopyOperationResult, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.CopyOperationResult
-        :raises: ~azure.core.exceptions.HttpResponseError
-        """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.CopyOperationResult"]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        accept = "application/json"
-
-        # Construct URL
-        url = self.get_custom_model_copy_result.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-            'modelId': self._serialize.url("model_id", model_id, 'str'),
-            'resultId': self._serialize.url("result_id", result_id, 'str'),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        request = self._client.get(url, query_parameters, header_parameters)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [200]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        deserialized = self._deserialize('CopyOperationResult', pipeline_response)
-
-        if cls:
-            return cls(pipeline_response, deserialized, {})
-
-        return deserialized
-    get_custom_model_copy_result.metadata = {'url': '/custom/models/{modelId}/copyResults/{resultId}'}  # type: ignore
-
-    async def generate_model_copy_authorization(
-        self,
-        **kwargs: Any
-    ) -> "_models.CopyAuthorizationResult":
-        """Generate Copy Authorization.
-
-        Generate authorization to copy a model into the target Form Recognizer resource.
-
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: CopyAuthorizationResult, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.CopyAuthorizationResult
-        :raises: ~azure.core.exceptions.HttpResponseError
-        """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.CopyAuthorizationResult"]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        accept = "application/json"
-
-        # Construct URL
-        url = self.generate_model_copy_authorization.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        request = self._client.post(url, query_parameters, header_parameters)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [201]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        response_headers = {}
-        response_headers['Location']=self._deserialize('str', response.headers.get('Location'))
-        deserialized = self._deserialize('CopyAuthorizationResult', pipeline_response)
-
-        if cls:
-            return cls(pipeline_response, deserialized, response_headers)
-
-        return deserialized
-    generate_model_copy_authorization.metadata = {'url': '/custom/models/copyAuthorization'}  # type: ignore
-
-    async def _analyze_receipt_async_initial(
-        self,
-        include_text_details: Optional[bool] = False,
-        file_stream: Optional[Union[IO, "_models.SourcePath"]] = None,
-        **kwargs: Any
-    ) -> None:
-        cls = kwargs.pop('cls', None)  # type: ClsType[None]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        content_type = kwargs.pop("content_type", "application/json")
-        accept = "application/json"
-
-        # Construct URL
-        url = self._analyze_receipt_async_initial.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-        if include_text_details is not None:
-            query_parameters['includeTextDetails'] = self._serialize.query("include_text_details", include_text_details, 'bool')
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Content-Type'] = self._serialize.header("content_type", content_type, 'str')
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        body_content_kwargs = {}  # type: Dict[str, Any]
-        if header_parameters['Content-Type'].split(";")[0] in ['application/pdf', 'image/jpeg', 'image/png', 'image/tiff']:
-            body_content_kwargs['stream_content'] = file_stream
-        elif header_parameters['Content-Type'].split(";")[0] in ['application/json']:
-            if file_stream is not None:
-                body_content = self._serialize.body(file_stream, 'SourcePath')
-            else:
-                body_content = None
-            body_content_kwargs['content'] = body_content
-        else:
-            raise ValueError(
-                "The content_type '{}' is not one of the allowed values: "
-                "['application/pdf', 'image/jpeg', 'image/png', 'image/tiff', 'application/json']".format(header_parameters['Content-Type'])
-            )
-        request = self._client.post(url, query_parameters, header_parameters, **body_content_kwargs)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [202]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        response_headers = {}
-        response_headers['Operation-Location']=self._deserialize('str', response.headers.get('Operation-Location'))
-
-        if cls:
-            return cls(pipeline_response, None, response_headers)
-
-    _analyze_receipt_async_initial.metadata = {'url': '/prebuilt/receipt/analyze'}  # type: ignore
-
-    async def begin_analyze_receipt_async(
-        self,
-        include_text_details: Optional[bool] = False,
-        file_stream: Optional[Union[IO, "_models.SourcePath"]] = None,
-        **kwargs: Any
-    ) -> AsyncLROPoller[None]:
-        """Analyze Receipt.
-
-        Extract field text and semantic values from a given receipt document. The input document must
-        be of one of the supported content types - 'application/pdf', 'image/jpeg', 'image/png' or
-        'image/tiff'. Alternatively, use 'application/json' type to specify the location (Uri or local
-        path) of the document to be analyzed.
-
-        :param include_text_details: Include text lines and element references in the result.
-        :type include_text_details: bool
-        :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
-        :type file_stream: IO or ~azure.ai.formrecognizer.models.SourcePath
-        :keyword str content_type: Media type of the body sent to the API. Default value is "application/json".
-         Allowed values are: "application/pdf", "image/jpeg", "image/png", "image/tiff", "application/json".
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling.
-         Pass in False for this operation to not poll, or pass in your own initialized polling object for a personal polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
-        :keyword int polling_interval: Default waiting time between two polls for LRO operations if no Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns either None or the result of cls(response)
-        :rtype: ~azure.core.polling.AsyncLROPoller[None]
-        :raises ~azure.core.exceptions.HttpResponseError:
-        """
-        polling = kwargs.pop('polling', True)  # type: Union[bool, AsyncPollingMethod]
-        cls = kwargs.pop('cls', None)  # type: ClsType[None]
-        lro_delay = kwargs.pop(
-            'polling_interval',
-            self._config.polling_interval
-        )
-        cont_token = kwargs.pop('continuation_token', None)  # type: Optional[str]
-        if cont_token is None:
-            raw_result = await self._analyze_receipt_async_initial(
-                include_text_details=include_text_details,
-                file_stream=file_stream,
-                cls=lambda x,y,z: x,
-                **kwargs
-            )
-
-        kwargs.pop('error_map', None)
-        kwargs.pop('content_type', None)
-
-        def get_long_running_output(pipeline_response):
-            if cls:
-                return cls(pipeline_response, None, {})
-
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-        }
-
-        if polling is True: polling_method = AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments,  **kwargs)
-        elif polling is False: polling_method = AsyncNoPolling()
-        else: polling_method = polling
-        if cont_token:
-            return AsyncLROPoller.from_continuation_token(
-                polling_method=polling_method,
-                continuation_token=cont_token,
-                client=self._client,
-                deserialization_callback=get_long_running_output
-            )
-        else:
-            return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
-    begin_analyze_receipt_async.metadata = {'url': '/prebuilt/receipt/analyze'}  # type: ignore
-
-    async def get_analyze_receipt_result(
-        self,
-        result_id: str,
-        **kwargs: Any
-    ) -> "_models.AnalyzeOperationResult":
-        """Get Analyze Receipt Result.
-
-        Track the progress and obtain the result of the analyze receipt operation.
-
-        :param result_id: Analyze operation result identifier.
-        :type result_id: str
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: AnalyzeOperationResult, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.AnalyzeOperationResult
-        :raises: ~azure.core.exceptions.HttpResponseError
-        """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.AnalyzeOperationResult"]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        accept = "application/json"
-
-        # Construct URL
-        url = self.get_analyze_receipt_result.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-            'resultId': self._serialize.url("result_id", result_id, 'str'),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        request = self._client.get(url, query_parameters, header_parameters)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [200]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        deserialized = self._deserialize('AnalyzeOperationResult', pipeline_response)
-
-        if cls:
-            return cls(pipeline_response, deserialized, {})
-
-        return deserialized
-    get_analyze_receipt_result.metadata = {'url': '/prebuilt/receipt/analyzeResults/{resultId}'}  # type: ignore
-
-    async def _analyze_layout_async_initial(
-        self,
-        file_stream: Optional[Union[IO, "_models.SourcePath"]] = None,
-        **kwargs: Any
-    ) -> None:
-        cls = kwargs.pop('cls', None)  # type: ClsType[None]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        content_type = kwargs.pop("content_type", "application/json")
-        accept = "application/json"
-
-        # Construct URL
-        url = self._analyze_layout_async_initial.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Content-Type'] = self._serialize.header("content_type", content_type, 'str')
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        body_content_kwargs = {}  # type: Dict[str, Any]
-        if header_parameters['Content-Type'].split(";")[0] in ['application/pdf', 'image/jpeg', 'image/png', 'image/tiff']:
-            body_content_kwargs['stream_content'] = file_stream
-        elif header_parameters['Content-Type'].split(";")[0] in ['application/json']:
-            if file_stream is not None:
-                body_content = self._serialize.body(file_stream, 'SourcePath')
-            else:
-                body_content = None
-            body_content_kwargs['content'] = body_content
-        else:
-            raise ValueError(
-                "The content_type '{}' is not one of the allowed values: "
-                "['application/pdf', 'image/jpeg', 'image/png', 'image/tiff', 'application/json']".format(header_parameters['Content-Type'])
-            )
-        request = self._client.post(url, query_parameters, header_parameters, **body_content_kwargs)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [202]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        response_headers = {}
-        response_headers['Operation-Location']=self._deserialize('str', response.headers.get('Operation-Location'))
-
-        if cls:
-            return cls(pipeline_response, None, response_headers)
-
-    _analyze_layout_async_initial.metadata = {'url': '/layout/analyze'}  # type: ignore
-
-    async def begin_analyze_layout_async(
-        self,
-        file_stream: Optional[Union[IO, "_models.SourcePath"]] = None,
-        **kwargs: Any
-    ) -> AsyncLROPoller[None]:
-        """Analyze Layout.
-
-        Extract text and layout information from a given document. The input document must be of one of
-        the supported content types - 'application/pdf', 'image/jpeg', 'image/png' or 'image/tiff'.
-        Alternatively, use 'application/json' type to specify the location (Uri or local path) of the
-        document to be analyzed.
-
-        :param file_stream: .json, .pdf, .jpg, .png or .tiff type file stream.
-        :type file_stream: IO or ~azure.ai.formrecognizer.models.SourcePath
-        :keyword str content_type: Media type of the body sent to the API. Default value is "application/json".
-         Allowed values are: "application/pdf", "image/jpeg", "image/png", "image/tiff", "application/json".
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling.
-         Pass in False for this operation to not poll, or pass in your own initialized polling object for a personal polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
-        :keyword int polling_interval: Default waiting time between two polls for LRO operations if no Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns either None or the result of cls(response)
-        :rtype: ~azure.core.polling.AsyncLROPoller[None]
-        :raises ~azure.core.exceptions.HttpResponseError:
-        """
-        polling = kwargs.pop('polling', True)  # type: Union[bool, AsyncPollingMethod]
-        cls = kwargs.pop('cls', None)  # type: ClsType[None]
-        lro_delay = kwargs.pop(
-            'polling_interval',
-            self._config.polling_interval
-        )
-        cont_token = kwargs.pop('continuation_token', None)  # type: Optional[str]
-        if cont_token is None:
-            raw_result = await self._analyze_layout_async_initial(
-                file_stream=file_stream,
-                cls=lambda x,y,z: x,
-                **kwargs
-            )
-
-        kwargs.pop('error_map', None)
-        kwargs.pop('content_type', None)
-
-        def get_long_running_output(pipeline_response):
-            if cls:
-                return cls(pipeline_response, None, {})
-
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-        }
-
-        if polling is True: polling_method = AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments,  **kwargs)
-        elif polling is False: polling_method = AsyncNoPolling()
-        else: polling_method = polling
-        if cont_token:
-            return AsyncLROPoller.from_continuation_token(
-                polling_method=polling_method,
-                continuation_token=cont_token,
-                client=self._client,
-                deserialization_callback=get_long_running_output
-            )
-        else:
-            return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
-    begin_analyze_layout_async.metadata = {'url': '/layout/analyze'}  # type: ignore
-
-    async def get_analyze_layout_result(
-        self,
-        result_id: str,
-        **kwargs: Any
-    ) -> "_models.AnalyzeOperationResult":
-        """Get Analyze Layout Result.
-
-        Track the progress and obtain the result of the analyze layout operation.
-
-        :param result_id: Analyze operation result identifier.
-        :type result_id: str
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: AnalyzeOperationResult, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.AnalyzeOperationResult
-        :raises: ~azure.core.exceptions.HttpResponseError
-        """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.AnalyzeOperationResult"]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        accept = "application/json"
-
-        # Construct URL
-        url = self.get_analyze_layout_result.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-            'resultId': self._serialize.url("result_id", result_id, 'str'),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        request = self._client.get(url, query_parameters, header_parameters)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [200]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        deserialized = self._deserialize('AnalyzeOperationResult', pipeline_response)
-
-        if cls:
-            return cls(pipeline_response, deserialized, {})
-
-        return deserialized
-    get_analyze_layout_result.metadata = {'url': '/layout/analyzeResults/{resultId}'}  # type: ignore
-
-    def list_custom_models(
-        self,
-        **kwargs: Any
-    ) -> AsyncIterable["_models.Models"]:
-        """List Custom Models.
-
-        Get information about all custom models.
-
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: An iterator like instance of either Models or the result of cls(response)
-        :rtype: ~azure.core.async_paging.AsyncItemPaged[~azure.ai.formrecognizer.models.Models]
-        :raises: ~azure.core.exceptions.HttpResponseError
-        """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.Models"]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        op = "full"
-        accept = "application/json"
-
-        def prepare_request(next_link=None):
-            # Construct headers
-            header_parameters = {}  # type: Dict[str, Any]
-            header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-            if not next_link:
-                # Construct URL
-                url = self.list_custom_models.metadata['url']  # type: ignore
-                path_format_arguments = {
-                    'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-                }
-                url = self._client.format_url(url, **path_format_arguments)
-                # Construct parameters
-                query_parameters = {}  # type: Dict[str, Any]
-                query_parameters['op'] = self._serialize.query("op", op, 'str')
-
-                request = self._client.get(url, query_parameters, header_parameters)
-            else:
-                url = next_link
-                query_parameters = {}  # type: Dict[str, Any]
-                path_format_arguments = {
-                    'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-                }
-                url = self._client.format_url(url, **path_format_arguments)
-                request = self._client.get(url, query_parameters, header_parameters)
-            return request
-
-        async def extract_data(pipeline_response):
-            deserialized = self._deserialize('Models', pipeline_response)
-            list_of_elem = deserialized.model_list
-            if cls:
-                list_of_elem = cls(list_of_elem)
-            return deserialized.next_link or None, AsyncList(list_of_elem)
-
-        async def get_next(next_link=None):
-            request = prepare_request(next_link)
-
-            pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-            response = pipeline_response.http_response
-
-            if response.status_code not in [200]:
-                error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-                map_error(status_code=response.status_code, response=response, error_map=error_map)
-                raise HttpResponseError(response=response, model=error)
-
-            return pipeline_response
-
-        return AsyncItemPaged(
-            get_next, extract_data
-        )
-    list_custom_models.metadata = {'url': '/custom/models'}  # type: ignore
-
-    async def get_custom_models(
-        self,
-        **kwargs: Any
-    ) -> "_models.Models":
-        """Get Custom Models.
-
-        Get information about all custom models.
-
-        :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: Models, or the result of cls(response)
-        :rtype: ~azure.ai.formrecognizer.models.Models
-        :raises: ~azure.core.exceptions.HttpResponseError
-        """
-        cls = kwargs.pop('cls', None)  # type: ClsType["_models.Models"]
-        error_map = {
-            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
-        }
-        error_map.update(kwargs.pop('error_map', {}))
-        op = "summary"
-        accept = "application/json"
-
-        # Construct URL
-        url = self.get_custom_models.metadata['url']  # type: ignore
-        path_format_arguments = {
-            'endpoint': self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}  # type: Dict[str, Any]
-        query_parameters['op'] = self._serialize.query("op", op, 'str')
-
-        # Construct headers
-        header_parameters = {}  # type: Dict[str, Any]
-        header_parameters['Accept'] = self._serialize.header("accept", accept, 'str')
-
-        request = self._client.get(url, query_parameters, header_parameters)
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
-        response = pipeline_response.http_response
-
-        if response.status_code not in [200]:
-            map_error(status_code=response.status_code, response=response, error_map=error_map)
-            error = self._deserialize.failsafe_deserialize(_models.ErrorResponseAutoGenerated, response)
-            raise HttpResponseError(response=response, model=error)
-
-        deserialized = self._deserialize('Models', pipeline_response)
-
-        if cls:
-            return cls(pipeline_response, deserialized, {})
-
-        return deserialized
-    get_custom_models.metadata = {'url': '/custom/models'}  # type: ignore

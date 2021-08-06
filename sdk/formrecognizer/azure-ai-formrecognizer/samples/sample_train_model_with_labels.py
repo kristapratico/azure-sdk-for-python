@@ -48,38 +48,21 @@ class TrainModelWithLabelsSample(object):
         container_sas_url = os.environ["CONTAINER_SAS_URL"]
 
         form_training_client = FormTrainingClient(endpoint, AzureKeyCredential(key))
-        poller = form_training_client.begin_training(
-            container_sas_url, use_training_labels=True, model_name="mymodel"
+        poller = form_training_client.begin_build_model(
+            source=container_sas_url, technique="fixedTemplate-2021-07-30"  # we set model_id internally
         )
         model = poller.result()
 
         # Custom model information
         print("Model ID: {}".format(model.model_id))
-        print("Status: {}".format(model.status))
-        print("Model name: {}".format(model.model_name))
-        print("Is this a composed model?: {}".format(model.properties.is_composed_model))
-        print("Training started on: {}".format(model.training_started_on))
-        print("Training completed on: {}".format(model.training_completed_on))
 
-        print("Recognized fields:")
-        # looping through the submodels, which contains the fields they were trained on
-        # The labels are based on the ones you gave the training document.
-        for submodel in model.submodels:
-            print("...The submodel has model ID: {}".format(submodel.model_id))
-            print("...The submodel with form type {} has an average accuracy '{}'".format(
-                submodel.form_type, submodel.accuracy
-            ))
-            for name, field in submodel.fields.items():
-                print("...The model found the field '{}' with an accuracy of {}".format(
-                    name, field.accuracy
-                ))
-
-        # Training result information
-        for doc in model.training_documents:
-            print("Document name: {}".format(doc.name))
-            print("Document status: {}".format(doc.status))
-            print("Document page count: {}".format(doc.page_count))
-            print("Document errors: {}".format(doc.errors))
+        print("Recognized doc types:")
+        for doc_type, fields in model.doc_types.items():
+            print("Doc type {} can recognize fields:".format(doc_type))
+            for name, field in fields.field_schema.items():
+                print("Name: {}, type: {}".format(name, field.type))
+            for name, confidence in fields.field_confidence.items():
+                print("Name: {}, confidence: {}".format(name, confidence))
 
 
 if __name__ == '__main__':

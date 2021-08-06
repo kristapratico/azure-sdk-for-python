@@ -42,10 +42,10 @@ class RecognizeReceiptsFromURLSample(object):
             endpoint=endpoint, credential=AzureKeyCredential(key)
         )
         url = "https://raw.githubusercontent.com/Azure/azure-sdk-for-python/main/sdk/formrecognizer/azure-ai-formrecognizer/tests/sample_forms/receipt/contoso-receipt.png"
-        poller = form_recognizer_client.begin_recognize_receipts_from_url(receipt_url=url)
-        receipts = poller.result()
+        poller = form_recognizer_client.begin_analyze_document_from_url(model_id="prebuilt-receipt", document=url)
+        receipt = poller.result()
 
-        for idx, receipt in enumerate(receipts):
+        for idx, receipt in enumerate(receipt.documents):
             print("--------Recognizing receipt #{}--------".format(idx+1))
             receipt_type = receipt.fields.get("ReceiptType")
             if receipt_type:

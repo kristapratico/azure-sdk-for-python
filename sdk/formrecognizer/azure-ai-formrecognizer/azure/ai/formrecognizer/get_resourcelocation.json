@@ -1,0 +1,49 @@
+{
+    "docTypes": {
+        "mymodel78": {
+            "fieldSchema": {
+                "Address": {
+                    "type": "string"
+                },
+                "Charges": {
+                    "type": "string"
+                },
+                "Company_Name": {
+                    "type": "string"
+                },
+                "Invoice_Date": {
+                    "type": "string"
+                },
+                "Invoice_Due_Date": {
+                    "type": "string"
+                },
+                "Invoice_For": {
+                    "type": "string"
+                },
+                "Invoice_Number": {
+                    "type": "string"
+                },
+                "Page": {
+                    "type": "string"
+                },
+                "VAT_ID": {
+                    "type": "string"
+                }
+            },
+            "technique": "fixedTemplate-2021-07-30",
+            "confidence": {
+                "Address": 0.8,
+                "Charges": 1,
+                "Company_Name": 1,
+                "Invoice_Date": 1,
+                "Invoice_Due_Date": 1,
+                "Invoice_For": 1,
+                "Invoice_Number": 1,
+                "Page": 1,
+                "VAT_ID": 1
+            }
+        }
+    },
+    "modelId": "mymodel78",
+    "createdDateTime": "2021-08-06T18:14:10.7937957+00:00"
+}

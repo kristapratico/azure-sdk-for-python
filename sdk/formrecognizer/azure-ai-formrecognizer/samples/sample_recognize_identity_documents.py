@@ -43,10 +43,10 @@ class RecognizeIdDocumentsSample(object):
             endpoint=endpoint, credential=AzureKeyCredential(key)
         )
         with open(path_to_sample_forms, "rb") as f:
-            poller = form_recognizer_client.begin_recognize_identity_documents(identity_document=f)
-        id_documents = poller.result()
+            poller = form_recognizer_client.begin_analyze_document(model_id="prebuilt-idDocument", document=f)
+        id_document = poller.result()
 
-        for idx, id_document in enumerate(id_documents):
+        for idx, id_document in enumerate(id_document.documents):
             print("--------Recognizing ID document #{}--------".format(idx+1))
             first_name = id_document.fields.get("FirstName")
             if first_name:

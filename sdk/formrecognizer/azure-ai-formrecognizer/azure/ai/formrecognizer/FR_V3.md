@@ -177,6 +177,10 @@ correctly. Additionally, lines used to contain words and now these two have been
 While we can index into the content directly to get the text, we will need to search the words, lines, etc to get the rest of 
 the information (page number, confidence, etc) to populate our existing model types FormWord, FormLine, FormSelectionMark.
 
+### 6a) v3.0 deprecates `includeFieldElements`.
+We used `includeFieldElements` as an optional paramerter in API's to include the element references in the recognition result.
+With v3.0 `includeFieldElements` would be defaulted to be `true`. In doing so, the service always returns the span information which can be then translated/computed to the element references.
+This potentially could be a behavioral breaking change for customers thinking of it as an "opt-in" feature.
 
 ### 7) v3.0 will support cross-page elements leading to bounding regions instead of bounding boxes
 A cross-page element might be something like a table that spans across two pages like this:
@@ -230,3 +234,44 @@ would need to decide which would get populated as `fields` and possibly add a ne
 `RecognizedForm`.
 
 ### 10) v3.0 makes the field schema programmatically accessible and SDK can leverage this to strongly type prebuilt/custom model fields
+
+
+### 11) Change in structural representation of the visual elements.
+With v3.0, service has seperated the visual elements into their respective lists.
+```json
+ List of words in page
+      "words": [
+        {
+          "text": "CONTOSO",            
+          "boundingBox": [ ... ],       
+          "confidence": 0.99,           
+          "span": { ... }               
+        }, ...
+      ],
+
+      // List of selectionMarks in page
+      "selectionMarks": [
+        {
+          "state": "selected",          
+          "boundingBox": [ ... ],       
+          "confidence": 0.95,           
+          "span": { ... }               
+        }, ...
+      ],
+
+      // List of lines in page
+      "lines": [
+        {
+          "content": "CONTOSO LTD.",    
+          "boundingBox": [ ... ],       
+          "spans": [ ... ],             
+        }, ...
+      ]
+```
+Currently, the SDK's represent a hierarchical association between the visual elements present on the form. For ex, FormLines to consist of FormWords. 
+[Service Question]
+Would it be a correct representation moving forward with additional elements in picture?
+
+### 12) isHeader/isFooter -> rowHeader, rowFooter, columnHeader, columnFooter
+Service v3.0, does not support binary header or footer specification for a  `FormTableCell. 
+Since, SDK's already expose this as a binary property we could have additive values to support `{rowHeader, rowFooter, columnHeader, columnFooter}` and also map it to the already existing `isHeader/isFooter` properties.

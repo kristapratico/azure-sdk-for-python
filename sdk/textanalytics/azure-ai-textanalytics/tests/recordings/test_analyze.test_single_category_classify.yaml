@@ -35,11 +35,19 @@ interactions:
       string: ''
     headers:
       apim-request-id:
+<<<<<<< HEAD
       - 399d6543-0686-4c2e-bfc7-9ea4b18af5c3
       date:
       - Wed, 06 Oct 2021 20:53:22 GMT
       operation-location:
       - https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/47512b7b-67e4-4dbb-b695-dd671bfd7121
+=======
+      - cd83bb55-93e5-4886-9649-6a26aad95d55
+      date:
+      - Tue, 05 Oct 2021 23:06:27 GMT
+      operation-location:
+      - https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/5bb3c6f6-2fb4-402a-9b9e-cc794ef7fbdd
+>>>>>>> feature/ta-v3.2-preview.2
       strict-transport-security:
       - max-age=31536000; includeSubDomains; preload
       transfer-encoding:
@@ -47,7 +55,11 @@ interactions:
       x-content-type-options:
       - nosniff
       x-envoy-upstream-service-time:
+<<<<<<< HEAD
       - '363'
+=======
+      - '893'
+>>>>>>> feature/ta-v3.2-preview.2
     status:
       code: 202
       message: Accepted
@@ -63,6 +75,7 @@ interactions:
       User-Agent:
       - azsdk-python-ai-textanalytics/5.2.0b2 Python/3.9.0 (Windows-10-10.0.19041-SP0)
     method: GET
+<<<<<<< HEAD
     uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/47512b7b-67e4-4dbb-b695-dd671bfd7121?showStats=True
   response:
     body:
@@ -74,6 +87,19 @@ interactions:
       - application/json; charset=utf-8
       date:
       - Wed, 06 Oct 2021 20:53:27 GMT
+=======
+    uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/5bb3c6f6-2fb4-402a-9b9e-cc794ef7fbdd?showStats=True
+  response:
+    body:
+      string: '{"jobId":"5bb3c6f6-2fb4-402a-9b9e-cc794ef7fbdd","lastUpdateDateTime":"2021-10-05T23:06:28Z","createdDateTime":"2021-10-05T23:06:28Z","expirationDateTime":"2021-10-06T23:06:28Z","status":"succeeded","errors":[],"displayName":"NA","tasks":{"completed":1,"failed":0,"inProgress":0,"total":1,"customSingleClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:06:28.8225814Z","state":"succeeded","results":{"statistics":{"documentsCount":3,"validDocumentsCount":3,"erroneousDocumentsCount":0,"transactionsCount":3},"documents":[{"id":"1","classification":{"category":"RateBook","confidenceScore":0.76},"statistics":{"charactersCount":295,"transactionsCount":1},"warnings":[]},{"id":"2","classification":{"category":"RateBook","confidenceScore":0.57},"statistics":{"charactersCount":158,"transactionsCount":1},"warnings":[]},{"id":"3","classification":{"category":"BookRestaurant","confidenceScore":1.0},"statistics":{"charactersCount":121,"transactionsCount":1},"warnings":[]}],"errors":[],"projectName":"single_category_classify_project_name","deploymentName":"single_category_classify_project_name"}}]}}'
+    headers:
+      apim-request-id:
+      - 139dd224-f7d9-41bd-bb8a-e7ec5c3a635c
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 05 Oct 2021 23:06:32 GMT
+>>>>>>> feature/ta-v3.2-preview.2
       strict-transport-security:
       - max-age=31536000; includeSubDomains; preload
       transfer-encoding:
@@ -81,7 +107,11 @@ interactions:
       x-content-type-options:
       - nosniff
       x-envoy-upstream-service-time:
+<<<<<<< HEAD
       - '74'
+=======
+      - '84'
+>>>>>>> feature/ta-v3.2-preview.2
     status:
       code: 200
       message: OK

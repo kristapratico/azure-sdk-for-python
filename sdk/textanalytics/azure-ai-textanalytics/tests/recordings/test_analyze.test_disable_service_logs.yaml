@@ -38,11 +38,19 @@ interactions:
       string: ''
     headers:
       apim-request-id:
+<<<<<<< HEAD
       - 45b21f58-981f-41a3-98d6-0c58597c9558
       date:
       - Wed, 06 Oct 2021 20:48:49 GMT
       operation-location:
       - https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/90dcf3a2-0306-4cfc-8bc4-0c9f08b42282
+=======
+      - 7ba904cd-3e4a-4782-b8af-e5137742615f
+      date:
+      - Tue, 05 Oct 2021 23:05:39 GMT
+      operation-location:
+      - https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/7fe5a17c-3353-4a0b-bf9e-81e20800c2cc
+>>>>>>> feature/ta-v3.2-preview.2
       strict-transport-security:
       - max-age=31536000; includeSubDomains; preload
       transfer-encoding:
@@ -50,7 +58,11 @@ interactions:
       x-content-type-options:
       - nosniff
       x-envoy-upstream-service-time:
+<<<<<<< HEAD
       - '675'
+=======
+      - '2053'
+>>>>>>> feature/ta-v3.2-preview.2
     status:
       code: 202
       message: Accepted
@@ -66,6 +78,7 @@ interactions:
       User-Agent:
       - azsdk-python-ai-textanalytics/5.2.0b2 Python/3.9.0 (Windows-10-10.0.19041-SP0)
     method: GET
+<<<<<<< HEAD
     uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/90dcf3a2-0306-4cfc-8bc4-0c9f08b42282
   response:
     body:
@@ -78,6 +91,19 @@ interactions:
       - application/json; charset=utf-8
       date:
       - Wed, 06 Oct 2021 20:48:54 GMT
+=======
+    uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/7fe5a17c-3353-4a0b-bf9e-81e20800c2cc
+  response:
+    body:
+      string: '{"jobId":"7fe5a17c-3353-4a0b-bf9e-81e20800c2cc","lastUpdateDateTime":"2021-10-05T23:05:42Z","createdDateTime":"2021-10-05T23:05:38Z","expirationDateTime":"2021-10-06T23:05:38Z","status":"running","errors":[],"displayName":"NA","tasks":{"completed":3,"failed":0,"inProgress":6,"total":9,"customEntityRecognitionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:41.0218796Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_custom_entities_project_name","deploymentName":"textanalytics_custom_entities_project_name"}}],"customSingleClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:40.9155093Z","state":"succeeded","results":{"documents":[{"id":"0","classification":{"category":"PlayMusic","confidenceScore":0.6},"warnings":[]}],"errors":[],"projectName":"single_category_classify_project_name","deploymentName":"single_category_classify_project_name"}}],"customMultiClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:42.6063834Z","state":"succeeded","results":{"documents":[{"id":"0","classifications":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_multi_category_classify_project_name","deploymentName":"textanalytics_multi_category_classify_project_name"}}]}}'
+    headers:
+      apim-request-id:
+      - a2e223fb-466b-4262-96ce-f1186171bcc7
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 05 Oct 2021 23:05:44 GMT
+>>>>>>> feature/ta-v3.2-preview.2
       strict-transport-security:
       - max-age=31536000; includeSubDomains; preload
       transfer-encoding:
@@ -85,7 +111,11 @@ interactions:
       x-content-type-options:
       - nosniff
       x-envoy-upstream-service-time:
+<<<<<<< HEAD
       - '241'
+=======
+      - '288'
+>>>>>>> feature/ta-v3.2-preview.2
     status:
       code: 200
       message: OK
@@ -101,6 +131,7 @@ interactions:
       User-Agent:
       - azsdk-python-ai-textanalytics/5.2.0b2 Python/3.9.0 (Windows-10-10.0.19041-SP0)
     method: GET
+<<<<<<< HEAD
     uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/90dcf3a2-0306-4cfc-8bc4-0c9f08b42282
   response:
     body:
@@ -116,6 +147,19 @@ interactions:
       - application/json; charset=utf-8
       date:
       - Wed, 06 Oct 2021 20:49:00 GMT
+=======
+    uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/7fe5a17c-3353-4a0b-bf9e-81e20800c2cc
+  response:
+    body:
+      string: '{"jobId":"7fe5a17c-3353-4a0b-bf9e-81e20800c2cc","lastUpdateDateTime":"2021-10-05T23:05:47Z","createdDateTime":"2021-10-05T23:05:38Z","expirationDateTime":"2021-10-06T23:05:38Z","status":"running","errors":[],"displayName":"NA","tasks":{"completed":5,"failed":0,"inProgress":4,"total":9,"entityRecognitionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:47.1949851Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[{"text":"logging","category":"Skill","offset":9,"length":7,"confidenceScore":0.61}],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"entityRecognitionPiiTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:47.2121156Z","state":"succeeded","results":{"documents":[{"redactedText":"Test
+        for logging disable","id":"0","entities":[],"warnings":[]}],"errors":[],"modelVersion":"2021-01-15"}}],"customEntityRecognitionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:41.0218796Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_custom_entities_project_name","deploymentName":"textanalytics_custom_entities_project_name"}}],"customSingleClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:40.9155093Z","state":"succeeded","results":{"documents":[{"id":"0","classification":{"category":"PlayMusic","confidenceScore":0.6},"warnings":[]}],"errors":[],"projectName":"single_category_classify_project_name","deploymentName":"single_category_classify_project_name"}}],"customMultiClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:42.6063834Z","state":"succeeded","results":{"documents":[{"id":"0","classifications":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_multi_category_classify_project_name","deploymentName":"textanalytics_multi_category_classify_project_name"}}]}}'
+    headers:
+      apim-request-id:
+      - 2aa777f3-e97e-4d5d-8baa-1e9b0071fa22
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 05 Oct 2021 23:05:50 GMT
       strict-transport-security:
       - max-age=31536000; includeSubDomains; preload
       transfer-encoding:
@@ -123,7 +167,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-envoy-upstream-service-time:
-      - '302'
+      - '360'
     status:
       code: 200
       message: OK
@@ -139,6 +183,87 @@ interactions:
       User-Agent:
       - azsdk-python-ai-textanalytics/5.2.0b2 Python/3.9.0 (Windows-10-10.0.19041-SP0)
     method: GET
+    uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/7fe5a17c-3353-4a0b-bf9e-81e20800c2cc
+  response:
+    body:
+      string: '{"jobId":"7fe5a17c-3353-4a0b-bf9e-81e20800c2cc","lastUpdateDateTime":"2021-10-05T23:05:54Z","createdDateTime":"2021-10-05T23:05:38Z","expirationDateTime":"2021-10-06T23:05:38Z","status":"running","errors":[],"displayName":"NA","tasks":{"completed":7,"failed":0,"inProgress":2,"total":9,"entityRecognitionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:47.1949851Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[{"text":"logging","category":"Skill","offset":9,"length":7,"confidenceScore":0.61}],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"entityLinkingTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:54.2247837Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[{"bingId":"a7b11e27-5b63-19a5-b4dd-37b71149ecac","name":"Test
+        (assessment)","matches":[{"text":"Test","offset":0,"length":4,"confidenceScore":0.04}],"language":"en","id":"Test
+        (assessment)","url":"https://en.wikipedia.org/wiki/Test_(assessment)","dataSource":"Wikipedia"}],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"entityRecognitionPiiTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:47.2121156Z","state":"succeeded","results":{"documents":[{"redactedText":"Test
+        for logging disable","id":"0","entities":[],"warnings":[]}],"errors":[],"modelVersion":"2021-01-15"}}],"keyPhraseExtractionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:53.4924157Z","state":"succeeded","results":{"documents":[{"id":"0","keyPhrases":["Test","logging"],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"customEntityRecognitionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:41.0218796Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_custom_entities_project_name","deploymentName":"textanalytics_custom_entities_project_name"}}],"customSingleClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:40.9155093Z","state":"succeeded","results":{"documents":[{"id":"0","classification":{"category":"PlayMusic","confidenceScore":0.6},"warnings":[]}],"errors":[],"projectName":"single_category_classify_project_name","deploymentName":"single_category_classify_project_name"}}],"customMultiClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:42.6063834Z","state":"succeeded","results":{"documents":[{"id":"0","classifications":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_multi_category_classify_project_name","deploymentName":"textanalytics_multi_category_classify_project_name"}}]}}'
+    headers:
+      apim-request-id:
+      - 220f9dbb-772e-4702-9d0f-3d47cf2fa24d
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 05 Oct 2021 23:05:55 GMT
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      x-content-type-options:
+      - nosniff
+      x-envoy-upstream-service-time:
+      - '416'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - azsdk-python-ai-textanalytics/5.2.0b2 Python/3.9.0 (Windows-10-10.0.19041-SP0)
+    method: GET
+    uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/7fe5a17c-3353-4a0b-bf9e-81e20800c2cc
+  response:
+    body:
+      string: '{"jobId":"7fe5a17c-3353-4a0b-bf9e-81e20800c2cc","lastUpdateDateTime":"2021-10-05T23:05:57Z","createdDateTime":"2021-10-05T23:05:38Z","expirationDateTime":"2021-10-06T23:05:38Z","status":"running","errors":[],"displayName":"NA","tasks":{"completed":8,"failed":0,"inProgress":1,"total":9,"entityRecognitionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:47.1949851Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[{"text":"logging","category":"Skill","offset":9,"length":7,"confidenceScore":0.61}],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"entityLinkingTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:54.2247837Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[{"bingId":"a7b11e27-5b63-19a5-b4dd-37b71149ecac","name":"Test
+        (assessment)","matches":[{"text":"Test","offset":0,"length":4,"confidenceScore":0.04}],"language":"en","id":"Test
+        (assessment)","url":"https://en.wikipedia.org/wiki/Test_(assessment)","dataSource":"Wikipedia"}],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"entityRecognitionPiiTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:47.2121156Z","state":"succeeded","results":{"documents":[{"redactedText":"Test
+        for logging disable","id":"0","entities":[],"warnings":[]}],"errors":[],"modelVersion":"2021-01-15"}}],"extractiveSummarizationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:57.5610052Z","state":"succeeded","results":{"documents":[{"id":"0","sentences":[{"text":"Test
+        for logging disable","rankScore":1.0,"offset":0,"length":24}],"warnings":[]}],"errors":[],"modelVersion":"2021-08-01"}}],"keyPhraseExtractionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:53.4924157Z","state":"succeeded","results":{"documents":[{"id":"0","keyPhrases":["Test","logging"],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"customEntityRecognitionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:41.0218796Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_custom_entities_project_name","deploymentName":"textanalytics_custom_entities_project_name"}}],"customSingleClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:40.9155093Z","state":"succeeded","results":{"documents":[{"id":"0","classification":{"category":"PlayMusic","confidenceScore":0.6},"warnings":[]}],"errors":[],"projectName":"single_category_classify_project_name","deploymentName":"single_category_classify_project_name"}}],"customMultiClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:42.6063834Z","state":"succeeded","results":{"documents":[{"id":"0","classifications":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_multi_category_classify_project_name","deploymentName":"textanalytics_multi_category_classify_project_name"}}]}}'
+    headers:
+      apim-request-id:
+      - 8f346088-468f-4836-819d-bced92bac553
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 05 Oct 2021 23:06:00 GMT
+>>>>>>> feature/ta-v3.2-preview.2
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      x-content-type-options:
+      - nosniff
+      x-envoy-upstream-service-time:
+<<<<<<< HEAD
+      - '302'
+=======
+      - '465'
+>>>>>>> feature/ta-v3.2-preview.2
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - azsdk-python-ai-textanalytics/5.2.0b2 Python/3.9.0 (Windows-10-10.0.19041-SP0)
+    method: GET
+<<<<<<< HEAD
     uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/90dcf3a2-0306-4cfc-8bc4-0c9f08b42282
   response:
     body:
@@ -155,6 +280,23 @@ interactions:
       - application/json; charset=utf-8
       date:
       - Wed, 06 Oct 2021 20:49:06 GMT
+=======
+    uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/7fe5a17c-3353-4a0b-bf9e-81e20800c2cc
+  response:
+    body:
+      string: '{"jobId":"7fe5a17c-3353-4a0b-bf9e-81e20800c2cc","lastUpdateDateTime":"2021-10-05T23:05:57Z","createdDateTime":"2021-10-05T23:05:38Z","expirationDateTime":"2021-10-06T23:05:38Z","status":"running","errors":[],"displayName":"NA","tasks":{"completed":8,"failed":0,"inProgress":1,"total":9,"entityRecognitionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:47.1949851Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[{"text":"logging","category":"Skill","offset":9,"length":7,"confidenceScore":0.61}],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"entityLinkingTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:54.2247837Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[{"bingId":"a7b11e27-5b63-19a5-b4dd-37b71149ecac","name":"Test
+        (assessment)","matches":[{"text":"Test","offset":0,"length":4,"confidenceScore":0.04}],"language":"en","id":"Test
+        (assessment)","url":"https://en.wikipedia.org/wiki/Test_(assessment)","dataSource":"Wikipedia"}],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"entityRecognitionPiiTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:47.2121156Z","state":"succeeded","results":{"documents":[{"redactedText":"Test
+        for logging disable","id":"0","entities":[],"warnings":[]}],"errors":[],"modelVersion":"2021-01-15"}}],"extractiveSummarizationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:57.5610052Z","state":"succeeded","results":{"documents":[{"id":"0","sentences":[{"text":"Test
+        for logging disable","rankScore":1.0,"offset":0,"length":24}],"warnings":[]}],"errors":[],"modelVersion":"2021-08-01"}}],"keyPhraseExtractionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:53.4924157Z","state":"succeeded","results":{"documents":[{"id":"0","keyPhrases":["Test","logging"],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"customEntityRecognitionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:41.0218796Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_custom_entities_project_name","deploymentName":"textanalytics_custom_entities_project_name"}}],"customSingleClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:40.9155093Z","state":"succeeded","results":{"documents":[{"id":"0","classification":{"category":"PlayMusic","confidenceScore":0.6},"warnings":[]}],"errors":[],"projectName":"single_category_classify_project_name","deploymentName":"single_category_classify_project_name"}}],"customMultiClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:42.6063834Z","state":"succeeded","results":{"documents":[{"id":"0","classifications":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_multi_category_classify_project_name","deploymentName":"textanalytics_multi_category_classify_project_name"}}]}}'
+    headers:
+      apim-request-id:
+      - 23fec020-7dd0-4104-8dda-5beae5818c93
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 05 Oct 2021 23:06:06 GMT
+>>>>>>> feature/ta-v3.2-preview.2
       strict-transport-security:
       - max-age=31536000; includeSubDomains; preload
       transfer-encoding:
@@ -162,7 +304,11 @@ interactions:
       x-content-type-options:
       - nosniff
       x-envoy-upstream-service-time:
+<<<<<<< HEAD
       - '406'
+=======
+      - '465'
+>>>>>>> feature/ta-v3.2-preview.2
     status:
       code: 200
       message: OK
@@ -178,6 +324,7 @@ interactions:
       User-Agent:
       - azsdk-python-ai-textanalytics/5.2.0b2 Python/3.9.0 (Windows-10-10.0.19041-SP0)
     method: GET
+<<<<<<< HEAD
     uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/90dcf3a2-0306-4cfc-8bc4-0c9f08b42282
   response:
     body:
@@ -194,6 +341,24 @@ interactions:
       - application/json; charset=utf-8
       date:
       - Wed, 06 Oct 2021 20:49:11 GMT
+=======
+    uri: https://westus2.api.cognitive.microsoft.com/text/analytics/v3.2-preview.2/analyze/jobs/7fe5a17c-3353-4a0b-bf9e-81e20800c2cc
+  response:
+    body:
+      string: '{"jobId":"7fe5a17c-3353-4a0b-bf9e-81e20800c2cc","lastUpdateDateTime":"2021-10-05T23:06:08Z","createdDateTime":"2021-10-05T23:05:38Z","expirationDateTime":"2021-10-06T23:05:38Z","status":"succeeded","errors":[],"displayName":"NA","tasks":{"completed":9,"failed":0,"inProgress":0,"total":9,"entityRecognitionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:47.1949851Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[{"text":"logging","category":"Skill","offset":9,"length":7,"confidenceScore":0.61}],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"entityLinkingTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:54.2247837Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[{"bingId":"a7b11e27-5b63-19a5-b4dd-37b71149ecac","name":"Test
+        (assessment)","matches":[{"text":"Test","offset":0,"length":4,"confidenceScore":0.04}],"language":"en","id":"Test
+        (assessment)","url":"https://en.wikipedia.org/wiki/Test_(assessment)","dataSource":"Wikipedia"}],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"entityRecognitionPiiTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:47.2121156Z","state":"succeeded","results":{"documents":[{"redactedText":"Test
+        for logging disable","id":"0","entities":[],"warnings":[]}],"errors":[],"modelVersion":"2021-01-15"}}],"extractiveSummarizationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:57.5610052Z","state":"succeeded","results":{"documents":[{"id":"0","sentences":[{"text":"Test
+        for logging disable","rankScore":1.0,"offset":0,"length":24}],"warnings":[]}],"errors":[],"modelVersion":"2021-08-01"}}],"keyPhraseExtractionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:53.4924157Z","state":"succeeded","results":{"documents":[{"id":"0","keyPhrases":["Test","logging"],"warnings":[]}],"errors":[],"modelVersion":"2021-06-01"}}],"sentimentAnalysisTasks":[{"lastUpdateDateTime":"2021-10-05T23:06:08.5504043Z","state":"succeeded","results":{"documents":[{"id":"0","sentiment":"negative","confidenceScores":{"positive":0.02,"neutral":0.12,"negative":0.86},"sentences":[{"sentiment":"negative","confidenceScores":{"positive":0.02,"neutral":0.12,"negative":0.86},"offset":0,"length":24,"text":"Test
+        for logging disable"}],"warnings":[]}],"errors":[],"modelVersion":"2020-04-01"}}],"customEntityRecognitionTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:41.0218796Z","state":"succeeded","results":{"documents":[{"id":"0","entities":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_custom_entities_project_name","deploymentName":"textanalytics_custom_entities_project_name"}}],"customSingleClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:40.9155093Z","state":"succeeded","results":{"documents":[{"id":"0","classification":{"category":"PlayMusic","confidenceScore":0.6},"warnings":[]}],"errors":[],"projectName":"single_category_classify_project_name","deploymentName":"single_category_classify_project_name"}}],"customMultiClassificationTasks":[{"lastUpdateDateTime":"2021-10-05T23:05:42.6063834Z","state":"succeeded","results":{"documents":[{"id":"0","classifications":[],"warnings":[]}],"errors":[],"projectName":"textanalytics_multi_category_classify_project_name","deploymentName":"textanalytics_multi_category_classify_project_name"}}]}}'
+    headers:
+      apim-request-id:
+      - aa1ae3f0-e3eb-455f-9c04-e472283b6891
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Tue, 05 Oct 2021 23:06:11 GMT
+>>>>>>> feature/ta-v3.2-preview.2
       strict-transport-security:
       - max-age=31536000; includeSubDomains; preload
       transfer-encoding:
@@ -201,6 +366,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-envoy-upstream-service-time:
+<<<<<<< HEAD
       - '334'
     status:
       code: 200
@@ -242,6 +408,9 @@ interactions:
       - nosniff
       x-envoy-upstream-service-time:
       - '492'
+=======
+      - '627'
+>>>>>>> feature/ta-v3.2-preview.2
     status:
       code: 200
       message: OK

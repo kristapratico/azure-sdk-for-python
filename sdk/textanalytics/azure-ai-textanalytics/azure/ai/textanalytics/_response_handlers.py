@@ -368,13 +368,12 @@ def resolve_action_pointer(pointer):
         task = pointer.split("#/tasks/")[1].split("/")[0]
         property_name = get_task_from_pointer(task)
         return property_name, index
-    else:
-        raise ValueError(
-            "Unexpected response from service - action pointer '{}' is not a valid action pointer.".format(pointer)
-        )
+    raise ValueError(
+        "Unexpected response from service - action pointer '{}' is not a valid action pointer.".format(pointer)
+    )
 
 
-def add_errors(tasks_obj, doc_id_order):
+def get_ordered_errors(tasks_obj, task_name, doc_id_order):
     missing_target = any([error for error in tasks_obj.errors if error.target is None])
     if missing_target:
         message = "".join(["\n({}) {}".format(err.code, err.message) for err in tasks_obj.errors])
@@ -384,16 +383,18 @@ def add_errors(tasks_obj, doc_id_order):
         property_name, index = resolve_action_pointer(err.target)
         actions = getattr(tasks_obj.tasks, property_name)
         action = actions[index]
-        action.results.errors = [
-            DocumentError(
-                id=doc_id,
-                error=TextAnalyticsError(code=err.code, message=err.message)
-            ) for doc_id in doc_id_order
-        ]
-    return tasks_obj
+        if action.task_name == task_name:
+            errors = [
+                DocumentError(
+                    id=doc_id,
+                    error=TextAnalyticsError(code=err.code, message=err.message)
+                ) for doc_id in doc_id_order
+            ]
+            return errors
+    raise ValueError("Unexpected response from service - no errors for missing action results.")
 
 
-def _get_good_result(task, doc_id_order, response_headers, returned_tasks_object):
+def _get_doc_results(task, doc_id_order, response_headers, returned_tasks_object):
     returned_tasks = returned_tasks_object.tasks
     current_task_type, task_name = task
     deserialization_callback = _get_deserialization_callback_from_task_type(
@@ -405,6 +406,9 @@ def _get_good_result(task, doc_id_order, response_headers, returned_tasks_object
             next(task for task in getattr(returned_tasks, property_name) if task.task_name == task_name)
     except StopIteration:
         raise ValueError("Unexpected response from service - unable to deserialize result.")
+
+    if response_task_to_deserialize.results is None:
+        return get_ordered_errors(returned_tasks_object, task_name, doc_id_order)
     return deserialization_callback(
         doc_id_order, response_task_to_deserialize.results, response_headers, lro=True
     )
@@ -413,10 +417,8 @@ def _get_good_result(task, doc_id_order, response_headers, returned_tasks_object
 def get_iter_items(doc_id_order, task_order, response_headers, analyze_job_state):
     iter_items = defaultdict(list)  # map doc id to action results
     returned_tasks_object = analyze_job_state
-    if returned_tasks_object.errors:
-        returned_tasks_object = add_errors(returned_tasks_object, doc_id_order)
     for task in task_order:
-        results = _get_good_result(
+        results = _get_doc_results(
             task,
             doc_id_order,
             response_headers,

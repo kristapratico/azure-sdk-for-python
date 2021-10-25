@@ -39,23 +39,25 @@ def sample_classify_document_single_category():
 
     endpoint = os.environ["AZURE_TEXT_ANALYTICS_ENDPOINT"]
     key = os.environ["AZURE_TEXT_ANALYTICS_KEY"]
-    project_name = os.environ["AZURE_TEXT_ANALYTICS_PROJECT_NAME"]
-    deployed_model_name = os.environ["AZURE_TEXT_ANALYTICS_DEPLOYMENT_NAME"]
+    project_name = os.environ["SINGLE_CATEGORY_CLASSIFY_PROJECT_NAME"]
+    deployed_model_name = os.environ["SINGLE_CATEGORY_CLASSIFY_DEPLOYMENT_NAME"]
+    path_to_sample_document = os.path.abspath(
+        os.path.join(
+            os.path.abspath(__file__),
+            "./text_samples/custom_classify_sample.txt",
+        )
+    )
 
     text_analytics_client = TextAnalyticsClient(
         endpoint=endpoint,
         credential=AzureKeyCredential(key),
     )
 
-    documents = [
-        "My internet has stopped working. I tried resetting the router, but it just keeps blinking red.",
-        "I submitted 3 jobs to print but the printer is unresponsive. I can't see it under my devices either.",
-        "My computer will not boot. Pushing the power button does nothing - just a black screen.",
-        "I seem to not be receiving all my emails on time. Emails from 2 days ago show up as just received.",
-    ]
+    with open(path_to_sample_document, "r") as fd:
+        document = fd.read()
 
     poller = text_analytics_client.begin_analyze_actions(
-        documents,
+        [document],
         actions=[
             SingleCategoryClassifyAction(
                 project_name=project_name,
@@ -65,7 +67,7 @@ def sample_classify_document_single_category():
     )
 
     document_results = poller.result()
-    for doc, classification_results in zip(documents, document_results):
+    for doc, classification_results in zip(document, document_results):
         for classification_result in classification_results:
             if not classification_result.is_error:
                 classification = classification_result.classification

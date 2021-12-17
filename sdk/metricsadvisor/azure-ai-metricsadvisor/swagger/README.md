@@ -1,4 +1,4 @@
-# Text Analytics for Python
+# Metrics Advisor for Python
 
 To generate this file, simply type
 
@@ -22,7 +22,7 @@ python: true
 
 
 
-## Release 3.0
+## Release 1.0
 
 These settings apply only when `--tag=release_1_0` is specified on the command line.
 

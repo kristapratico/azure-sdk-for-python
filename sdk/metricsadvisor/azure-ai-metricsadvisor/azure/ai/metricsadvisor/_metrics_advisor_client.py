@@ -262,7 +262,7 @@ class MetricsAdvisorClient(object):
             incident_id=incident_id,
             cls=kwargs.pop(
                 "cls",
-                lambda result: [IncidentRootCause._from_generated(x) for x in result],
+                lambda resp, deserialized, _: [IncidentRootCause._from_generated(x) for x in deserialized.value],
             ),
             **kwargs
         )
@@ -318,8 +318,8 @@ class MetricsAdvisorClient(object):
             body=detection_series_query,
             cls=kwargs.pop(
                 "cls",
-                lambda series: [
-                    MetricEnrichedSeriesData._from_generated(data) for data in series
+                lambda resp, series, _: [
+                    MetricEnrichedSeriesData._from_generated(data) for data in series.value
                 ],
             ),
             **kwargs
@@ -774,8 +774,8 @@ class MetricsAdvisorClient(object):
             body=metric_data_query_options,
             cls=kwargs.pop(
                 "cls",
-                lambda result: [
-                    MetricSeriesData._from_generated(series) for series in result
+                lambda resp, result, _: [
+                    MetricSeriesData._from_generated(series) for series in result.value
                 ],
             ),
             **kwargs

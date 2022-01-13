@@ -68,10 +68,27 @@ class TextAnalysisClient:
     @distributed_trace
     def analyze_text(
         self,
-        documents,  # type: Union[List[str], List[TextDocumentInput], List[Dict[str, str]]]
-        action,  # type: Union[RecognizeEntitiesAction, RecognizeLinkedEntitiesAction, RecognizePiiEntitiesAction, ExtractKeyPhrasesAction, AnalyzeSentimentAction, DetectLanguageAction] # pylint: disable=line-too-long
-        **kwargs  # type: Any
-    ):  # type: (...) -> List[Union[RecognizeEntitiesResult, RecognizeLinkedEntitiesResult, RecognizePiiEntitiesResult, ExtractKeyPhrasesResult, AnalyzeSentimentResult, DetectLanguageResult, DocumentError]]  # pylint: disable=line-too-long
+        documents: Union[List[str], List[TextDocumentInput], List[Dict[str, str]]],
+        action: Union[
+            RecognizeEntitiesAction,
+            RecognizeLinkedEntitiesAction,
+            RecognizePiiEntitiesAction,
+            ExtractKeyPhrasesAction,
+            AnalyzeSentimentAction,
+            DetectLanguageAction,
+        ],
+        **kwargs: Any
+    ) -> List[
+        Union[
+            RecognizeEntitiesResult,
+            RecognizeLinkedEntitiesResult,
+            RecognizePiiEntitiesResult,
+            ExtractKeyPhrasesResult,
+            AnalyzeSentimentResult,
+            DetectLanguageResult,
+            DocumentError,
+        ]
+    ]:
         """analyze text.
 
         :param documents: The set of documents to process as part of this batch.

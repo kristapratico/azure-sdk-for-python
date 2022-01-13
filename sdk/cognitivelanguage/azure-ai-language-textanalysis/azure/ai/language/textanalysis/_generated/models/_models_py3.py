@@ -19,15 +19,13 @@ class AnalyzeTextTask(msrest.serialization.Model):
     """AnalyzeTextTask.
 
     You probably want to use the sub-classes and not this class directly. Known
-    sub-classes are: AnalyzeTextJobsInputTasksItem, CustomEntitiesTask, CustomMultiClassificationTask, CustomSingleClassificationTask, EntityLinkingTask, EntitiesTask, ExtractiveSummarizationTask, HealthcareTask, KeyPhraseTask, LanguageDetectionTask, PiiTask, SentimentAnalysisTask.
+    sub-classes are: AnalyzeTextEntityLinkingInput, AnalyzeTextEntityRecognitionInput, AnalyzeTextKeyPhraseExtractionInput, AnalyzeTextLanguageDetectionInput, AnalyzeTextPiiEntitiesRecognitionInput, AnalyzeTextSentimentAnalysisInput.
 
     All required parameters must be populated in order to send to Azure.
 
     :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
      Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
+     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking".
     :vartype kind: str or
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
     """
@@ -41,7 +39,7 @@ class AnalyzeTextTask(msrest.serialization.Model):
     }
 
     _subtype_map = {
-        'kind': {'AnalyzeTextJobsInput-tasksItem': 'AnalyzeTextJobsInputTasksItem', 'CustomEntityRecognition': 'CustomEntitiesTask', 'CustomMultiClassification': 'CustomMultiClassificationTask', 'CustomSingleClassification': 'CustomSingleClassificationTask', 'EntityLinking': 'EntityLinkingTask', 'EntityRecognition': 'EntitiesTask', 'ExtractiveSummarization': 'ExtractiveSummarizationTask', 'Healthcare': 'HealthcareTask', 'KeyPhraseExtraction': 'KeyPhraseTask', 'LanguageDetection': 'LanguageDetectionTask', 'PiiEntityRecognition': 'PiiTask', 'SentimentAnalysis': 'SentimentAnalysisTask'}
+        'kind': {'EntityLinking': 'AnalyzeTextEntityLinkingInput', 'EntityRecognition': 'AnalyzeTextEntityRecognitionInput', 'KeyPhraseExtraction': 'AnalyzeTextKeyPhraseExtractionInput', 'LanguageDetection': 'AnalyzeTextLanguageDetectionInput', 'PiiEntityRecognition': 'AnalyzeTextPiiEntitiesRecognitionInput', 'SentimentAnalysis': 'AnalyzeTextSentimentAnalysisInput'}
     }
 
     def __init__(
@@ -61,15 +59,13 @@ class AnalyzeTextEntityLinkingInput(AnalyzeTextTask):
 
     :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
      Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
+     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking".
     :vartype kind: str or
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
     :ivar analysis_input:
     :vartype analysis_input:
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.MultiLanguageAnalysisInput
-    :ivar parameters: Parameters object for a Sentiment Analysis task.
+    :ivar parameters: Supported parameters for an Entity Linking task.
     :vartype parameters:
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntityLinkingTaskParameters
     """
@@ -95,7 +91,7 @@ class AnalyzeTextEntityLinkingInput(AnalyzeTextTask):
         :keyword analysis_input:
         :paramtype analysis_input:
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.MultiLanguageAnalysisInput
-        :keyword parameters: Parameters object for a Sentiment Analysis task.
+        :keyword parameters: Supported parameters for an Entity Linking task.
         :paramtype parameters:
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntityLinkingTaskParameters
         """
@@ -112,15 +108,13 @@ class AnalyzeTextEntityRecognitionInput(AnalyzeTextTask):
 
     :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
      Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
+     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking".
     :vartype kind: str or
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
     :ivar analysis_input:
     :vartype analysis_input:
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.MultiLanguageAnalysisInput
-    :ivar parameters: Parameters object for a Sentiment Analysis task.
+    :ivar parameters: Supported parameters for an Entity Recognition task.
     :vartype parameters:
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntitiesTaskParameters
     """
@@ -146,7 +140,7 @@ class AnalyzeTextEntityRecognitionInput(AnalyzeTextTask):
         :keyword analysis_input:
         :paramtype analysis_input:
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.MultiLanguageAnalysisInput
-        :keyword parameters: Parameters object for a Sentiment Analysis task.
+        :keyword parameters: Supported parameters for an Entity Recognition task.
         :paramtype parameters:
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntitiesTaskParameters
         """
@@ -206,6 +200,45 @@ class AnalyzeTextJobsInput(msrest.serialization.Model):
         self.tasks = tasks
 
 
+class AnalyzeTextLROTask(msrest.serialization.Model):
+    """AnalyzeTextLROTask.
+
+    You probably want to use the sub-classes and not this class directly. Known
+    sub-classes are: AnalyzeTextJobsInputTasksItem, CustomEntitiesLROTask, CustomMultiClassificationLROTask, CustomSingleClassificationLROTask, EntityLinkingLROTask, EntitiesLROTask, ExtractiveSummarizationLROTask, HealthcareLROTask, KeyPhraseLROTask, PiiLROTask, SentimentAnalysisLROTask.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
+     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
+     "CustomMultiClassification".
+    :vartype kind: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    """
+
+    _validation = {
+        'kind': {'required': True},
+    }
+
+    _attribute_map = {
+        'kind': {'key': 'kind', 'type': 'str'},
+    }
+
+    _subtype_map = {
+        'kind': {'AnalyzeTextJobsInput-tasksItem': 'AnalyzeTextJobsInputTasksItem', 'CustomEntityRecognition': 'CustomEntitiesLROTask', 'CustomMultiClassification': 'CustomMultiClassificationLROTask', 'CustomSingleClassification': 'CustomSingleClassificationLROTask', 'EntityLinking': 'EntityLinkingLROTask', 'EntityRecognition': 'EntitiesLROTask', 'ExtractiveSummarization': 'ExtractiveSummarizationLROTask', 'Healthcare': 'HealthcareLROTask', 'KeyPhraseExtraction': 'KeyPhraseLROTask', 'PiiEntityRecognition': 'PiiLROTask', 'SentimentAnalysis': 'SentimentAnalysisLROTask'}
+    }
+
+    def __init__(
+        self,
+        **kwargs
+    ):
+        """
+        """
+        super(AnalyzeTextLROTask, self).__init__(**kwargs)
+        self.kind = None  # type: Optional[str]
+
+
 class TaskIdentifier(msrest.serialization.Model):
     """Base task object.
 
@@ -237,30 +270,30 @@ class TaskIdentifier(msrest.serialization.Model):
         self.task_id = task_id
 
 
-class AnalyzeTextJobsInputTasksItem(AnalyzeTextTask, TaskIdentifier):
+class AnalyzeTextJobsInputTasksItem(TaskIdentifier, AnalyzeTextLROTask):
     """AnalyzeTextJobsInputTasksItem.
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar task_id: Required.
-    :vartype task_id: str
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
      "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
      "CustomMultiClassification".
     :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    :ivar task_id: Required.
+    :vartype task_id: str
     """
 
     _validation = {
-        'task_id': {'required': True},
         'kind': {'required': True},
+        'task_id': {'required': True},
     }
 
     _attribute_map = {
-        'task_id': {'key': 'taskId', 'type': 'str'},
         'kind': {'key': 'kind', 'type': 'str'},
+        'task_id': {'key': 'taskId', 'type': 'str'},
     }
 
     def __init__(
@@ -274,9 +307,9 @@ class AnalyzeTextJobsInputTasksItem(AnalyzeTextTask, TaskIdentifier):
         :paramtype task_id: str
         """
         super(AnalyzeTextJobsInputTasksItem, self).__init__(task_id=task_id, **kwargs)
+        self.kind = 'AnalyzeTextJobsInput-tasksItem'  # type: str
+        self.kind = 'AnalyzeTextJobsInput-tasksItem'  # type: str
         self.task_id = task_id
-        self.kind = 'AnalyzeTextJobsInput-tasksItem'  # type: str
-        self.kind = 'AnalyzeTextJobsInput-tasksItem'  # type: str
 
 
 class AnalyzeTextJobStatistics(msrest.serialization.Model):
@@ -674,9 +707,7 @@ class AnalyzeTextKeyPhraseExtractionInput(AnalyzeTextTask):
 
     :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
      Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
+     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking".
     :vartype kind: str or
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
     :ivar analysis_input:
@@ -725,15 +756,13 @@ class AnalyzeTextLanguageDetectionInput(AnalyzeTextTask):
 
     :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
      Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
+     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking".
     :vartype kind: str or
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
     :ivar analysis_input:
     :vartype analysis_input:
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.LanguageDetectionAnalysisInput
-    :ivar parameters: Parameters object for a Language Detection task.
+    :ivar parameters: Supported parameters for a Language Detection task.
     :vartype parameters:
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.LanguageDetectionTaskParameters
     """
@@ -759,7 +788,7 @@ class AnalyzeTextLanguageDetectionInput(AnalyzeTextTask):
         :keyword analysis_input:
         :paramtype analysis_input:
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.LanguageDetectionAnalysisInput
-        :keyword parameters: Parameters object for a Language Detection task.
+        :keyword parameters: Supported parameters for a Language Detection task.
         :paramtype parameters:
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.LanguageDetectionTaskParameters
         """
@@ -886,15 +915,13 @@ class AnalyzeTextPiiEntitiesRecognitionInput(AnalyzeTextTask):
 
     :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
      Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
+     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking".
     :vartype kind: str or
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
     :ivar analysis_input:
     :vartype analysis_input:
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.MultiLanguageAnalysisInput
-    :ivar parameters: Parameters object for a PII Entities Recognition task.
+    :ivar parameters: Supported parameters for a PII Entities Recognition task.
     :vartype parameters:
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.PiiTaskParameters
     """
@@ -920,7 +947,7 @@ class AnalyzeTextPiiEntitiesRecognitionInput(AnalyzeTextTask):
         :keyword analysis_input:
         :paramtype analysis_input:
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.MultiLanguageAnalysisInput
-        :keyword parameters: Parameters object for a PII Entities Recognition task.
+        :keyword parameters: Supported parameters for a PII Entities Recognition task.
         :paramtype parameters:
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.PiiTaskParameters
         """
@@ -937,15 +964,13 @@ class AnalyzeTextSentimentAnalysisInput(AnalyzeTextTask):
 
     :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
      Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
+     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking".
     :vartype kind: str or
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
     :ivar analysis_input:
     :vartype analysis_input:
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.MultiLanguageAnalysisInput
-    :ivar parameters: Parameters object for a Sentiment Analysis task.
+    :ivar parameters: Supported parameters for a Sentiment Analysis task.
     :vartype parameters:
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.SentimentAnalysisTaskParameters
     """
@@ -971,7 +996,7 @@ class AnalyzeTextSentimentAnalysisInput(AnalyzeTextTask):
         :keyword analysis_input:
         :paramtype analysis_input:
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.MultiLanguageAnalysisInput
-        :keyword parameters: Parameters object for a Sentiment Analysis task.
+        :keyword parameters: Supported parameters for a Sentiment Analysis task.
         :paramtype parameters:
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.SentimentAnalysisTaskParameters
         """
@@ -1058,6 +1083,48 @@ class ClassificationResult(msrest.serialization.Model):
         super(ClassificationResult, self).__init__(**kwargs)
         self.category = category
         self.confidence_score = confidence_score
+
+
+class CustomEntitiesLROTask(AnalyzeTextLROTask):
+    """Use custom models to ease the process of information extraction from unstructured documents like contracts or financial documents.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
+     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
+     "CustomMultiClassification".
+    :vartype kind: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    :ivar parameters: Supported parameters for a Custom Entities task.
+    :vartype parameters:
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomEntitiesTaskParameters
+    """
+
+    _validation = {
+        'kind': {'required': True},
+    }
+
+    _attribute_map = {
+        'kind': {'key': 'kind', 'type': 'str'},
+        'parameters': {'key': 'parameters', 'type': 'CustomEntitiesTaskParameters'},
+    }
+
+    def __init__(
+        self,
+        *,
+        parameters: Optional["CustomEntitiesTaskParameters"] = None,
+        **kwargs
+    ):
+        """
+        :keyword parameters: Supported parameters for a Custom Entities task.
+        :paramtype parameters:
+         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomEntitiesTaskParameters
+        """
+        super(CustomEntitiesLROTask, self).__init__(**kwargs)
+        self.kind = 'CustomEntityRecognition'  # type: str
+        self.parameters = parameters
 
 
 class CustomResult(msrest.serialization.Model):
@@ -1184,35 +1251,6 @@ class CustomEntitiesResult(CustomResult):
         self.documents = documents
 
 
-class DocumentDetectedLanguage(msrest.serialization.Model):
-    """DocumentDetectedLanguage.
-
-    :ivar detected_language: If 'language' is set to 'auto' for the document in the request this
-     field will contain a 2 letter ISO 639-1 representation of the language detected for this
-     document.
-    :vartype detected_language: str
-    """
-
-    _attribute_map = {
-        'detected_language': {'key': 'detectedLanguage', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        detected_language: Optional[str] = None,
-        **kwargs
-    ):
-        """
-        :keyword detected_language: If 'language' is set to 'auto' for the document in the request this
-         field will contain a 2 letter ISO 639-1 representation of the language detected for this
-         document.
-        :paramtype detected_language: str
-        """
-        super(DocumentDetectedLanguage, self).__init__(**kwargs)
-        self.detected_language = detected_language
-
-
 class DocumentResult(msrest.serialization.Model):
     """DocumentResult.
 
@@ -1322,15 +1360,11 @@ class EntitiesDocumentResult(DocumentResult):
         self.entities = entities
 
 
-class CustomEntitiesResultDocumentsItem(EntitiesDocumentResult, DocumentDetectedLanguage):
+class CustomEntitiesResultDocumentsItem(EntitiesDocumentResult):
     """CustomEntitiesResultDocumentsItem.
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar detected_language: If 'language' is set to 'auto' for the document in the request this
-     field will contain a 2 letter ISO 639-1 representation of the language detected for this
-     document.
-    :vartype detected_language: str
     :ivar id: Required. Unique, non-empty document identifier.
     :vartype id: str
     :ivar warnings: Required. Warnings encountered while processing document.
@@ -1351,7 +1385,6 @@ class CustomEntitiesResultDocumentsItem(EntitiesDocumentResult, DocumentDetected
     }
 
     _attribute_map = {
-        'detected_language': {'key': 'detectedLanguage', 'type': 'str'},
         'id': {'key': 'id', 'type': 'str'},
         'warnings': {'key': 'warnings', 'type': '[DocumentWarning]'},
         'statistics': {'key': 'statistics', 'type': 'DocumentStatistics'},
@@ -1364,15 +1397,10 @@ class CustomEntitiesResultDocumentsItem(EntitiesDocumentResult, DocumentDetected
         id: str,
         warnings: List["DocumentWarning"],
         entities: List["Entity"],
-        detected_language: Optional[str] = None,
         statistics: Optional["DocumentStatistics"] = None,
         **kwargs
     ):
         """
-        :keyword detected_language: If 'language' is set to 'auto' for the document in the request this
-         field will contain a 2 letter ISO 639-1 representation of the language detected for this
-         document.
-        :paramtype detected_language: str
         :keyword id: Required. Unique, non-empty document identifier.
         :paramtype id: str
         :keyword warnings: Required. Warnings encountered while processing document.
@@ -1385,54 +1413,7 @@ class CustomEntitiesResultDocumentsItem(EntitiesDocumentResult, DocumentDetected
         :keyword entities: Required. Recognized entities in the document.
         :paramtype entities: list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.Entity]
         """
-        super(CustomEntitiesResultDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, entities=entities, detected_language=detected_language, **kwargs)
-        self.detected_language = detected_language
-        self.id = id
-        self.warnings = warnings
-        self.statistics = statistics
-        self.entities = entities
-
-
-class CustomEntitiesTask(AnalyzeTextTask):
-    """Use custom models to ease the process of information extraction from unstructured documents like contracts or financial documents.
-
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
-    :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
-    :ivar parameters:
-    :vartype parameters:
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomEntitiesTaskParameters
-    """
-
-    _validation = {
-        'kind': {'required': True},
-    }
-
-    _attribute_map = {
-        'kind': {'key': 'kind', 'type': 'str'},
-        'parameters': {'key': 'parameters', 'type': 'CustomEntitiesTaskParameters'},
-    }
-
-    def __init__(
-        self,
-        *,
-        parameters: Optional["CustomEntitiesTaskParameters"] = None,
-        **kwargs
-    ):
-        """
-        :keyword parameters:
-        :paramtype parameters:
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomEntitiesTaskParameters
-        """
-        super(CustomEntitiesTask, self).__init__(**kwargs)
-        self.kind = 'CustomEntityRecognition'  # type: str
-        self.parameters = parameters
+        super(CustomEntitiesResultDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, entities=entities, **kwargs)
 
 
 class CustomTaskParameters(msrest.serialization.Model):
@@ -1474,6 +1455,31 @@ class CustomTaskParameters(msrest.serialization.Model):
         self.deployment_name = deployment_name
 
 
+class PreBuiltTaskParameters(msrest.serialization.Model):
+    """Parameters object for a text analysis task using pre-built models.
+
+    :ivar model_version:
+    :vartype model_version: str
+    """
+
+    _attribute_map = {
+        'model_version': {'key': 'modelVersion', 'type': 'str'},
+    }
+
+    def __init__(
+        self,
+        *,
+        model_version: Optional[str] = "latest",
+        **kwargs
+    ):
+        """
+        :keyword model_version:
+        :paramtype model_version: str
+        """
+        super(PreBuiltTaskParameters, self).__init__(**kwargs)
+        self.model_version = model_version
+
+
 class TaskParameters(msrest.serialization.Model):
     """Base parameters object for a text analysis task.
 
@@ -1499,9 +1505,13 @@ class TaskParameters(msrest.serialization.Model):
         self.logging_opt_out = logging_opt_out
 
 
-class EntitiesTaskParameters(msrest.serialization.Model):
-    """Parameters object for a Sentiment Analysis task.
+class EntitiesTaskParameters(TaskParameters, PreBuiltTaskParameters):
+    """Supported parameters for an Entity Recognition task.
 
+    :ivar model_version:
+    :vartype model_version: str
+    :ivar logging_opt_out:
+    :vartype logging_opt_out: bool
     :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
      Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
      https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
@@ -1511,16 +1521,24 @@ class EntitiesTaskParameters(msrest.serialization.Model):
     """
 
     _attribute_map = {
+        'model_version': {'key': 'modelVersion', 'type': 'str'},
+        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
         'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
     }
 
     def __init__(
         self,
         *,
+        model_version: Optional[str] = "latest",
+        logging_opt_out: Optional[bool] = False,
         string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
         **kwargs
     ):
         """
+        :keyword model_version:
+        :paramtype model_version: str
+        :keyword logging_opt_out:
+        :paramtype logging_opt_out: bool
         :keyword string_index_type: Specifies the method used to interpret string offsets.  Defaults to
          Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
          https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
@@ -1528,12 +1546,15 @@ class EntitiesTaskParameters(msrest.serialization.Model):
         :paramtype string_index_type: str or
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
         """
-        super(EntitiesTaskParameters, self).__init__(**kwargs)
+        super(EntitiesTaskParameters, self).__init__(logging_opt_out=logging_opt_out, model_version=model_version, **kwargs)
+        self.model_version = model_version
+        self.string_index_type = string_index_type
+        self.logging_opt_out = logging_opt_out
         self.string_index_type = string_index_type
 
 
-class CustomEntitiesTaskParameters(EntitiesTaskParameters, TaskParameters, CustomTaskParameters):
-    """CustomEntitiesTaskParameters.
+class CustomEntitiesTaskParameters(EntitiesTaskParameters, CustomTaskParameters):
+    """Supported parameters for a Custom Entities task.
 
     All required parameters must be populated in order to send to Azure.
 
@@ -1541,6 +1562,8 @@ class CustomEntitiesTaskParameters(EntitiesTaskParameters, TaskParameters, Custo
     :vartype project_name: str
     :ivar deployment_name: Required.
     :vartype deployment_name: str
+    :ivar model_version:
+    :vartype model_version: str
     :ivar logging_opt_out:
     :vartype logging_opt_out: bool
     :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
@@ -1559,6 +1582,7 @@ class CustomEntitiesTaskParameters(EntitiesTaskParameters, TaskParameters, Custo
     _attribute_map = {
         'project_name': {'key': 'projectName', 'type': 'str'},
         'deployment_name': {'key': 'deploymentName', 'type': 'str'},
+        'model_version': {'key': 'modelVersion', 'type': 'str'},
         'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
         'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
     }
@@ -1568,6 +1592,7 @@ class CustomEntitiesTaskParameters(EntitiesTaskParameters, TaskParameters, Custo
         *,
         project_name: str,
         deployment_name: str,
+        model_version: Optional[str] = "latest",
         logging_opt_out: Optional[bool] = False,
         string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
         **kwargs
@@ -1577,6 +1602,8 @@ class CustomEntitiesTaskParameters(EntitiesTaskParameters, TaskParameters, Custo
         :paramtype project_name: str
         :keyword deployment_name: Required.
         :paramtype deployment_name: str
+        :keyword model_version:
+        :paramtype model_version: str
         :keyword logging_opt_out:
         :paramtype logging_opt_out: bool
         :keyword string_index_type: Specifies the method used to interpret string offsets.  Defaults to
@@ -1586,13 +1613,10 @@ class CustomEntitiesTaskParameters(EntitiesTaskParameters, TaskParameters, Custo
         :paramtype string_index_type: str or
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
         """
-        super(CustomEntitiesTaskParameters, self).__init__(string_index_type=string_index_type, logging_opt_out=logging_opt_out, project_name=project_name, deployment_name=deployment_name, **kwargs)
+        super(CustomEntitiesTaskParameters, self).__init__(model_version=model_version, logging_opt_out=logging_opt_out, string_index_type=string_index_type, project_name=project_name, deployment_name=deployment_name, **kwargs)
         self.project_name = project_name
         self.deployment_name = deployment_name
-        self.logging_opt_out = logging_opt_out
-        self.project_name = project_name
-        self.deployment_name = deployment_name
-        self.string_index_type = string_index_type
+        self.model_version = model_version
         self.logging_opt_out = logging_opt_out
         self.string_index_type = string_index_type
 
@@ -1733,6 +1757,48 @@ class CustomMultiClassificationLROResult(AnalyzeTextLROResult):
         self.results = results
 
 
+class CustomMultiClassificationLROTask(AnalyzeTextLROTask):
+    """Use custom models to classify text into multi label taxonomy.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
+     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
+     "CustomMultiClassification".
+    :vartype kind: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    :ivar parameters: Supported parameters for a Custom Multi Classification task.
+    :vartype parameters:
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomMultiClassificationTaskParameters
+    """
+
+    _validation = {
+        'kind': {'required': True},
+    }
+
+    _attribute_map = {
+        'kind': {'key': 'kind', 'type': 'str'},
+        'parameters': {'key': 'parameters', 'type': 'CustomMultiClassificationTaskParameters'},
+    }
+
+    def __init__(
+        self,
+        *,
+        parameters: Optional["CustomMultiClassificationTaskParameters"] = None,
+        **kwargs
+    ):
+        """
+        :keyword parameters: Supported parameters for a Custom Multi Classification task.
+        :paramtype parameters:
+         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomMultiClassificationTaskParameters
+        """
+        super(CustomMultiClassificationLROTask, self).__init__(**kwargs)
+        self.kind = 'CustomMultiClassification'  # type: str
+        self.parameters = parameters
+
+
 class CustomMultiClassificationResult(CustomResult):
     """CustomMultiClassificationResult.
 
@@ -1857,7 +1923,7 @@ class MultiClassificationDocumentResult(DocumentResult):
         self.classifications = classifications
 
 
-class CustomMultiClassificationResultDocumentsItem(DocumentDetectedLanguage, MultiClassificationDocumentResult):
+class CustomMultiClassificationResultDocumentsItem(MultiClassificationDocumentResult):
     """CustomMultiClassificationResultDocumentsItem.
 
     All required parameters must be populated in order to send to Azure.
@@ -1874,10 +1940,6 @@ class CustomMultiClassificationResultDocumentsItem(DocumentDetectedLanguage, Mul
     :ivar classifications: Required.
     :vartype classifications:
      list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.ClassificationResult]
-    :ivar detected_language: If 'language' is set to 'auto' for the document in the request this
-     field will contain a 2 letter ISO 639-1 representation of the language detected for this
-     document.
-    :vartype detected_language: str
     """
 
     _validation = {
@@ -1891,7 +1953,6 @@ class CustomMultiClassificationResultDocumentsItem(DocumentDetectedLanguage, Mul
         'warnings': {'key': 'warnings', 'type': '[DocumentWarning]'},
         'statistics': {'key': 'statistics', 'type': 'DocumentStatistics'},
         'classifications': {'key': 'classifications', 'type': '[ClassificationResult]'},
-        'detected_language': {'key': 'detectedLanguage', 'type': 'str'},
     }
 
     def __init__(
@@ -1901,7 +1962,6 @@ class CustomMultiClassificationResultDocumentsItem(DocumentDetectedLanguage, Mul
         warnings: List["DocumentWarning"],
         classifications: List["ClassificationResult"],
         statistics: Optional["DocumentStatistics"] = None,
-        detected_language: Optional[str] = None,
         **kwargs
     ):
         """
@@ -1917,63 +1977,12 @@ class CustomMultiClassificationResultDocumentsItem(DocumentDetectedLanguage, Mul
         :keyword classifications: Required.
         :paramtype classifications:
          list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.ClassificationResult]
-        :keyword detected_language: If 'language' is set to 'auto' for the document in the request this
-         field will contain a 2 letter ISO 639-1 representation of the language detected for this
-         document.
-        :paramtype detected_language: str
         """
-        super(CustomMultiClassificationResultDocumentsItem, self).__init__(detected_language=detected_language, id=id, warnings=warnings, statistics=statistics, classifications=classifications, **kwargs)
-        self.id = id
-        self.warnings = warnings
-        self.statistics = statistics
-        self.classifications = classifications
-        self.detected_language = detected_language
-
-
-class CustomMultiClassificationTask(AnalyzeTextTask):
-    """Use custom models to classify text into multi label taxonomy.
-
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
-    :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
-    :ivar parameters:
-    :vartype parameters:
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomMultiClassificationTaskParameters
-    """
-
-    _validation = {
-        'kind': {'required': True},
-    }
-
-    _attribute_map = {
-        'kind': {'key': 'kind', 'type': 'str'},
-        'parameters': {'key': 'parameters', 'type': 'CustomMultiClassificationTaskParameters'},
-    }
-
-    def __init__(
-        self,
-        *,
-        parameters: Optional["CustomMultiClassificationTaskParameters"] = None,
-        **kwargs
-    ):
-        """
-        :keyword parameters:
-        :paramtype parameters:
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomMultiClassificationTaskParameters
-        """
-        super(CustomMultiClassificationTask, self).__init__(**kwargs)
-        self.kind = 'CustomMultiClassification'  # type: str
-        self.parameters = parameters
+        super(CustomMultiClassificationResultDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, classifications=classifications, **kwargs)
 
 
 class CustomMultiClassificationTaskParameters(TaskParameters, CustomTaskParameters):
-    """CustomMultiClassificationTaskParameters.
+    """Supported parameters for a Custom Multi Classification task.
 
     All required parameters must be populated in order to send to Azure.
 
@@ -2084,6 +2093,48 @@ class CustomSingleClassificationLROResult(AnalyzeTextLROResult):
         super(CustomSingleClassificationLROResult, self).__init__(last_update_date_time=last_update_date_time, status=status, task_id=task_id, **kwargs)
         self.kind = 'CustomSingleClassificationLROResults'  # type: str
         self.results = results
+
+
+class CustomSingleClassificationLROTask(AnalyzeTextLROTask):
+    """Use custom models to classify text into single label taxonomy.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
+     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
+     "CustomMultiClassification".
+    :vartype kind: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    :ivar parameters: Supported parameters for a Custom Single Classification task.
+    :vartype parameters:
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomSingleClassificationTaskParameters
+    """
+
+    _validation = {
+        'kind': {'required': True},
+    }
+
+    _attribute_map = {
+        'kind': {'key': 'kind', 'type': 'str'},
+        'parameters': {'key': 'parameters', 'type': 'CustomSingleClassificationTaskParameters'},
+    }
+
+    def __init__(
+        self,
+        *,
+        parameters: Optional["CustomSingleClassificationTaskParameters"] = None,
+        **kwargs
+    ):
+        """
+        :keyword parameters: Supported parameters for a Custom Single Classification task.
+        :paramtype parameters:
+         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomSingleClassificationTaskParameters
+        """
+        super(CustomSingleClassificationLROTask, self).__init__(**kwargs)
+        self.kind = 'CustomSingleClassification'  # type: str
+        self.parameters = parameters
 
 
 class CustomSingleClassificationResult(CustomResult):
@@ -2210,7 +2261,7 @@ class SingleClassificationDocumentResult(DocumentResult):
         self.classification = classification
 
 
-class CustomSingleClassificationResultDocumentsItem(DocumentDetectedLanguage, SingleClassificationDocumentResult):
+class CustomSingleClassificationResultDocumentsItem(SingleClassificationDocumentResult):
     """CustomSingleClassificationResultDocumentsItem.
 
     All required parameters must be populated in order to send to Azure.
@@ -2227,10 +2278,6 @@ class CustomSingleClassificationResultDocumentsItem(DocumentDetectedLanguage, Si
     :ivar classification: Required.
     :vartype classification:
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.ClassificationResult
-    :ivar detected_language: If 'language' is set to 'auto' for the document in the request this
-     field will contain a 2 letter ISO 639-1 representation of the language detected for this
-     document.
-    :vartype detected_language: str
     """
 
     _validation = {
@@ -2244,7 +2291,6 @@ class CustomSingleClassificationResultDocumentsItem(DocumentDetectedLanguage, Si
         'warnings': {'key': 'warnings', 'type': '[DocumentWarning]'},
         'statistics': {'key': 'statistics', 'type': 'DocumentStatistics'},
         'classification': {'key': 'classification', 'type': 'ClassificationResult'},
-        'detected_language': {'key': 'detectedLanguage', 'type': 'str'},
     }
 
     def __init__(
@@ -2254,7 +2300,6 @@ class CustomSingleClassificationResultDocumentsItem(DocumentDetectedLanguage, Si
         warnings: List["DocumentWarning"],
         classification: "ClassificationResult",
         statistics: Optional["DocumentStatistics"] = None,
-        detected_language: Optional[str] = None,
         **kwargs
     ):
         """
@@ -2270,63 +2315,12 @@ class CustomSingleClassificationResultDocumentsItem(DocumentDetectedLanguage, Si
         :keyword classification: Required.
         :paramtype classification:
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.ClassificationResult
-        :keyword detected_language: If 'language' is set to 'auto' for the document in the request this
-         field will contain a 2 letter ISO 639-1 representation of the language detected for this
-         document.
-        :paramtype detected_language: str
         """
-        super(CustomSingleClassificationResultDocumentsItem, self).__init__(detected_language=detected_language, id=id, warnings=warnings, statistics=statistics, classification=classification, **kwargs)
-        self.id = id
-        self.warnings = warnings
-        self.statistics = statistics
-        self.classification = classification
-        self.detected_language = detected_language
-
-
-class CustomSingleClassificationTask(AnalyzeTextTask):
-    """Use custom models to classify text into single label taxonomy.
-
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
-    :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
-    :ivar parameters:
-    :vartype parameters:
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomSingleClassificationTaskParameters
-    """
-
-    _validation = {
-        'kind': {'required': True},
-    }
-
-    _attribute_map = {
-        'kind': {'key': 'kind', 'type': 'str'},
-        'parameters': {'key': 'parameters', 'type': 'CustomSingleClassificationTaskParameters'},
-    }
-
-    def __init__(
-        self,
-        *,
-        parameters: Optional["CustomSingleClassificationTaskParameters"] = None,
-        **kwargs
-    ):
-        """
-        :keyword parameters:
-        :paramtype parameters:
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.CustomSingleClassificationTaskParameters
-        """
-        super(CustomSingleClassificationTask, self).__init__(**kwargs)
-        self.kind = 'CustomSingleClassification'  # type: str
-        self.parameters = parameters
+        super(CustomSingleClassificationResultDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, classification=classification, **kwargs)
 
 
 class CustomSingleClassificationTaskParameters(TaskParameters, CustomTaskParameters):
-    """CustomSingleClassificationTaskParameters.
+    """Supported parameters for a Custom Single Classification task.
 
     All required parameters must be populated in order to send to Azure.
 
@@ -2550,6 +2544,48 @@ class DocumentWarning(msrest.serialization.Model):
         self.target_ref = target_ref
 
 
+class EntitiesLROTask(AnalyzeTextLROTask):
+    """An object representing the task definition for an Entities Recognition task.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
+     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
+     "CustomMultiClassification".
+    :vartype kind: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    :ivar parameters: Supported parameters for an Entity Recognition task.
+    :vartype parameters:
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntitiesTaskParameters
+    """
+
+    _validation = {
+        'kind': {'required': True},
+    }
+
+    _attribute_map = {
+        'kind': {'key': 'kind', 'type': 'str'},
+        'parameters': {'key': 'parameters', 'type': 'EntitiesTaskParameters'},
+    }
+
+    def __init__(
+        self,
+        *,
+        parameters: Optional["EntitiesTaskParameters"] = None,
+        **kwargs
+    ):
+        """
+        :keyword parameters: Supported parameters for an Entity Recognition task.
+        :paramtype parameters:
+         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntitiesTaskParameters
+        """
+        super(EntitiesLROTask, self).__init__(**kwargs)
+        self.kind = 'EntityRecognition'  # type: str
+        self.parameters = parameters
+
+
 class PreBuiltResult(msrest.serialization.Model):
     """PreBuiltResult.
 
@@ -2659,15 +2695,11 @@ class EntitiesResult(PreBuiltResult):
         self.documents = documents
 
 
-class EntitiesResultDocumentsItem(EntitiesDocumentResult, DocumentDetectedLanguage):
+class EntitiesResultDocumentsItem(EntitiesDocumentResult):
     """EntitiesResultDocumentsItem.
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar detected_language: If 'language' is set to 'auto' for the document in the request this
-     field will contain a 2 letter ISO 639-1 representation of the language detected for this
-     document.
-    :vartype detected_language: str
     :ivar id: Required. Unique, non-empty document identifier.
     :vartype id: str
     :ivar warnings: Required. Warnings encountered while processing document.
@@ -2688,7 +2720,6 @@ class EntitiesResultDocumentsItem(EntitiesDocumentResult, DocumentDetectedLangua
     }
 
     _attribute_map = {
-        'detected_language': {'key': 'detectedLanguage', 'type': 'str'},
         'id': {'key': 'id', 'type': 'str'},
         'warnings': {'key': 'warnings', 'type': '[DocumentWarning]'},
         'statistics': {'key': 'statistics', 'type': 'DocumentStatistics'},
@@ -2701,15 +2732,10 @@ class EntitiesResultDocumentsItem(EntitiesDocumentResult, DocumentDetectedLangua
         id: str,
         warnings: List["DocumentWarning"],
         entities: List["Entity"],
-        detected_language: Optional[str] = None,
         statistics: Optional["DocumentStatistics"] = None,
         **kwargs
     ):
         """
-        :keyword detected_language: If 'language' is set to 'auto' for the document in the request this
-         field will contain a 2 letter ISO 639-1 representation of the language detected for this
-         document.
-        :paramtype detected_language: str
         :keyword id: Required. Unique, non-empty document identifier.
         :paramtype id: str
         :keyword warnings: Required. Warnings encountered while processing document.
@@ -2722,129 +2748,7 @@ class EntitiesResultDocumentsItem(EntitiesDocumentResult, DocumentDetectedLangua
         :keyword entities: Required. Recognized entities in the document.
         :paramtype entities: list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.Entity]
         """
-        super(EntitiesResultDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, entities=entities, detected_language=detected_language, **kwargs)
-        self.detected_language = detected_language
-        self.id = id
-        self.warnings = warnings
-        self.statistics = statistics
-        self.entities = entities
-
-
-class EntitiesTask(AnalyzeTextTask):
-    """An object representing the task definition for an Entities Recognition task.
-
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
-    :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
-    :ivar parameters:
-    :vartype parameters:
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntitiesTaskParametersAutoGenerated
-    """
-
-    _validation = {
-        'kind': {'required': True},
-    }
-
-    _attribute_map = {
-        'kind': {'key': 'kind', 'type': 'str'},
-        'parameters': {'key': 'parameters', 'type': 'EntitiesTaskParametersAutoGenerated'},
-    }
-
-    def __init__(
-        self,
-        *,
-        parameters: Optional["EntitiesTaskParametersAutoGenerated"] = None,
-        **kwargs
-    ):
-        """
-        :keyword parameters:
-        :paramtype parameters:
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntitiesTaskParametersAutoGenerated
-        """
-        super(EntitiesTask, self).__init__(**kwargs)
-        self.kind = 'EntityRecognition'  # type: str
-        self.parameters = parameters
-
-
-class PreBuiltTaskParameters(msrest.serialization.Model):
-    """Parameters object for a text analysis task using pre-built models.
-
-    :ivar model_version:
-    :vartype model_version: str
-    """
-
-    _attribute_map = {
-        'model_version': {'key': 'modelVersion', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        model_version: Optional[str] = "latest",
-        **kwargs
-    ):
-        """
-        :keyword model_version:
-        :paramtype model_version: str
-        """
-        super(PreBuiltTaskParameters, self).__init__(**kwargs)
-        self.model_version = model_version
-
-
-class EntitiesTaskParametersAutoGenerated(EntitiesTaskParameters, PreBuiltTaskParameters, TaskParameters):
-    """EntitiesTaskParametersAutoGenerated.
-
-    :ivar logging_opt_out:
-    :vartype logging_opt_out: bool
-    :ivar model_version:
-    :vartype model_version: str
-    :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-     Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-     https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-     "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-    :vartype string_index_type: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-    """
-
-    _attribute_map = {
-        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
-        'model_version': {'key': 'modelVersion', 'type': 'str'},
-        'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        logging_opt_out: Optional[bool] = False,
-        model_version: Optional[str] = "latest",
-        string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
-        **kwargs
-    ):
-        """
-        :keyword logging_opt_out:
-        :paramtype logging_opt_out: bool
-        :keyword model_version:
-        :paramtype model_version: str
-        :keyword string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-         Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-         https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-         "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-        :paramtype string_index_type: str or
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-        """
-        super(EntitiesTaskParametersAutoGenerated, self).__init__(string_index_type=string_index_type, model_version=model_version, logging_opt_out=logging_opt_out, **kwargs)
-        self.logging_opt_out = logging_opt_out
-        self.model_version = model_version
-        self.logging_opt_out = logging_opt_out
-        self.string_index_type = string_index_type
-        self.model_version = model_version
-        self.string_index_type = string_index_type
+        super(EntitiesResultDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, entities=entities, **kwargs)
 
 
 class EntitiesTaskResult(AnalyzeTextTaskResult):
@@ -3028,6 +2932,48 @@ class EntityLinkingLROResult(AnalyzeTextLROResult):
         self.results = results
 
 
+class EntityLinkingLROTask(AnalyzeTextLROTask):
+    """An object representing the task definition for an Entity Linking task.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
+     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
+     "CustomMultiClassification".
+    :vartype kind: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    :ivar parameters: Supported parameters for an Entity Linking task.
+    :vartype parameters:
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntityLinkingTaskParameters
+    """
+
+    _validation = {
+        'kind': {'required': True},
+    }
+
+    _attribute_map = {
+        'kind': {'key': 'kind', 'type': 'str'},
+        'parameters': {'key': 'parameters', 'type': 'EntityLinkingTaskParameters'},
+    }
+
+    def __init__(
+        self,
+        *,
+        parameters: Optional["EntityLinkingTaskParameters"] = None,
+        **kwargs
+    ):
+        """
+        :keyword parameters: Supported parameters for an Entity Linking task.
+        :paramtype parameters:
+         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntityLinkingTaskParameters
+        """
+        super(EntityLinkingLROTask, self).__init__(**kwargs)
+        self.kind = 'EntityLinking'  # type: str
+        self.parameters = parameters
+
+
 class EntityLinkingResult(PreBuiltResult):
     """EntityLinkingResult.
 
@@ -3145,7 +3091,7 @@ class LinkedEntitiesDocumentResult(DocumentResult):
         self.entities = entities
 
 
-class EntityLinkingResultDocumentsItem(DocumentDetectedLanguage, LinkedEntitiesDocumentResult):
+class EntityLinkingResultDocumentsItem(LinkedEntitiesDocumentResult):
     """EntityLinkingResultDocumentsItem.
 
     All required parameters must be populated in order to send to Azure.
@@ -3162,10 +3108,6 @@ class EntityLinkingResultDocumentsItem(DocumentDetectedLanguage, LinkedEntitiesD
     :ivar entities: Required. Recognized well known entities in the document.
     :vartype entities:
      list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.LinkedEntity]
-    :ivar detected_language: If 'language' is set to 'auto' for the document in the request this
-     field will contain a 2 letter ISO 639-1 representation of the language detected for this
-     document.
-    :vartype detected_language: str
     """
 
     _validation = {
@@ -3179,7 +3121,6 @@ class EntityLinkingResultDocumentsItem(DocumentDetectedLanguage, LinkedEntitiesD
         'warnings': {'key': 'warnings', 'type': '[DocumentWarning]'},
         'statistics': {'key': 'statistics', 'type': 'DocumentStatistics'},
         'entities': {'key': 'entities', 'type': '[LinkedEntity]'},
-        'detected_language': {'key': 'detectedLanguage', 'type': 'str'},
     }
 
     def __init__(
@@ -3189,7 +3130,6 @@ class EntityLinkingResultDocumentsItem(DocumentDetectedLanguage, LinkedEntitiesD
         warnings: List["DocumentWarning"],
         entities: List["LinkedEntity"],
         statistics: Optional["DocumentStatistics"] = None,
-        detected_language: Optional[str] = None,
         **kwargs
     ):
         """
@@ -3205,101 +3145,17 @@ class EntityLinkingResultDocumentsItem(DocumentDetectedLanguage, LinkedEntitiesD
         :keyword entities: Required. Recognized well known entities in the document.
         :paramtype entities:
          list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.LinkedEntity]
-        :keyword detected_language: If 'language' is set to 'auto' for the document in the request this
-         field will contain a 2 letter ISO 639-1 representation of the language detected for this
-         document.
-        :paramtype detected_language: str
         """
-        super(EntityLinkingResultDocumentsItem, self).__init__(detected_language=detected_language, id=id, warnings=warnings, statistics=statistics, entities=entities, **kwargs)
-        self.id = id
-        self.warnings = warnings
-        self.statistics = statistics
-        self.entities = entities
-        self.detected_language = detected_language
+        super(EntityLinkingResultDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, entities=entities, **kwargs)
 
 
-class EntityLinkingTask(AnalyzeTextTask):
-    """An object representing the task definition for an Entity Linking task.
+class EntityLinkingTaskParameters(TaskParameters, PreBuiltTaskParameters):
+    """Supported parameters for an Entity Linking task.
 
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
-    :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
-    :ivar parameters:
-    :vartype parameters:
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntityLinkingTaskParametersAutoGenerated
-    """
-
-    _validation = {
-        'kind': {'required': True},
-    }
-
-    _attribute_map = {
-        'kind': {'key': 'kind', 'type': 'str'},
-        'parameters': {'key': 'parameters', 'type': 'EntityLinkingTaskParametersAutoGenerated'},
-    }
-
-    def __init__(
-        self,
-        *,
-        parameters: Optional["EntityLinkingTaskParametersAutoGenerated"] = None,
-        **kwargs
-    ):
-        """
-        :keyword parameters:
-        :paramtype parameters:
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.EntityLinkingTaskParametersAutoGenerated
-        """
-        super(EntityLinkingTask, self).__init__(**kwargs)
-        self.kind = 'EntityLinking'  # type: str
-        self.parameters = parameters
-
-
-class EntityLinkingTaskParameters(msrest.serialization.Model):
-    """Parameters object for a Sentiment Analysis task.
-
-    :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-     Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-     https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-     "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-    :vartype string_index_type: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-    """
-
-    _attribute_map = {
-        'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
-        **kwargs
-    ):
-        """
-        :keyword string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-         Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-         https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-         "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-        :paramtype string_index_type: str or
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-        """
-        super(EntityLinkingTaskParameters, self).__init__(**kwargs)
-        self.string_index_type = string_index_type
-
-
-class EntityLinkingTaskParametersAutoGenerated(EntityLinkingTaskParameters, PreBuiltTaskParameters, TaskParameters):
-    """EntityLinkingTaskParametersAutoGenerated.
-
-    :ivar logging_opt_out:
-    :vartype logging_opt_out: bool
     :ivar model_version:
     :vartype model_version: str
+    :ivar logging_opt_out:
+    :vartype logging_opt_out: bool
     :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
      Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
      https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
@@ -3309,24 +3165,24 @@ class EntityLinkingTaskParametersAutoGenerated(EntityLinkingTaskParameters, PreB
     """
 
     _attribute_map = {
-        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
         'model_version': {'key': 'modelVersion', 'type': 'str'},
+        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
         'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
     }
 
     def __init__(
         self,
         *,
-        logging_opt_out: Optional[bool] = False,
         model_version: Optional[str] = "latest",
+        logging_opt_out: Optional[bool] = False,
         string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
         **kwargs
     ):
         """
-        :keyword logging_opt_out:
-        :paramtype logging_opt_out: bool
         :keyword model_version:
         :paramtype model_version: str
+        :keyword logging_opt_out:
+        :paramtype logging_opt_out: bool
         :keyword string_index_type: Specifies the method used to interpret string offsets.  Defaults to
          Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
          https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
@@ -3334,12 +3190,10 @@ class EntityLinkingTaskParametersAutoGenerated(EntityLinkingTaskParameters, PreB
         :paramtype string_index_type: str or
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
         """
-        super(EntityLinkingTaskParametersAutoGenerated, self).__init__(string_index_type=string_index_type, model_version=model_version, logging_opt_out=logging_opt_out, **kwargs)
-        self.logging_opt_out = logging_opt_out
+        super(EntityLinkingTaskParameters, self).__init__(logging_opt_out=logging_opt_out, model_version=model_version, **kwargs)
         self.model_version = model_version
-        self.logging_opt_out = logging_opt_out
         self.string_index_type = string_index_type
-        self.model_version = model_version
+        self.logging_opt_out = logging_opt_out
         self.string_index_type = string_index_type
 
 
@@ -3746,6 +3600,48 @@ class ExtractiveSummarizationLROResult(AnalyzeTextLROResult):
         self.results = results
 
 
+class ExtractiveSummarizationLROTask(AnalyzeTextLROTask):
+    """An object representing the task definition for an Extractive Summarization task.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
+     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
+     "CustomMultiClassification".
+    :vartype kind: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    :ivar parameters: Supported parameters for an Extractive Summarization task.
+    :vartype parameters:
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.ExtractiveSummarizationTaskParameters
+    """
+
+    _validation = {
+        'kind': {'required': True},
+    }
+
+    _attribute_map = {
+        'kind': {'key': 'kind', 'type': 'str'},
+        'parameters': {'key': 'parameters', 'type': 'ExtractiveSummarizationTaskParameters'},
+    }
+
+    def __init__(
+        self,
+        *,
+        parameters: Optional["ExtractiveSummarizationTaskParameters"] = None,
+        **kwargs
+    ):
+        """
+        :keyword parameters: Supported parameters for an Extractive Summarization task.
+        :paramtype parameters:
+         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.ExtractiveSummarizationTaskParameters
+        """
+        super(ExtractiveSummarizationLROTask, self).__init__(**kwargs)
+        self.kind = 'ExtractiveSummarization'  # type: str
+        self.parameters = parameters
+
+
 class ExtractiveSummarizationResult(PreBuiltResult):
     """ExtractiveSummarizationResult.
 
@@ -3804,7 +3700,7 @@ class ExtractiveSummarizationResult(PreBuiltResult):
         self.documents = documents
 
 
-class ExtractiveSummarizationResultDocumentsItem(DocumentDetectedLanguage, ExtractedSummaryDocumentResult):
+class ExtractiveSummarizationResultDocumentsItem(ExtractedSummaryDocumentResult):
     """ExtractiveSummarizationResultDocumentsItem.
 
     All required parameters must be populated in order to send to Azure.
@@ -3821,10 +3717,6 @@ class ExtractiveSummarizationResultDocumentsItem(DocumentDetectedLanguage, Extra
     :ivar sentences: Required. A ranked list of sentences representing the extracted summary.
     :vartype sentences:
      list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.ExtractedSummarySentence]
-    :ivar detected_language: If 'language' is set to 'auto' for the document in the request this
-     field will contain a 2 letter ISO 639-1 representation of the language detected for this
-     document.
-    :vartype detected_language: str
     """
 
     _validation = {
@@ -3838,7 +3730,6 @@ class ExtractiveSummarizationResultDocumentsItem(DocumentDetectedLanguage, Extra
         'warnings': {'key': 'warnings', 'type': '[DocumentWarning]'},
         'statistics': {'key': 'statistics', 'type': 'DocumentStatistics'},
         'sentences': {'key': 'sentences', 'type': '[ExtractedSummarySentence]'},
-        'detected_language': {'key': 'detectedLanguage', 'type': 'str'},
     }
 
     def __init__(
@@ -3848,7 +3739,6 @@ class ExtractiveSummarizationResultDocumentsItem(DocumentDetectedLanguage, Extra
         warnings: List["DocumentWarning"],
         sentences: List["ExtractedSummarySentence"],
         statistics: Optional["DocumentStatistics"] = None,
-        detected_language: Optional[str] = None,
         **kwargs
     ):
         """
@@ -3864,152 +3754,54 @@ class ExtractiveSummarizationResultDocumentsItem(DocumentDetectedLanguage, Extra
         :keyword sentences: Required. A ranked list of sentences representing the extracted summary.
         :paramtype sentences:
          list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.ExtractedSummarySentence]
-        :keyword detected_language: If 'language' is set to 'auto' for the document in the request this
-         field will contain a 2 letter ISO 639-1 representation of the language detected for this
-         document.
-        :paramtype detected_language: str
         """
-        super(ExtractiveSummarizationResultDocumentsItem, self).__init__(detected_language=detected_language, id=id, warnings=warnings, statistics=statistics, sentences=sentences, **kwargs)
-        self.id = id
-        self.warnings = warnings
-        self.statistics = statistics
-        self.sentences = sentences
-        self.detected_language = detected_language
+        super(ExtractiveSummarizationResultDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, sentences=sentences, **kwargs)
 
 
-class ExtractiveSummarizationTask(AnalyzeTextTask):
-    """An object representing the task definition for an Extractive Summarization task.
+class ExtractiveSummarizationTaskParameters(TaskParameters, PreBuiltTaskParameters):
+    """Supported parameters for an Extractive Summarization task.
 
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
-    :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
-    :ivar parameters:
-    :vartype parameters:
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.ExtractiveSummarizationTaskParametersAutoGenerated
-    """
-
-    _validation = {
-        'kind': {'required': True},
-    }
-
-    _attribute_map = {
-        'kind': {'key': 'kind', 'type': 'str'},
-        'parameters': {'key': 'parameters', 'type': 'ExtractiveSummarizationTaskParametersAutoGenerated'},
-    }
-
-    def __init__(
-        self,
-        *,
-        parameters: Optional["ExtractiveSummarizationTaskParametersAutoGenerated"] = None,
-        **kwargs
-    ):
-        """
-        :keyword parameters:
-        :paramtype parameters:
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.ExtractiveSummarizationTaskParametersAutoGenerated
-        """
-        super(ExtractiveSummarizationTask, self).__init__(**kwargs)
-        self.kind = 'ExtractiveSummarization'  # type: str
-        self.parameters = parameters
-
-
-class ExtractiveSummarizationTaskParameters(msrest.serialization.Model):
-    """Parameters object for an Extractive Summarization task.
-
-    :ivar sentence_count:
-    :vartype sentence_count: int
-    :ivar sort_by: The sorting criteria to use for the results of Extractive Summarization.
-     Possible values include: "Offset", "Rank". Default value: "Offset".
-    :vartype sort_by: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.ExtractiveSummarizationSortingCriteria
-    :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-     Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-     https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-     "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-    :vartype string_index_type: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-    """
-
-    _attribute_map = {
-        'sentence_count': {'key': 'sentenceCount', 'type': 'int'},
-        'sort_by': {'key': 'sortBy', 'type': 'str'},
-        'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        sentence_count: Optional[int] = 3,
-        sort_by: Optional[Union[str, "ExtractiveSummarizationSortingCriteria"]] = "Offset",
-        string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
-        **kwargs
-    ):
-        """
-        :keyword sentence_count:
-        :paramtype sentence_count: int
-        :keyword sort_by: The sorting criteria to use for the results of Extractive Summarization.
-         Possible values include: "Offset", "Rank". Default value: "Offset".
-        :paramtype sort_by: str or
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.ExtractiveSummarizationSortingCriteria
-        :keyword string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-         Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-         https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-         "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-        :paramtype string_index_type: str or
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-        """
-        super(ExtractiveSummarizationTaskParameters, self).__init__(**kwargs)
-        self.sentence_count = sentence_count
-        self.sort_by = sort_by
-        self.string_index_type = string_index_type
-
-
-class ExtractiveSummarizationTaskParametersAutoGenerated(PreBuiltTaskParameters, TaskParameters, ExtractiveSummarizationTaskParameters):
-    """ExtractiveSummarizationTaskParametersAutoGenerated.
-
-    :ivar sentence_count:
-    :vartype sentence_count: int
-    :ivar sort_by: The sorting criteria to use for the results of Extractive Summarization.
-     Possible values include: "Offset", "Rank". Default value: "Offset".
-    :vartype sort_by: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.ExtractiveSummarizationSortingCriteria
-    :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-     Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-     https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-     "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-    :vartype string_index_type: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-    :ivar logging_opt_out:
-    :vartype logging_opt_out: bool
     :ivar model_version:
     :vartype model_version: str
+    :ivar logging_opt_out:
+    :vartype logging_opt_out: bool
+    :ivar sentence_count:
+    :vartype sentence_count: int
+    :ivar sort_by: The sorting criteria to use for the results of Extractive Summarization.
+     Possible values include: "Offset", "Rank". Default value: "Offset".
+    :vartype sort_by: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.ExtractiveSummarizationSortingCriteria
+    :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
+     Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
+     https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
+     "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
+    :vartype string_index_type: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
     """
 
     _attribute_map = {
+        'model_version': {'key': 'modelVersion', 'type': 'str'},
+        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
         'sentence_count': {'key': 'sentenceCount', 'type': 'int'},
         'sort_by': {'key': 'sortBy', 'type': 'str'},
         'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
-        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
-        'model_version': {'key': 'modelVersion', 'type': 'str'},
     }
 
     def __init__(
         self,
         *,
+        model_version: Optional[str] = "latest",
+        logging_opt_out: Optional[bool] = False,
         sentence_count: Optional[int] = 3,
         sort_by: Optional[Union[str, "ExtractiveSummarizationSortingCriteria"]] = "Offset",
         string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
-        logging_opt_out: Optional[bool] = False,
-        model_version: Optional[str] = "latest",
         **kwargs
     ):
         """
+        :keyword model_version:
+        :paramtype model_version: str
+        :keyword logging_opt_out:
+        :paramtype logging_opt_out: bool
         :keyword sentence_count:
         :paramtype sentence_count: int
         :keyword sort_by: The sorting criteria to use for the results of Extractive Summarization.
@@ -4022,12 +3814,9 @@ class ExtractiveSummarizationTaskParametersAutoGenerated(PreBuiltTaskParameters,
          "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
         :paramtype string_index_type: str or
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-        :keyword logging_opt_out:
-        :paramtype logging_opt_out: bool
-        :keyword model_version:
-        :paramtype model_version: str
         """
-        super(ExtractiveSummarizationTaskParametersAutoGenerated, self).__init__(model_version=model_version, logging_opt_out=logging_opt_out, sentence_count=sentence_count, sort_by=sort_by, string_index_type=string_index_type, **kwargs)
+        super(ExtractiveSummarizationTaskParameters, self).__init__(logging_opt_out=logging_opt_out, model_version=model_version, **kwargs)
+        self.model_version = model_version
         self.sentence_count = sentence_count
         self.sort_by = sort_by
         self.string_index_type = string_index_type
@@ -4035,9 +3824,6 @@ class ExtractiveSummarizationTaskParametersAutoGenerated(PreBuiltTaskParameters,
         self.sentence_count = sentence_count
         self.sort_by = sort_by
         self.string_index_type = string_index_type
-        self.model_version = model_version
-        self.logging_opt_out = logging_opt_out
-        self.model_version = model_version
 
 
 class HealthcareAssertion(msrest.serialization.Model):
@@ -4508,6 +4294,48 @@ class HealthcareLROResult(AnalyzeTextLROResult):
         self.results = results
 
 
+class HealthcareLROTask(AnalyzeTextLROTask):
+    """HealthcareLROTask.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
+     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
+     "CustomMultiClassification".
+    :vartype kind: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    :ivar parameters: Supported parameters for a Healthcare task.
+    :vartype parameters:
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.HealthcareTaskParameters
+    """
+
+    _validation = {
+        'kind': {'required': True},
+    }
+
+    _attribute_map = {
+        'kind': {'key': 'kind', 'type': 'str'},
+        'parameters': {'key': 'parameters', 'type': 'HealthcareTaskParameters'},
+    }
+
+    def __init__(
+        self,
+        *,
+        parameters: Optional["HealthcareTaskParameters"] = None,
+        **kwargs
+    ):
+        """
+        :keyword parameters: Supported parameters for a Healthcare task.
+        :paramtype parameters:
+         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.HealthcareTaskParameters
+        """
+        super(HealthcareLROTask, self).__init__(**kwargs)
+        self.kind = 'Healthcare'  # type: str
+        self.parameters = parameters
+
+
 class HealthcareRelation(msrest.serialization.Model):
     """Every relation is an entity graph of a certain relationType, where all entities are connected and have specific roles within the relation context.
 
@@ -4666,7 +4494,7 @@ class HealthcareResult(PreBuiltResult):
         self.documents = documents
 
 
-class HealthcareResultDocumentsItem(DocumentDetectedLanguage, HealthcareEntitiesDocumentResult):
+class HealthcareResultDocumentsItem(HealthcareEntitiesDocumentResult):
     """HealthcareResultDocumentsItem.
 
     All required parameters must be populated in order to send to Azure.
@@ -4686,10 +4514,6 @@ class HealthcareResultDocumentsItem(DocumentDetectedLanguage, HealthcareEntities
     :ivar relations: Required. Healthcare entity relations.
     :vartype relations:
      list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.HealthcareRelation]
-    :ivar detected_language: If 'language' is set to 'auto' for the document in the request this
-     field will contain a 2 letter ISO 639-1 representation of the language detected for this
-     document.
-    :vartype detected_language: str
     """
 
     _validation = {
@@ -4705,7 +4529,6 @@ class HealthcareResultDocumentsItem(DocumentDetectedLanguage, HealthcareEntities
         'statistics': {'key': 'statistics', 'type': 'DocumentStatistics'},
         'entities': {'key': 'entities', 'type': '[HealthcareEntity]'},
         'relations': {'key': 'relations', 'type': '[HealthcareRelation]'},
-        'detected_language': {'key': 'detectedLanguage', 'type': 'str'},
     }
 
     def __init__(
@@ -4716,7 +4539,6 @@ class HealthcareResultDocumentsItem(DocumentDetectedLanguage, HealthcareEntities
         entities: List["HealthcareEntity"],
         relations: List["HealthcareRelation"],
         statistics: Optional["DocumentStatistics"] = None,
-        detected_language: Optional[str] = None,
         **kwargs
     ):
         """
@@ -4735,143 +4557,56 @@ class HealthcareResultDocumentsItem(DocumentDetectedLanguage, HealthcareEntities
         :keyword relations: Required. Healthcare entity relations.
         :paramtype relations:
          list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.HealthcareRelation]
-        :keyword detected_language: If 'language' is set to 'auto' for the document in the request this
-         field will contain a 2 letter ISO 639-1 representation of the language detected for this
-         document.
-        :paramtype detected_language: str
         """
-        super(HealthcareResultDocumentsItem, self).__init__(detected_language=detected_language, id=id, warnings=warnings, statistics=statistics, entities=entities, relations=relations, **kwargs)
-        self.id = id
-        self.warnings = warnings
-        self.statistics = statistics
-        self.entities = entities
-        self.relations = relations
-        self.detected_language = detected_language
+        super(HealthcareResultDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, entities=entities, relations=relations, **kwargs)
 
 
-class HealthcareTask(AnalyzeTextTask):
-    """HealthcareTask.
+class HealthcareTaskParameters(TaskParameters, PreBuiltTaskParameters):
+    """Supported parameters for a Healthcare task.
 
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
-    :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
-    :ivar parameters:
-    :vartype parameters:
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.HealthcareTaskParametersAutoGenerated
-    """
-
-    _validation = {
-        'kind': {'required': True},
-    }
-
-    _attribute_map = {
-        'kind': {'key': 'kind', 'type': 'str'},
-        'parameters': {'key': 'parameters', 'type': 'HealthcareTaskParametersAutoGenerated'},
-    }
-
-    def __init__(
-        self,
-        *,
-        parameters: Optional["HealthcareTaskParametersAutoGenerated"] = None,
-        **kwargs
-    ):
-        """
-        :keyword parameters:
-        :paramtype parameters:
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.HealthcareTaskParametersAutoGenerated
-        """
-        super(HealthcareTask, self).__init__(**kwargs)
-        self.kind = 'Healthcare'  # type: str
-        self.parameters = parameters
-
-
-class HealthcareTaskParameters(msrest.serialization.Model):
-    """Parameters object for a Healthcare task.
-
-    :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-     Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-     https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-     "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-    :vartype string_index_type: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-    """
-
-    _attribute_map = {
-        'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
-        **kwargs
-    ):
-        """
-        :keyword string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-         Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-         https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-         "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-        :paramtype string_index_type: str or
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-        """
-        super(HealthcareTaskParameters, self).__init__(**kwargs)
-        self.string_index_type = string_index_type
-
-
-class HealthcareTaskParametersAutoGenerated(PreBuiltTaskParameters, TaskParameters, HealthcareTaskParameters):
-    """HealthcareTaskParametersAutoGenerated.
-
-    :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-     Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-     https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-     "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-    :vartype string_index_type: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-    :ivar logging_opt_out:
-    :vartype logging_opt_out: bool
     :ivar model_version:
     :vartype model_version: str
+    :ivar logging_opt_out:
+    :vartype logging_opt_out: bool
+    :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
+     Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
+     https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
+     "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
+    :vartype string_index_type: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
     """
 
     _attribute_map = {
-        'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
-        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
         'model_version': {'key': 'modelVersion', 'type': 'str'},
+        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
+        'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
     }
 
     def __init__(
         self,
         *,
-        string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
-        logging_opt_out: Optional[bool] = False,
         model_version: Optional[str] = "latest",
+        logging_opt_out: Optional[bool] = False,
+        string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
         **kwargs
     ):
         """
+        :keyword model_version:
+        :paramtype model_version: str
+        :keyword logging_opt_out:
+        :paramtype logging_opt_out: bool
         :keyword string_index_type: Specifies the method used to interpret string offsets.  Defaults to
          Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
          https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
          "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
         :paramtype string_index_type: str or
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-        :keyword logging_opt_out:
-        :paramtype logging_opt_out: bool
-        :keyword model_version:
-        :paramtype model_version: str
         """
-        super(HealthcareTaskParametersAutoGenerated, self).__init__(model_version=model_version, logging_opt_out=logging_opt_out, string_index_type=string_index_type, **kwargs)
+        super(HealthcareTaskParameters, self).__init__(logging_opt_out=logging_opt_out, model_version=model_version, **kwargs)
+        self.model_version = model_version
         self.string_index_type = string_index_type
         self.logging_opt_out = logging_opt_out
         self.string_index_type = string_index_type
-        self.model_version = model_version
-        self.logging_opt_out = logging_opt_out
-        self.model_version = model_version
 
 
 class InnerErrorModel(msrest.serialization.Model):
@@ -5023,6 +4758,48 @@ class KeyPhraseExtractionLROResult(AnalyzeTextLROResult):
         self.results = results
 
 
+class KeyPhraseLROTask(AnalyzeTextLROTask):
+    """An object representing the task definition for a Key Phrase Extraction task.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
+     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
+     "CustomMultiClassification".
+    :vartype kind: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    :ivar parameters: Supported parameters for a Key Phrase Extraction task.
+    :vartype parameters:
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.KeyPhraseTaskParameters
+    """
+
+    _validation = {
+        'kind': {'required': True},
+    }
+
+    _attribute_map = {
+        'kind': {'key': 'kind', 'type': 'str'},
+        'parameters': {'key': 'parameters', 'type': 'KeyPhraseTaskParameters'},
+    }
+
+    def __init__(
+        self,
+        *,
+        parameters: Optional["KeyPhraseTaskParameters"] = None,
+        **kwargs
+    ):
+        """
+        :keyword parameters: Supported parameters for a Key Phrase Extraction task.
+        :paramtype parameters:
+         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.KeyPhraseTaskParameters
+        """
+        super(KeyPhraseLROTask, self).__init__(**kwargs)
+        self.kind = 'KeyPhraseExtraction'  # type: str
+        self.parameters = parameters
+
+
 class KeyPhraseResult(PreBuiltResult):
     """KeyPhraseResult.
 
@@ -5140,7 +4917,7 @@ class KeyPhrasesDocumentResult(DocumentResult):
         self.key_phrases = key_phrases
 
 
-class KeyPhraseResultDocumentsItem(DocumentDetectedLanguage, KeyPhrasesDocumentResult):
+class KeyPhraseResultDocumentsItem(KeyPhrasesDocumentResult):
     """KeyPhraseResultDocumentsItem.
 
     All required parameters must be populated in order to send to Azure.
@@ -5157,10 +4934,6 @@ class KeyPhraseResultDocumentsItem(DocumentDetectedLanguage, KeyPhrasesDocumentR
     :ivar key_phrases: Required. A list of representative words or phrases. The number of key
      phrases returned is proportional to the number of words in the input document.
     :vartype key_phrases: list[str]
-    :ivar detected_language: If 'language' is set to 'auto' for the document in the request this
-     field will contain a 2 letter ISO 639-1 representation of the language detected for this
-     document.
-    :vartype detected_language: str
     """
 
     _validation = {
@@ -5174,7 +4947,6 @@ class KeyPhraseResultDocumentsItem(DocumentDetectedLanguage, KeyPhrasesDocumentR
         'warnings': {'key': 'warnings', 'type': '[DocumentWarning]'},
         'statistics': {'key': 'statistics', 'type': 'DocumentStatistics'},
         'key_phrases': {'key': 'keyPhrases', 'type': '[str]'},
-        'detected_language': {'key': 'detectedLanguage', 'type': 'str'},
     }
 
     def __init__(
@@ -5184,7 +4956,6 @@ class KeyPhraseResultDocumentsItem(DocumentDetectedLanguage, KeyPhrasesDocumentR
         warnings: List["DocumentWarning"],
         key_phrases: List[str],
         statistics: Optional["DocumentStatistics"] = None,
-        detected_language: Optional[str] = None,
         **kwargs
     ):
         """
@@ -5200,91 +4971,40 @@ class KeyPhraseResultDocumentsItem(DocumentDetectedLanguage, KeyPhrasesDocumentR
         :keyword key_phrases: Required. A list of representative words or phrases. The number of key
          phrases returned is proportional to the number of words in the input document.
         :paramtype key_phrases: list[str]
-        :keyword detected_language: If 'language' is set to 'auto' for the document in the request this
-         field will contain a 2 letter ISO 639-1 representation of the language detected for this
-         document.
-        :paramtype detected_language: str
         """
-        super(KeyPhraseResultDocumentsItem, self).__init__(detected_language=detected_language, id=id, warnings=warnings, statistics=statistics, key_phrases=key_phrases, **kwargs)
-        self.id = id
-        self.warnings = warnings
-        self.statistics = statistics
-        self.key_phrases = key_phrases
-        self.detected_language = detected_language
+        super(KeyPhraseResultDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, key_phrases=key_phrases, **kwargs)
 
 
-class KeyPhraseTask(AnalyzeTextTask):
-    """An object representing the task definition for a Key Phrase Extraction task.
+class KeyPhraseTaskParameters(TaskParameters, PreBuiltTaskParameters):
+    """Supported parameters for a Key Phrase Extraction task.
 
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
-    :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
-    :ivar parameters:
-    :vartype parameters:
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.KeyPhraseTaskParameters
-    """
-
-    _validation = {
-        'kind': {'required': True},
-    }
-
-    _attribute_map = {
-        'kind': {'key': 'kind', 'type': 'str'},
-        'parameters': {'key': 'parameters', 'type': 'KeyPhraseTaskParameters'},
-    }
-
-    def __init__(
-        self,
-        *,
-        parameters: Optional["KeyPhraseTaskParameters"] = None,
-        **kwargs
-    ):
-        """
-        :keyword parameters:
-        :paramtype parameters:
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.KeyPhraseTaskParameters
-        """
-        super(KeyPhraseTask, self).__init__(**kwargs)
-        self.kind = 'KeyPhraseExtraction'  # type: str
-        self.parameters = parameters
-
-
-class KeyPhraseTaskParameters(PreBuiltTaskParameters, TaskParameters):
-    """KeyPhraseTaskParameters.
-
-    :ivar logging_opt_out:
-    :vartype logging_opt_out: bool
     :ivar model_version:
     :vartype model_version: str
+    :ivar logging_opt_out:
+    :vartype logging_opt_out: bool
     """
 
     _attribute_map = {
-        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
         'model_version': {'key': 'modelVersion', 'type': 'str'},
+        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
     }
 
     def __init__(
         self,
         *,
-        logging_opt_out: Optional[bool] = False,
         model_version: Optional[str] = "latest",
+        logging_opt_out: Optional[bool] = False,
         **kwargs
     ):
         """
-        :keyword logging_opt_out:
-        :paramtype logging_opt_out: bool
         :keyword model_version:
         :paramtype model_version: str
+        :keyword logging_opt_out:
+        :paramtype logging_opt_out: bool
         """
-        super(KeyPhraseTaskParameters, self).__init__(model_version=model_version, logging_opt_out=logging_opt_out, **kwargs)
-        self.logging_opt_out = logging_opt_out
+        super(KeyPhraseTaskParameters, self).__init__(logging_opt_out=logging_opt_out, model_version=model_version, **kwargs)
         self.model_version = model_version
+        self.logging_opt_out = logging_opt_out
 
 
 class KeyPhraseTaskResult(AnalyzeTextTaskResult):
@@ -5324,39 +5044,6 @@ class KeyPhraseTaskResult(AnalyzeTextTaskResult):
         super(KeyPhraseTaskResult, self).__init__(**kwargs)
         self.kind = 'KeyPhraseExtractionResults'  # type: str
         self.results = results
-
-
-class LanguageBatchInput(msrest.serialization.Model):
-    """LanguageBatchInput.
-
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar documents: Required.
-    :vartype documents:
-     list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.LanguageInput]
-    """
-
-    _validation = {
-        'documents': {'required': True},
-    }
-
-    _attribute_map = {
-        'documents': {'key': 'documents', 'type': '[LanguageInput]'},
-    }
-
-    def __init__(
-        self,
-        *,
-        documents: List["LanguageInput"],
-        **kwargs
-    ):
-        """
-        :keyword documents: Required.
-        :paramtype documents:
-         list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.LanguageInput]
-        """
-        super(LanguageBatchInput, self).__init__(**kwargs)
-        self.documents = documents
 
 
 class LanguageDetectionAnalysisInput(msrest.serialization.Model):
@@ -5501,113 +5188,36 @@ class LanguageDetectionResult(PreBuiltResult):
         self.documents = documents
 
 
-class LanguageDetectionTask(AnalyzeTextTask):
-    """LanguageDetectionTask.
+class LanguageDetectionTaskParameters(TaskParameters, PreBuiltTaskParameters):
+    """Supported parameters for a Language Detection task.
 
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
-    :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
-    :ivar parameters:
-    :vartype parameters:
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.LanguageDetectionTaskParametersAutoGenerated
-    """
-
-    _validation = {
-        'kind': {'required': True},
-    }
-
-    _attribute_map = {
-        'kind': {'key': 'kind', 'type': 'str'},
-        'parameters': {'key': 'parameters', 'type': 'LanguageDetectionTaskParametersAutoGenerated'},
-    }
-
-    def __init__(
-        self,
-        *,
-        parameters: Optional["LanguageDetectionTaskParametersAutoGenerated"] = None,
-        **kwargs
-    ):
-        """
-        :keyword parameters:
-        :paramtype parameters:
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.LanguageDetectionTaskParametersAutoGenerated
-        """
-        super(LanguageDetectionTask, self).__init__(**kwargs)
-        self.kind = 'LanguageDetection'  # type: str
-        self.parameters = parameters
-
-
-class LanguageDetectionTaskParameters(msrest.serialization.Model):
-    """Parameters object for a Language Detection task.
-
-    :ivar region_hint:
-    :vartype region_hint: str
-    """
-
-    _attribute_map = {
-        'region_hint': {'key': 'regionHint', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        region_hint: Optional[str] = None,
-        **kwargs
-    ):
-        """
-        :keyword region_hint:
-        :paramtype region_hint: str
-        """
-        super(LanguageDetectionTaskParameters, self).__init__(**kwargs)
-        self.region_hint = region_hint
-
-
-class LanguageDetectionTaskParametersAutoGenerated(PreBuiltTaskParameters, LanguageDetectionTaskParameters, TaskParameters):
-    """LanguageDetectionTaskParametersAutoGenerated.
-
-    :ivar logging_opt_out:
-    :vartype logging_opt_out: bool
-    :ivar region_hint:
-    :vartype region_hint: str
     :ivar model_version:
     :vartype model_version: str
+    :ivar logging_opt_out:
+    :vartype logging_opt_out: bool
     """
 
     _attribute_map = {
-        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
-        'region_hint': {'key': 'regionHint', 'type': 'str'},
         'model_version': {'key': 'modelVersion', 'type': 'str'},
+        'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
     }
 
     def __init__(
         self,
         *,
-        logging_opt_out: Optional[bool] = False,
-        region_hint: Optional[str] = None,
         model_version: Optional[str] = "latest",
+        logging_opt_out: Optional[bool] = False,
         **kwargs
     ):
         """
-        :keyword logging_opt_out:
-        :paramtype logging_opt_out: bool
-        :keyword region_hint:
-        :paramtype region_hint: str
         :keyword model_version:
         :paramtype model_version: str
+        :keyword logging_opt_out:
+        :paramtype logging_opt_out: bool
         """
-        super(LanguageDetectionTaskParametersAutoGenerated, self).__init__(model_version=model_version, region_hint=region_hint, logging_opt_out=logging_opt_out, **kwargs)
-        self.logging_opt_out = logging_opt_out
-        self.region_hint = region_hint
-        self.logging_opt_out = logging_opt_out
+        super(LanguageDetectionTaskParameters, self).__init__(logging_opt_out=logging_opt_out, model_version=model_version, **kwargs)
         self.model_version = model_version
-        self.region_hint = region_hint
-        self.model_version = model_version
+        self.logging_opt_out = logging_opt_out
 
 
 class LanguageDetectionTaskResult(AnalyzeTextTaskResult):
@@ -5857,39 +5467,6 @@ class MultiLanguageAnalysisInput(msrest.serialization.Model):
         self.documents = documents
 
 
-class MultiLanguageBatchInput(msrest.serialization.Model):
-    """Contains a set of input documents to be analyzed by the service.
-
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar documents: Required. The set of documents to process as part of this batch.
-    :vartype documents:
-     list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.MultiLanguageInput]
-    """
-
-    _validation = {
-        'documents': {'required': True},
-    }
-
-    _attribute_map = {
-        'documents': {'key': 'documents', 'type': '[MultiLanguageInput]'},
-    }
-
-    def __init__(
-        self,
-        *,
-        documents: List["MultiLanguageInput"],
-        **kwargs
-    ):
-        """
-        :keyword documents: Required. The set of documents to process as part of this batch.
-        :paramtype documents:
-         list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.MultiLanguageInput]
-        """
-        super(MultiLanguageBatchInput, self).__init__(**kwargs)
-        self.documents = documents
-
-
 class MultiLanguageInput(msrest.serialization.Model):
     """Contains an input document to be analyzed by the service.
 
@@ -5901,12 +5478,8 @@ class MultiLanguageInput(msrest.serialization.Model):
     :vartype text: str
     :ivar language: (Optional) This is the 2 letter ISO 639-1 representation of a language. For
      example, use "en" for English; "es" for Spanish etc. If not set, use "en" for English as
-     default. Use "auto" for automatic language detection.
+     default.
     :vartype language: str
-    :ivar default_language: (Optional) A 2 letter ISO 639-1 representation of a language to be used
-     as a default value when the "language" property is set to "auto". The default value will be
-     used as a fallback if a language cannot be automatically detected.
-    :vartype default_language: str
     """
 
     _validation = {
@@ -5918,7 +5491,6 @@ class MultiLanguageInput(msrest.serialization.Model):
         'id': {'key': 'id', 'type': 'str'},
         'text': {'key': 'text', 'type': 'str'},
         'language': {'key': 'language', 'type': 'str'},
-        'default_language': {'key': 'defaultLanguage', 'type': 'str'},
     }
 
     def __init__(
@@ -5927,7 +5499,6 @@ class MultiLanguageInput(msrest.serialization.Model):
         id: str,
         text: str,
         language: Optional[str] = None,
-        default_language: Optional[str] = None,
         **kwargs
     ):
         """
@@ -5937,18 +5508,13 @@ class MultiLanguageInput(msrest.serialization.Model):
         :paramtype text: str
         :keyword language: (Optional) This is the 2 letter ISO 639-1 representation of a language. For
          example, use "en" for English; "es" for Spanish etc. If not set, use "en" for English as
-         default. Use "auto" for automatic language detection.
+         default.
         :paramtype language: str
-        :keyword default_language: (Optional) A 2 letter ISO 639-1 representation of a language to be
-         used as a default value when the "language" property is set to "auto". The default value will
-         be used as a fallback if a language cannot be automatically detected.
-        :paramtype default_language: str
         """
         super(MultiLanguageInput, self).__init__(**kwargs)
         self.id = id
         self.text = text
         self.language = language
-        self.default_language = default_language
 
 
 class PiiEntitiesDocumentResult(DocumentResult):
@@ -6082,6 +5648,48 @@ class PiiEntityRecognitionLROResult(AnalyzeTextLROResult):
         self.results = results
 
 
+class PiiLROTask(AnalyzeTextLROTask):
+    """An object representing the task definition for a PII Entities Recognition task.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
+     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
+     "CustomMultiClassification".
+    :vartype kind: str or
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    :ivar parameters: Supported parameters for a PII Entities Recognition task.
+    :vartype parameters:
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.PiiTaskParameters
+    """
+
+    _validation = {
+        'kind': {'required': True},
+    }
+
+    _attribute_map = {
+        'kind': {'key': 'kind', 'type': 'str'},
+        'parameters': {'key': 'parameters', 'type': 'PiiTaskParameters'},
+    }
+
+    def __init__(
+        self,
+        *,
+        parameters: Optional["PiiTaskParameters"] = None,
+        **kwargs
+    ):
+        """
+        :keyword parameters: Supported parameters for a PII Entities Recognition task.
+        :paramtype parameters:
+         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.PiiTaskParameters
+        """
+        super(PiiLROTask, self).__init__(**kwargs)
+        self.kind = 'PiiEntityRecognition'  # type: str
+        self.parameters = parameters
+
+
 class PiiResult(PreBuiltResult):
     """PiiResult.
 
@@ -6140,7 +5748,7 @@ class PiiResult(PreBuiltResult):
         self.documents = documents
 
 
-class PiiResultDocumentsItem(DocumentDetectedLanguage, PiiEntitiesDocumentResult):
+class PiiResultDocumentsItem(PiiEntitiesDocumentResult):
     """PiiResultDocumentsItem.
 
     All required parameters must be populated in order to send to Azure.
@@ -6158,10 +5766,6 @@ class PiiResultDocumentsItem(DocumentDetectedLanguage, PiiEntitiesDocumentResult
     :vartype redacted_text: str
     :ivar entities: Required. Recognized entities in the document.
     :vartype entities: list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.Entity]
-    :ivar detected_language: If 'language' is set to 'auto' for the document in the request this
-     field will contain a 2 letter ISO 639-1 representation of the language detected for this
-     document.
-    :vartype detected_language: str
     """
 
     _validation = {
@@ -6177,7 +5781,6 @@ class PiiResultDocumentsItem(DocumentDetectedLanguage, PiiEntitiesDocumentResult
         'statistics': {'key': 'statistics', 'type': 'DocumentStatistics'},
         'redacted_text': {'key': 'redactedText', 'type': 'str'},
         'entities': {'key': 'entities', 'type': '[Entity]'},
-        'detected_language': {'key': 'detectedLanguage', 'type': 'str'},
     }
 
     def __init__(
@@ -6188,7 +5791,6 @@ class PiiResultDocumentsItem(DocumentDetectedLanguage, PiiEntitiesDocumentResult
         redacted_text: str,
         entities: List["Entity"],
         statistics: Optional["DocumentStatistics"] = None,
-        detected_language: Optional[str] = None,
         **kwargs
     ):
         """
@@ -6205,120 +5807,15 @@ class PiiResultDocumentsItem(DocumentDetectedLanguage, PiiEntitiesDocumentResult
         :paramtype redacted_text: str
         :keyword entities: Required. Recognized entities in the document.
         :paramtype entities: list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.Entity]
-        :keyword detected_language: If 'language' is set to 'auto' for the document in the request this
-         field will contain a 2 letter ISO 639-1 representation of the language detected for this
-         document.
-        :paramtype detected_language: str
         """
-        super(PiiResultDocumentsItem, self).__init__(detected_language=detected_language, id=id, warnings=warnings, statistics=statistics, redacted_text=redacted_text, entities=entities, **kwargs)
-        self.id = id
-        self.warnings = warnings
-        self.statistics = statistics
-        self.redacted_text = redacted_text
-        self.entities = entities
-        self.detected_language = detected_language
+        super(PiiResultDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, redacted_text=redacted_text, entities=entities, **kwargs)
 
 
-class PiiTask(AnalyzeTextTask):
-    """An object representing the task definition for a PII Entities Recognition task.
+class PiiTaskParameters(TaskParameters, PreBuiltTaskParameters):
+    """Supported parameters for a PII Entities Recognition task.
 
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-     "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-     "CustomMultiClassification".
-    :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
-    :ivar parameters:
-    :vartype parameters:
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.PiiTaskParametersAutoGenerated
-    """
-
-    _validation = {
-        'kind': {'required': True},
-    }
-
-    _attribute_map = {
-        'kind': {'key': 'kind', 'type': 'str'},
-        'parameters': {'key': 'parameters', 'type': 'PiiTaskParametersAutoGenerated'},
-    }
-
-    def __init__(
-        self,
-        *,
-        parameters: Optional["PiiTaskParametersAutoGenerated"] = None,
-        **kwargs
-    ):
-        """
-        :keyword parameters:
-        :paramtype parameters:
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.PiiTaskParametersAutoGenerated
-        """
-        super(PiiTask, self).__init__(**kwargs)
-        self.kind = 'PiiEntityRecognition'  # type: str
-        self.parameters = parameters
-
-
-class PiiTaskParameters(msrest.serialization.Model):
-    """Parameters object for a PII Entities Recognition task.
-
-    :ivar domain: The PII domain used for PII Entity Recognition. Possible values include: "phi",
-     "none". Default value: "none".
-    :vartype domain: str or ~azure.ai.language.textanalysis.v2022_02_01_preview.models.PiiDomain
-    :ivar pii_categories: (Optional) describes the PII categories to return.
-    :vartype pii_categories: list[str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.PiiCategory]
-    :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-     Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-     https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-     "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-    :vartype string_index_type: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-    """
-
-    _validation = {
-        'pii_categories': {'unique': True},
-    }
-
-    _attribute_map = {
-        'domain': {'key': 'domain', 'type': 'str'},
-        'pii_categories': {'key': 'piiCategories', 'type': '[str]'},
-        'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        domain: Optional[Union[str, "PiiDomain"]] = "none",
-        pii_categories: Optional[List[Union[str, "PiiCategory"]]] = None,
-        string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
-        **kwargs
-    ):
-        """
-        :keyword domain: The PII domain used for PII Entity Recognition. Possible values include:
-         "phi", "none". Default value: "none".
-        :paramtype domain: str or ~azure.ai.language.textanalysis.v2022_02_01_preview.models.PiiDomain
-        :keyword pii_categories: (Optional) describes the PII categories to return.
-        :paramtype pii_categories: list[str or
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.PiiCategory]
-        :keyword string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-         Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-         https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-         "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-        :paramtype string_index_type: str or
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-        """
-        super(PiiTaskParameters, self).__init__(**kwargs)
-        self.domain = domain
-        self.pii_categories = pii_categories
-        self.string_index_type = string_index_type
-
-
-class PiiTaskParametersAutoGenerated(PreBuiltTaskParameters, PiiTaskParameters, TaskParameters):
-    """PiiTaskParametersAutoGenerated.
-
+    :ivar model_version:
+    :vartype model_version: str
     :ivar logging_opt_out:
     :vartype logging_opt_out: bool
     :ivar domain: The PII domain used for PII Entity Recognition. Possible values include: "phi",
@@ -6333,8 +5830,6 @@ class PiiTaskParametersAutoGenerated(PreBuiltTaskParameters, PiiTaskParameters, 
      "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
     :vartype string_index_type: str or
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-    :ivar model_version:
-    :vartype model_version: str
     """
 
     _validation = {
@@ -6342,24 +5837,26 @@ class PiiTaskParametersAutoGenerated(PreBuiltTaskParameters, PiiTaskParameters, 
     }
 
     _attribute_map = {
+        'model_version': {'key': 'modelVersion', 'type': 'str'},
         'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
         'domain': {'key': 'domain', 'type': 'str'},
         'pii_categories': {'key': 'piiCategories', 'type': '[str]'},
         'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
-        'model_version': {'key': 'modelVersion', 'type': 'str'},
     }
 
     def __init__(
         self,
         *,
+        model_version: Optional[str] = "latest",
         logging_opt_out: Optional[bool] = False,
         domain: Optional[Union[str, "PiiDomain"]] = "none",
         pii_categories: Optional[List[Union[str, "PiiCategory"]]] = None,
         string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
-        model_version: Optional[str] = "latest",
         **kwargs
     ):
         """
+        :keyword model_version:
+        :paramtype model_version: str
         :keyword logging_opt_out:
         :paramtype logging_opt_out: bool
         :keyword domain: The PII domain used for PII Entity Recognition. Possible values include:
@@ -6374,20 +5871,16 @@ class PiiTaskParametersAutoGenerated(PreBuiltTaskParameters, PiiTaskParameters, 
          "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
         :paramtype string_index_type: str or
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-        :keyword model_version:
-        :paramtype model_version: str
         """
-        super(PiiTaskParametersAutoGenerated, self).__init__(model_version=model_version, domain=domain, pii_categories=pii_categories, string_index_type=string_index_type, logging_opt_out=logging_opt_out, **kwargs)
-        self.logging_opt_out = logging_opt_out
-        self.domain = domain
-        self.pii_categories = pii_categories
-        self.string_index_type = string_index_type
-        self.logging_opt_out = logging_opt_out
+        super(PiiTaskParameters, self).__init__(logging_opt_out=logging_opt_out, model_version=model_version, **kwargs)
         self.model_version = model_version
         self.domain = domain
         self.pii_categories = pii_categories
         self.string_index_type = string_index_type
-        self.model_version = model_version
+        self.logging_opt_out = logging_opt_out
+        self.domain = domain
+        self.pii_categories = pii_categories
+        self.string_index_type = string_index_type
 
 
 class PiiTaskResult(AnalyzeTextTaskResult):
@@ -6737,21 +6230,21 @@ class SentenceTarget(msrest.serialization.Model):
         self.relations = relations
 
 
-class SentimentAnalysisTask(AnalyzeTextTask):
+class SentimentAnalysisLROTask(AnalyzeTextLROTask):
     """An object representing the task definition for a Sentiment Analysis task.
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar kind: Required. Enumeration of supported Text Analysis tasks.Constant filled by server.
-     Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-     "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
+    :ivar kind: Required. Enumeration of supported long-running Text Analysis tasks.Constant filled
+     by server. Possible values include: "SentimentAnalysis", "EntityRecognition",
+     "PiiEntityRecognition", "KeyPhraseExtraction", "EntityLinking", "Healthcare",
      "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
      "CustomMultiClassification".
     :vartype kind: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskKind
-    :ivar parameters:
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextLROTaskKind
+    :ivar parameters: Supported parameters for a Sentiment Analysis task.
     :vartype parameters:
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.SentimentAnalysisTaskParametersAutoGenerated
+     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.SentimentAnalysisTaskParameters
     """
 
     _validation = {
@@ -6760,68 +6253,30 @@ class SentimentAnalysisTask(AnalyzeTextTask):
 
     _attribute_map = {
         'kind': {'key': 'kind', 'type': 'str'},
-        'parameters': {'key': 'parameters', 'type': 'SentimentAnalysisTaskParametersAutoGenerated'},
+        'parameters': {'key': 'parameters', 'type': 'SentimentAnalysisTaskParameters'},
     }
 
     def __init__(
         self,
         *,
-        parameters: Optional["SentimentAnalysisTaskParametersAutoGenerated"] = None,
+        parameters: Optional["SentimentAnalysisTaskParameters"] = None,
         **kwargs
     ):
         """
-        :keyword parameters:
+        :keyword parameters: Supported parameters for a Sentiment Analysis task.
         :paramtype parameters:
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.SentimentAnalysisTaskParametersAutoGenerated
+         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.SentimentAnalysisTaskParameters
         """
-        super(SentimentAnalysisTask, self).__init__(**kwargs)
+        super(SentimentAnalysisLROTask, self).__init__(**kwargs)
         self.kind = 'SentimentAnalysis'  # type: str
         self.parameters = parameters
 
 
-class SentimentAnalysisTaskParameters(msrest.serialization.Model):
-    """Parameters object for a Sentiment Analysis task.
+class SentimentAnalysisTaskParameters(TaskParameters, PreBuiltTaskParameters):
+    """Supported parameters for a Sentiment Analysis task.
 
-    :ivar opinion_mining:
-    :vartype opinion_mining: bool
-    :ivar string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-     Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-     https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-     "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-    :vartype string_index_type: str or
-     ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-    """
-
-    _attribute_map = {
-        'opinion_mining': {'key': 'opinionMining', 'type': 'bool'},
-        'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
-    }
-
-    def __init__(
-        self,
-        *,
-        opinion_mining: Optional[bool] = False,
-        string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
-        **kwargs
-    ):
-        """
-        :keyword opinion_mining:
-        :paramtype opinion_mining: bool
-        :keyword string_index_type: Specifies the method used to interpret string offsets.  Defaults to
-         Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see
-         https://aka.ms/text-analytics-offsets. Possible values include: "TextElements_v8",
-         "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
-        :paramtype string_index_type: str or
-         ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-        """
-        super(SentimentAnalysisTaskParameters, self).__init__(**kwargs)
-        self.opinion_mining = opinion_mining
-        self.string_index_type = string_index_type
-
-
-class SentimentAnalysisTaskParametersAutoGenerated(PreBuiltTaskParameters, SentimentAnalysisTaskParameters, TaskParameters):
-    """SentimentAnalysisTaskParametersAutoGenerated.
-
+    :ivar model_version:
+    :vartype model_version: str
     :ivar logging_opt_out:
     :vartype logging_opt_out: bool
     :ivar opinion_mining:
@@ -6832,27 +6287,27 @@ class SentimentAnalysisTaskParametersAutoGenerated(PreBuiltTaskParameters, Senti
      "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
     :vartype string_index_type: str or
      ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-    :ivar model_version:
-    :vartype model_version: str
     """
 
     _attribute_map = {
+        'model_version': {'key': 'modelVersion', 'type': 'str'},
         'logging_opt_out': {'key': 'loggingOptOut', 'type': 'bool'},
         'opinion_mining': {'key': 'opinionMining', 'type': 'bool'},
         'string_index_type': {'key': 'stringIndexType', 'type': 'str'},
-        'model_version': {'key': 'modelVersion', 'type': 'str'},
     }
 
     def __init__(
         self,
         *,
+        model_version: Optional[str] = "latest",
         logging_opt_out: Optional[bool] = False,
         opinion_mining: Optional[bool] = False,
         string_index_type: Optional[Union[str, "StringIndexType"]] = "TextElements_v8",
-        model_version: Optional[str] = "latest",
         **kwargs
     ):
         """
+        :keyword model_version:
+        :paramtype model_version: str
         :keyword logging_opt_out:
         :paramtype logging_opt_out: bool
         :keyword opinion_mining:
@@ -6863,18 +6318,14 @@ class SentimentAnalysisTaskParametersAutoGenerated(PreBuiltTaskParameters, Senti
          "UnicodeCodePoint", "Utf16CodeUnit". Default value: "TextElements_v8".
         :paramtype string_index_type: str or
          ~azure.ai.language.textanalysis.v2022_02_01_preview.models.StringIndexType
-        :keyword model_version:
-        :paramtype model_version: str
         """
-        super(SentimentAnalysisTaskParametersAutoGenerated, self).__init__(model_version=model_version, opinion_mining=opinion_mining, string_index_type=string_index_type, logging_opt_out=logging_opt_out, **kwargs)
-        self.logging_opt_out = logging_opt_out
-        self.opinion_mining = opinion_mining
-        self.string_index_type = string_index_type
-        self.logging_opt_out = logging_opt_out
+        super(SentimentAnalysisTaskParameters, self).__init__(logging_opt_out=logging_opt_out, model_version=model_version, **kwargs)
         self.model_version = model_version
         self.opinion_mining = opinion_mining
         self.string_index_type = string_index_type
-        self.model_version = model_version
+        self.logging_opt_out = logging_opt_out
+        self.opinion_mining = opinion_mining
+        self.string_index_type = string_index_type
 
 
 class SentimentConfidenceScorePerLabel(msrest.serialization.Model):
@@ -7132,7 +6583,7 @@ class SentimentResponse(PreBuiltResult):
         self.documents = documents
 
 
-class SentimentResponseDocumentsItem(DocumentDetectedLanguage, SentimentDocumentResult):
+class SentimentResponseDocumentsItem(SentimentDocumentResult):
     """SentimentResponseDocumentsItem.
 
     All required parameters must be populated in order to send to Azure.
@@ -7157,10 +6608,6 @@ class SentimentResponseDocumentsItem(DocumentDetectedLanguage, SentimentDocument
     :ivar sentences: Required. Sentence level sentiment analysis.
     :vartype sentences:
      list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.SentenceSentiment]
-    :ivar detected_language: If 'language' is set to 'auto' for the document in the request this
-     field will contain a 2 letter ISO 639-1 representation of the language detected for this
-     document.
-    :vartype detected_language: str
     """
 
     _validation = {
@@ -7178,7 +6625,6 @@ class SentimentResponseDocumentsItem(DocumentDetectedLanguage, SentimentDocument
         'sentiment': {'key': 'sentiment', 'type': 'str'},
         'confidence_scores': {'key': 'confidenceScores', 'type': 'SentimentConfidenceScorePerLabel'},
         'sentences': {'key': 'sentences', 'type': '[SentenceSentiment]'},
-        'detected_language': {'key': 'detectedLanguage', 'type': 'str'},
     }
 
     def __init__(
@@ -7190,7 +6636,6 @@ class SentimentResponseDocumentsItem(DocumentDetectedLanguage, SentimentDocument
         confidence_scores: "SentimentConfidenceScorePerLabel",
         sentences: List["SentenceSentiment"],
         statistics: Optional["DocumentStatistics"] = None,
-        detected_language: Optional[str] = None,
         **kwargs
     ):
         """
@@ -7214,19 +6659,8 @@ class SentimentResponseDocumentsItem(DocumentDetectedLanguage, SentimentDocument
         :keyword sentences: Required. Sentence level sentiment analysis.
         :paramtype sentences:
          list[~azure.ai.language.textanalysis.v2022_02_01_preview.models.SentenceSentiment]
-        :keyword detected_language: If 'language' is set to 'auto' for the document in the request this
-         field will contain a 2 letter ISO 639-1 representation of the language detected for this
-         document.
-        :paramtype detected_language: str
         """
-        super(SentimentResponseDocumentsItem, self).__init__(detected_language=detected_language, id=id, warnings=warnings, statistics=statistics, sentiment=sentiment, confidence_scores=confidence_scores, sentences=sentences, **kwargs)
-        self.id = id
-        self.warnings = warnings
-        self.statistics = statistics
-        self.sentiment = sentiment
-        self.confidence_scores = confidence_scores
-        self.sentences = sentences
-        self.detected_language = detected_language
+        super(SentimentResponseDocumentsItem, self).__init__(id=id, warnings=warnings, statistics=statistics, sentiment=sentiment, confidence_scores=confidence_scores, sentences=sentences, **kwargs)
 
 
 class SentimentTaskResult(AnalyzeTextTaskResult):

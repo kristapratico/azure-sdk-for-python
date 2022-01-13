@@ -27,6 +27,21 @@ class AnalyzeTextLROResultsKind(with_metaclass(CaseInsensitiveEnumMeta, str, Enu
     CUSTOM_SINGLE_CLASSIFICATION_LRO_RESULTS = "CustomSingleClassificationLROResults"
     CUSTOM_MULTI_CLASSIFICATION_LRO_RESULTS = "CustomMultiClassificationLROResults"
 
+class AnalyzeTextLROTaskKind(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
+    """Enumeration of supported long-running Text Analysis tasks.
+    """
+
+    SENTIMENT_ANALYSIS = "SentimentAnalysis"
+    ENTITY_RECOGNITION = "EntityRecognition"
+    PII_ENTITY_RECOGNITION = "PiiEntityRecognition"
+    KEY_PHRASE_EXTRACTION = "KeyPhraseExtraction"
+    ENTITY_LINKING = "EntityLinking"
+    HEALTHCARE = "Healthcare"
+    EXTRACTIVE_SUMMARIZATION = "ExtractiveSummarization"
+    CUSTOM_ENTITY_RECOGNITION = "CustomEntityRecognition"
+    CUSTOM_SINGLE_CLASSIFICATION = "CustomSingleClassification"
+    CUSTOM_MULTI_CLASSIFICATION = "CustomMultiClassification"
+
 class AnalyzeTextTaskKind(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
     """Enumeration of supported Text Analysis tasks.
     """
@@ -37,11 +52,6 @@ class AnalyzeTextTaskKind(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
     KEY_PHRASE_EXTRACTION = "KeyPhraseExtraction"
     LANGUAGE_DETECTION = "LanguageDetection"
     ENTITY_LINKING = "EntityLinking"
-    HEALTHCARE = "Healthcare"
-    EXTRACTIVE_SUMMARIZATION = "ExtractiveSummarization"
-    CUSTOM_ENTITY_RECOGNITION = "CustomEntityRecognition"
-    CUSTOM_SINGLE_CLASSIFICATION = "CustomSingleClassification"
-    CUSTOM_MULTI_CLASSIFICATION = "CustomMultiClassification"
 
 class AnalyzeTextTaskResultsKind(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
     """Enumeration of supported Text Analysis task results.

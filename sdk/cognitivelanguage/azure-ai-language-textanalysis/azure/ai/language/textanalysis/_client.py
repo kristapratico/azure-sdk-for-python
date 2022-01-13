@@ -69,9 +69,9 @@ class TextAnalysisClient:
     def analyze_text(
         self,
         documents,  # type: Union[List[str], List[TextDocumentInput], List[Dict[str, str]]]
-        action,  # type: Union[RecognizeEntitiesAction, RecognizeLinkedEntitiesAction, RecognizePiiEntitiesAction, ExtractKeyPhrasesAction, AnalyzeSentimentAction, ExtractSummaryAction, RecognizeCustomEntitiesAction, SingleCategoryClassifyAction, MultiCategoryClassifyAction, AnalyzeHealthcareEntitiesAction] # pylint: disable=line-too-long
+        action,  # type: Union[RecognizeEntitiesAction, RecognizeLinkedEntitiesAction, RecognizePiiEntitiesAction, ExtractKeyPhrasesAction, AnalyzeSentimentAction, DetectLanguageAction] # pylint: disable=line-too-long
         **kwargs  # type: Any
-    ):  # type: (...) -> List[Union[RecognizeEntitiesResult, RecognizeLinkedEntitiesResult, RecognizePiiEntitiesResult, ExtractKeyPhrasesResult, AnalyzeSentimentResult, ExtractSummaryResult, RecognizeCustomEntitiesResult, SingleCategoryClassifyResult, MultiCategoryClassifyResult, AnalyzeHealthcareEntitiesResult, DocumentError]]  # pylint: disable=line-too-long
+    ):  # type: (...) -> List[Union[RecognizeEntitiesResult, RecognizeLinkedEntitiesResult, RecognizePiiEntitiesResult, ExtractKeyPhrasesResult, AnalyzeSentimentResult, DetectLanguageResult, DocumentError]]  # pylint: disable=line-too-long
         """analyze text.
 
         :param documents: The set of documents to process as part of this batch.
@@ -83,11 +83,13 @@ class TextAnalysisClient:
         :param action: A heterogeneous list of actions to perform on the input documents.
             Each action object encapsulates the parameters used for the particular action type.
             The action results will be in the same order of the input actions.
-        :type action: RecognizeEntitiesAction or RecognizePiiEntitiesAction or ExtractKeyPhrasesAction or RecognizeLinkedEntitiesAction or AnalyzeSentimentAction or ExtractSummaryAction or RecognizeCustomEntitiesAction or SingleCategoryClassifyAction or MultiCategoryClassifyAction or AnalyzeHealthcareEntitiesAction
+        :type action: RecognizeEntitiesAction or RecognizePiiEntitiesAction or ExtractKeyPhrasesAction or
+         RecognizeLinkedEntitiesAction or AnalyzeSentimentAction or DetectLanguageAction
         :keyword str api_version:
         :keyword bool show_stats: If set to true, response will contain document level statistics.
         :return: A list of the type of the action specified.
-        :rtype: list[RecognizeEntitiesResult or RecognizeLinkedEntitiesResult or RecognizePiiEntitiesResult, ExtractKeyPhrasesResult or AnalyzeSentimentResult or ExtractSummaryAction or RecognizeCustomEntitiesResult or SingleCategoryClassifyResult or MultiCategoryClassifyResult or AnalyzeHealthcareEntitiesResult or DocumentError]
+        :rtype: list[RecognizeEntitiesResult or RecognizeLinkedEntitiesResult or RecognizePiiEntitiesResult,
+         ExtractKeyPhrasesResult or AnalyzeSentimentResult or DetectLanguageResult or DocumentError]
         :raises ~azure.core.exceptions.HttpResponseError or TypeError or ValueError or NotImplementedError:
         """
         pass

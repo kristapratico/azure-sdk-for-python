@@ -32,6 +32,7 @@ from ._models import (
     SingleCategoryClassifyResult,
     MultiCategoryClassifyAction,
     MultiCategoryClassifyResult,
+    DetectLanguageInput
 )
 from ._polling import AnalyzeActionsLROPoller
 
@@ -63,6 +64,57 @@ class TextAnalysisClient:
         api_version: str = None,
         **kwargs: Any
     ) -> None:
+        pass
+
+    @distributed_trace
+    def analyze_text_1(
+        self,
+        analysis_kind: Union[
+            RecognizeEntities,
+            RecognizeLinkedEntities,
+            RecognizePiiEntities,
+            ExtractKeyPhrases,
+            AnalyzeSentiment,
+            DetectLanguage,
+        ],
+        **kwargs: Any
+    ) -> List[
+        Union[
+            RecognizeEntitiesResult,
+            RecognizeLinkedEntitiesResult,
+            RecognizePiiEntitiesResult,
+            ExtractKeyPhrasesResult,
+            AnalyzeSentimentResult,
+            DetectLanguageResult,
+            DocumentError,
+        ]
+    ]:
+        pass
+
+    @distributed_trace
+    def analyze_text_2(
+        self,
+        documents: Union[List[str], Union[List[TextDocumentInput], List[DetectLanguageInput]], List[Dict[str, str]]],
+        action: Union[
+            RecognizeEntitiesAction,
+            RecognizeLinkedEntitiesAction,
+            RecognizePiiEntitiesAction,
+            ExtractKeyPhrasesAction,
+            AnalyzeSentimentAction,
+            DetectLanguageAction,
+        ],
+        **kwargs: Any
+    ) -> List[
+        Union[
+            RecognizeEntitiesResult,
+            RecognizeLinkedEntitiesResult,
+            RecognizePiiEntitiesResult,
+            ExtractKeyPhrasesResult,
+            AnalyzeSentimentResult,
+            DetectLanguageResult,
+            DocumentError,
+        ]
+    ]:
         pass
 
     @distributed_trace
@@ -114,10 +166,41 @@ class TextAnalysisClient:
     @distributed_trace
     def begin_analyze_actions(
         self,
-        documents,  # type: Union[List[str], List[TextDocumentInput], List[Dict[str, str]]]
-        actions,  # type: List[Union[RecognizeEntitiesAction, RecognizeLinkedEntitiesAction, RecognizePiiEntitiesAction, ExtractKeyPhrasesAction, AnalyzeSentimentAction, ExtractSummaryAction, RecognizeCustomEntitiesAction, SingleCategoryClassifyAction, MultiCategoryClassifyAction, AnalyzeHealthcareEntitiesAction]] # pylint: disable=line-too-long
-        **kwargs  # type: Any
-    ):  # type: (...) -> AnalyzeActionsLROPoller[ItemPaged[List[Union[RecognizeEntitiesResult, RecognizeLinkedEntitiesResult, RecognizePiiEntitiesResult, ExtractKeyPhrasesResult, AnalyzeSentimentResult, ExtractSummaryResult, RecognizeCustomEntitiesResult, SingleCategoryClassifyResult, MultiCategoryClassifyResult, AnalyzeHealthcareEntitiesResult, DocumentError]]]]  # pylint: disable=line-too-long
+        documents: Union[List[str], List[TextDocumentInput], List[Dict[str, str]]],
+        actions: List[
+            Union[
+                RecognizeEntitiesAction,
+                RecognizeLinkedEntitiesAction,
+                RecognizePiiEntitiesAction,
+                ExtractKeyPhrasesAction,
+                AnalyzeSentimentAction,
+                ExtractSummaryAction,
+                RecognizeCustomEntitiesAction,
+                SingleCategoryClassifyAction,
+                MultiCategoryClassifyAction,
+                AnalyzeHealthcareEntitiesAction,
+            ]
+        ],
+        **kwargs: Any
+    ) -> AnalyzeActionsLROPoller[
+        ItemPaged[
+            List[
+                Union[
+                    RecognizeEntitiesResult,
+                    RecognizeLinkedEntitiesResult,
+                    RecognizePiiEntitiesResult,
+                    ExtractKeyPhrasesResult,
+                    AnalyzeSentimentResult,
+                    ExtractSummaryResult,
+                    RecognizeCustomEntitiesResult,
+                    SingleCategoryClassifyResult,
+                    MultiCategoryClassifyResult,
+                    AnalyzeHealthcareEntitiesResult,
+                    DocumentError,
+                ]
+            ]
+        ]
+    ]:
         """Begin analyze actions.
 
         :param documents: The set of documents to process as part of this batch.

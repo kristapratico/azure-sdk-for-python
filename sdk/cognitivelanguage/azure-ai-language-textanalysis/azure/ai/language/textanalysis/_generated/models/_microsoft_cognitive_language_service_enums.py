@@ -19,7 +19,6 @@ class AnalyzeTextLROResultsKind(with_metaclass(CaseInsensitiveEnumMeta, str, Enu
     ENTITY_RECOGNITION_LRO_RESULTS = "EntityRecognitionLROResults"
     PII_ENTITY_RECOGNITION_LRO_RESULTS = "PiiEntityRecognitionLROResults"
     KEY_PHRASE_EXTRACTION_LRO_RESULTS = "KeyPhraseExtractionLROResults"
-    LANGUAGE_DETECTION_LRO_RESULTS = "LanguageDetectionLROResults"
     ENTITY_LINKING_LRO_RESULTS = "EntityLinkingLROResults"
     HEALTHCARE_LRO_RESULTS = "HealthcareLROResults"
     EXTRACTIVE_SUMMARIZATION_LRO_RESULTS = "ExtractiveSummarizationLROResults"
@@ -397,7 +396,6 @@ class State(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
     FAILED = "failed"
     CANCELLED = "cancelled"
     CANCELLING = "cancelling"
-    REJECTED = "rejected"
 
 class StringIndexType(with_metaclass(CaseInsensitiveEnumMeta, str, Enum)):
     """Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes)

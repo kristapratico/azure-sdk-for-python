@@ -12,7 +12,6 @@ try:
     from ._models_py3 import AnalyzeTextJobState
     from ._models_py3 import AnalyzeTextJobStatistics
     from ._models_py3 import AnalyzeTextJobsInput
-    from ._models_py3 import AnalyzeTextJobsInputTasksItem
     from ._models_py3 import AnalyzeTextKeyPhraseExtractionInput
     from ._models_py3 import AnalyzeTextLROResult
     from ._models_py3 import AnalyzeTextLROTask
@@ -139,7 +138,6 @@ except (SyntaxError, ImportError):
     from ._models import AnalyzeTextJobState  # type: ignore
     from ._models import AnalyzeTextJobStatistics  # type: ignore
     from ._models import AnalyzeTextJobsInput  # type: ignore
-    from ._models import AnalyzeTextJobsInputTasksItem  # type: ignore
     from ._models import AnalyzeTextKeyPhraseExtractionInput  # type: ignore
     from ._models import AnalyzeTextLROResult  # type: ignore
     from ._models import AnalyzeTextLROTask  # type: ignore
@@ -291,7 +289,6 @@ __all__ = [
     'AnalyzeTextJobState',
     'AnalyzeTextJobStatistics',
     'AnalyzeTextJobsInput',
-    'AnalyzeTextJobsInputTasksItem',
     'AnalyzeTextKeyPhraseExtractionInput',
     'AnalyzeTextLROResult',
     'AnalyzeTextLROTask',

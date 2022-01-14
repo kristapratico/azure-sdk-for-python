@@ -81,13 +81,10 @@ class MicrosoftCognitiveLanguageServiceOperationsMixin(object):
          statistics.
         :type show_stats: bool
         :param body: Collection of documents to analyze and a single task to execute.
-        :type body: ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTask
-        :keyword api_version: Api Version. The default value is "2022-02-01-preview". Note that
-         overriding this default value may result in unsupported behavior.
-        :paramtype api_version: str
+        :type body: ~azure.ai.language.textanalysis.models.AnalyzeTextTask
         :keyword callable cls: A custom type or function that will be passed the direct response
         :return: AnalyzeTextTaskResult, or the result of cls(response)
-        :rtype: ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextTaskResult
+        :rtype: ~azure.ai.language.textanalysis.models.AnalyzeTextTaskResult
         :raises: ~azure.core.exceptions.HttpResponseError
         """
         cls = kwargs.pop('cls', None)  # type: ClsType["_models.AnalyzeTextTaskResult"]

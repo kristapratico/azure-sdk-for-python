@@ -110,7 +110,7 @@ class AnalyzeTextOperations(object):
     instantiates it for you and attaches it as an attribute.
 
     :ivar models: Alias to model classes used in this operation group.
-    :type models: ~azure.ai.language.textanalysis.v2022_02_01_preview.models
+    :type models: ~azure.ai.language.textanalysis.models
     :param client: Client for service requests.
     :param config: Configuration of service client.
     :param serializer: An object model serializer.
@@ -187,10 +187,7 @@ class AnalyzeTextOperations(object):
         executed as a long-running operation.
 
         :param body: Collection of documents to analyze and one or more tasks to execute.
-        :type body: ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextJobsInput
-        :keyword api_version: Api Version. The default value is "2022-02-01-preview". Note that
-         overriding this default value may result in unsupported behavior.
-        :paramtype api_version: str
+        :type body: ~azure.ai.language.textanalysis.models.AnalyzeTextJobsInput
         :keyword callable cls: A custom type or function that will be passed the direct response
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
         :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
@@ -273,12 +270,9 @@ class AnalyzeTextOperations(object):
         :param skip: (Optional) Set the number of elements to offset in the response. When both top and
          skip are specified, skip is applied first.
         :type skip: int
-        :keyword api_version: Api Version. The default value is "2022-02-01-preview". Note that
-         overriding this default value may result in unsupported behavior.
-        :paramtype api_version: str
         :keyword callable cls: A custom type or function that will be passed the direct response
         :return: AnalyzeTextJobState, or the result of cls(response)
-        :rtype: ~azure.ai.language.textanalysis.v2022_02_01_preview.models.AnalyzeTextJobState
+        :rtype: ~azure.ai.language.textanalysis.models.AnalyzeTextJobState
         :raises: ~azure.core.exceptions.HttpResponseError
         """
         cls = kwargs.pop('cls', None)  # type: ClsType["_models.AnalyzeTextJobState"]

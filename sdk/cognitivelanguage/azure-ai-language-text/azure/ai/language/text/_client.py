@@ -21,7 +21,12 @@ from ._models import (
     RecognizeLinkedEntitiesAction,
     ExtractKeyPhrasesAction,
     AnalyzeSentimentAction,
-    DetectLanguageAction,
+    RecognizeEntities,
+    RecognizePiiEntities,
+    RecognizeLinkedEntities,
+    ExtractKeyPhrases,
+    AnalyzeSentiment,
+    DetectLanguage,
     AnalyzeHealthcareEntitiesAction,
     AnalyzeHealthcareEntitiesResult,
     ExtractSummaryAction,
@@ -67,9 +72,9 @@ class TextAnalysisClient:
         pass
 
     @distributed_trace
-    def analyze_text_1(
+    def analyze_text(
         self,
-        analysis_kind: Union[
+        kind: Union[
             RecognizeEntities,
             RecognizeLinkedEntities,
             RecognizePiiEntities,
@@ -78,60 +83,7 @@ class TextAnalysisClient:
             DetectLanguage,
         ],
         **kwargs: Any
-    ) -> List[
-        Union[
-            RecognizeEntitiesResult,
-            RecognizeLinkedEntitiesResult,
-            RecognizePiiEntitiesResult,
-            ExtractKeyPhrasesResult,
-            AnalyzeSentimentResult,
-            DetectLanguageResult,
-            DocumentError,
-        ]
-    ]:
-        pass
-
-    @distributed_trace
-    def analyze_text_2(
-        self,
-        documents: Union[List[str], Union[List[TextDocumentInput], List[DetectLanguageInput]], List[Dict[str, str]]],
-        action: Union[
-            RecognizeEntitiesAction,
-            RecognizeLinkedEntitiesAction,
-            RecognizePiiEntitiesAction,
-            ExtractKeyPhrasesAction,
-            AnalyzeSentimentAction,
-            DetectLanguageAction,
-        ],
-        **kwargs: Any
-    ) -> List[
-        Union[
-            RecognizeEntitiesResult,
-            RecognizeLinkedEntitiesResult,
-            RecognizePiiEntitiesResult,
-            ExtractKeyPhrasesResult,
-            AnalyzeSentimentResult,
-            DetectLanguageResult,
-            DocumentError,
-        ]
-    ]:
-        pass
-
-    @distributed_trace
-    def analyze_text(
-        self,
-        documents: Union[List[str], List[TextDocumentInput], List[Dict[str, str]]],
-        action: Union[
-            RecognizeEntitiesAction,
-            RecognizeLinkedEntitiesAction,
-            RecognizePiiEntitiesAction,
-            ExtractKeyPhrasesAction,
-            AnalyzeSentimentAction,
-            DetectLanguageAction,
-        ],
-        **kwargs: Any
-    ) -> List[
-        Union[
+    ) -> List[Union[
             RecognizeEntitiesResult,
             RecognizeLinkedEntitiesResult,
             RecognizePiiEntitiesResult,
@@ -143,25 +95,43 @@ class TextAnalysisClient:
     ]:
         """analyze text.
 
-        :param documents: The set of documents to process as part of this batch.
-            If you wish to specify the ID and language on a per-item basis you must
-            use as input a list[:class:`~azure.ai.textanalytics.TextDocumentInput`] or a list of
-            dict representations of :class:`~azure.ai.textanalytics.TextDocumentInput`, like
-            `{"id": "1", "language": "en", "text": "hello world"}`.
-        :type documents: list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or list[dict[str, str]]
-        :param action: A heterogeneous list of actions to perform on the input documents.
-            Each action object encapsulates the parameters used for the particular action type.
-            The action results will be in the same order of the input actions.
-        :type action: RecognizeEntitiesAction or RecognizePiiEntitiesAction or ExtractKeyPhrasesAction or
-         RecognizeLinkedEntitiesAction or AnalyzeSentimentAction or DetectLanguageAction
+        :param kind: Analysis kind.
+        :type kind: RecognizeEntities or RecognizePiiEntities or ExtractKeyPhrases or
+         RecognizeLinkedEntities or AnalyzeSentiment or DetectLanguage
         :keyword str api_version:
         :keyword bool show_stats: If set to true, response will contain document level statistics.
         :return: A list of the type of the action specified.
         :rtype: list[RecognizeEntitiesResult or RecognizeLinkedEntitiesResult or RecognizePiiEntitiesResult,
          ExtractKeyPhrasesResult or AnalyzeSentimentResult or DetectLanguageResult or DocumentError]
-        :raises ~azure.core.exceptions.HttpResponseError or TypeError or ValueError or NotImplementedError:
+        :raises: ~azure.core.exceptions.HttpResponseError
         """
         pass
+
+    # @distributed_trace
+    # def analyze_text_2(
+    #     self,
+    #     documents: Union[List[str], Union[List[TextDocumentInput], List[DetectLanguageInput]], List[Dict[str, str]]],
+    #     kind: Union[
+    #         RecognizeEntitiesAction,
+    #         RecognizeLinkedEntitiesAction,
+    #         RecognizePiiEntitiesAction,
+    #         ExtractKeyPhrasesAction,
+    #         AnalyzeSentimentAction,
+    #         DetectLanguageAction,
+    #     ],
+    #     **kwargs: Any
+    # ) -> List[
+    #     Union[
+    #         RecognizeEntitiesResult,
+    #         RecognizeLinkedEntitiesResult,
+    #         RecognizePiiEntitiesResult,
+    #         ExtractKeyPhrasesResult,
+    #         AnalyzeSentimentResult,
+    #         DetectLanguageResult,
+    #         DocumentError,
+    #     ]
+    # ]:
+    #     pass
 
     @distributed_trace
     def begin_analyze_actions(
@@ -212,7 +182,10 @@ class TextAnalysisClient:
         :param actions: A heterogeneous list of actions to perform on the input documents.
             Each action object encapsulates the parameters used for the particular action type.
             The action results will be in the same order of the input actions.
-        :type actions: list[RecognizeEntitiesAction or RecognizePiiEntitiesAction or ExtractKeyPhrasesAction or RecognizeLinkedEntitiesAction or AnalyzeSentimentAction or ExtractSummaryAction or RecognizeCustomEntitiesAction or SingleCategoryClassifyAction or MultiCategoryClassifyAction or AnalyzeHealthcareEntitiesAction]
+        :type actions: list[RecognizeEntitiesAction or RecognizePiiEntitiesAction or ExtractKeyPhrasesAction or
+         RecognizeLinkedEntitiesAction or AnalyzeSentimentAction or ExtractSummaryAction or
+         or RecognizeCustomEntitiesAction or SingleCategoryClassifyAction or MultiCategoryClassifyAction or
+         AnalyzeHealthcareEntitiesAction]
         :keyword str api_version:
         :keyword str display_name: An optional display name to set for the requested analysis.
         :keyword bool show_stats: If set to true, response will contain document level statistics.
@@ -227,7 +200,10 @@ class TextAnalysisClient:
             then the :class:`~azure.ai.textanalytics.AnalyzeSentimentResult` of "Hello".
             Then, you will get the :class:`~azure.ai.textanalytics.RecognizeEntitiesResult` and
             :class:`~azure.ai.textanalytics.AnalyzeSentimentResult` of "world".
-        :rtype: AnalyzeActionsLROPoller[ItemPaged[list[RecognizeEntitiesResult or RecognizeLinkedEntitiesResult or RecognizePiiEntitiesResult or ExtractKeyPhrasesResult or AnalyzeSentimentResult or ExtractSummaryAction or RecognizeCustomEntitiesResult or SingleCategoryClassifyResult or MultiCategoryClassifyResult or AnalyzeHealthcareEntitiesResult or DocumentError]]]
+        :rtype: AnalyzeActionsLROPoller[ItemPaged[list[RecognizeEntitiesResult or RecognizeLinkedEntitiesResult or
+         RecognizePiiEntitiesResult or ExtractKeyPhrasesResult or AnalyzeSentimentResult or ExtractSummaryAction or
+         RecognizeCustomEntitiesResult or SingleCategoryClassifyResult or MultiCategoryClassifyResult or
+         AnalyzeHealthcareEntitiesResult or DocumentError]]]
         :raises ~azure.core.exceptions.HttpResponseError or TypeError or ValueError or NotImplementedError:
         """
 

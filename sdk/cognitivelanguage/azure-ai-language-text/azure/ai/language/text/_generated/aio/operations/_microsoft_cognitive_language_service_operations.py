@@ -6,72 +6,30 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 import functools
-from typing import TYPE_CHECKING
+from typing import Any, Callable, Dict, Generic, Optional, TypeVar
 import warnings
 
 from azure.core.exceptions import ClientAuthenticationError, HttpResponseError, ResourceExistsError, ResourceNotFoundError, map_error
 from azure.core.pipeline import PipelineResponse
-from azure.core.pipeline.transport import HttpResponse
+from azure.core.pipeline.transport import AsyncHttpResponse
 from azure.core.rest import HttpRequest
-from azure.core.tracing.decorator import distributed_trace
-from msrest import Serializer
+from azure.core.tracing.decorator_async import distributed_trace_async
 
-from .. import models as _models
-from .._vendor import _convert_request
+from ... import models as _models
+from ..._vendor import _convert_request
+from ...operations._microsoft_cognitive_language_service_operations import build_analyze_text_request
+T = TypeVar('T')
+ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
 
-if TYPE_CHECKING:
-    # pylint: disable=unused-import,ungrouped-imports
-    from typing import Any, Callable, Dict, Generic, Optional, TypeVar
-    T = TypeVar('T')
-    ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
+class MicrosoftCognitiveLanguageServiceOperationsMixin:
 
-_SERIALIZER = Serializer()
-_SERIALIZER.client_side_validation = False
-# fmt: off
-
-def build_analyze_text_request(
-    **kwargs  # type: Any
-):
-    # type: (...) -> HttpRequest
-    api_version = kwargs.pop('api_version', "2022-02-01-preview")  # type: str
-    content_type = kwargs.pop('content_type', None)  # type: Optional[str]
-    show_stats = kwargs.pop('show_stats', None)  # type: Optional[bool]
-
-    accept = "application/json, text/json"
-    # Construct URL
-    url = kwargs.pop("template_url", '/:analyze-text')
-
-    # Construct parameters
-    query_parameters = kwargs.pop("params", {})  # type: Dict[str, Any]
-    query_parameters['api-version'] = _SERIALIZER.query("api_version", api_version, 'str')
-    if show_stats is not None:
-        query_parameters['showStats'] = _SERIALIZER.query("show_stats", show_stats, 'bool')
-
-    # Construct headers
-    header_parameters = kwargs.pop("headers", {})  # type: Dict[str, Any]
-    if content_type is not None:
-        header_parameters['Content-Type'] = _SERIALIZER.header("content_type", content_type, 'str')
-    header_parameters['Accept'] = _SERIALIZER.header("accept", accept, 'str')
-
-    return HttpRequest(
-        method="POST",
-        url=url,
-        params=query_parameters,
-        headers=header_parameters,
-        **kwargs
-    )
-
-# fmt: on
-class MicrosoftCognitiveLanguageServiceOperationsMixin(object):
-
-    @distributed_trace
-    def analyze_text(
+    @distributed_trace_async
+    async def analyze_text(
         self,
-        show_stats=None,  # type: Optional[bool]
-        body=None,  # type: Optional["_models.AnalyzeTextTask"]
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> "_models.AnalyzeTextTaskResult"
+        show_stats: Optional[bool] = None,
+        body: Optional["_models.AnalyzeTextTask"] = None,
+        **kwargs: Any
+    ) -> "_models.AnalyzeTextTaskResult":
         """Request text analysis over a collection of documents.
 
         Submit a collection of text documents for analysis.  Specify a single unique task to be
@@ -81,10 +39,10 @@ class MicrosoftCognitiveLanguageServiceOperationsMixin(object):
          statistics.
         :type show_stats: bool
         :param body: Collection of documents to analyze and a single task to execute.
-        :type body: ~azure.ai.language.textanalysis.models.AnalyzeTextTask
+        :type body: ~azure.ai.language.text.models.AnalyzeTextTask
         :keyword callable cls: A custom type or function that will be passed the direct response
         :return: AnalyzeTextTaskResult, or the result of cls(response)
-        :rtype: ~azure.ai.language.textanalysis.models.AnalyzeTextTaskResult
+        :rtype: ~azure.ai.language.text.models.AnalyzeTextTaskResult
         :raises: ~azure.core.exceptions.HttpResponseError
         """
         cls = kwargs.pop('cls', None)  # type: ClsType["_models.AnalyzeTextTaskResult"]
@@ -114,7 +72,7 @@ class MicrosoftCognitiveLanguageServiceOperationsMixin(object):
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)
 
-        pipeline_response = self._client._pipeline.run(request, stream=False, **kwargs)
+        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
         response = pipeline_response.http_response
 
         if response.status_code not in [200]:

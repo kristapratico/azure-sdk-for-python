@@ -57,7 +57,12 @@ from ._models import (
     MultiCategoryClassifyResult,
     ClassificationCategory,
     AnalyzeHealthcareEntitiesAction,
-    DetectLanguageAction,
+    DetectLanguage,
+    RecognizeEntities,
+    RecognizePiiEntities,
+    RecognizeLinkedEntities,
+    ExtractKeyPhrases,
+    AnalyzeSentiment,
 )
 from ._polling import AnalyzeActionsLROPoller
 
@@ -116,7 +121,12 @@ __all__ = [
     "MultiCategoryClassifyResult",
     "ClassificationCategory",
     "AnalyzeHealthcareEntitiesAction",
-    "DetectLanguageAction",
+    "DetectLanguage",
+    "RecognizeEntities",
+    "RecognizePiiEntities",
+    "RecognizeLinkedEntities",
+    "ExtractKeyPhrases",
+    "AnalyzeSentiment",
 ]
 
 __version__ = VERSION

@@ -1152,7 +1152,6 @@ class RecognizeEntitiesAction:
     """
 
     def __init__(self, **kwargs):
-        self.kind = "EntityRecognition"
         self.model_version = kwargs.get("model_version", None)
         self.string_index_type = kwargs.get("string_index_type", "UnicodeCodePoint")
         self.disable_service_logs = kwargs.get("disable_service_logs", None)
@@ -1210,7 +1209,6 @@ class AnalyzeSentimentAction:
     """
 
     def __init__(self, **kwargs):
-        self.kind = "SentimentAnalysis"
         self.model_version = kwargs.get("model_version", None)
         self.show_opinion_mining = kwargs.get("show_opinion_mining", None)
         self.string_index_type = kwargs.get("string_index_type", "UnicodeCodePoint")
@@ -1271,7 +1269,6 @@ class RecognizePiiEntitiesAction:
     """
 
     def __init__(self, **kwargs):
-        self.kind = "PiiEntityRecognition"
         self.model_version = kwargs.get("model_version", None)
         self.domain_filter = kwargs.get("domain_filter", None)
         self.categories_filter = kwargs.get("categories_filter", None)
@@ -1313,7 +1310,6 @@ class ExtractKeyPhrasesAction:
     """
 
     def __init__(self, **kwargs):
-        self.kind = "KeyPhraseExtraction"
         self.model_version = kwargs.get("model_version", None)
         self.disable_service_logs = kwargs.get("disable_service_logs", None)
 
@@ -1360,7 +1356,6 @@ class RecognizeLinkedEntitiesAction:
     """
 
     def __init__(self, **kwargs):
-        self.kind = "EntityLinking"
         self.model_version = kwargs.get("model_version", None)
         self.string_index_type = kwargs.get("string_index_type", "UnicodeCodePoint")
         self.disable_service_logs = kwargs.get("disable_service_logs", None)
@@ -1409,7 +1404,6 @@ class ExtractSummaryAction:
     """
 
     def __init__(self, **kwargs):
-        self.kind = "ExtractiveSummarization"
         self.model_version = kwargs.get("model_version", None)
         self.string_index_type = kwargs.get("string_index_type", "UnicodeCodePoint")
         self.disable_service_logs = kwargs.get("disable_service_logs", None)
@@ -1512,7 +1506,6 @@ class RecognizeCustomEntitiesAction:
         deployment_name,
         **kwargs
     ):
-        self.kind = "CustomEntityRecognition"
         self.project_name = project_name
         self.deployment_name = deployment_name
         self.disable_service_logs = kwargs.get('disable_service_logs', None)
@@ -1588,7 +1581,6 @@ class MultiCategoryClassifyAction:
         deployment_name,
         **kwargs
     ):
-        self.kind = "CustomMultiClassification"
         self.project_name = project_name
         self.deployment_name = deployment_name
         self.disable_service_logs = kwargs.get('disable_service_logs', None)
@@ -1663,7 +1655,6 @@ class SingleCategoryClassifyAction:
         deployment_name,
         **kwargs
     ):
-        self.kind = "CustomSingleClassification"
         self.project_name = project_name
         self.deployment_name = deployment_name
         self.disable_service_logs = kwargs.get('disable_service_logs', None)
@@ -1752,15 +1743,16 @@ class AnalyzeHealthcareEntitiesAction:
     """
 
     def __init__(self, **kwargs):
-        self.kind = "Healthcare"
         self.model_version = kwargs.get("model_version", None)
         self.string_index_type = kwargs.get("string_index_type", "UnicodeCodePoint")
         self.disable_service_logs = kwargs.get("disable_service_logs", None)
 
 
-class DetectLanguageAction:
-    """DetectLanguageAction.
+class DetectLanguage:
+    """DetectLanguage.
 
+    :param documents:
+    :type documents: list[str] or list[dict[str, str]] or list[DetectLanguageInput]
     :keyword str model_version: The model version to use for the analysis.
     :keyword bool disable_service_logs: If set to true, you opt-out of having your text input
         logged on the service side for troubleshooting. By default, Text Analytics logs your
@@ -1770,7 +1762,6 @@ class DetectLanguageAction:
         Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
         additional details, and Microsoft Responsible AI principles at
         https://www.microsoft.com/ai/responsible-ai.
-    :keyword str region_hint:
     :ivar str model_version: The model version to use for the analysis.
     :ivar bool disable_service_logs: If set to true, you opt-out of having your text input
         logged on the service side for troubleshooting. By default, Text Analytics logs your
@@ -1780,17 +1771,225 @@ class DetectLanguageAction:
         Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
         additional details, and Microsoft Responsible AI principles at
         https://www.microsoft.com/ai/responsible-ai.
-    :ivar str region_hint:
-    :ivar str kind: Enumeration of supported Text Analysis tasks. Constant filled by server.
-        Possible values include: "SentimentAnalysis", "EntityRecognition", "PiiEntityRecognition",
-        "KeyPhraseExtraction", "LanguageDetection", "EntityLinking", "Healthcare",
-        "ExtractiveSummarization", "CustomEntityRecognition", "CustomSingleClassification",
-        "CustomMultiClassification".
     """
 
-    def __init__(self, **kwargs):
-        self.kind = "LanguageDetection"
+    def __init__(self, documents, **kwargs):
+        self.documents = documents
         self.model_version = kwargs.get("model_version", None)
-        self.region_hint = kwargs.get("region_hint", None)
         self.disable_service_logs = kwargs.get("disable_service_logs", None)
 
+
+class RecognizeLinkedEntities:
+    """RecognizeLinkedEntities
+
+    :param documents:
+    :type documents: list[str] or list[dict[str, str]] or list[TextDocumentInput]
+    :keyword str model_version: The model version to use for the analysis.
+    :keyword str string_index_type: Specifies the method used to interpret string offsets.
+        `UnicodeCodePoint`, the Python encoding, is the default. To override the Python default,
+        you can also pass in `Utf16CodePoint` or TextElement_v8`. For additional information
+        see https://aka.ms/text-analytics-offsets
+    :keyword bool disable_service_logs: If set to true, you opt-out of having your text input
+        logged on the service side for troubleshooting. By default, Text Analytics logs your
+        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
+        the Text Analytics natural language processing functions. Setting this parameter to true,
+        disables input logging and may limit our ability to remediate issues that occur. Please see
+        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
+        additional details, and Microsoft Responsible AI principles at
+        https://www.microsoft.com/ai/responsible-ai.
+    :ivar str model_version: The model version to use for the analysis.
+    :ivar str string_index_type: Specifies the method used to interpret string offsets.
+        `UnicodeCodePoint`, the Python encoding, is the default. To override the Python default,
+        you can also pass in `Utf16CodePoint` or TextElement_v8`. For additional information
+        see https://aka.ms/text-analytics-offsets
+    :ivar bool disable_service_logs: If set to true, you opt-out of having your text input
+        logged on the service side for troubleshooting. By default, Text Analytics logs your
+        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
+        the Text Analytics natural language processing functions. Setting this parameter to true,
+        disables input logging and may limit our ability to remediate issues that occur. Please see
+        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
+        additional details, and Microsoft Responsible AI principles at
+        https://www.microsoft.com/ai/responsible-ai.
+    """
+
+    def __init__(self, documents, **kwargs):
+        self.documents = documents
+        self.model_version = kwargs.get("model_version", None)
+        self.string_index_type = kwargs.get("string_index_type", "UnicodeCodePoint")
+        self.disable_service_logs = kwargs.get("disable_service_logs", None)
+
+
+class RecognizeEntities:
+    """RecognizeEntities
+
+    :param documents:
+    :type documents: list[str] or list[dict[str, str]] or list[TextDocumentInput]
+    :keyword str model_version: The model version to use for the analysis.
+    :keyword str string_index_type: Specifies the method used to interpret string offsets.
+        `UnicodeCodePoint`, the Python encoding, is the default. To override the Python default,
+        you can also pass in `Utf16CodePoint` or TextElement_v8`. For additional information
+        see https://aka.ms/text-analytics-offsets
+    :keyword bool disable_service_logs: If set to true, you opt-out of having your text input
+        logged on the service side for troubleshooting. By default, Text Analytics logs your
+        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
+        the Text Analytics natural language processing functions. Setting this parameter to true,
+        disables input logging and may limit our ability to remediate issues that occur. Please see
+        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
+        additional details, and Microsoft Responsible AI principles at
+        https://www.microsoft.com/ai/responsible-ai.
+    :ivar str model_version: The model version to use for the analysis.
+    :ivar str string_index_type: Specifies the method used to interpret string offsets.
+        `UnicodeCodePoint`, the Python encoding, is the default. To override the Python default,
+        you can also pass in `Utf16CodePoint` or TextElement_v8`. For additional information
+        see https://aka.ms/text-analytics-offsets
+    :ivar bool disable_service_logs: If set to true, you opt-out of having your text input
+        logged on the service side for troubleshooting. By default, Text Analytics logs your
+        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
+        the Text Analytics natural language processing functions. Setting this parameter to true,
+        disables input logging and may limit our ability to remediate issues that occur. Please see
+        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
+        additional details, and Microsoft Responsible AI principles at
+        https://www.microsoft.com/ai/responsible-ai.
+    """
+
+    def __init__(self, documents, **kwargs):
+        self.documents = documents
+        self.model_version = kwargs.get("model_version", None)
+        self.string_index_type = kwargs.get("string_index_type", "UnicodeCodePoint")
+        self.disable_service_logs = kwargs.get("disable_service_logs", None)
+
+
+class AnalyzeSentiment:
+    """AnalyzeSentiment
+
+    :param documents:
+    :type documents: list[str] or list[dict[str, str]] or list[TextDocumentInput]
+    :keyword str model_version: The model version to use for the analysis.
+    :keyword bool show_opinion_mining: Whether to mine the opinions of a sentence and conduct more
+        granular analysis around the aspects of a product or service (also known as
+        aspect-based sentiment analysis). If set to true, the returned
+        :class:`~azure.ai.textanalytics.SentenceSentiment` objects
+        will have property `mined_opinions` containing the result of this analysis.
+    :keyword str string_index_type: Specifies the method used to interpret string offsets.
+        `UnicodeCodePoint`, the Python encoding, is the default. To override the Python default,
+        you can also pass in `Utf16CodePoint` or TextElement_v8`. For additional information
+        see https://aka.ms/text-analytics-offsets
+    :keyword bool disable_service_logs: If set to true, you opt-out of having your text input
+        logged on the service side for troubleshooting. By default, Text Analytics logs your
+        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
+        the Text Analytics natural language processing functions. Setting this parameter to true,
+        disables input logging and may limit our ability to remediate issues that occur. Please see
+        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
+        additional details, and Microsoft Responsible AI principles at
+        https://www.microsoft.com/ai/responsible-ai.
+    :ivar str model_version: The model version to use for the analysis.
+    :ivar bool show_opinion_mining: Whether to mine the opinions of a sentence and conduct more
+        granular analysis around the aspects of a product or service (also known as
+        aspect-based sentiment analysis). If set to true, the returned
+        :class:`~azure.ai.textanalytics.SentenceSentiment` objects
+        will have property `mined_opinions` containing the result of this analysis.
+    :ivar str string_index_type: Specifies the method used to interpret string offsets.
+        `UnicodeCodePoint`, the Python encoding, is the default. To override the Python default,
+        you can also pass in `Utf16CodePoint` or TextElement_v8`. For additional information
+        see https://aka.ms/text-analytics-offsets
+    :ivar bool disable_service_logs: If set to true, you opt-out of having your text input
+        logged on the service side for troubleshooting. By default, Text Analytics logs your
+        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
+        the Text Analytics natural language processing functions. Setting this parameter to true,
+        disables input logging and may limit our ability to remediate issues that occur. Please see
+        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
+        additional details, and Microsoft Responsible AI principles at
+        https://www.microsoft.com/ai/responsible-ai.
+    """
+
+    def __init__(self, documents, **kwargs):
+        self.documents = documents
+        self.model_version = kwargs.get("model_version", None)
+        self.show_opinion_mining = kwargs.get("show_opinion_mining", None)
+        self.string_index_type = kwargs.get("string_index_type", "UnicodeCodePoint")
+        self.disable_service_logs = kwargs.get("disable_service_logs", None)
+
+
+class RecognizePiiEntities:
+    """RecognizePiiEntities
+
+    :param documents:
+    :type documents: list[str] or list[dict[str, str]] or list[TextDocumentInput]
+    :keyword str model_version: The model version to use for the analysis.
+    :keyword str domain_filter: An optional string to set the PII domain to include only a
+        subset of the PII entity categories. Possible values include 'phi' or None.
+    :keyword categories_filter: Instead of filtering over all PII entity categories, you can pass in a list of
+        the specific PII entity categories you want to filter out. For example, if you only want to filter out
+        U.S. social security numbers in a document, you can pass in
+        `[PiiEntityCategory.US_SOCIAL_SECURITY_NUMBER]` for this kwarg.
+    :paramtype categories_filter: list[~azure.ai.textanalytics.PiiEntityCategory]
+    :keyword str string_index_type: Specifies the method used to interpret string offsets.
+        `UnicodeCodePoint`, the Python encoding, is the default. To override the Python default,
+        you can also pass in `Utf16CodePoint` or TextElement_v8`. For additional information
+        see https://aka.ms/text-analytics-offsets
+    :keyword bool disable_service_logs: Defaults to true, meaning that Text Analytics will not log your
+        input text on the service side for troubleshooting. If set to False, Text Analytics logs your
+        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
+        the Text Analytics natural language processing functions. Please see
+        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
+        additional details, and Microsoft Responsible AI principles at
+        https://www.microsoft.com/ai/responsible-ai.
+    :ivar str model_version: The model version to use for the analysis.
+    :ivar str domain_filter: An optional string to set the PII domain to include only a
+        subset of the PII entity categories. Possible values include 'phi' or None.
+    :ivar categories_filter: Instead of filtering over all PII entity categories, you can pass in a list of
+        the specific PII entity categories you want to filter out. For example, if you only want to filter out
+        U.S. social security numbers in a document, you can pass in
+        `[PiiEntityCategory.US_SOCIAL_SECURITY_NUMBER]` for this kwarg.
+    :vartype categories_filter: list[~azure.ai.textanalytics.PiiEntityCategory]
+    :ivar str string_index_type: Specifies the method used to interpret string offsets.
+        `UnicodeCodePoint`, the Python encoding, is the default. To override the Python default,
+        you can also pass in `Utf16CodePoint` or TextElement_v8`. For additional information
+        see https://aka.ms/text-analytics-offsets
+    :ivar bool disable_service_logs: Defaults to true, meaning that Text Analytics will not log your
+        input text on the service side for troubleshooting. If set to False, Text Analytics logs your
+        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
+        the Text Analytics natural language processing functions. Please see
+        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
+        additional details, and Microsoft Responsible AI principles at
+        https://www.microsoft.com/ai/responsible-ai.
+    """
+
+    def __init__(self, documents, **kwargs):
+        self.documents = documents
+        self.model_version = kwargs.get("model_version", None)
+        self.domain_filter = kwargs.get("domain_filter", None)
+        self.categories_filter = kwargs.get("categories_filter", None)
+        self.string_index_type = kwargs.get("string_index_type", "UnicodeCodePoint")
+        self.disable_service_logs = kwargs.get("disable_service_logs", None)
+
+
+class ExtractKeyPhrases:
+    """ExtractKeyPhrases
+
+    :param documents:
+    :type documents: list[str] or list[dict[str, str]] or list[TextDocumentInput]
+    :keyword str model_version: The model version to use for the analysis.
+    :keyword bool disable_service_logs: If set to true, you opt-out of having your text input
+        logged on the service side for troubleshooting. By default, Text Analytics logs your
+        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
+        the Text Analytics natural language processing functions. Setting this parameter to true,
+        disables input logging and may limit our ability to remediate issues that occur. Please see
+        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
+        additional details, and Microsoft Responsible AI principles at
+        https://www.microsoft.com/ai/responsible-ai.
+    :ivar str model_version: The model version to use for the analysis.
+    :ivar bool disable_service_logs: If set to true, you opt-out of having your text input
+        logged on the service side for troubleshooting. By default, Text Analytics logs your
+        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
+        the Text Analytics natural language processing functions. Setting this parameter to true,
+        disables input logging and may limit our ability to remediate issues that occur. Please see
+        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
+        additional details, and Microsoft Responsible AI principles at
+        https://www.microsoft.com/ai/responsible-ai.
+    """
+
+    def __init__(self, documents, **kwargs):
+        self.documents = documents
+        self.model_version = kwargs.get("model_version", None)
+        self.disable_service_logs = kwargs.get("disable_service_logs", None)

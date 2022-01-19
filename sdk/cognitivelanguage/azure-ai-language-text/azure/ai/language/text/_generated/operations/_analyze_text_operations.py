@@ -6,31 +6,111 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 import functools
-from typing import Any, Callable, Dict, Generic, Optional, TypeVar, Union
+from typing import TYPE_CHECKING
 import warnings
 
 from azure.core.exceptions import ClientAuthenticationError, HttpResponseError, ResourceExistsError, ResourceNotFoundError, map_error
 from azure.core.pipeline import PipelineResponse
-from azure.core.pipeline.transport import AsyncHttpResponse
-from azure.core.polling import AsyncLROPoller, AsyncNoPolling, AsyncPollingMethod
-from azure.core.polling.async_base_polling import AsyncLROBasePolling
+from azure.core.pipeline.transport import HttpResponse
+from azure.core.polling import LROPoller, NoPolling, PollingMethod
+from azure.core.polling.base_polling import LROBasePolling
 from azure.core.rest import HttpRequest
-from azure.core.tracing.decorator_async import distributed_trace_async
+from azure.core.tracing.decorator import distributed_trace
+from msrest import Serializer
 
-from ... import models as _models
-from ..._vendor import _convert_request
-from ...operations._analyze_text_operations import build_job_status_request, build_submit_job_request_initial
-T = TypeVar('T')
-ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
+from .. import models as _models
+from .._vendor import _convert_request, _format_url_section
 
-class AnalyzeTextOperations:
-    """AnalyzeTextOperations async operations.
+if TYPE_CHECKING:
+    # pylint: disable=unused-import,ungrouped-imports
+    from typing import Any, Callable, Dict, Generic, Optional, TypeVar, Union
+    T = TypeVar('T')
+    ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
+
+_SERIALIZER = Serializer()
+_SERIALIZER.client_side_validation = False
+# fmt: off
+
+def build_submit_job_request_initial(
+    **kwargs  # type: Any
+):
+    # type: (...) -> HttpRequest
+    api_version = kwargs.pop('api_version', "2022-02-01-preview")  # type: str
+    content_type = kwargs.pop('content_type', None)  # type: Optional[str]
+
+    accept = "application/json"
+    # Construct URL
+    url = kwargs.pop("template_url", '/analyze-text/jobs')
+
+    # Construct parameters
+    query_parameters = kwargs.pop("params", {})  # type: Dict[str, Any]
+    query_parameters['api-version'] = _SERIALIZER.query("api_version", api_version, 'str')
+
+    # Construct headers
+    header_parameters = kwargs.pop("headers", {})  # type: Dict[str, Any]
+    if content_type is not None:
+        header_parameters['Content-Type'] = _SERIALIZER.header("content_type", content_type, 'str')
+    header_parameters['Accept'] = _SERIALIZER.header("accept", accept, 'str')
+
+    return HttpRequest(
+        method="POST",
+        url=url,
+        params=query_parameters,
+        headers=header_parameters,
+        **kwargs
+    )
+
+
+def build_job_status_request(
+    job_id,  # type: str
+    **kwargs  # type: Any
+):
+    # type: (...) -> HttpRequest
+    api_version = kwargs.pop('api_version', "2022-02-01-preview")  # type: str
+    show_stats = kwargs.pop('show_stats', None)  # type: Optional[bool]
+    top = kwargs.pop('top', 20)  # type: Optional[int]
+    skip = kwargs.pop('skip', 0)  # type: Optional[int]
+
+    accept = "application/json"
+    # Construct URL
+    url = kwargs.pop("template_url", '/analyze-text/jobs/{jobId}')
+    path_format_arguments = {
+        "jobId": _SERIALIZER.url("job_id", job_id, 'str'),
+    }
+
+    url = _format_url_section(url, **path_format_arguments)
+
+    # Construct parameters
+    query_parameters = kwargs.pop("params", {})  # type: Dict[str, Any]
+    query_parameters['api-version'] = _SERIALIZER.query("api_version", api_version, 'str')
+    if show_stats is not None:
+        query_parameters['showStats'] = _SERIALIZER.query("show_stats", show_stats, 'bool')
+    if top is not None:
+        query_parameters['top'] = _SERIALIZER.query("top", top, 'int', maximum=50, minimum=1)
+    if skip is not None:
+        query_parameters['skip'] = _SERIALIZER.query("skip", skip, 'int', minimum=0)
+
+    # Construct headers
+    header_parameters = kwargs.pop("headers", {})  # type: Dict[str, Any]
+    header_parameters['Accept'] = _SERIALIZER.header("accept", accept, 'str')
+
+    return HttpRequest(
+        method="GET",
+        url=url,
+        params=query_parameters,
+        headers=header_parameters,
+        **kwargs
+    )
+
+# fmt: on
+class AnalyzeTextOperations(object):
+    """AnalyzeTextOperations operations.
 
     You should not instantiate this class directly. Instead, you should create a Client instance that
     instantiates it for you and attaches it as an attribute.
 
     :ivar models: Alias to model classes used in this operation group.
-    :type models: ~azure.ai.language.textanalysis.models
+    :type models: ~azure.ai.language.text.models
     :param client: Client for service requests.
     :param config: Configuration of service client.
     :param serializer: An object model serializer.
@@ -39,17 +119,18 @@ class AnalyzeTextOperations:
 
     models = _models
 
-    def __init__(self, client, config, serializer, deserializer) -> None:
+    def __init__(self, client, config, serializer, deserializer):
         self._client = client
         self._serialize = serializer
         self._deserialize = deserializer
         self._config = config
 
-    async def _submit_job_initial(
+    def _submit_job_initial(
         self,
-        body: Optional["_models.AnalyzeTextJobsInput"] = None,
-        **kwargs: Any
-    ) -> None:
+        body=None,  # type: Optional["_models.AnalyzeTextJobsInput"]
+        **kwargs  # type: Any
+    ):
+        # type: (...) -> None
         cls = kwargs.pop('cls', None)  # type: ClsType[None]
         error_map = {
             401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
@@ -76,7 +157,7 @@ class AnalyzeTextOperations:
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)
 
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
+        pipeline_response = self._client._pipeline.run(request, stream=False, **kwargs)
         response = pipeline_response.http_response
 
         if response.status_code not in [202]:
@@ -93,34 +174,35 @@ class AnalyzeTextOperations:
     _submit_job_initial.metadata = {'url': '/analyze-text/jobs'}  # type: ignore
 
 
-    @distributed_trace_async
-    async def begin_submit_job(
+    @distributed_trace
+    def begin_submit_job(
         self,
-        body: Optional["_models.AnalyzeTextJobsInput"] = None,
-        **kwargs: Any
-    ) -> AsyncLROPoller[None]:
+        body=None,  # type: Optional["_models.AnalyzeTextJobsInput"]
+        **kwargs  # type: Any
+    ):
+        # type: (...) -> LROPoller[None]
         """Submit text analysis job.
 
         Submit a collection of text documents for analysis. Specify one or more unique tasks to be
         executed as a long-running operation.
 
         :param body: Collection of documents to analyze and one or more tasks to execute.
-        :type body: ~azure.ai.language.textanalysis.models.AnalyzeTextJobsInput
+        :type body: ~azure.ai.language.text.models.AnalyzeTextJobsInput
         :keyword callable cls: A custom type or function that will be passed the direct response
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns either None or the result of cls(response)
-        :rtype: ~azure.core.polling.AsyncLROPoller[None]
+        :return: An instance of LROPoller that returns either None or the result of cls(response)
+        :rtype: ~azure.core.polling.LROPoller[None]
         :raises: ~azure.core.exceptions.HttpResponseError
         """
         api_version = kwargs.pop('api_version', "2022-02-01-preview")  # type: str
         content_type = kwargs.pop('content_type', "application/json")  # type: Optional[str]
-        polling = kwargs.pop('polling', True)  # type: Union[bool, azure.core.polling.AsyncPollingMethod]
+        polling = kwargs.pop('polling', True)  # type: Union[bool, azure.core.polling.PollingMethod]
         cls = kwargs.pop('cls', None)  # type: ClsType[None]
         lro_delay = kwargs.pop(
             'polling_interval',
@@ -128,7 +210,7 @@ class AnalyzeTextOperations:
         )
         cont_token = kwargs.pop('continuation_token', None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._submit_job_initial(
+            raw_result = self._submit_job_initial(
                 body=body,
                 api_version=api_version,
                 content_type=content_type,
@@ -146,30 +228,31 @@ class AnalyzeTextOperations:
             "Endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
         }
 
-        if polling is True: polling_method = AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs)
-        elif polling is False: polling_method = AsyncNoPolling()
+        if polling is True: polling_method = LROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs)
+        elif polling is False: polling_method = NoPolling()
         else: polling_method = polling
         if cont_token:
-            return AsyncLROPoller.from_continuation_token(
+            return LROPoller.from_continuation_token(
                 polling_method=polling_method,
                 continuation_token=cont_token,
                 client=self._client,
                 deserialization_callback=get_long_running_output
             )
         else:
-            return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
+            return LROPoller(self._client, raw_result, get_long_running_output, polling_method)
 
     begin_submit_job.metadata = {'url': '/analyze-text/jobs'}  # type: ignore
 
-    @distributed_trace_async
-    async def job_status(
+    @distributed_trace
+    def job_status(
         self,
-        job_id: str,
-        show_stats: Optional[bool] = None,
-        top: Optional[int] = 20,
-        skip: Optional[int] = 0,
-        **kwargs: Any
-    ) -> "_models.AnalyzeTextJobState":
+        job_id,  # type: str
+        show_stats=None,  # type: Optional[bool]
+        top=20,  # type: Optional[int]
+        skip=0,  # type: Optional[int]
+        **kwargs  # type: Any
+    ):
+        # type: (...) -> "_models.AnalyzeTextJobState"
         """Get analysis status and results.
 
         Get the status of an analysis job.  A job may consist of one or more tasks.  Once all tasks are
@@ -189,7 +272,7 @@ class AnalyzeTextOperations:
         :type skip: int
         :keyword callable cls: A custom type or function that will be passed the direct response
         :return: AnalyzeTextJobState, or the result of cls(response)
-        :rtype: ~azure.ai.language.textanalysis.models.AnalyzeTextJobState
+        :rtype: ~azure.ai.language.text.models.AnalyzeTextJobState
         :raises: ~azure.core.exceptions.HttpResponseError
         """
         cls = kwargs.pop('cls', None)  # type: ClsType["_models.AnalyzeTextJobState"]
@@ -215,7 +298,7 @@ class AnalyzeTextOperations:
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)
 
-        pipeline_response = await self._client._pipeline.run(request, stream=False, **kwargs)
+        pipeline_response = self._client._pipeline.run(request, stream=False, **kwargs)
         response = pipeline_response.http_response
 
         if response.status_code not in [200]:

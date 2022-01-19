@@ -5,4 +5,4 @@
 
 from ._version import VERSION
 
-USER_AGENT = f"ai-language-textanalysis/{VERSION}"
+USER_AGENT = f"ai-language-text/{VERSION}"

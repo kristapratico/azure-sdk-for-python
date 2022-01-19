@@ -194,7 +194,7 @@ class AnalyzeActionsLROPollingMethod(TextAnalyticsLROPollingMethod):
         return base64.b64encode(pickle.dumps(self._initial_response)).decode('ascii')
 
 
-class AnalyzeActionsLROPoller(LROPoller, Generic[PollingReturnType]):
+class TextAnalysisLROPoller(LROPoller, Generic[PollingReturnType]):
     def polling_method(self):
         # type: () -> AnalyzeActionsLROPollingMethod
         """Return the polling method associated to this poller."""
@@ -295,7 +295,7 @@ class AnalyzeActionsLROPoller(LROPoller, Generic[PollingReturnType]):
 
     @classmethod
     def from_continuation_token(cls, polling_method, continuation_token, **kwargs):  # type: ignore
-        # type: (AnalyzeActionsLROPollingMethod, str, Any) -> AnalyzeActionsLROPoller
+        # type: (AnalyzeActionsLROPollingMethod, str, Any) -> TextAnalysisLROPoller
         client, initial_response, deserialization_callback = polling_method.from_continuation_token(
             continuation_token, **kwargs
         )

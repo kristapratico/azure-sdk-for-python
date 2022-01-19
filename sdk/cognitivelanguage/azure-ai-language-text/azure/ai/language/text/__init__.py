@@ -4,6 +4,7 @@
 # ------------------------------------
 
 from ._client import TextAnalysisClient
+from ._actions_client import TextAnalysisActionsClient
 from ._version import VERSION
 from ._models import (
     DetectLanguageInput,
@@ -64,11 +65,12 @@ from ._models import (
     ExtractKeyPhrases,
     AnalyzeSentiment,
 )
-from ._polling import AnalyzeActionsLROPoller
+from ._polling import TextAnalysisLROPoller
 
 
 __all__ = [
     "TextAnalysisClient",
+    "TextAnalysisActionsClient",
     "DetectLanguageInput",
     "TextDocumentInput",
     "DetectedLanguage",
@@ -108,7 +110,7 @@ __all__ = [
     "EntityCertainty",
     "EntityAssociation",
     "AnalyzeSentimentAction",
-    "AnalyzeActionsLROPoller",
+    "TextAnalysisLROPoller",
     "HealthcareEntityCategory",
     "ExtractSummaryAction",
     "ExtractSummaryResult",

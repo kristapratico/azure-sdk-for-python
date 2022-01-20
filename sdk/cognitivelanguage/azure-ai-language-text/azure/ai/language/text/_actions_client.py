@@ -74,41 +74,11 @@ class TextAnalysisActionsClient:
     @distributed_trace
     def begin_analyze_actions(
         self,
-        documents: Union[List[str], List[TextDocumentInput], List[Dict[str, str]]],
-        actions: List[
-            Union[
-                RecognizeEntitiesAction,
-                RecognizeLinkedEntitiesAction,
-                RecognizePiiEntitiesAction,
-                ExtractKeyPhrasesAction,
-                AnalyzeSentimentAction,
-                ExtractSummaryAction,
-                RecognizeCustomEntitiesAction,
-                SingleCategoryClassifyAction,
-                MultiCategoryClassifyAction,
-                AnalyzeHealthcareEntitiesAction,
-            ]
-        ],
-        **kwargs: Any
-    ) -> TextAnalysisLROPoller[
-        ItemPaged[
-            List[
-                Union[
-                    RecognizeEntitiesResult,
-                    RecognizeLinkedEntitiesResult,
-                    RecognizePiiEntitiesResult,
-                    ExtractKeyPhrasesResult,
-                    AnalyzeSentimentResult,
-                    ExtractSummaryResult,
-                    RecognizeCustomEntitiesResult,
-                    SingleCategoryClassifyResult,
-                    MultiCategoryClassifyResult,
-                    AnalyzeHealthcareEntitiesResult,
-                    DocumentError,
-                ]
-            ]
-        ]
-    ]:
+        documents,  # type: Union[List[str], List[TextDocumentInput], List[Dict[str, str]]]
+        actions,  # type: List[Union[RecognizeEntitiesAction, RecognizeLinkedEntitiesAction, RecognizePiiEntitiesAction, ExtractKeyPhrasesAction, AnalyzeSentimentAction, ExtractSummaryAction, RecognizeCustomEntitiesAction, SingleCategoryClassifyAction, MultiCategoryClassifyAction]] # pylint: disable=line-too-long
+        **kwargs  # type: Any
+    ):
+        # type: (...) -> TextAnalysisLROPoller[ItemPaged[List[Union[RecognizeEntitiesResult, RecognizeLinkedEntitiesResult, RecognizePiiEntitiesResult, ExtractKeyPhrasesResult, AnalyzeSentimentResult, ExtractSummaryResult, RecognizeCustomEntitiesResult, SingleCategoryClassifyResult, MultiCategoryClassifyResult, AnalyzeHealthcareEntitiesResult, DocumentError]]]]
         """Begin analyze actions.
 
         :param documents: The set of documents to process as part of this batch.
@@ -120,10 +90,7 @@ class TextAnalysisActionsClient:
         :param actions: A heterogeneous list of actions to perform on the input documents.
             Each action object encapsulates the parameters used for the particular action type.
             The action results will be in the same order of the input actions.
-        :type actions: list[RecognizeEntitiesAction or RecognizePiiEntitiesAction or ExtractKeyPhrasesAction or
-         RecognizeLinkedEntitiesAction or AnalyzeSentimentAction or ExtractSummaryAction or
-         or RecognizeCustomEntitiesAction or SingleCategoryClassifyAction or MultiCategoryClassifyAction or
-         AnalyzeHealthcareEntitiesAction]
+        :type actions: list[RecognizeEntitiesAction or RecognizePiiEntitiesAction or ExtractKeyPhrasesAction or RecognizeLinkedEntitiesAction or AnalyzeSentimentAction or ExtractSummaryAction or RecognizeCustomEntitiesAction or SingleCategoryClassifyAction or MultiCategoryClassifyAction or AnalyzeHealthcareEntitiesAction]
         :keyword str api_version:
         :keyword str display_name: An optional display name to set for the requested analysis.
         :keyword bool show_stats: If set to true, response will contain document level statistics.
@@ -138,10 +105,7 @@ class TextAnalysisActionsClient:
             then the :class:`~azure.ai.textanalytics.AnalyzeSentimentResult` of "Hello".
             Then, you will get the :class:`~azure.ai.textanalytics.RecognizeEntitiesResult` and
             :class:`~azure.ai.textanalytics.AnalyzeSentimentResult` of "world".
-        :rtype: TextAnalysisLROPoller[ItemPaged[list[RecognizeEntitiesResult or RecognizeLinkedEntitiesResult or
-         RecognizePiiEntitiesResult or ExtractKeyPhrasesResult or AnalyzeSentimentResult or ExtractSummaryAction or
-         RecognizeCustomEntitiesResult or SingleCategoryClassifyResult or MultiCategoryClassifyResult or
-         AnalyzeHealthcareEntitiesResult or DocumentError]]]
+        :rtype: TextAnalysisLROPoller[ItemPaged[list[RecognizeEntitiesResult or RecognizeLinkedEntitiesResult or RecognizePiiEntitiesResult or ExtractKeyPhrasesResult or AnalyzeSentimentResult or ExtractSummaryAction or RecognizeCustomEntitiesResult or SingleCategoryClassifyResult or MultiCategoryClassifyResult or AnalyzeHealthcareEntitiesResult or DocumentError]]]
         :raises ~azure.core.exceptions.HttpResponseError or TypeError or ValueError or NotImplementedError:
         """
 

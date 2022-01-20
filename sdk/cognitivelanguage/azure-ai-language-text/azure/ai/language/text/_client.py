@@ -94,8 +94,7 @@ class TextAnalysisClient:
             dict representations of :class:`~azure.ai.textanalytics.DetectLanguageInput`, like
             `{"id": "1", "country_hint": "us", "text": "hello world"}`.
         :type documents:
-            list[str] or list[~azure.ai.textanalytics.DetectLanguageInput] or
-            list[dict[str, str]]
+            list[str] or list[~azure.ai.textanalytics.DetectLanguageInput] or list[dict[str, str]]
         :keyword str country_hint: Country of origin hint for the entire batch. Accepts two
             letter country codes specified by ISO 3166-1 alpha-2. Per-document
             country hints will take precedence over whole batch hints. Defaults to
@@ -156,8 +155,7 @@ class TextAnalysisClient:
             of dict representations of :class:`~azure.ai.textanalytics.TextDocumentInput`,
             like `{"id": "1", "language": "en", "text": "hello world"}`.
         :type documents:
-            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or
-            list[dict[str, str]]
+            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or list[dict[str, str]]
         :keyword str language: The 2 letter ISO 639-1 representation of language for the
             entire batch. For example, use "en" for English; "es" for Spanish etc.
             If not set, uses "en" for English as default. Per-document language will
@@ -223,8 +221,7 @@ class TextAnalysisClient:
             dict representations of :class:`~azure.ai.textanalytics.TextDocumentInput`, like
             `{"id": "1", "language": "en", "text": "hello world"}`.
         :type documents:
-            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or
-            list[dict[str, str]]
+            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or list[dict[str, str]]
         :keyword str language: The 2 letter ISO 639-1 representation of language for the
             entire batch. For example, use "en" for English; "es" for Spanish etc.
             If not set, uses "en" for English as default. Per-document language will
@@ -299,8 +296,7 @@ class TextAnalysisClient:
             dict representations of :class:`~azure.ai.textanalytics.TextDocumentInput`, like
             `{"id": "1", "language": "en", "text": "hello world"}`.
         :type documents:
-            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or
-            list[dict[str, str]]
+            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or list[dict[str, str]]
         :keyword str language: The 2 letter ISO 639-1 representation of language for the
             entire batch. For example, use "en" for English; "es" for Spanish etc.
             If not set, uses "en" for English as default. Per-document language will
@@ -367,8 +363,7 @@ class TextAnalysisClient:
             dict representations of :class:`~azure.ai.textanalytics.TextDocumentInput`, like
             `{"id": "1", "language": "en", "text": "hello world"}`.
         :type documents:
-            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or
-            list[dict[str, str]]
+            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or list[dict[str, str]]
         :keyword str language: The 2 letter ISO 639-1 representation of language for the
             entire batch. For example, use "en" for English; "es" for Spanish etc.
             If not set, uses "en" for English as default. Per-document language will
@@ -430,8 +425,7 @@ class TextAnalysisClient:
             dict representations of  :class:`~azure.ai.textanalytics.TextDocumentInput`, like
             `{"id": "1", "language": "en", "text": "hello world"}`.
         :type documents:
-            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or
-            list[dict[str, str]]
+            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or list[dict[str, str]]
         :keyword bool show_opinion_mining: Whether to mine the opinions of a sentence and conduct more
             granular analysis around the aspects of a product or service (also known as
             aspect-based sentiment analysis). If set to true, the returned
@@ -502,8 +496,7 @@ class TextAnalysisClient:
             dict representations of :class:`~azure.ai.textanalytics.TextDocumentInput`, like
             `{"id": "1", "language": "en", "text": "hello world"}`.
         :type documents:
-            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or
-            list[dict[str, str]]
+            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or list[dict[str, str]]
         :keyword str model_version: This value indicates which model will
             be used for scoring, e.g. "latest", "2019-10-01". If a model-version
             is not specified, the API will default to the latest, non-preview version.
@@ -569,8 +562,7 @@ class TextAnalysisClient:
             dict representations of :class:`~azure.ai.textanalytics.TextDocumentInput`, like
             `{"id": "1", "language": "en", "text": "hello world"}`.
         :type documents:
-            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or
-            list[dict[str, str]]
+            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or list[dict[str, str]]
         :keyword str model_version: This value indicates which model will
             be used for scoring, e.g. "latest", "2019-10-01". If a model-version
             is not specified, the API will default to the latest, non-preview version.
@@ -637,8 +629,7 @@ class TextAnalysisClient:
             dict representations of :class:`~azure.ai.textanalytics.TextDocumentInput`, like
             `{"id": "1", "language": "en", "text": "hello world"}`.
         :type documents:
-            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or
-            list[dict[str, str]]
+            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or list[dict[str, str]]
         :keyword str model_version: This value indicates which model will
             be used for scoring, e.g. "latest", "2019-10-01". If a model-version
             is not specified, the API will default to the latest, non-preview version.
@@ -705,8 +696,7 @@ class TextAnalysisClient:
             dict representations of :class:`~azure.ai.textanalytics.TextDocumentInput`, like
             `{"id": "1", "language": "en", "text": "hello world"}`.
         :type documents:
-            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or
-            list[dict[str, str]]
+            list[str] or list[~azure.ai.textanalytics.TextDocumentInput] or list[dict[str, str]]
         :keyword str model_version: This value indicates which model will
             be used for scoring, e.g. "latest", "2019-10-01". If a model-version
             is not specified, the API will default to the latest, non-preview version.

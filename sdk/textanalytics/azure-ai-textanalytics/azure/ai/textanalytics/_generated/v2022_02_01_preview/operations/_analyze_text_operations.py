@@ -68,8 +68,8 @@ def build_job_status_request(
     # type: (...) -> HttpRequest
     api_version = kwargs.pop('api_version', "2022-02-01-preview")  # type: str
     show_stats = kwargs.pop('show_stats', None)  # type: Optional[bool]
-    top = kwargs.pop('top', 20)  # type: Optional[int]
-    skip = kwargs.pop('skip', 0)  # type: Optional[int]
+    top = kwargs.pop('top', None)  # type: Optional[int]
+    skip = kwargs.pop('skip', None)  # type: Optional[int]
 
     accept = "application/json"
     # Construct URL
@@ -86,9 +86,9 @@ def build_job_status_request(
     if show_stats is not None:
         query_parameters['showStats'] = _SERIALIZER.query("show_stats", show_stats, 'bool')
     if top is not None:
-        query_parameters['top'] = _SERIALIZER.query("top", top, 'int', maximum=50, minimum=1)
+        query_parameters['top'] = _SERIALIZER.query("top", top, 'int')
     if skip is not None:
-        query_parameters['skip'] = _SERIALIZER.query("skip", skip, 'int', minimum=0)
+        query_parameters['skip'] = _SERIALIZER.query("skip", skip, 'int')
 
     # Construct headers
     header_parameters = kwargs.pop("headers", {})  # type: Dict[str, Any]
@@ -248,8 +248,8 @@ class AnalyzeTextOperations(object):
         self,
         job_id,  # type: str
         show_stats=None,  # type: Optional[bool]
-        top=20,  # type: Optional[int]
-        skip=0,  # type: Optional[int]
+        top=None,  # type: Optional[int]
+        skip=None,  # type: Optional[int]
         **kwargs  # type: Any
     ):
         # type: (...) -> "_models.AnalyzeTextJobState"
@@ -264,11 +264,9 @@ class AnalyzeTextOperations(object):
         :param show_stats: (Optional) if set to true, response will contain request and document level
          statistics.
         :type show_stats: bool
-        :param top: (Optional) Set the maximum number of results per task. When both top and skip are
-         specified, skip is applied first.
+        :param top: The maximum number of resources to return from the collection.
         :type top: int
-        :param skip: (Optional) Set the number of elements to offset in the response. When both top and
-         skip are specified, skip is applied first.
+        :param skip: An offset into the collection of the first resource to be returned.
         :type skip: int
         :keyword callable cls: A custom type or function that will be passed the direct response
         :return: AnalyzeTextJobState, or the result of cls(response)

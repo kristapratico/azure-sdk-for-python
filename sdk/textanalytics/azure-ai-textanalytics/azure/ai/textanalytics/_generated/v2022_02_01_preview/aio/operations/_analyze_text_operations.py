@@ -166,8 +166,8 @@ class AnalyzeTextOperations:
         self,
         job_id: str,
         show_stats: Optional[bool] = None,
-        top: Optional[int] = 20,
-        skip: Optional[int] = 0,
+        top: Optional[int] = None,
+        skip: Optional[int] = None,
         **kwargs: Any
     ) -> "_models.AnalyzeTextJobState":
         """Get analysis status and results.
@@ -181,11 +181,9 @@ class AnalyzeTextOperations:
         :param show_stats: (Optional) if set to true, response will contain request and document level
          statistics.
         :type show_stats: bool
-        :param top: (Optional) Set the maximum number of results per task. When both top and skip are
-         specified, skip is applied first.
+        :param top: The maximum number of resources to return from the collection.
         :type top: int
-        :param skip: (Optional) Set the number of elements to offset in the response. When both top and
-         skip are specified, skip is applied first.
+        :param skip: An offset into the collection of the first resource to be returned.
         :type skip: int
         :keyword callable cls: A custom type or function that will be passed the direct response
         :return: AnalyzeTextJobState, or the result of cls(response)

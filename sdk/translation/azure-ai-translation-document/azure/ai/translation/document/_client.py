@@ -5,7 +5,7 @@
 # ------------------------------------
 
 import json
-from typing import Any, TYPE_CHECKING, List, Union, overload
+from typing import Any, TYPE_CHECKING, List, Union, overload, Optional
 from azure.core.tracing.decorator import distributed_trace
 from ._generated import (
     BatchDocumentTranslationClient as _BatchDocumentTranslationClient,
@@ -246,8 +246,13 @@ class DocumentTranslationClient(object):  # pylint: disable=r0205
         self._client.document_translation.cancel_translation(translation_id, **kwargs)
 
     @distributed_trace
-    def list_translation_statuses(self, **kwargs):
-        # type: (**Any) -> ItemPaged[TranslationStatus]
+    def list_translation_statuses(
+            self,
+            *,
+            top: Optional[int] = None,
+            skip: Optional[int] = None,
+            **kwargs: Any
+    ) -> ItemPaged[TranslationStatus]:
         """List all the submitted translation operations under the Document Translation resource.
 
         :keyword int top: the total number of operations to return (across all pages) from all submitted translations.
@@ -318,7 +323,6 @@ class DocumentTranslationClient(object):  # pylint: disable=r0205
 
     @distributed_trace
     def list_document_statuses(self, translation_id, **kwargs):
-        # type: (str, **Any) -> ItemPaged[DocumentStatus]
         """List all the document statuses for a given translation operation.
 
         :param str translation_id: ID of translation operation to list documents for.

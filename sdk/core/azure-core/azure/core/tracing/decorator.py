@@ -27,7 +27,7 @@
 
 import functools
 
-from typing import overload
+from typing import overload, Callable, Any, TypeVar, cast
 
 from .common import change_context, get_function_and_class_name
 from ..settings import settings
@@ -37,27 +37,24 @@ try:
 except ImportError:
     TYPE_CHECKING = False
 
-if TYPE_CHECKING:
-    from typing import Callable, Dict, Optional, Any, TypeVar
 
-    T = TypeVar("T")
+T = TypeVar("T")
+F = TypeVar("F", bound=Callable[..., T])
 
 
 @overload
-def distributed_trace(__func):
-    # type: (Callable[..., T]) -> Callable[..., T]
+def distributed_trace(__func: F) -> F:
     pass
 
 
 @overload
-def distributed_trace(**kwargs):  # pylint:disable=function-redefined,unused-argument
-    # type: (**Any) -> Callable[[Callable[..., T]], Callable[..., T]]
+def distributed_trace(**kwargs: Any) -> Callable[[F], F]: # pylint:disable=function-redefined,unused-argument
     pass
 
 
 def distributed_trace(  # pylint:disable=function-redefined
-    __func=None,  # type: Callable[..., T]
-    **kwargs  # type: Any
+    __func: F = None,
+    **kwargs: Any
 ):
     """Decorator to apply to function to get traced automatically.
 
@@ -69,12 +66,10 @@ def distributed_trace(  # pylint:disable=function-redefined
     name_of_span = kwargs.pop("name_of_span", None)
     tracing_attributes = kwargs.pop("tracing_attributes", {})
 
-    def decorator(func):
-        # type: (Callable[..., T]) -> Callable[..., T]
+    def decorator(func: F) -> F:
 
         @functools.wraps(func)
-        def wrapper_use_tracer(*args, **kwargs):
-            # type: (*Any, **Any) -> T
+        def wrapper_use_tracer(*args, **kwargs) -> T:
             merge_span = kwargs.pop("merge_span", False)
             passed_in_parent = kwargs.pop("parent_span", None)
 
@@ -93,6 +88,6 @@ def distributed_trace(  # pylint:disable=function-redefined
                         span.add_attribute(key, value)
                     return func(*args, **kwargs)
 
-        return wrapper_use_tracer
+        return cast(F, wrapper_use_tracer)
 
     return decorator if __func is None else decorator(__func)

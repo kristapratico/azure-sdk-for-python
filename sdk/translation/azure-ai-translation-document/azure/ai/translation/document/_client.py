@@ -323,6 +323,7 @@ class DocumentTranslationClient(object):  # pylint: disable=r0205
 
     @distributed_trace
     def list_document_statuses(self, translation_id, **kwargs):
+        # type: (str, **Any) -> ItemPaged[DocumentStatus]
         """List all the document statuses for a given translation operation.
 
         :param str translation_id: ID of translation operation to list documents for.

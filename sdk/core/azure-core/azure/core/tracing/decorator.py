@@ -69,7 +69,7 @@ def distributed_trace(  # pylint:disable=function-redefined
     def decorator(func: F) -> F:
 
         @functools.wraps(func)
-        def wrapper_use_tracer(*args, **kwargs) -> T:
+        def wrapper_use_tracer(*args, **kwargs):
             merge_span = kwargs.pop("merge_span", False)
             passed_in_parent = kwargs.pop("parent_span", None)
 

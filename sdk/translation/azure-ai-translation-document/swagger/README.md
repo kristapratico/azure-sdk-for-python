@@ -16,11 +16,13 @@ add-credentials: true
 payload-flattening-threshold: 2
 namespace: azure.ai.translation.document
 package-name: azure-ai-translation-document
-clear-output-folder: true
 credential-scopes: https://cognitiveservices.azure.com/.default
 no-namespace-folders: true
 python: true
 python-sdks-folder: $(python-sdks-folder)
+version-tolerant: true
+models-mode: msrest
+title: DocumentTranslationClient
 ```
 
 
@@ -30,7 +32,7 @@ These settings apply only when `--tag=release_1_0` is specified on the command l
 
 ``` yaml $(tag) == 'release_1_0'
 input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/cognitiveservices/data-plane/TranslatorText/stable/v1.0/TranslatorBatch.json
-output-folder: $(python-sdks-folder)/translation/azure-ai-translation-document/azure/ai/translation/document/_generated/
+output-folder: $(python-sdks-folder)/translation/azure-ai-translation-document/azure/ai/translation/document/
 ```
 
 

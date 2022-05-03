@@ -44,7 +44,8 @@ from azure.ai.textanalytics import (
     RecognizeCustomEntitiesAction,
     SingleCategoryClassifyResult,
     MultiCategoryClassifyResult,
-    RecognizeCustomEntitiesResult
+    RecognizeCustomEntitiesResult,
+    AnalyzeHealthcareEntitiesAction
 )
 
 # pre-apply the client_cls positional argument so it needn't be explicitly passed below
@@ -797,7 +798,8 @@ class TestAnalyzeAsync(TextAnalyticsTest):
                 project_name=textanalytics_custom_entities_project_name,
                 deployment_name=textanalytics_custom_entities_deployment_name,
                 disable_service_logs=True
-            )
+            ),
+            AnalyzeHealthcareEntitiesAction(disable_service_logs=True)
         ]
 
         for action in actions:
@@ -1847,3 +1849,38 @@ class TestAnalyzeAsync(TextAnalyticsTest):
                     assert document_result.id == document_order[doc_idx]
                     assert not document_result.is_error
                     assert self.document_result_to_action_type(document_result) == action_order[action_idx]
+
+    @TextAnalyticsPreparer()
+    @TextAnalyticsClientPreparer()
+    @recorded_by_proxy_async
+    async def test_healthcare_action(self, client):
+        docs = [
+            "Patient does not suffer from high blood pressure.",
+            "Prescribed 100mg ibuprofen, taken twice daily.",
+            ""
+        ]
+        async with client:
+            result = await (await client.begin_analyze_actions(
+                docs,
+                actions=[
+                    AnalyzeHealthcareEntitiesAction(
+                        model_version="latest",
+                        fhir_version="4.0.1"
+                    )
+                ],
+                show_stats=True,
+                polling_interval=self._interval(),
+            )).result()
+            response = []
+            async for r in result:
+                response.append(r)
+
+            for idx, result in enumerate(response):
+                for res in result:
+                    if idx == 2:
+                        assert res.is_error
+                        assert res.error.code == "InvalidDocument"
+                    else:
+                        assert res.entities
+                        assert res.fhir_bundle
+                        assert res.statistics

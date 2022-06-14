@@ -62,8 +62,7 @@ from ._models import (
     ExtractSummaryResult,
     RecognizeCustomEntitiesAction,
     RecognizeCustomEntitiesResult,
-    SingleCategoryClassifyAction,
-    MultiCategoryClassifyAction,
+    CustomLabelClassifyAction,
     ClassifyDocumentResult,
     AnalyzeHealthcareEntitiesAction,
     _AnalyzeActionsType,
@@ -1072,8 +1071,7 @@ class TextAnalyticsClient(TextAnalyticsClientBase):
                 AnalyzeSentimentAction,
                 ExtractSummaryAction,
                 RecognizeCustomEntitiesAction,
-                SingleCategoryClassifyAction,
-                MultiCategoryClassifyAction,
+                CustomLabelClassifyAction,
                 AnalyzeHealthcareEntitiesAction,
             ]
         ],
@@ -1118,8 +1116,7 @@ class TextAnalyticsClient(TextAnalyticsClientBase):
         :type actions:
             list[RecognizeEntitiesAction or RecognizePiiEntitiesAction or ExtractKeyPhrasesAction or
             RecognizeLinkedEntitiesAction or AnalyzeSentimentAction or ExtractSummaryAction or
-            RecognizeCustomEntitiesAction or SingleCategoryClassifyAction or
-            MultiCategoryClassifyAction or AnalyzeHealthcareEntitiesAction]
+            RecognizeCustomEntitiesAction or CustomLabelClassifyAction or AnalyzeHealthcareEntitiesAction]
         :keyword str display_name: An optional display name to set for the requested analysis.
         :keyword str language: The 2 letter ISO 639-1 representation of language for the
             entire batch. For example, use "en" for English; "es" for Spanish etc.
@@ -1154,8 +1151,8 @@ class TextAnalyticsClient(TextAnalyticsClientBase):
         .. versionadded:: v3.1
             The *begin_analyze_actions* client method.
         .. versionadded:: 2022-04-01-preview
-            The *ExtractSummaryAction*, *RecognizeCustomEntitiesAction*, *SingleCategoryClassifyAction*,
-            *MultiCategoryClassifyAction*, and *AnalyzeHealthcareEntitiesAction* input options and the
+            The *ExtractSummaryAction*, *RecognizeCustomEntitiesAction*,
+            *CustomLabelClassifyAction*, and *AnalyzeHealthcareEntitiesAction* input options and the
             corresponding *ExtractSummaryResult*, *RecognizeCustomEntitiesResult*, *ClassifyDocumentResult*,
             and *AnalyzeHealthcareEntitiesResult* result objects
 

@@ -4,6 +4,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 import re
+import typing
 from enum import Enum
 from azure.core import CaseInsensitiveEnumMeta
 from ._generated.models import (
@@ -71,6 +72,13 @@ class DictMixin:
         if key in self.__dict__:
             return self.__dict__[key]
         return default
+
+
+class ClassificationType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """Describes whether single or multi label classification should be performed."""
+
+    SINGLE_LABEL = "singleLabel"
+    MULTI_LABEL = "multiLabel"
 
 
 class EntityAssociation(str, Enum, metaclass=CaseInsensitiveEnumMeta):
@@ -1764,8 +1772,7 @@ class _AnalyzeActionsType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     ANALYZE_SENTIMENT = "analyze_sentiment"  #: Sentiment Analysis action.
     EXTRACT_SUMMARY = "extract_summary"
     RECOGNIZE_CUSTOM_ENTITIES = "recognize_custom_entities"
-    SINGLE_CATEGORY_CLASSIFY = "single_category_classify"
-    MULTI_CATEGORY_CLASSIFY = "multi_category_classify"
+    CUSTOM_LABEL_CLASSIFY = "custom_label_classify"
     ANALYZE_HEALTHCARE_ENTITIES = "analyze_healthcare_entities"
 
 
@@ -2442,62 +2449,6 @@ class RecognizeCustomEntitiesResult(DictMixin):
         )
 
 
-class MultiCategoryClassifyAction(DictMixin):
-    """MultiCategoryClassifyAction encapsulates the parameters for starting a long-running custom multi category
-    classification operation. For information on regional support of custom features and how to train a model to
-    classify your documents, see https://aka.ms/azsdk/textanalytics/customfunctionalities
-
-    :param str project_name: Required. This field indicates the project name for the model.
-    :param str deployment_name: Required. This field indicates the deployment name for the model.
-    :keyword bool disable_service_logs: If set to true, you opt-out of having your text input
-        logged on the service side for troubleshooting. By default, the Language service logs your
-        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
-        the service's natural language processing functions. Setting this parameter to true,
-        disables input logging and may limit our ability to remediate issues that occur. Please see
-        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
-        additional details, and Microsoft Responsible AI principles at
-        https://www.microsoft.com/ai/responsible-ai.
-    :ivar str project_name: This field indicates the project name for the model.
-    :ivar str deployment_name: This field indicates the deployment name for the model.
-    :ivar bool disable_service_logs: If set to true, you opt-out of having your text input
-        logged on the service side for troubleshooting. By default, the Language service logs your
-        input text for 48 hours, solely to allow for troubleshooting issues in providing you with
-        the service's natural language processing functions. Setting this parameter to true,
-        disables input logging and may limit our ability to remediate issues that occur. Please see
-        Cognitive Services Compliance and Privacy notes at https://aka.ms/cs-compliance for
-        additional details, and Microsoft Responsible AI principles at
-        https://www.microsoft.com/ai/responsible-ai.
-    """
-
-    def __init__(
-        self,
-        project_name: str,
-        deployment_name: str,
-        **kwargs
-    ) -> None:
-        self.project_name = project_name
-        self.deployment_name = deployment_name
-        self.disable_service_logs = kwargs.get('disable_service_logs', None)
-
-    def __repr__(self):
-        return "MultiCategoryClassifyAction(project_name={}, deployment_name={}, " \
-               "disable_service_logs={})".format(
-            self.project_name,
-            self.deployment_name,
-            self.disable_service_logs,
-        )[:1024]
-
-    def _to_generated(self, api_version, task_id):  # pylint: disable=unused-argument
-        return _v2022_05_01_models.CustomMultiLabelClassificationLROTask(
-            task_name=task_id,
-            parameters=_v2022_05_01_models.CustomMultiLabelClassificationTaskParameters(
-                project_name=self.project_name,
-                deployment_name=self.deployment_name,
-                logging_opt_out=self.disable_service_logs,
-            )
-        )
-
-
 class ClassifyDocumentResult(DictMixin):
     """ClassifyDocumentResult is a result object which contains
     the classifications for a particular document.
@@ -2556,13 +2507,15 @@ class ClassifyDocumentResult(DictMixin):
         )
 
 
-class SingleCategoryClassifyAction(DictMixin):
-    """SingleCategoryClassifyAction encapsulates the parameters for starting a long-running custom single category
+class CustomLabelClassifyAction(DictMixin):
+    """CustomLabelClassifyAction encapsulates the parameters for starting a long-running custom single or multi label
     classification operation. For information on regional support of custom features and how to train a model to
     classify your documents, see https://aka.ms/azsdk/textanalytics/customfunctionalities
 
     :param str project_name: Required. This field indicates the project name for the model.
     :param str deployment_name: Required. This field indicates the deployment name for the model.
+    :param classification: Required. Whether to perform single or multi label classification.
+    :type classification: str or ~azure.ai.textanalytics.ClassificationType
     :keyword bool disable_service_logs: If set to true, you opt-out of having your text input
         logged on the service side for troubleshooting. By default, the Language service logs your
         input text for 48 hours, solely to allow for troubleshooting issues in providing you with
@@ -2587,29 +2540,44 @@ class SingleCategoryClassifyAction(DictMixin):
         self,
         project_name: str,
         deployment_name: str,
+        classification: typing.Union[str, ClassificationType],
         **kwargs
     ) -> None:
         self.project_name = project_name
         self.deployment_name = deployment_name
+        self.classification = classification
         self.disable_service_logs = kwargs.get('disable_service_logs', None)
 
     def __repr__(self):
         return "SingleCategoryClassifyAction(project_name={}, deployment_name={}, " \
-               "disable_service_logs={})".format(
+               "disable_service_logs={}, classification={})".format(
             self.project_name,
             self.deployment_name,
             self.disable_service_logs,
+            self.classification
         )[:1024]
 
     def _to_generated(self, api_version, task_id):  # pylint: disable=unused-argument
-        return _v2022_05_01_models.CustomSingleLabelClassificationLROTask(
-            task_name=task_id,
-            parameters=_v2022_05_01_models.CustomSingleLabelClassificationTaskParameters(
-                project_name=self.project_name,
-                deployment_name=self.deployment_name,
-                logging_opt_out=self.disable_service_logs,
+        if self.classification == ClassificationType.SINGLE_LABEL:
+            return _v2022_05_01_models.CustomSingleLabelClassificationLROTask(
+                task_name=task_id,
+                parameters=_v2022_05_01_models.CustomSingleLabelClassificationTaskParameters(
+                    project_name=self.project_name,
+                    deployment_name=self.deployment_name,
+                    logging_opt_out=self.disable_service_logs,
+                )
             )
-        )
+        elif self.classification == ClassificationType.MULTI_LABEL:
+            return _v2022_05_01_models.CustomMultiLabelClassificationLROTask(
+                task_name=task_id,
+                parameters=_v2022_05_01_models.CustomMultiLabelClassificationTaskParameters(
+                    project_name=self.project_name,
+                    deployment_name=self.deployment_name,
+                    logging_opt_out=self.disable_service_logs,
+                )
+            )
+
+        raise ValueError(f"'{self.classification}' is not a valid classification type.")
 
 
 class ClassificationCategory(DictMixin):

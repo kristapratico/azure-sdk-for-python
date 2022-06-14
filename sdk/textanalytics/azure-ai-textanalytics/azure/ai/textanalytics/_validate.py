@@ -31,8 +31,7 @@ def check_for_unsupported_actions_types(*args, **kwargs):
         [
             "ExtractSummaryAction",
             "RecognizeCustomEntitiesAction",
-            "SingleCategoryClassifyAction",
-            "MultiCategoryClassifyAction",
+            "CustomLabelClassifyAction",
             "AnalyzeHealthcareEntitiesAction"
         ]
     }

@@ -237,8 +237,8 @@ The following section provides several code snippets covering some of the most c
 - [Multiple Analysis](#multiple-analysis "Multiple analysis")
 - [Extractive Summarization][extract_summary_sample]
 - [Custom Entity Recognition][recognize_custom_entities_sample]
-- [Custom Single Category Classification][single_category_classify_sample]
-- [Custom Multi Category Classification][multi_category_classify_sample]
+- [Custom Single Label Classification][custom_classify_single_label_sample]
+- [Custom Multi Label Classification][custom_classify_multi_label_sample]
 
 ### Analyze sentiment
 
@@ -517,8 +517,8 @@ Note: The Healthcare Entities Analysis service is only available in the Standard
 - Sentiment Analysis
 - Extractive Summarization (see sample [here][extract_summary_sample])
 - Custom Entity Recognition (see sample [here][recognize_custom_entities_sample])
-- Custom Single Category Classification (see sample [here][single_category_classify_sample])
-- Custom Multi Category Classification (see sample [here][multi_category_classify_sample])
+- Custom Single Label Classification (see sample [here][custom_classify_single_label_sample])
+- Custom Multi Label Classification (see sample [here][custom_classify_multi_label_sample])
 - Healthcare Entities Analysis
 
 ```python
@@ -650,8 +650,8 @@ Common scenarios
 - Multiple Analysis: [sample_analyze_actions.py][analyze_sample] ([async version][analyze_sample_async])
 - Extractive text summarization: [sample_extract_summary.py][extract_summary_sample] ([async version][extract_summary_sample_async])
 - Custom Entity Recognition: [sample_recognize_custom_entities.py][recognize_custom_entities_sample] ([async_version][recognize_custom_entities_sample_async])
-- Custom Single Classification: [sample_single_category_classify.py][single_category_classify_sample] ([async_version][single_category_classify_sample_async])
-- Custom Multi Classification: [sample_multi_category_classify.py][multi_category_classify_sample] ([async_version][multi_category_classify_sample_async])
+- Custom Single Classification: [sample_custom_classify_single_label.py][custom_classify_single_label_sample] ([async_version][custom_classify_single_label_sample_async])
+- Custom Multi Classification: [sample_custom_classify_multi_label.py][custom_classify_multi_label_sample] ([async_version][custom_classify_multi_label_sample_async])
 
 Advanced scenarios
 
@@ -751,10 +751,10 @@ This project has adopted the [Microsoft Open Source Code of Conduct][code_of_con
 [extract_summary_sample_async]: https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/textanalytics/azure-ai-textanalytics/samples/async_samples/sample_extract_summary_async.py
 [recognize_custom_entities_sample]: https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/textanalytics/azure-ai-textanalytics/samples/sample_recognize_custom_entities.py
 [recognize_custom_entities_sample_async]: https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/textanalytics/azure-ai-textanalytics/samples/async_samples/sample_recognize_custom_entities_async.py
-[single_category_classify_sample]: https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/textanalytics/azure-ai-textanalytics/samples/sample_single_category_classify.py
-[single_category_classify_sample_async]: https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/textanalytics/azure-ai-textanalytics/samples/async_samples/sample_single_category_classify_async.py
-[multi_category_classify_sample]: https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/textanalytics/azure-ai-textanalytics/samples/sample_multi_category_classify.py
-[multi_category_classify_sample_async]: https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/textanalytics/azure-ai-textanalytics/samples/async_samples/sample_multi_category_classify_async.py
+[custom_classify_single_label_sample]: https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/textanalytics/azure-ai-textanalytics/samples/sample_custom_classify_single_label.py
+[custom_classify_single_label_sample_async]: https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/textanalytics/azure-ai-textanalytics/samples/async_samples/sample_custom_classify_single_label_async.py
+[custom_classify_multi_label_sample]: https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/textanalytics/azure-ai-textanalytics/samples/sample_custom_classify_multi_label.py
+[custom_classify_multi_label_sample_async]: https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/textanalytics/azure-ai-textanalytics/samples/async_samples/sample_custom_classify_multi_label_async.py
 [cla]: https://cla.microsoft.com
 [code_of_conduct]: https://opensource.microsoft.com/codeofconduct/
 [coc_faq]: https://opensource.microsoft.com/codeofconduct/faq/

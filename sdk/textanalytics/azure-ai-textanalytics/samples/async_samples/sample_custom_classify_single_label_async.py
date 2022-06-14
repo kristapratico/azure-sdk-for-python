@@ -5,10 +5,10 @@
 # --------------------------------------------------------------------------
 
 """
-FILE: sample_single_category_classify.py
+FILE: sample_custom_classify_single_label_async.py
 
 DESCRIPTION:
-    This sample demonstrates how to classify documents into a single custom category. For example,
+    This sample demonstrates how to classify documents into a single custom class. For example,
     movie plot summaries can be categorized into a single movie genre like "Mystery", "Drama", "Thriller",
     "Comedy", "Action", etc. Classifying documents is available as an action type through
     the begin_analyze_actions API.
@@ -17,7 +17,7 @@ DESCRIPTION:
     classify your documents, see https://aka.ms/azsdk/textanalytics/customfunctionalities
 
 USAGE:
-    python sample_single_category_classify.py
+    python sample_custom_classify_single_label_async.py
 
     Set the environment variables with your own values before running the sample:
     1) AZURE_LANGUAGE_ENDPOINT - the endpoint to your Language resource.
@@ -28,13 +28,15 @@ USAGE:
 
 
 import os
+import asyncio
 
 
-def sample_classify_document_single_category():
+async def sample_classify_document_single_label_async():
     from azure.core.credentials import AzureKeyCredential
+    from azure.ai.textanalytics.aio import TextAnalyticsClient
     from azure.ai.textanalytics import (
-        TextAnalyticsClient,
-        SingleCategoryClassifyAction
+        CustomLabelClassifyAction,
+        ClassificationType
     )
 
     endpoint = os.environ["AZURE_LANGUAGE_ENDPOINT"]
@@ -44,6 +46,7 @@ def sample_classify_document_single_category():
     path_to_sample_document = os.path.abspath(
         os.path.join(
             os.path.abspath(__file__),
+            "..",
             "..",
             "./text_samples/custom_classify_sample.txt",
         )
@@ -57,17 +60,24 @@ def sample_classify_document_single_category():
     with open(path_to_sample_document) as fd:
         document = [fd.read()]
 
-    poller = text_analytics_client.begin_analyze_actions(
-        document,
-        actions=[
-            SingleCategoryClassifyAction(
-                project_name=project_name,
-                deployment_name=deployment_name
-            ),
-        ],
-    )
+    async with text_analytics_client:
+        poller = await text_analytics_client.begin_analyze_actions(
+            document,
+            actions=[
+                CustomLabelClassifyAction(
+                    project_name=project_name,
+                    deployment_name=deployment_name,
+                    classification=ClassificationType.SINGLE_LABEL
+                ),
+            ],
+        )
 
-    document_results = poller.result()
+        pages = await poller.result()
+
+        document_results = []
+        async for page in pages:
+            document_results.append(page)
+
     for doc, classification_results in zip(document, document_results):
         for classification_result in classification_results:
             if not classification_result.is_error:
@@ -81,5 +91,9 @@ def sample_classify_document_single_category():
                 ))
 
 
-if __name__ == "__main__":
-    sample_classify_document_single_category()
+async def main():
+    await sample_classify_document_single_label_async()
+
+
+if __name__ == '__main__':
+    asyncio.run(main())

@@ -5,10 +5,10 @@
 # --------------------------------------------------------------------------
 
 """
-FILE: sample_multi_category_classify_async.py
+FILE: sample_custom_classify_multi_label.py
 
 DESCRIPTION:
-    This sample demonstrates how to classify documents into multiple custom categories. For example,
+    This sample demonstrates how to classify documents into multiple custom classes. For example,
     movie plot summaries can be categorized into multiple movie genres like "Action" and "Thriller",
     or "Comedy" and "Drama", etc. Classifying documents is available as an action type through
     the begin_analyze_actions API.
@@ -17,7 +17,7 @@ DESCRIPTION:
     classify your documents, see https://aka.ms/azsdk/textanalytics/customfunctionalities
 
 USAGE:
-    python sample_multi_category_classify_async.py
+    python sample_custom_classify_multi_label.py
 
     Set the environment variables with your own values before running the sample:
     1) AZURE_LANGUAGE_ENDPOINT - the endpoint to your Language resource.
@@ -28,13 +28,15 @@ USAGE:
 
 
 import os
-import asyncio
 
 
-async def sample_classify_document_multi_categories_async():
+def sample_classify_document_multi_label():
     from azure.core.credentials import AzureKeyCredential
-    from azure.ai.textanalytics.aio import TextAnalyticsClient
-    from azure.ai.textanalytics import MultiCategoryClassifyAction
+    from azure.ai.textanalytics import (
+        TextAnalyticsClient,
+        CustomLabelClassifyAction,
+        ClassificationType
+    )
 
     endpoint = os.environ["AZURE_LANGUAGE_ENDPOINT"]
     key = os.environ["AZURE_LANGUAGE_KEY"]
@@ -44,35 +46,30 @@ async def sample_classify_document_multi_categories_async():
         os.path.join(
             os.path.abspath(__file__),
             "..",
-            "..",
             "./text_samples/custom_classify_sample.txt",
         )
     )
-
-    with open(path_to_sample_document) as fd:
-        document = [fd.read()]
 
     text_analytics_client = TextAnalyticsClient(
         endpoint=endpoint,
         credential=AzureKeyCredential(key),
     )
 
-    async with text_analytics_client:
-        poller = await text_analytics_client.begin_analyze_actions(
-            document,
-            actions=[
-                MultiCategoryClassifyAction(
-                    project_name=project_name,
-                    deployment_name=deployment_name
-                ),
-            ],
-        )
+    with open(path_to_sample_document) as fd:
+        document = [fd.read()]
 
-        pages = await poller.result()
+    poller = text_analytics_client.begin_analyze_actions(
+        document,
+        actions=[
+            CustomLabelClassifyAction(
+                project_name=project_name,
+                deployment_name=deployment_name,
+                classification=ClassificationType.MULTI_LABEL
+            ),
+        ],
+    )
 
-        document_results = []
-        async for page in pages:
-            document_results.append(page)
+    document_results = poller.result()
     for doc, classification_results in zip(document, document_results):
         for classification_result in classification_results:
             if not classification_result.is_error:
@@ -88,9 +85,5 @@ async def sample_classify_document_multi_categories_async():
                 ))
 
 
-async def main():
-    await sample_classify_document_multi_categories_async()
-
-
-if __name__ == '__main__':
-    asyncio.run(main())
+if __name__ == "__main__":
+    sample_classify_document_multi_label()

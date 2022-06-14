@@ -36,8 +36,8 @@ from azure.ai.textanalytics import (
     ExtractSummaryAction,
     PiiEntityCategory,
     ExtractSummaryResult,
-    SingleCategoryClassifyAction,
-    MultiCategoryClassifyAction,
+    CustomLabelClassifyAction,
+    ClassificationType,
     RecognizeCustomEntitiesAction,
     ClassifyDocumentResult,
     RecognizeCustomEntitiesResult,
@@ -722,14 +722,16 @@ class TestAnalyze(TextAnalyticsTest):
             RecognizeLinkedEntitiesAction(disable_service_logs=True),
             AnalyzeSentimentAction(disable_service_logs=True),
             ExtractSummaryAction(disable_service_logs=True),
-            SingleCategoryClassifyAction(
+            CustomLabelClassifyAction(
                 project_name=textanalytics_single_category_classify_project_name,
                 deployment_name=textanalytics_single_category_classify_deployment_name,
+                classification=ClassificationType.SINGLE_LABEL,
                 disable_service_logs=True
             ),
-            MultiCategoryClassifyAction(
+            CustomLabelClassifyAction(
                 project_name=textanalytics_multi_category_classify_project_name,
                 deployment_name=textanalytics_multi_category_classify_deployment_name,
+                classification=ClassificationType.MULTI_LABEL,
                 disable_service_logs=True
             ),
             RecognizeCustomEntitiesAction(
@@ -1066,7 +1068,7 @@ class TestAnalyze(TextAnalyticsTest):
     @pytest.mark.skipif(not is_public_cloud(), reason='Usgov and China Cloud are not supported')
     @TextAnalyticsCustomPreparer()
     @recorded_by_proxy
-    def test_single_category_classify(
+    def test_single_label_classify(
             self,
             textanalytics_custom_text_endpoint,
             textanalytics_custom_text_key,
@@ -1084,9 +1086,10 @@ class TestAnalyze(TextAnalyticsTest):
         response = client.begin_analyze_actions(
             docs,
             actions=[
-                SingleCategoryClassifyAction(
+                CustomLabelClassifyAction(
                     project_name=textanalytics_single_category_classify_project_name,
-                    deployment_name=textanalytics_single_category_classify_deployment_name
+                    deployment_name=textanalytics_single_category_classify_deployment_name,
+                    classification=ClassificationType.SINGLE_LABEL
                 )
             ],
             show_stats=True,
@@ -1107,7 +1110,7 @@ class TestAnalyze(TextAnalyticsTest):
     @pytest.mark.skipif(not is_public_cloud(), reason='Usgov and China Cloud are not supported')
     @TextAnalyticsCustomPreparer()
     @recorded_by_proxy
-    def test_multi_category_classify(
+    def test_multi_label_classify(
             self,
             textanalytics_custom_text_endpoint,
             textanalytics_custom_text_key,
@@ -1125,9 +1128,10 @@ class TestAnalyze(TextAnalyticsTest):
         response = client.begin_analyze_actions(
             docs,
             actions=[
-                MultiCategoryClassifyAction(
+                CustomLabelClassifyAction(
                     project_name=textanalytics_multi_category_classify_project_name,
-                    deployment_name=textanalytics_multi_category_classify_deployment_name
+                    deployment_name=textanalytics_multi_category_classify_deployment_name,
+                    classification=ClassificationType.MULTI_LABEL
                 )
             ],
             show_stats=True,
@@ -1213,13 +1217,15 @@ class TestAnalyze(TextAnalyticsTest):
         response = client.begin_analyze_actions(
             docs,
             actions=[
-                SingleCategoryClassifyAction(
+                CustomLabelClassifyAction(
                     project_name=textanalytics_single_category_classify_project_name,
-                    deployment_name=textanalytics_single_category_classify_deployment_name
+                    deployment_name=textanalytics_single_category_classify_deployment_name,
+                    classification=ClassificationType.SINGLE_LABEL
                 ),
-                MultiCategoryClassifyAction(
+                CustomLabelClassifyAction(
                     project_name=textanalytics_multi_category_classify_project_name,
-                    deployment_name=textanalytics_multi_category_classify_deployment_name
+                    deployment_name=textanalytics_multi_category_classify_deployment_name,
+                    classification=ClassificationType.MULTI_LABEL
                 ),
                 RecognizeCustomEntitiesAction(
                     project_name=textanalytics_custom_entities_project_name,
@@ -1775,13 +1781,15 @@ class TestAnalyze(TextAnalyticsTest):
             response = client.begin_analyze_actions(
                 docs,
                 actions=[
-                    SingleCategoryClassifyAction(
+                    CustomLabelClassifyAction(
                         project_name=textanalytics_single_category_classify_project_name,
-                        deployment_name=textanalytics_single_category_classify_deployment_name
+                        deployment_name=textanalytics_single_category_classify_deployment_name,
+                        classification=ClassificationType.SINGLE_LABEL
                     ),
-                    MultiCategoryClassifyAction(
+                    CustomLabelClassifyAction(
                         project_name=textanalytics_multi_category_classify_project_name,
-                        deployment_name=textanalytics_multi_category_classify_deployment_name
+                        deployment_name=textanalytics_multi_category_classify_deployment_name,
+                        classification=ClassificationType.MULTI_LABEL
                     ),
                     RecognizeCustomEntitiesAction(
                         project_name=textanalytics_custom_entities_project_name,
@@ -1794,8 +1802,8 @@ class TestAnalyze(TextAnalyticsTest):
             ).result()
         assert str(e.value) == f"'ExtractSummaryAction' is only available for API version {version_supported} and " \
                                f"up.\n'RecognizeCustomEntitiesAction' is only available for API version " \
-                               f"{version_supported} and up.\n'SingleCategoryClassifyAction' is only available " \
-                               f"for API version {version_supported} and up.\n'MultiCategoryClassifyAction' is " \
+                               f"{version_supported} and up.\n'CustomLabelClassifyAction' is only available " \
+                               f"for API version {version_supported} and up.\n'CustomLabelClassifyAction' is " \
                                f"only available for API version {version_supported} and up.\n'AnalyzeHealthcareEntitiesAction' is " \
                                f"only available for API version {version_supported} and up.\n"
 

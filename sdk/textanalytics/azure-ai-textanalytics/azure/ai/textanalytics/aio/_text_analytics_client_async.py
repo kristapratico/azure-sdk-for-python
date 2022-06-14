@@ -44,8 +44,6 @@ from .._models import (
     RecognizeLinkedEntitiesAction,
     AnalyzeSentimentAction,
     AnalyzeHealthcareEntitiesResult,
-    ExtractSummaryAction,
-    ExtractSummaryResult,
     RecognizeCustomEntitiesAction,
     RecognizeCustomEntitiesResult,
     CustomLabelClassifyAction,
@@ -74,7 +72,6 @@ AsyncAnalyzeActionsResponse = AsyncAnalyzeActionsLROPoller[
                 RecognizePiiEntitiesResult,
                 ExtractKeyPhrasesResult,
                 AnalyzeSentimentResult,
-                ExtractSummaryResult,
                 RecognizeCustomEntitiesResult,
                 ClassifyDocumentResult,
                 AnalyzeHealthcareEntitiesResult,
@@ -1063,7 +1060,6 @@ class TextAnalyticsClient(AsyncTextAnalyticsClientBase):
                 RecognizePiiEntitiesAction,
                 ExtractKeyPhrasesAction,
                 AnalyzeSentimentAction,
-                ExtractSummaryAction,
                 RecognizeCustomEntitiesAction,
                 CustomLabelClassifyAction,
                 AnalyzeHealthcareEntitiesAction,
@@ -1079,7 +1075,6 @@ class TextAnalyticsClient(AsyncTextAnalyticsClientBase):
                     RecognizePiiEntitiesResult,
                     ExtractKeyPhrasesResult,
                     AnalyzeSentimentResult,
-                    ExtractSummaryResult,
                     RecognizeCustomEntitiesResult,
                     ClassifyDocumentResult,
                     AnalyzeHealthcareEntitiesResult,
@@ -1109,7 +1104,7 @@ class TextAnalyticsClient(AsyncTextAnalyticsClientBase):
             The action results will be in the same order of the input actions.
         :type actions:
             list[RecognizeEntitiesAction or RecognizePiiEntitiesAction or ExtractKeyPhrasesAction or
-            RecognizeLinkedEntitiesAction or AnalyzeSentimentAction or ExtractSummaryAction or
+            RecognizeLinkedEntitiesAction or AnalyzeSentimentAction or
             RecognizeCustomEntitiesAction or CustomLabelClassifyAction or AnalyzeHealthcareEntitiesAction]
         :keyword str display_name: An optional display name to set for the requested analysis.
         :keyword str language: The 2 letter ISO 639-1 representation of language for the
@@ -1138,16 +1133,15 @@ class TextAnalyticsClient(AsyncTextAnalyticsClientBase):
         :rtype:
             ~azure.ai.textanalytics.aio.AsyncAnalyzeActionsLROPoller[~azure.core.async_paging.AsyncItemPaged[
             list[RecognizeEntitiesResult or RecognizeLinkedEntitiesResult or RecognizePiiEntitiesResult or
-            ExtractKeyPhrasesResult or AnalyzeSentimentResult or ExtractSummaryAction or RecognizeCustomEntitiesResult
+            ExtractKeyPhrasesResult or AnalyzeSentimentResult or RecognizeCustomEntitiesResult
             or ClassifyDocumentResult or AnalyzeHealthcareEntitiesResult or DocumentError]]]
         :raises ~azure.core.exceptions.HttpResponseError or TypeError or ValueError:
 
         .. versionadded:: v3.1
             The *begin_analyze_actions* client method.
         .. versionadded:: 2022-04-01-preview
-            The *ExtractSummaryAction*, *RecognizeCustomEntitiesAction*,
-            *CustomLabelClassifyAction*, and *AnalyzeHealthcareEntitiesAction* input options and the
-            corresponding *ExtractSummaryResult*, *RecognizeCustomEntitiesResult*, *ClassifyDocumentResult*,
+            The *RecognizeCustomEntitiesAction*, *CustomLabelClassifyAction*, and *AnalyzeHealthcareEntitiesAction*
+            input options and the corresponding *RecognizeCustomEntitiesResult*, *ClassifyDocumentResult*,
             and *AnalyzeHealthcareEntitiesResult* result objects
 
         .. admonition:: Example:
@@ -1265,22 +1259,6 @@ class TextAnalyticsClient(AsyncTextAnalyticsClientBase):
                 sentiment_analysis_tasks=[
                     a for a in generated_tasks
                     if _determine_action_type(a) == _AnalyzeActionsType.ANALYZE_SENTIMENT
-                ],
-                extractive_summarization_tasks=[
-                    a for a in generated_tasks
-                    if _determine_action_type(a) == _AnalyzeActionsType.EXTRACT_SUMMARY
-                ],
-                custom_entity_recognition_tasks=[
-                    a for a in generated_tasks
-                    if _determine_action_type(a) == _AnalyzeActionsType.RECOGNIZE_CUSTOM_ENTITIES
-                ],
-                custom_single_classification_tasks=[
-                    a for a in generated_tasks
-                    if _determine_action_type(a) == _AnalyzeActionsType.SINGLE_CATEGORY_CLASSIFY
-                ],
-                custom_multi_classification_tasks=[
-                    a for a in generated_tasks
-                    if _determine_action_type(a) == _AnalyzeActionsType.MULTI_CATEGORY_CLASSIFY
                 ],
             )
             analyze_body = models.AnalyzeBatchInput(

@@ -1766,10 +1766,10 @@ class TestAnalyzeAsync(TextAnalyticsTest):
             )).result()
         assert str(e.value) == f"'RecognizeCustomEntitiesAction' is only available for API version " \
                                f"{version_supported} and up.\n'CustomLabelClassifyAction' is only available " \
-                               f"for API version {version_supported} and up.\n'CustomLabelClassifyAction' is " \
-                               f"only available for API version {version_supported} and up.\n'AnalyzeHealthcareEntitiesAction' is " \
+                               f"for API version {version_supported} and up.\n'AnalyzeHealthcareEntitiesAction' is " \
                                f"only available for API version {version_supported} and up.\n"
 
+    @pytest.mark.skip("code changes needed before we can run test")
     @TextAnalyticsPreparer()
     @TextAnalyticsClientPreparer()
     @recorded_by_proxy_async

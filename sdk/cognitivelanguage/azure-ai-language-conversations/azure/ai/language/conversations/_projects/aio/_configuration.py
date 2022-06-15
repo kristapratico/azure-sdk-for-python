@@ -15,8 +15,8 @@ from azure.core.pipeline import policies
 from .._version import VERSION
 
 
-class ConversationAnalysisClientConfiguration(Configuration):  # pylint: disable=too-many-instance-attributes
-    """Configuration for ConversationAnalysisClient.
+class ConversationAnalysisProjectsClientConfiguration(Configuration):  # pylint: disable=too-many-instance-attributes
+    """Configuration for ConversationAnalysisProjectsClient.
 
     Note that all parameters used to create this instance are saved as instance
     attributes.
@@ -32,7 +32,7 @@ class ConversationAnalysisClientConfiguration(Configuration):  # pylint: disable
     """
 
     def __init__(self, endpoint: str, credential: AzureKeyCredential, **kwargs: Any) -> None:
-        super(ConversationAnalysisClientConfiguration, self).__init__(**kwargs)
+        super(ConversationAnalysisProjectsClientConfiguration, self).__init__(**kwargs)
         api_version = kwargs.pop("api_version", "2022-05-01")  # type: str
 
         if endpoint is None:

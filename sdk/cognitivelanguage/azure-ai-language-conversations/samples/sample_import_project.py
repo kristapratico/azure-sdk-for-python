@@ -20,6 +20,7 @@ USAGE:
     4) AZURE_CONVERSATIONS_WORKFLOW_DEPLOYMENT_NAME  - deployment name for your CLU orchestration project.
 """
 
+
 def sample_import_project():
     import os
     from azure.core.credentials import AzureKeyCredential
@@ -31,59 +32,42 @@ def sample_import_project():
 
     exported_project_assets = {
         "projectKind": "Conversation",
-        "intents": [
-        {
-            "category": "Read"
-        },
-        {
-            "category": "Delete"
-        }
-        ],
-        "entities": [
-        {
-            "category": "Sender"
-        }
-        ],
+        "intents": [{"category": "Read"}, {"category": "Delete"}],
+        "entities": [{"category": "Sender"}],
         "utterances": [
-        {
-            "text": "Open Blake's email",
-            "dataset": "Train",
-            "intent": "Read",
-            "entities": [
             {
-                "category": "Sender",
-                "offset": 5,
-                "length": 5
-            }
-            ]
-        },
-        {
-            "text": "Delete last email",
-            "language": "en-gb",
-            "dataset": "Test",
-            "intent": "Delete",
-            "entities": []
-        }
-        ]
+                "text": "Open Blake's email",
+                "dataset": "Train",
+                "intent": "Read",
+                "entities": [{"category": "Sender", "offset": 5, "length": 5}],
+            },
+            {
+                "text": "Delete last email",
+                "language": "en-gb",
+                "dataset": "Test",
+                "intent": "Delete",
+                "entities": [],
+            },
+        ],
     }
 
-    client = ConversationAnalysisProjectsClient(clu_endpoint, AzureKeyCredential(clu_key))
+    client = ConversationAnalysisProjectsClient(
+        clu_endpoint, AzureKeyCredential(clu_key)
+    )
     poller = client.begin_import_project(
         project_name=project_name,
         body={
             "assets": exported_project_assets,
             "metadata": {
                 "projectKind": "Conversation",
-                "settings": {
-                "confidenceThreshold": 0.7
-                },
+                "settings": {"confidenceThreshold": 0.7},
                 "projectName": "EmailApp",
                 "multilingual": True,
                 "description": "Trying out CLU",
-                "language": "en-us"
+                "language": "en-us",
             },
-            "projectFileVersion": "2022-05-01"
-        }
+            "projectFileVersion": "2022-05-01",
+        },
     )
     response = poller.result()
     print(response)
@@ -98,14 +82,13 @@ def sample_train_model():
     clu_key = os.environ["AZURE_CONVERSATIONS_KEY"]
     project_name = os.environ["AZURE_CONVERSATIONS_PROJECT_NAME"]
 
-    client = ConversationAnalysisProjectsClient(clu_endpoint, AzureKeyCredential(clu_key))
+    client = ConversationAnalysisProjectsClient(
+        clu_endpoint, AzureKeyCredential(clu_key)
+    )
 
     poller = client.begin_train(
         project_name=project_name,
-        body={
-            "modelLabel": "sample",
-            "trainingMode": "standard"
-        }
+        body={"modelLabel": "sample", "trainingMode": "standard"},
     )
 
     response = poller.result()
@@ -122,20 +105,20 @@ def sample_deploy_model():
     project_name = os.environ["AZURE_CONVERSATIONS_PROJECT_NAME"]
     deployment_name = os.environ["AZURE_CONVERSATIONS_DEPLOYMENT_NAME"]
 
-    client = ConversationAnalysisProjectsClient(clu_endpoint, AzureKeyCredential(clu_key))
+    client = ConversationAnalysisProjectsClient(
+        clu_endpoint, AzureKeyCredential(clu_key)
+    )
 
     poller = client.begin_deploy_project(
         project_name=project_name,
         deployment_name=deployment_name,
-        body={
-            "trainedModelLabel": "sample"
-        }
+        body={"trainedModelLabel": "sample"},
     )
     response = poller.result()
     print(response)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sample_import_project()
     sample_train_model()
     sample_deploy_model()

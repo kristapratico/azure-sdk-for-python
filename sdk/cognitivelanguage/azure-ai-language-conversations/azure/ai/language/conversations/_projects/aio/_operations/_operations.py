@@ -33,7 +33,7 @@ from ..._operations._operations import (
     build_delete_project_request,
     build_delete_trained_model_request,
     build_deploy_project_request,
-    build_export_request,
+    build_export_project_request,
     build_get_deployment_request,
     build_get_deployment_status_request,
     build_get_export_status_request,
@@ -47,7 +47,7 @@ from ..._operations._operations import (
     build_get_swap_deployments_status_request,
     build_get_trained_model_request,
     build_get_training_status_request,
-    build_import_method_request,
+    build_import_project_request,
     build_list_deployments_request,
     build_list_projects_request,
     build_list_trained_models_request,
@@ -646,7 +646,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
             )
         return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
 
-    async def _export_initial(
+    async def _export_project_initial(
         self,
         project_name: str,
         *,
@@ -663,7 +663,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         cls = kwargs.pop("cls", None)  # type: ClsType[Optional[JSON]]
 
-        request = build_export_request(
+        request = build_export_project_request(
             project_name=project_name,
             string_index_type=string_index_type,
             exported_project_format=exported_project_format,
@@ -706,7 +706,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         return deserialized
 
     @distributed_trace_async
-    async def begin_export(
+    async def begin_export_project(
         self,
         project_name: str,
         *,
@@ -806,7 +806,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         lro_delay = kwargs.pop("polling_interval", self._config.polling_interval)
         cont_token = kwargs.pop("continuation_token", None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._export_initial(  # type: ignore
+            raw_result = await self._export_project_initial(  # type: ignore
                 project_name=project_name,
                 string_index_type=string_index_type,
                 exported_project_format=exported_project_format,
@@ -850,7 +850,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
             )
         return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
 
-    async def _import_method_initial(
+    async def _import_project_initial(
         self, project_name: str, body: Union[JSON, IO], *, exported_project_format: Optional[str] = None, **kwargs: Any
     ) -> Optional[JSON]:
         error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
@@ -870,7 +870,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         else:
             _json = body
 
-        request = build_import_method_request(
+        request = build_import_project_request(
             project_name=project_name,
             exported_project_format=exported_project_format,
             content_type=content_type,
@@ -914,7 +914,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         return deserialized
 
     @overload
-    async def begin_import_method(
+    async def begin_import_project(
         self,
         project_name: str,
         body: JSON,
@@ -1032,7 +1032,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         """
 
     @overload
-    async def begin_import_method(
+    async def begin_import_project(
         self,
         project_name: str,
         body: IO,
@@ -1125,7 +1125,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         """
 
     @distributed_trace_async
-    async def begin_import_method(
+    async def begin_import_project(
         self, project_name: str, body: Union[JSON, IO], *, exported_project_format: Optional[str] = None, **kwargs: Any
     ) -> AsyncLROPoller[JSON]:
         """Triggers a job to import a project. If a project with the same name already exists, the data of
@@ -1219,7 +1219,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         lro_delay = kwargs.pop("polling_interval", self._config.polling_interval)
         cont_token = kwargs.pop("continuation_token", None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._import_method_initial(  # type: ignore
+            raw_result = await self._import_project_initial(  # type: ignore
                 project_name=project_name,
                 body=body,
                 exported_project_format=exported_project_format,

@@ -226,10 +226,10 @@ directive:
       to: DeleteProject
   - rename-operation:
       from: ConversationalAnalysisAuthoring_Export
-      to: Export
+      to: ExportProject
   - rename-operation:
       from: ConversationalAnalysisAuthoring_Import
-      to: Import
+      to: ImportProject
   - rename-operation:
       from: ConversationalAnalysisAuthoring_Train
       to: Train

@@ -62,7 +62,7 @@ These settings apply only when `--tag=release_authoring_1_0` is specified on the
 
 ```yaml $(tag) == 'release_authoring_1_0'
 input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cognitiveservices/data-plane/Language/stable/2022-05-01/analyzeconversations-authoring.json
-output-folder: ../azure/ai/language/conversations/_projects
+output-folder: ../azure/ai/language/conversations/projects
 title: ConversationAnalysisProjectsClient
 ```
 

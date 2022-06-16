@@ -1528,7 +1528,8 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 response == {
                     "createdDateTime": "2020-02-20 00:00:00",  # The creation date time of the
                       job. Required.
-                    "errors": [@
+                    "errors": [
+                        {
                             "code": "str",  # One of a server-defined set of error codes.
                               Required. Known values are: "InvalidRequest", "InvalidArgument",
                               "Unauthorized", "Forbidden", "NotFound", "ProjectNotFound",

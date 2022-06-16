@@ -24,7 +24,7 @@ USAGE:
 def sample_import_project():
     import os
     from azure.core.credentials import AzureKeyCredential
-    from azure.ai.language.conversations import ConversationAnalysisProjectsClient
+    from azure.ai.language.conversations.projects import ConversationAnalysisProjectsClient
 
     clu_endpoint = os.environ["AZURE_CONVERSATIONS_ENDPOINT"]
     clu_key = os.environ["AZURE_CONVERSATIONS_KEY"]
@@ -76,7 +76,7 @@ def sample_import_project():
 def sample_train_model():
     import os
     from azure.core.credentials import AzureKeyCredential
-    from azure.ai.language.conversations import ConversationAnalysisProjectsClient
+    from azure.ai.language.conversations.projects import ConversationAnalysisProjectsClient
 
     clu_endpoint = os.environ["AZURE_CONVERSATIONS_ENDPOINT"]
     clu_key = os.environ["AZURE_CONVERSATIONS_KEY"]
@@ -98,7 +98,7 @@ def sample_train_model():
 def sample_deploy_model():
     import os
     from azure.core.credentials import AzureKeyCredential
-    from azure.ai.language.conversations import ConversationAnalysisProjectsClient
+    from azure.ai.language.conversations.projects import ConversationAnalysisProjectsClient
 
     clu_endpoint = os.environ["AZURE_CONVERSATIONS_ENDPOINT"]
     clu_key = os.environ["AZURE_CONVERSATIONS_KEY"]

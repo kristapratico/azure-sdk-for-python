@@ -115,16 +115,18 @@ directive:
     $["description"] = "Specifies the method used to interpret string offsets. Set to \"UnicodeCodePoint\" for Python strings.";
     $["x-ms-client-default"] = "UnicodeCodePoint";
 
-# This is the only option for these types?
+# Only Utf16CodeUnit is supported for these types right now. Once UnicodeCodePoint is supported we can default to that.
 # - from: swagger-document
 #   where: $.definitions.ConversationalAnalysisAuthoringStringIndexType
 #   transform: |
-#     $["x-ms-client-default"] = "Utf16CodeUnit";
+#     $["description"] = "Specifies the method used to interpret string offsets. Set to \"UnicodeCodePoint\" for Python strings.";
+#     $["x-ms-client-default"] = "UnicodeCodePoint";
 
 # - from: swagger-document
 #   where: $.parameters.ConversationalAnalysisAuthoringStringIndexTypeQueryParameter
 #   transform: |
-#     $["x-ms-client-default"] = "Utf16CodeUnit";
+#     $["description"] = "Specifies the method used to interpret string offsets. Set to \"UnicodeCodePoint\" for Python strings.";
+#     $["x-ms-client-default"] = "UnicodeCodePoint";
 ```
 
 

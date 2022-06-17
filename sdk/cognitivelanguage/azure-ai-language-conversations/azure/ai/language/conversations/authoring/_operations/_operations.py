@@ -7,9 +7,8 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 import sys
-from typing import Any, AsyncIterable, Callable, Dict, IO, Optional, TypeVar, Union, cast, overload
+from typing import Any, Callable, Dict, IO, Iterable, Optional, TypeVar, Union, cast, overload
 
-from azure.core.async_paging import AsyncItemPaged, AsyncList
 from azure.core.exceptions import (
     ClientAuthenticationError,
     HttpResponseError,
@@ -17,46 +16,17 @@ from azure.core.exceptions import (
     ResourceNotFoundError,
     map_error,
 )
+from azure.core.paging import ItemPaged
 from azure.core.pipeline import PipelineResponse
-from azure.core.pipeline.transport import AsyncHttpResponse
-from azure.core.polling import AsyncLROPoller, AsyncNoPolling, AsyncPollingMethod
-from azure.core.polling.async_base_polling import AsyncLROBasePolling
+from azure.core.pipeline.transport import HttpResponse
+from azure.core.polling import LROPoller, NoPolling, PollingMethod
+from azure.core.polling.base_polling import LROBasePolling
 from azure.core.rest import HttpRequest
 from azure.core.tracing.decorator import distributed_trace
-from azure.core.tracing.decorator_async import distributed_trace_async
 from azure.core.utils import case_insensitive_dict
 
-from ..._operations._operations import (
-    build_cancel_training_job_request,
-    build_create_project_request,
-    build_delete_deployment_request,
-    build_delete_project_request,
-    build_delete_trained_model_request,
-    build_deploy_project_request,
-    build_export_project_request,
-    build_get_deployment_request,
-    build_get_deployment_status_request,
-    build_get_export_status_request,
-    build_get_import_status_request,
-    build_get_model_evaluation_results_request,
-    build_get_model_evaluation_summary_request,
-    build_get_project_deletion_status_request,
-    build_get_project_request,
-    build_get_supported_languages_request,
-    build_get_supported_prebuilt_entities_request,
-    build_get_swap_deployments_status_request,
-    build_get_trained_model_request,
-    build_get_training_status_request,
-    build_import_project_request,
-    build_list_deployments_request,
-    build_list_projects_request,
-    build_list_trained_models_request,
-    build_list_training_config_versions_request,
-    build_list_training_jobs_request,
-    build_swap_deployments_request,
-    build_train_request,
-)
-from .._vendor import MixinABC
+from .._serialization import Serializer
+from .._vendor import MixinABC, _format_url_section
 
 if sys.version_info >= (3, 9):
     from collections.abc import MutableMapping
@@ -64,14 +34,828 @@ else:
     from typing import MutableMapping  # type: ignore  # pylint: disable=ungrouped-imports
 JSON = MutableMapping[str, Any]  # pylint: disable=unsubscriptable-object
 T = TypeVar("T")
-ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T, Dict[str, Any]], Any]]
+ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
+
+_SERIALIZER = Serializer()
+_SERIALIZER.client_side_validation = False
 
 
-class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: disable=too-many-public-methods
+def build_list_projects_request(
+    *, top: Optional[int] = None, skip: Optional[int] = None, maxpagesize: Optional[int] = None, **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects"
+
+    # Construct parameters
+    if top is not None:
+        _params["top"] = _SERIALIZER.query("top", top, "int")
+    if skip is not None:
+        _params["skip"] = _SERIALIZER.query("skip", skip, "int")
+    if maxpagesize is not None:
+        _params["maxpagesize"] = _SERIALIZER.query("maxpagesize", maxpagesize, "int")
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_create_project_request(project_name: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    content_type = kwargs.pop("content_type", _headers.pop("Content-Type", None))  # type: Optional[str]
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    if content_type is not None:
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str")
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="PATCH", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_get_project_request(project_name: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_delete_project_request(project_name: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="DELETE", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_export_project_request(
+    project_name: str,
+    *,
+    string_index_type: str,
+    exported_project_format: Optional[str] = None,
+    asset_kind: Optional[str] = None,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/:export"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    if exported_project_format is not None:
+        _params["format"] = _SERIALIZER.query("exported_project_format", exported_project_format, "str")
+    _params["stringIndexType"] = _SERIALIZER.query("string_index_type", string_index_type, "str")
+    if asset_kind is not None:
+        _params["assetKind"] = _SERIALIZER.query("asset_kind", asset_kind, "str")
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_import_project_request(project_name: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    exported_project_format = kwargs.pop("exported_project_format", _params.pop("format", None))  # type: Optional[str]
+    content_type = kwargs.pop("content_type", _headers.pop("Content-Type", None))  # type: Optional[str]
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/:import"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    if exported_project_format is not None:
+        _params["format"] = _SERIALIZER.query("exported_project_format", exported_project_format, "str")
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    if content_type is not None:
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str")
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_train_request(project_name: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    content_type = kwargs.pop("content_type", _headers.pop("Content-Type", None))  # type: Optional[str]
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/:train"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    if content_type is not None:
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str")
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_list_deployments_request(
+    project_name: str,
+    *,
+    top: Optional[int] = None,
+    skip: Optional[int] = None,
+    maxpagesize: Optional[int] = None,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/deployments"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    if top is not None:
+        _params["top"] = _SERIALIZER.query("top", top, "int")
+    if skip is not None:
+        _params["skip"] = _SERIALIZER.query("skip", skip, "int")
+    if maxpagesize is not None:
+        _params["maxpagesize"] = _SERIALIZER.query("maxpagesize", maxpagesize, "int")
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_swap_deployments_request(project_name: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    content_type = kwargs.pop("content_type", _headers.pop("Content-Type", None))  # type: Optional[str]
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/deployments/:swap"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    if content_type is not None:
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str")
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_get_deployment_request(project_name: str, deployment_name: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/deployments/{deploymentName}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "deploymentName": _SERIALIZER.url("deployment_name", deployment_name, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_deploy_project_request(project_name: str, deployment_name: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    content_type = kwargs.pop("content_type", _headers.pop("Content-Type", None))  # type: Optional[str]
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/deployments/{deploymentName}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "deploymentName": _SERIALIZER.url("deployment_name", deployment_name, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    if content_type is not None:
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str")
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="PUT", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_delete_deployment_request(project_name: str, deployment_name: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/deployments/{deploymentName}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "deploymentName": _SERIALIZER.url("deployment_name", deployment_name, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="DELETE", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_get_deployment_job_status_request(
+    project_name: str, deployment_name: str, job_id: str, **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/deployments/{deploymentName}/jobs/{jobId}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "deploymentName": _SERIALIZER.url("deployment_name", deployment_name, "str"),
+        "jobId": _SERIALIZER.url("job_id", job_id, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_get_swap_deployments_job_status_request(project_name: str, job_id: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/deployments/swap/jobs/{jobId}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "jobId": _SERIALIZER.url("job_id", job_id, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_get_export_project_job_status_request(project_name: str, job_id: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/export/jobs/{jobId}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "jobId": _SERIALIZER.url("job_id", job_id, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_get_import_project_job_status_request(project_name: str, job_id: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/import/jobs/{jobId}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "jobId": _SERIALIZER.url("job_id", job_id, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_list_trained_models_request(
+    project_name: str,
+    *,
+    top: Optional[int] = None,
+    skip: Optional[int] = None,
+    maxpagesize: Optional[int] = None,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/models"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    if top is not None:
+        _params["top"] = _SERIALIZER.query("top", top, "int")
+    if skip is not None:
+        _params["skip"] = _SERIALIZER.query("skip", skip, "int")
+    if maxpagesize is not None:
+        _params["maxpagesize"] = _SERIALIZER.query("maxpagesize", maxpagesize, "int")
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_get_trained_model_request(project_name: str, trained_model_label: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/models/{trainedModelLabel}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "trainedModelLabel": _SERIALIZER.url("trained_model_label", trained_model_label, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_delete_trained_model_request(project_name: str, trained_model_label: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/models/{trainedModelLabel}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "trainedModelLabel": _SERIALIZER.url("trained_model_label", trained_model_label, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="DELETE", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_list_model_evaluation_results_request(
+    project_name: str,
+    trained_model_label: str,
+    *,
+    string_index_type: str,
+    top: Optional[int] = None,
+    skip: Optional[int] = None,
+    maxpagesize: Optional[int] = None,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/models/{trainedModelLabel}/evaluation/result"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "trainedModelLabel": _SERIALIZER.url("trained_model_label", trained_model_label, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["stringIndexType"] = _SERIALIZER.query("string_index_type", string_index_type, "str")
+    if top is not None:
+        _params["top"] = _SERIALIZER.query("top", top, "int")
+    if skip is not None:
+        _params["skip"] = _SERIALIZER.query("skip", skip, "int")
+    if maxpagesize is not None:
+        _params["maxpagesize"] = _SERIALIZER.query("maxpagesize", maxpagesize, "int")
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_get_model_evaluation_summary_request(
+    project_name: str, trained_model_label: str, **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = (
+        "/authoring/analyze-conversations/projects/{projectName}/models/{trainedModelLabel}/evaluation/summary-result"
+    )
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "trainedModelLabel": _SERIALIZER.url("trained_model_label", trained_model_label, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_list_training_jobs_request(
+    project_name: str,
+    *,
+    top: Optional[int] = None,
+    skip: Optional[int] = None,
+    maxpagesize: Optional[int] = None,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/train/jobs"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    if top is not None:
+        _params["top"] = _SERIALIZER.query("top", top, "int")
+    if skip is not None:
+        _params["skip"] = _SERIALIZER.query("skip", skip, "int")
+    if maxpagesize is not None:
+        _params["maxpagesize"] = _SERIALIZER.query("maxpagesize", maxpagesize, "int")
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_get_training_job_status_request(project_name: str, job_id: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/train/jobs/{jobId}"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "jobId": _SERIALIZER.url("job_id", job_id, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_cancel_training_job_request(project_name: str, job_id: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/{projectName}/train/jobs/{jobId}/:cancel"
+    path_format_arguments = {
+        "projectName": _SERIALIZER.url("project_name", project_name, "str", max_length=100),
+        "jobId": _SERIALIZER.url("job_id", job_id, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_get_project_deletion_job_status_request(job_id: str, **kwargs: Any) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/global/deletion-jobs/{jobId}"
+    path_format_arguments = {
+        "jobId": _SERIALIZER.url("job_id", job_id, "str"),
+    }
+
+    _url = _format_url_section(_url, **path_format_arguments)
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_list_supported_languages_request(
+    *,
+    project_kind: str,
+    top: Optional[int] = None,
+    skip: Optional[int] = None,
+    maxpagesize: Optional[int] = None,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/global/languages"
+
+    # Construct parameters
+    _params["projectKind"] = _SERIALIZER.query("project_kind", project_kind, "str")
+    if top is not None:
+        _params["top"] = _SERIALIZER.query("top", top, "int")
+    if skip is not None:
+        _params["skip"] = _SERIALIZER.query("skip", skip, "int")
+    if maxpagesize is not None:
+        _params["maxpagesize"] = _SERIALIZER.query("maxpagesize", maxpagesize, "int")
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_list_supported_prebuilt_entities_request(
+    *,
+    language: Optional[str] = None,
+    multilingual: Optional[bool] = None,
+    top: Optional[int] = None,
+    skip: Optional[int] = None,
+    maxpagesize: Optional[int] = None,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/global/prebuilt-entities"
+
+    # Construct parameters
+    if language is not None:
+        _params["language"] = _SERIALIZER.query("language", language, "str")
+    if multilingual is not None:
+        _params["multilingual"] = _SERIALIZER.query("multilingual", multilingual, "bool")
+    if top is not None:
+        _params["top"] = _SERIALIZER.query("top", top, "int")
+    if skip is not None:
+        _params["skip"] = _SERIALIZER.query("skip", skip, "int")
+    if maxpagesize is not None:
+        _params["maxpagesize"] = _SERIALIZER.query("maxpagesize", maxpagesize, "int")
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+def build_list_training_config_versions_request(
+    *,
+    project_kind: str,
+    top: Optional[int] = None,
+    skip: Optional[int] = None,
+    maxpagesize: Optional[int] = None,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    api_version = kwargs.pop("api_version", _params.pop("api-version", "2022-05-01"))  # type: str
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/authoring/analyze-conversations/projects/global/training-config-versions"
+
+    # Construct parameters
+    _params["projectKind"] = _SERIALIZER.query("project_kind", project_kind, "str")
+    if top is not None:
+        _params["top"] = _SERIALIZER.query("top", top, "int")
+    if skip is not None:
+        _params["skip"] = _SERIALIZER.query("skip", skip, "int")
+    if maxpagesize is not None:
+        _params["maxpagesize"] = _SERIALIZER.query("maxpagesize", maxpagesize, "int")
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+
+    return HttpRequest(method="GET", url=_url, params=_params, headers=_headers, **kwargs)
+
+
+class ConversationAuthoringClientOperationsMixin(MixinABC):  # pylint: disable=too-many-public-methods
     @distributed_trace
     def list_projects(
         self, *, top: Optional[int] = None, skip: Optional[int] = None, maxpagesize: Optional[int] = None, **kwargs: Any
-    ) -> AsyncIterable[JSON]:
+    ) -> Iterable[JSON]:
         """Lists the existing projects.
 
         :keyword top: The maximum number of resources to return from the collection. Default value is
@@ -84,7 +868,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
          value is None.
         :paramtype maxpagesize: int
         :return: An iterator like instance of JSON object
-        :rtype: ~azure.core.async_paging.AsyncItemPaged[JSON]
+        :rtype: ~azure.core.paging.ItemPaged[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -163,17 +947,17 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 request.method = "GET"
             return request
 
-        async def extract_data(pipeline_response):
+        def extract_data(pipeline_response):
             deserialized = pipeline_response.http_response.json()
             list_of_elem = deserialized["value"]
             if cls:
                 list_of_elem = cls(list_of_elem)
-            return deserialized.get("nextLink", None), AsyncList(list_of_elem)
+            return deserialized.get("nextLink", None), iter(list_of_elem)
 
-        async def get_next(next_link=None):
+        def get_next(next_link=None):
             request = prepare_request(next_link)
 
-            pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
                 request, stream=False, **kwargs
             )
             response = pipeline_response.http_response
@@ -184,18 +968,18 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
             return pipeline_response
 
-        return AsyncItemPaged(get_next, extract_data)
+        return ItemPaged(get_next, extract_data)
 
     @overload
-    async def create_project(
-        self, project_name: str, body: JSON, *, content_type: str = "application/merge-patch+json", **kwargs: Any
+    def create_project(
+        self, project_name: str, project: JSON, *, content_type: str = "application/merge-patch+json", **kwargs: Any
     ) -> JSON:
         """Creates a new project or updates an existing one.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The project parameters. Required.
-        :type body: JSON
+        :param project: The project parameters. Required.
+        :type project: JSON
         :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
          Default value is "application/merge-patch+json".
         :paramtype content_type: str
@@ -207,7 +991,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
             .. code-block:: python
 
                 # JSON input template you can fill out and use as your body input.
-                body = {
+                project = {
                     "description": "str",  # Optional. The project description.
                     "language": "str",  # The project language. This is BCP-47 representation of
                       a language. For example, use "en" for English, "en-gb" for English (UK), "es" for
@@ -252,15 +1036,15 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         """
 
     @overload
-    async def create_project(
-        self, project_name: str, body: IO, *, content_type: str = "application/merge-patch+json", **kwargs: Any
+    def create_project(
+        self, project_name: str, project: IO, *, content_type: str = "application/merge-patch+json", **kwargs: Any
     ) -> JSON:
         """Creates a new project or updates an existing one.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The project parameters. Required.
-        :type body: IO
+        :param project: The project parameters. Required.
+        :type project: IO
         :keyword content_type: Body Parameter content-type. Content type parameter for binary body.
          Default value is "application/merge-patch+json".
         :paramtype content_type: str
@@ -298,14 +1082,14 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 }
         """
 
-    @distributed_trace_async
-    async def create_project(self, project_name: str, body: Union[JSON, IO], **kwargs: Any) -> JSON:
+    @distributed_trace
+    def create_project(self, project_name: str, project: Union[JSON, IO], **kwargs: Any) -> JSON:
         """Creates a new project or updates an existing one.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The project parameters. Is either a model type or a IO type. Required.
-        :type body: JSON or IO
+        :param project: The project parameters. Is either a model type or a IO type. Required.
+        :type project: JSON or IO
         :keyword content_type: Body Parameter content-type. Known values are:
          'application/merge-patch+json'. Default value is None.
         :paramtype content_type: str
@@ -354,10 +1138,10 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         content_type = content_type or "application/merge-patch+json"
         _json = None
         _content = None
-        if isinstance(body, (IO, bytes)):
-            _content = body
+        if isinstance(project, (IO, bytes)):
+            _content = project
         else:
-            _json = body
+            _json = project
 
         request = build_create_project_request(
             project_name=project_name,
@@ -373,7 +1157,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -400,8 +1184,8 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return cast(JSON, deserialized)
 
-    @distributed_trace_async
-    async def get_project(self, project_name: str, **kwargs: Any) -> JSON:
+    @distributed_trace
+    def get_project(self, project_name: str, **kwargs: Any) -> JSON:
         """Gets the details of a project.
 
         :param project_name: The name of the project to use. Required.
@@ -458,7 +1242,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -478,7 +1262,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return cast(JSON, deserialized)
 
-    async def _delete_project_initial(self, project_name: str, **kwargs: Any) -> Optional[JSON]:
+    def _delete_project_initial(self, project_name: str, **kwargs: Any) -> Optional[JSON]:
         error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
         error_map.update(kwargs.pop("error_map", {}) or {})
 
@@ -498,7 +1282,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -526,21 +1310,21 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return deserialized
 
-    @distributed_trace_async
-    async def begin_delete_project(self, project_name: str, **kwargs: Any) -> AsyncLROPoller[JSON]:
+    @distributed_trace
+    def begin_delete_project(self, project_name: str, **kwargs: Any) -> LROPoller[JSON]:
         """Deletes a project.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -605,11 +1389,11 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         _params = kwargs.pop("params", {}) or {}
 
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
-        polling = kwargs.pop("polling", True)  # type: Union[bool, AsyncPollingMethod]
+        polling = kwargs.pop("polling", True)  # type: Union[bool, PollingMethod]
         lro_delay = kwargs.pop("polling_interval", self._config.polling_interval)
         cont_token = kwargs.pop("continuation_token", None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._delete_project_initial(  # type: ignore
+            raw_result = self._delete_project_initial(  # type: ignore
                 project_name=project_name, cls=lambda x, y, z: x, headers=_headers, params=_params, **kwargs
             )
         kwargs.pop("error_map", None)
@@ -630,23 +1414,22 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         if polling is True:
             polling_method = cast(
-                AsyncPollingMethod,
-                AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs),
-            )  # type: AsyncPollingMethod
+                PollingMethod, LROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs)
+            )  # type: PollingMethod
         elif polling is False:
-            polling_method = cast(AsyncPollingMethod, AsyncNoPolling())
+            polling_method = cast(PollingMethod, NoPolling())
         else:
             polling_method = polling
         if cont_token:
-            return AsyncLROPoller.from_continuation_token(
+            return LROPoller.from_continuation_token(
                 polling_method=polling_method,
                 continuation_token=cont_token,
                 client=self._client,
                 deserialization_callback=get_long_running_output,
             )
-        return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
+        return LROPoller(self._client, raw_result, get_long_running_output, polling_method)
 
-    async def _export_project_initial(
+    def _export_project_initial(
         self,
         project_name: str,
         *,
@@ -677,7 +1460,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -705,8 +1488,8 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return deserialized
 
-    @distributed_trace_async
-    async def begin_export_project(
+    @distributed_trace
+    def begin_export_project(
         self,
         project_name: str,
         *,
@@ -714,7 +1497,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         exported_project_format: Optional[str] = None,
         asset_kind: Optional[str] = None,
         **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    ) -> LROPoller[JSON]:
         """Triggers a job to export a project's data.
 
         :param project_name: The name of the project to use. Required.
@@ -728,14 +1511,14 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         :keyword asset_kind: Kind of asset to export. Default value is None.
         :paramtype asset_kind: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -802,11 +1585,11 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         _params = kwargs.pop("params", {}) or {}
 
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
-        polling = kwargs.pop("polling", True)  # type: Union[bool, AsyncPollingMethod]
+        polling = kwargs.pop("polling", True)  # type: Union[bool, PollingMethod]
         lro_delay = kwargs.pop("polling_interval", self._config.polling_interval)
         cont_token = kwargs.pop("continuation_token", None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._export_project_initial(  # type: ignore
+            raw_result = self._export_project_initial(  # type: ignore
                 project_name=project_name,
                 string_index_type=string_index_type,
                 exported_project_format=exported_project_format,
@@ -834,24 +1617,28 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         if polling is True:
             polling_method = cast(
-                AsyncPollingMethod,
-                AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs),
-            )  # type: AsyncPollingMethod
+                PollingMethod, LROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs)
+            )  # type: PollingMethod
         elif polling is False:
-            polling_method = cast(AsyncPollingMethod, AsyncNoPolling())
+            polling_method = cast(PollingMethod, NoPolling())
         else:
             polling_method = polling
         if cont_token:
-            return AsyncLROPoller.from_continuation_token(
+            return LROPoller.from_continuation_token(
                 polling_method=polling_method,
                 continuation_token=cont_token,
                 client=self._client,
                 deserialization_callback=get_long_running_output,
             )
-        return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
+        return LROPoller(self._client, raw_result, get_long_running_output, polling_method)
 
-    async def _import_project_initial(
-        self, project_name: str, body: Union[JSON, IO], *, exported_project_format: Optional[str] = None, **kwargs: Any
+    def _import_project_initial(
+        self,
+        project_name: str,
+        project: Union[JSON, IO],
+        *,
+        exported_project_format: Optional[str] = None,
+        **kwargs: Any
     ) -> Optional[JSON]:
         error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
         error_map.update(kwargs.pop("error_map", {}) or {})
@@ -865,10 +1652,10 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         content_type = content_type or "application/json"
         _json = None
         _content = None
-        if isinstance(body, (IO, bytes)):
-            _content = body
+        if isinstance(project, (IO, bytes)):
+            _content = project
         else:
-            _json = body
+            _json = project
 
         request = build_import_project_request(
             project_name=project_name,
@@ -885,7 +1672,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -914,22 +1701,22 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         return deserialized
 
     @overload
-    async def begin_import_project(
+    def begin_import_project(
         self,
         project_name: str,
-        body: JSON,
+        project: JSON,
         *,
         exported_project_format: Optional[str] = None,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    ) -> LROPoller[JSON]:
         """Triggers a job to import a project. If a project with the same name already exists, the data of
         that project is replaced.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The project data to import. Required.
-        :type body: JSON
+        :param project: The project data to import. Required.
+        :type project: JSON
         :keyword exported_project_format: The format of the exported project file to use. Known values
          are: "Conversation" and "Luis". Default value is None.
         :paramtype exported_project_format: str
@@ -937,21 +1724,21 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
          Default value is "application/json".
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
             .. code-block:: python
 
                 # JSON input template you can fill out and use as your body input.
-                body = {
+                project = {
                     "assets": exported_project_assets,
                     "metadata": {
                         "description": "str",  # Optional. The project description.
@@ -1032,22 +1819,22 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         """
 
     @overload
-    async def begin_import_project(
+    def begin_import_project(
         self,
         project_name: str,
-        body: IO,
+        project: IO,
         *,
         exported_project_format: Optional[str] = None,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    ) -> LROPoller[JSON]:
         """Triggers a job to import a project. If a project with the same name already exists, the data of
         that project is replaced.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The project data to import. Required.
-        :type body: IO
+        :param project: The project data to import. Required.
+        :type project: IO
         :keyword exported_project_format: The format of the exported project file to use. Known values
          are: "Conversation" and "Luis". Default value is None.
         :paramtype exported_project_format: str
@@ -1055,14 +1842,14 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
          Default value is "application/json".
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -1124,17 +1911,22 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 }
         """
 
-    @distributed_trace_async
-    async def begin_import_project(
-        self, project_name: str, body: Union[JSON, IO], *, exported_project_format: Optional[str] = None, **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    @distributed_trace
+    def begin_import_project(
+        self,
+        project_name: str,
+        project: Union[JSON, IO],
+        *,
+        exported_project_format: Optional[str] = None,
+        **kwargs: Any
+    ) -> LROPoller[JSON]:
         """Triggers a job to import a project. If a project with the same name already exists, the data of
         that project is replaced.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The project data to import. Is either a model type or a IO type. Required.
-        :type body: JSON or IO
+        :param project: The project data to import. Is either a model type or a IO type. Required.
+        :type project: JSON or IO
         :keyword exported_project_format: The format of the exported project file to use. Known values
          are: "Conversation" and "Luis". Default value is None.
         :paramtype exported_project_format: str
@@ -1142,14 +1934,14 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
          Default value is None.
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -1215,13 +2007,13 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         content_type = kwargs.pop("content_type", _headers.pop("Content-Type", None))  # type: Optional[str]
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
-        polling = kwargs.pop("polling", True)  # type: Union[bool, AsyncPollingMethod]
+        polling = kwargs.pop("polling", True)  # type: Union[bool, PollingMethod]
         lro_delay = kwargs.pop("polling_interval", self._config.polling_interval)
         cont_token = kwargs.pop("continuation_token", None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._import_project_initial(  # type: ignore
+            raw_result = self._import_project_initial(  # type: ignore
                 project_name=project_name,
-                body=body,
+                project=project,
                 exported_project_format=exported_project_format,
                 content_type=content_type,
                 cls=lambda x, y, z: x,
@@ -1247,23 +2039,22 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         if polling is True:
             polling_method = cast(
-                AsyncPollingMethod,
-                AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs),
-            )  # type: AsyncPollingMethod
+                PollingMethod, LROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs)
+            )  # type: PollingMethod
         elif polling is False:
-            polling_method = cast(AsyncPollingMethod, AsyncNoPolling())
+            polling_method = cast(PollingMethod, NoPolling())
         else:
             polling_method = polling
         if cont_token:
-            return AsyncLROPoller.from_continuation_token(
+            return LROPoller.from_continuation_token(
                 polling_method=polling_method,
                 continuation_token=cont_token,
                 client=self._client,
                 deserialization_callback=get_long_running_output,
             )
-        return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
+        return LROPoller(self._client, raw_result, get_long_running_output, polling_method)
 
-    async def _train_initial(self, project_name: str, body: Union[JSON, IO], **kwargs: Any) -> Optional[JSON]:
+    def _train_initial(self, project_name: str, configuration: Union[JSON, IO], **kwargs: Any) -> Optional[JSON]:
         error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
         error_map.update(kwargs.pop("error_map", {}) or {})
 
@@ -1276,10 +2067,10 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         content_type = content_type or "application/json"
         _json = None
         _content = None
-        if isinstance(body, (IO, bytes)):
-            _content = body
+        if isinstance(configuration, (IO, bytes)):
+            _content = configuration
         else:
-            _json = body
+            _json = configuration
 
         request = build_train_request(
             project_name=project_name,
@@ -1295,7 +2086,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -1324,34 +2115,34 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         return deserialized
 
     @overload
-    async def begin_train(
-        self, project_name: str, body: JSON, *, content_type: str = "application/json", **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    def begin_train(
+        self, project_name: str, configuration: JSON, *, content_type: str = "application/json", **kwargs: Any
+    ) -> LROPoller[JSON]:
         """Triggers a training job for a project.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The training input parameters. Required.
-        :type body: JSON
+        :param configuration: The training input parameters. Required.
+        :type configuration: JSON
         :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
          Default value is "application/json".
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
             .. code-block:: python
 
                 # JSON input template you can fill out and use as your body input.
-                body = {
+                configuration = {
                     "evaluationOptions": {
                         "kind": "str",  # Optional. Represents the evaluation kind. By
                           default, the evaluation kind is set to percentage. Known values are:
@@ -1461,27 +2252,27 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         """
 
     @overload
-    async def begin_train(
-        self, project_name: str, body: IO, *, content_type: str = "application/json", **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    def begin_train(
+        self, project_name: str, configuration: IO, *, content_type: str = "application/json", **kwargs: Any
+    ) -> LROPoller[JSON]:
         """Triggers a training job for a project.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The training input parameters. Required.
-        :type body: IO
+        :param configuration: The training input parameters. Required.
+        :type configuration: IO
         :keyword content_type: Body Parameter content-type. Content type parameter for binary body.
          Default value is "application/json".
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -1576,26 +2367,27 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 }
         """
 
-    @distributed_trace_async
-    async def begin_train(self, project_name: str, body: Union[JSON, IO], **kwargs: Any) -> AsyncLROPoller[JSON]:
+    @distributed_trace
+    def begin_train(self, project_name: str, configuration: Union[JSON, IO], **kwargs: Any) -> LROPoller[JSON]:
         """Triggers a training job for a project.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The training input parameters. Is either a model type or a IO type. Required.
-        :type body: JSON or IO
+        :param configuration: The training input parameters. Is either a model type or a IO type.
+         Required.
+        :type configuration: JSON or IO
         :keyword content_type: Body Parameter content-type. Known values are: 'application/json'.
          Default value is None.
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -1694,13 +2486,13 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         content_type = kwargs.pop("content_type", _headers.pop("Content-Type", None))  # type: Optional[str]
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
-        polling = kwargs.pop("polling", True)  # type: Union[bool, AsyncPollingMethod]
+        polling = kwargs.pop("polling", True)  # type: Union[bool, PollingMethod]
         lro_delay = kwargs.pop("polling_interval", self._config.polling_interval)
         cont_token = kwargs.pop("continuation_token", None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._train_initial(  # type: ignore
+            raw_result = self._train_initial(  # type: ignore
                 project_name=project_name,
-                body=body,
+                configuration=configuration,
                 content_type=content_type,
                 cls=lambda x, y, z: x,
                 headers=_headers,
@@ -1725,21 +2517,20 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         if polling is True:
             polling_method = cast(
-                AsyncPollingMethod,
-                AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs),
-            )  # type: AsyncPollingMethod
+                PollingMethod, LROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs)
+            )  # type: PollingMethod
         elif polling is False:
-            polling_method = cast(AsyncPollingMethod, AsyncNoPolling())
+            polling_method = cast(PollingMethod, NoPolling())
         else:
             polling_method = polling
         if cont_token:
-            return AsyncLROPoller.from_continuation_token(
+            return LROPoller.from_continuation_token(
                 polling_method=polling_method,
                 continuation_token=cont_token,
                 client=self._client,
                 deserialization_callback=get_long_running_output,
             )
-        return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
+        return LROPoller(self._client, raw_result, get_long_running_output, polling_method)
 
     @distributed_trace
     def list_deployments(
@@ -1750,7 +2541,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         skip: Optional[int] = None,
         maxpagesize: Optional[int] = None,
         **kwargs: Any
-    ) -> AsyncIterable[JSON]:
+    ) -> Iterable[JSON]:
         """Lists the deployments belonging to a project.
 
         :param project_name: The name of the project to use. Required.
@@ -1765,7 +2556,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
          value is None.
         :paramtype maxpagesize: int
         :return: An iterator like instance of JSON object
-        :rtype: ~azure.core.async_paging.AsyncItemPaged[JSON]
+        :rtype: ~azure.core.paging.ItemPaged[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -1834,17 +2625,17 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 request.method = "GET"
             return request
 
-        async def extract_data(pipeline_response):
+        def extract_data(pipeline_response):
             deserialized = pipeline_response.http_response.json()
             list_of_elem = deserialized["value"]
             if cls:
                 list_of_elem = cls(list_of_elem)
-            return deserialized.get("nextLink", None), AsyncList(list_of_elem)
+            return deserialized.get("nextLink", None), iter(list_of_elem)
 
-        async def get_next(next_link=None):
+        def get_next(next_link=None):
             request = prepare_request(next_link)
 
-            pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
                 request, stream=False, **kwargs
             )
             response = pipeline_response.http_response
@@ -1855,10 +2646,10 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
             return pipeline_response
 
-        return AsyncItemPaged(get_next, extract_data)
+        return ItemPaged(get_next, extract_data)
 
-    async def _swap_deployments_initial(
-        self, project_name: str, body: Union[JSON, IO], **kwargs: Any
+    def _swap_deployments_initial(
+        self, project_name: str, deployments: Union[JSON, IO], **kwargs: Any
     ) -> Optional[JSON]:
         error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
         error_map.update(kwargs.pop("error_map", {}) or {})
@@ -1872,10 +2663,10 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         content_type = content_type or "application/json"
         _json = None
         _content = None
-        if isinstance(body, (IO, bytes)):
-            _content = body
+        if isinstance(deployments, (IO, bytes)):
+            _content = deployments
         else:
-            _json = body
+            _json = deployments
 
         request = build_swap_deployments_request(
             project_name=project_name,
@@ -1891,7 +2682,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -1920,34 +2711,34 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         return deserialized
 
     @overload
-    async def begin_swap_deployments(
-        self, project_name: str, body: JSON, *, content_type: str = "application/json", **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    def begin_swap_deployments(
+        self, project_name: str, deployments: JSON, *, content_type: str = "application/json", **kwargs: Any
+    ) -> LROPoller[JSON]:
         """Swaps two existing deployments with each other.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The job object to swap two deployments. Required.
-        :type body: JSON
+        :param deployments: The job object to swap two deployments. Required.
+        :type deployments: JSON
         :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
          Default value is "application/json".
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
             .. code-block:: python
 
                 # JSON input template you can fill out and use as your body input.
-                body = {
+                deployments = {
                     "firstDeploymentName": "str",  # Represents the first deployment name.
                       Required.
                     "secondDeploymentName": "str"  # Represents the second deployment name.
@@ -2011,27 +2802,27 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         """
 
     @overload
-    async def begin_swap_deployments(
-        self, project_name: str, body: IO, *, content_type: str = "application/json", **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    def begin_swap_deployments(
+        self, project_name: str, deployments: IO, *, content_type: str = "application/json", **kwargs: Any
+    ) -> LROPoller[JSON]:
         """Swaps two existing deployments with each other.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The job object to swap two deployments. Required.
-        :type body: IO
+        :param deployments: The job object to swap two deployments. Required.
+        :type deployments: IO
         :keyword content_type: Body Parameter content-type. Content type parameter for binary body.
          Default value is "application/json".
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -2093,29 +2884,27 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 }
         """
 
-    @distributed_trace_async
-    async def begin_swap_deployments(
-        self, project_name: str, body: Union[JSON, IO], **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    @distributed_trace
+    def begin_swap_deployments(self, project_name: str, deployments: Union[JSON, IO], **kwargs: Any) -> LROPoller[JSON]:
         """Swaps two existing deployments with each other.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
-        :param body: The job object to swap two deployments. Is either a model type or a IO type.
-         Required.
-        :type body: JSON or IO
+        :param deployments: The job object to swap two deployments. Is either a model type or a IO
+         type. Required.
+        :type deployments: JSON or IO
         :keyword content_type: Body Parameter content-type. Known values are: 'application/json'.
          Default value is None.
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -2181,13 +2970,13 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         content_type = kwargs.pop("content_type", _headers.pop("Content-Type", None))  # type: Optional[str]
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
-        polling = kwargs.pop("polling", True)  # type: Union[bool, AsyncPollingMethod]
+        polling = kwargs.pop("polling", True)  # type: Union[bool, PollingMethod]
         lro_delay = kwargs.pop("polling_interval", self._config.polling_interval)
         cont_token = kwargs.pop("continuation_token", None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._swap_deployments_initial(  # type: ignore
+            raw_result = self._swap_deployments_initial(  # type: ignore
                 project_name=project_name,
-                body=body,
+                deployments=deployments,
                 content_type=content_type,
                 cls=lambda x, y, z: x,
                 headers=_headers,
@@ -2212,24 +3001,23 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         if polling is True:
             polling_method = cast(
-                AsyncPollingMethod,
-                AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs),
-            )  # type: AsyncPollingMethod
+                PollingMethod, LROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs)
+            )  # type: PollingMethod
         elif polling is False:
-            polling_method = cast(AsyncPollingMethod, AsyncNoPolling())
+            polling_method = cast(PollingMethod, NoPolling())
         else:
             polling_method = polling
         if cont_token:
-            return AsyncLROPoller.from_continuation_token(
+            return LROPoller.from_continuation_token(
                 polling_method=polling_method,
                 continuation_token=cont_token,
                 client=self._client,
                 deserialization_callback=get_long_running_output,
             )
-        return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
+        return LROPoller(self._client, raw_result, get_long_running_output, polling_method)
 
-    @distributed_trace_async
-    async def get_deployment(self, project_name: str, deployment_name: str, **kwargs: Any) -> JSON:
+    @distributed_trace
+    def get_deployment(self, project_name: str, deployment_name: str, **kwargs: Any) -> JSON:
         """Gets the details of a deployment.
 
         :param project_name: The name of the project to use. Required.
@@ -2277,7 +3065,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -2297,8 +3085,8 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return cast(JSON, deserialized)
 
-    async def _deploy_project_initial(
-        self, project_name: str, deployment_name: str, body: Union[JSON, IO], **kwargs: Any
+    def _deploy_project_initial(
+        self, project_name: str, deployment_name: str, deployment: Union[JSON, IO], **kwargs: Any
     ) -> Optional[JSON]:
         error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
         error_map.update(kwargs.pop("error_map", {}) or {})
@@ -2312,10 +3100,10 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         content_type = content_type or "application/json"
         _json = None
         _content = None
-        if isinstance(body, (IO, bytes)):
-            _content = body
+        if isinstance(deployment, (IO, bytes)):
+            _content = deployment
         else:
-            _json = body
+            _json = deployment
 
         request = build_deploy_project_request(
             project_name=project_name,
@@ -2332,7 +3120,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -2361,131 +3149,90 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         return deserialized
 
     @overload
-    async def begin_deploy_project(
+    def begin_deploy_project(
         self,
         project_name: str,
         deployment_name: str,
-        body: JSON,
+        deployment: JSON,
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    ) -> LROPoller[JSON]:
         """Creates a new deployment or replaces an existing one.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
         :param deployment_name: The name of the specific deployment of the project to use. Required.
         :type deployment_name: str
-        :param body: The new deployment info. Required.
-        :type body: JSON
+        :param deployment: The new deployment info. Required.
+        :type deployment: JSON
         :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
          Default value is "application/json".
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
             .. code-block:: python
 
                 # JSON input template you can fill out and use as your body input.
-                body = {
+                deployment = {
                     "trainedModelLabel": "str"  # Represents the trained model label. Required.
                 }
 
                 # response body for status code(s): 200
                 response == {
-                    "createdDateTime": "2020-02-20 00:00:00",  # The creation date time of the
-                      job. Required.
-                    "errors": [
-                        {
-                            "code": "str",  # One of a server-defined set of error codes.
-                              Required. Known values are: "InvalidRequest", "InvalidArgument",
-                              "Unauthorized", "Forbidden", "NotFound", "ProjectNotFound",
-                              "OperationNotFound", "AzureCognitiveSearchNotFound",
-                              "AzureCognitiveSearchIndexNotFound", "TooManyRequests",
-                              "AzureCognitiveSearchThrottling",
-                              "AzureCognitiveSearchIndexLimitReached", "InternalServerError",
-                              "ServiceUnavailable", "Timeout", "QuotaExceeded", "Conflict", and
-                              "Warning".
-                            "details": [
-                                ...
-                            ],
-                            "innererror": {
-                                "code": "str",  # One of a server-defined set of
-                                  error codes. Required. Known values are: "InvalidRequest",
-                                  "InvalidParameterValue", "KnowledgeBaseNotFound",
-                                  "AzureCognitiveSearchNotFound", "AzureCognitiveSearchThrottling",
-                                  "ExtractionFailure", "InvalidRequestBodyFormat", "EmptyRequest",
-                                  "MissingInputDocuments", "InvalidDocument", "ModelVersionIncorrect",
-                                  "InvalidDocumentBatch", "UnsupportedLanguageCode", and
-                                  "InvalidCountryHint".
-                                "details": {
-                                    "str": "str"  # Optional. Error details.
-                                },
-                                "innererror": ...,
-                                "message": "str",  # Error message. Required.
-                                "target": "str"  # Optional. Error target.
-                            },
-                            "message": "str",  # A human-readable representation of the
-                              error. Required.
-                            "target": "str"  # Optional. The target of the error.
-                        }
-                    ],
-                    "expirationDateTime": "2020-02-20 00:00:00",  # Optional. The expiration date
-                      time of the job.
-                    "jobId": "str",  # The job ID. Required.
-                    "lastUpdatedDateTime": "2020-02-20 00:00:00",  # The last date time the job
-                      was updated. Required.
-                    "status": "str",  # The job status. Required. Known values are: "notStarted",
-                      "running", "succeeded", "failed", "cancelled", "cancelling", and
-                      "partiallyCompleted".
-                    "warnings": [
-                        {
-                            "code": "str",  # The warning code. Required.
-                            "message": "str"  # The warning message. Required.
-                        }
-                    ]
+                    "deploymentExpirationDate": "2020-02-20",  # Represents deployment expiration
+                      date in the runtime. Required.
+                    "deploymentName": "str",  # Represents deployment name. Required.
+                    "lastDeployedDateTime": "2020-02-20 00:00:00",  # Represents deployment last
+                      deployed time. Required.
+                    "lastTrainedDateTime": "2020-02-20 00:00:00",  # Represents deployment last
+                      trained time. Required.
+                    "modelId": "str",  # Represents deployment modelId. Required.
+                    "modelTrainingConfigVersion": "str"  # Represents model training config
+                      version. Required.
                 }
         """
 
     @overload
-    async def begin_deploy_project(
+    def begin_deploy_project(
         self,
         project_name: str,
         deployment_name: str,
-        body: IO,
+        deployment: IO,
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    ) -> LROPoller[JSON]:
         """Creates a new deployment or replaces an existing one.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
         :param deployment_name: The name of the specific deployment of the project to use. Required.
         :type deployment_name: str
-        :param body: The new deployment info. Required.
-        :type body: IO
+        :param deployment: The new deployment info. Required.
+        :type deployment: IO
         :keyword content_type: Body Parameter content-type. Content type parameter for binary body.
          Default value is "application/json".
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -2493,84 +3240,43 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
                 # response body for status code(s): 200
                 response == {
-                    "createdDateTime": "2020-02-20 00:00:00",  # The creation date time of the
-                      job. Required.
-                    "errors": [
-                        {
-                            "code": "str",  # One of a server-defined set of error codes.
-                              Required. Known values are: "InvalidRequest", "InvalidArgument",
-                              "Unauthorized", "Forbidden", "NotFound", "ProjectNotFound",
-                              "OperationNotFound", "AzureCognitiveSearchNotFound",
-                              "AzureCognitiveSearchIndexNotFound", "TooManyRequests",
-                              "AzureCognitiveSearchThrottling",
-                              "AzureCognitiveSearchIndexLimitReached", "InternalServerError",
-                              "ServiceUnavailable", "Timeout", "QuotaExceeded", "Conflict", and
-                              "Warning".
-                            "details": [
-                                ...
-                            ],
-                            "innererror": {
-                                "code": "str",  # One of a server-defined set of
-                                  error codes. Required. Known values are: "InvalidRequest",
-                                  "InvalidParameterValue", "KnowledgeBaseNotFound",
-                                  "AzureCognitiveSearchNotFound", "AzureCognitiveSearchThrottling",
-                                  "ExtractionFailure", "InvalidRequestBodyFormat", "EmptyRequest",
-                                  "MissingInputDocuments", "InvalidDocument", "ModelVersionIncorrect",
-                                  "InvalidDocumentBatch", "UnsupportedLanguageCode", and
-                                  "InvalidCountryHint".
-                                "details": {
-                                    "str": "str"  # Optional. Error details.
-                                },
-                                "innererror": ...,
-                                "message": "str",  # Error message. Required.
-                                "target": "str"  # Optional. Error target.
-                            },
-                            "message": "str",  # A human-readable representation of the
-                              error. Required.
-                            "target": "str"  # Optional. The target of the error.
-                        }
-                    ],
-                    "expirationDateTime": "2020-02-20 00:00:00",  # Optional. The expiration date
-                      time of the job.
-                    "jobId": "str",  # The job ID. Required.
-                    "lastUpdatedDateTime": "2020-02-20 00:00:00",  # The last date time the job
-                      was updated. Required.
-                    "status": "str",  # The job status. Required. Known values are: "notStarted",
-                      "running", "succeeded", "failed", "cancelled", "cancelling", and
-                      "partiallyCompleted".
-                    "warnings": [
-                        {
-                            "code": "str",  # The warning code. Required.
-                            "message": "str"  # The warning message. Required.
-                        }
-                    ]
+                    "deploymentExpirationDate": "2020-02-20",  # Represents deployment expiration
+                      date in the runtime. Required.
+                    "deploymentName": "str",  # Represents deployment name. Required.
+                    "lastDeployedDateTime": "2020-02-20 00:00:00",  # Represents deployment last
+                      deployed time. Required.
+                    "lastTrainedDateTime": "2020-02-20 00:00:00",  # Represents deployment last
+                      trained time. Required.
+                    "modelId": "str",  # Represents deployment modelId. Required.
+                    "modelTrainingConfigVersion": "str"  # Represents model training config
+                      version. Required.
                 }
         """
 
-    @distributed_trace_async
-    async def begin_deploy_project(
-        self, project_name: str, deployment_name: str, body: Union[JSON, IO], **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    @distributed_trace
+    def begin_deploy_project(
+        self, project_name: str, deployment_name: str, deployment: Union[JSON, IO], **kwargs: Any
+    ) -> LROPoller[JSON]:
         """Creates a new deployment or replaces an existing one.
 
         :param project_name: The name of the project to use. Required.
         :type project_name: str
         :param deployment_name: The name of the specific deployment of the project to use. Required.
         :type deployment_name: str
-        :param body: The new deployment info. Is either a model type or a IO type. Required.
-        :type body: JSON or IO
+        :param deployment: The new deployment info. Is either a model type or a IO type. Required.
+        :type deployment: JSON or IO
         :keyword content_type: Body Parameter content-type. Known values are: 'application/json'.
          Default value is None.
         :paramtype content_type: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -2578,57 +3284,16 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
                 # response body for status code(s): 200
                 response == {
-                    "createdDateTime": "2020-02-20 00:00:00",  # The creation date time of the
-                      job. Required.
-                    "errors": [
-                        {
-                            "code": "str",  # One of a server-defined set of error codes.
-                              Required. Known values are: "InvalidRequest", "InvalidArgument",
-                              "Unauthorized", "Forbidden", "NotFound", "ProjectNotFound",
-                              "OperationNotFound", "AzureCognitiveSearchNotFound",
-                              "AzureCognitiveSearchIndexNotFound", "TooManyRequests",
-                              "AzureCognitiveSearchThrottling",
-                              "AzureCognitiveSearchIndexLimitReached", "InternalServerError",
-                              "ServiceUnavailable", "Timeout", "QuotaExceeded", "Conflict", and
-                              "Warning".
-                            "details": [
-                                ...
-                            ],
-                            "innererror": {
-                                "code": "str",  # One of a server-defined set of
-                                  error codes. Required. Known values are: "InvalidRequest",
-                                  "InvalidParameterValue", "KnowledgeBaseNotFound",
-                                  "AzureCognitiveSearchNotFound", "AzureCognitiveSearchThrottling",
-                                  "ExtractionFailure", "InvalidRequestBodyFormat", "EmptyRequest",
-                                  "MissingInputDocuments", "InvalidDocument", "ModelVersionIncorrect",
-                                  "InvalidDocumentBatch", "UnsupportedLanguageCode", and
-                                  "InvalidCountryHint".
-                                "details": {
-                                    "str": "str"  # Optional. Error details.
-                                },
-                                "innererror": ...,
-                                "message": "str",  # Error message. Required.
-                                "target": "str"  # Optional. Error target.
-                            },
-                            "message": "str",  # A human-readable representation of the
-                              error. Required.
-                            "target": "str"  # Optional. The target of the error.
-                        }
-                    ],
-                    "expirationDateTime": "2020-02-20 00:00:00",  # Optional. The expiration date
-                      time of the job.
-                    "jobId": "str",  # The job ID. Required.
-                    "lastUpdatedDateTime": "2020-02-20 00:00:00",  # The last date time the job
-                      was updated. Required.
-                    "status": "str",  # The job status. Required. Known values are: "notStarted",
-                      "running", "succeeded", "failed", "cancelled", "cancelling", and
-                      "partiallyCompleted".
-                    "warnings": [
-                        {
-                            "code": "str",  # The warning code. Required.
-                            "message": "str"  # The warning message. Required.
-                        }
-                    ]
+                    "deploymentExpirationDate": "2020-02-20",  # Represents deployment expiration
+                      date in the runtime. Required.
+                    "deploymentName": "str",  # Represents deployment name. Required.
+                    "lastDeployedDateTime": "2020-02-20 00:00:00",  # Represents deployment last
+                      deployed time. Required.
+                    "lastTrainedDateTime": "2020-02-20 00:00:00",  # Represents deployment last
+                      trained time. Required.
+                    "modelId": "str",  # Represents deployment modelId. Required.
+                    "modelTrainingConfigVersion": "str"  # Represents model training config
+                      version. Required.
                 }
         """
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
@@ -2636,14 +3301,14 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         content_type = kwargs.pop("content_type", _headers.pop("Content-Type", None))  # type: Optional[str]
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
-        polling = kwargs.pop("polling", True)  # type: Union[bool, AsyncPollingMethod]
+        polling = kwargs.pop("polling", True)  # type: Union[bool, PollingMethod]
         lro_delay = kwargs.pop("polling_interval", self._config.polling_interval)
         cont_token = kwargs.pop("continuation_token", None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._deploy_project_initial(  # type: ignore
+            raw_result = self._deploy_project_initial(  # type: ignore
                 project_name=project_name,
                 deployment_name=deployment_name,
-                body=body,
+                deployment=deployment,
                 content_type=content_type,
                 cls=lambda x, y, z: x,
                 headers=_headers,
@@ -2668,25 +3333,22 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         if polling is True:
             polling_method = cast(
-                AsyncPollingMethod,
-                AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs),
-            )  # type: AsyncPollingMethod
+                PollingMethod, LROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs)
+            )  # type: PollingMethod
         elif polling is False:
-            polling_method = cast(AsyncPollingMethod, AsyncNoPolling())
+            polling_method = cast(PollingMethod, NoPolling())
         else:
             polling_method = polling
         if cont_token:
-            return AsyncLROPoller.from_continuation_token(
+            return LROPoller.from_continuation_token(
                 polling_method=polling_method,
                 continuation_token=cont_token,
                 client=self._client,
                 deserialization_callback=get_long_running_output,
             )
-        return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
+        return LROPoller(self._client, raw_result, get_long_running_output, polling_method)
 
-    async def _delete_deployment_initial(
-        self, project_name: str, deployment_name: str, **kwargs: Any
-    ) -> Optional[JSON]:
+    def _delete_deployment_initial(self, project_name: str, deployment_name: str, **kwargs: Any) -> Optional[JSON]:
         error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
         error_map.update(kwargs.pop("error_map", {}) or {})
 
@@ -2707,7 +3369,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -2735,10 +3397,8 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return deserialized
 
-    @distributed_trace_async
-    async def begin_delete_deployment(
-        self, project_name: str, deployment_name: str, **kwargs: Any
-    ) -> AsyncLROPoller[JSON]:
+    @distributed_trace
+    def begin_delete_deployment(self, project_name: str, deployment_name: str, **kwargs: Any) -> LROPoller[JSON]:
         """Deletes a project deployment.
 
         :param project_name: The name of the project to use. Required.
@@ -2746,14 +3406,14 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         :param deployment_name: The name of the specific deployment of the project to use. Required.
         :type deployment_name: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -2818,11 +3478,11 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         _params = kwargs.pop("params", {}) or {}
 
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
-        polling = kwargs.pop("polling", True)  # type: Union[bool, AsyncPollingMethod]
+        polling = kwargs.pop("polling", True)  # type: Union[bool, PollingMethod]
         lro_delay = kwargs.pop("polling_interval", self._config.polling_interval)
         cont_token = kwargs.pop("continuation_token", None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._delete_deployment_initial(  # type: ignore
+            raw_result = self._delete_deployment_initial(  # type: ignore
                 project_name=project_name,
                 deployment_name=deployment_name,
                 cls=lambda x, y, z: x,
@@ -2848,24 +3508,23 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         if polling is True:
             polling_method = cast(
-                AsyncPollingMethod,
-                AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs),
-            )  # type: AsyncPollingMethod
+                PollingMethod, LROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs)
+            )  # type: PollingMethod
         elif polling is False:
-            polling_method = cast(AsyncPollingMethod, AsyncNoPolling())
+            polling_method = cast(PollingMethod, NoPolling())
         else:
             polling_method = polling
         if cont_token:
-            return AsyncLROPoller.from_continuation_token(
+            return LROPoller.from_continuation_token(
                 polling_method=polling_method,
                 continuation_token=cont_token,
                 client=self._client,
                 deserialization_callback=get_long_running_output,
             )
-        return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
+        return LROPoller(self._client, raw_result, get_long_running_output, polling_method)
 
-    @distributed_trace_async
-    async def get_deployment_status(self, project_name: str, deployment_name: str, job_id: str, **kwargs: Any) -> JSON:
+    @distributed_trace
+    def get_deployment_job_status(self, project_name: str, deployment_name: str, job_id: str, **kwargs: Any) -> JSON:
         """Gets the status of an existing deployment job.
 
         :param project_name: The name of the project to use. Required.
@@ -2944,7 +3603,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
 
-        request = build_get_deployment_status_request(
+        request = build_get_deployment_job_status_request(
             project_name=project_name,
             deployment_name=deployment_name,
             job_id=job_id,
@@ -2957,7 +3616,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -2977,8 +3636,8 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return cast(JSON, deserialized)
 
-    @distributed_trace_async
-    async def get_swap_deployments_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
+    @distributed_trace
+    def get_swap_deployments_job_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
         """Gets the status of an existing swap deployment job.
 
         :param project_name: The name of the project to use. Required.
@@ -3055,7 +3714,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
 
-        request = build_get_swap_deployments_status_request(
+        request = build_get_swap_deployments_job_status_request(
             project_name=project_name,
             job_id=job_id,
             api_version=self._config.api_version,
@@ -3067,7 +3726,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -3087,8 +3746,8 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return cast(JSON, deserialized)
 
-    @distributed_trace_async
-    async def get_export_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
+    @distributed_trace
+    def get_export_project_job_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
         """Gets the status of an export job. Once job completes, returns the project metadata, and assets.
 
         :param project_name: The name of the project to use. Required.
@@ -3167,7 +3826,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
 
-        request = build_get_export_status_request(
+        request = build_get_export_project_job_status_request(
             project_name=project_name,
             job_id=job_id,
             api_version=self._config.api_version,
@@ -3179,7 +3838,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -3199,8 +3858,8 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return cast(JSON, deserialized)
 
-    @distributed_trace_async
-    async def get_import_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
+    @distributed_trace
+    def get_import_project_job_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
         """Gets the status for an import.
 
         :param project_name: The name of the project to use. Required.
@@ -3277,7 +3936,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
 
-        request = build_get_import_status_request(
+        request = build_get_import_project_job_status_request(
             project_name=project_name,
             job_id=job_id,
             api_version=self._config.api_version,
@@ -3289,7 +3948,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -3318,7 +3977,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         skip: Optional[int] = None,
         maxpagesize: Optional[int] = None,
         **kwargs: Any
-    ) -> AsyncIterable[JSON]:
+    ) -> Iterable[JSON]:
         """Lists the trained models belonging to a project.
 
         :param project_name: The name of the project to use. Required.
@@ -3333,7 +3992,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
          value is None.
         :paramtype maxpagesize: int
         :return: An iterator like instance of JSON object
-        :rtype: ~azure.core.async_paging.AsyncItemPaged[JSON]
+        :rtype: ~azure.core.paging.ItemPaged[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -3401,17 +4060,17 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 request.method = "GET"
             return request
 
-        async def extract_data(pipeline_response):
+        def extract_data(pipeline_response):
             deserialized = pipeline_response.http_response.json()
             list_of_elem = deserialized["value"]
             if cls:
                 list_of_elem = cls(list_of_elem)
-            return deserialized.get("nextLink", None), AsyncList(list_of_elem)
+            return deserialized.get("nextLink", None), iter(list_of_elem)
 
-        async def get_next(next_link=None):
+        def get_next(next_link=None):
             request = prepare_request(next_link)
 
-            pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
                 request, stream=False, **kwargs
             )
             response = pipeline_response.http_response
@@ -3422,10 +4081,10 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
             return pipeline_response
 
-        return AsyncItemPaged(get_next, extract_data)
+        return ItemPaged(get_next, extract_data)
 
-    @distributed_trace_async
-    async def get_trained_model(self, project_name: str, trained_model_label: str, **kwargs: Any) -> JSON:
+    @distributed_trace
+    def get_trained_model(self, project_name: str, trained_model_label: str, **kwargs: Any) -> JSON:
         """Gets the details of a trained model.
 
         :param project_name: The name of the project to use. Required.
@@ -3472,7 +4131,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -3492,8 +4151,8 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return cast(JSON, deserialized)
 
-    @distributed_trace_async
-    async def delete_trained_model(  # pylint: disable=inconsistent-return-statements
+    @distributed_trace
+    def delete_trained_model(  # pylint: disable=inconsistent-return-statements
         self, project_name: str, trained_model_label: str, **kwargs: Any
     ) -> None:
         """Deletes an existing trained model.
@@ -3526,7 +4185,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -3540,7 +4199,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
             return cls(pipeline_response, None, {})
 
     @distributed_trace
-    def get_model_evaluation_results(
+    def list_model_evaluation_results(
         self,
         project_name: str,
         trained_model_label: str,
@@ -3550,7 +4209,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         skip: Optional[int] = None,
         maxpagesize: Optional[int] = None,
         **kwargs: Any
-    ) -> AsyncIterable[JSON]:
+    ) -> Iterable[JSON]:
         """Gets the detailed results of the evaluation for a trained model. This includes the raw
         inference results for the data included in the evaluation process.
 
@@ -3571,7 +4230,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
          value is None.
         :paramtype maxpagesize: int
         :return: An iterator like instance of JSON object
-        :rtype: ~azure.core.async_paging.AsyncItemPaged[JSON]
+        :rtype: ~azure.core.paging.ItemPaged[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -3624,7 +4283,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         def prepare_request(next_link=None):
             if not next_link:
 
-                request = build_get_model_evaluation_results_request(
+                request = build_list_model_evaluation_results_request(
                     project_name=project_name,
                     trained_model_label=trained_model_label,
                     string_index_type=string_index_type,
@@ -3644,7 +4303,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
             else:
 
-                request = build_get_model_evaluation_results_request(
+                request = build_list_model_evaluation_results_request(
                     project_name=project_name,
                     trained_model_label=trained_model_label,
                     headers=_headers,
@@ -3665,17 +4324,17 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 request.method = "GET"
             return request
 
-        async def extract_data(pipeline_response):
+        def extract_data(pipeline_response):
             deserialized = pipeline_response.http_response.json()
             list_of_elem = deserialized["value"]
             if cls:
                 list_of_elem = cls(list_of_elem)
-            return deserialized.get("nextLink", None), AsyncList(list_of_elem)
+            return deserialized.get("nextLink", None), iter(list_of_elem)
 
-        async def get_next(next_link=None):
+        def get_next(next_link=None):
             request = prepare_request(next_link)
 
-            pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
                 request, stream=False, **kwargs
             )
             response = pipeline_response.http_response
@@ -3686,10 +4345,10 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
             return pipeline_response
 
-        return AsyncItemPaged(get_next, extract_data)
+        return ItemPaged(get_next, extract_data)
 
-    @distributed_trace_async
-    async def get_model_evaluation_summary(self, project_name: str, trained_model_label: str, **kwargs: Any) -> JSON:
+    @distributed_trace
+    def get_model_evaluation_summary(self, project_name: str, trained_model_label: str, **kwargs: Any) -> JSON:
         """Gets the evaluation summary of a trained model. The summary includes high level performance
         measurements of the model e.g., F1, Precision, Recall, etc.
 
@@ -3811,7 +4470,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -3840,7 +4499,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         skip: Optional[int] = None,
         maxpagesize: Optional[int] = None,
         **kwargs: Any
-    ) -> AsyncIterable[JSON]:
+    ) -> Iterable[JSON]:
         """Lists the non-expired training jobs created for a project.
 
         :param project_name: The name of the project to use. Required.
@@ -3855,7 +4514,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
          value is None.
         :paramtype maxpagesize: int
         :return: An iterator like instance of JSON object
-        :rtype: ~azure.core.async_paging.AsyncItemPaged[JSON]
+        :rtype: ~azure.core.paging.ItemPaged[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -3998,17 +4657,17 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 request.method = "GET"
             return request
 
-        async def extract_data(pipeline_response):
+        def extract_data(pipeline_response):
             deserialized = pipeline_response.http_response.json()
             list_of_elem = deserialized["value"]
             if cls:
                 list_of_elem = cls(list_of_elem)
-            return deserialized.get("nextLink", None), AsyncList(list_of_elem)
+            return deserialized.get("nextLink", None), iter(list_of_elem)
 
-        async def get_next(next_link=None):
+        def get_next(next_link=None):
             request = prepare_request(next_link)
 
-            pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
                 request, stream=False, **kwargs
             )
             response = pipeline_response.http_response
@@ -4019,10 +4678,10 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
             return pipeline_response
 
-        return AsyncItemPaged(get_next, extract_data)
+        return ItemPaged(get_next, extract_data)
 
-    @distributed_trace_async
-    async def get_training_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
+    @distributed_trace
+    def get_training_job_status(self, project_name: str, job_id: str, **kwargs: Any) -> JSON:
         """Gets the status for a training job.
 
         :param project_name: The name of the project to use. Required.
@@ -4132,7 +4791,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
 
-        request = build_get_training_status_request(
+        request = build_get_training_job_status_request(
             project_name=project_name,
             job_id=job_id,
             api_version=self._config.api_version,
@@ -4144,7 +4803,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -4164,7 +4823,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return cast(JSON, deserialized)
 
-    async def _cancel_training_job_initial(self, project_name: str, job_id: str, **kwargs: Any) -> Optional[JSON]:
+    def _cancel_training_job_initial(self, project_name: str, job_id: str, **kwargs: Any) -> Optional[JSON]:
         error_map = {401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError}
         error_map.update(kwargs.pop("error_map", {}) or {})
 
@@ -4185,7 +4844,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -4213,8 +4872,8 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         return deserialized
 
-    @distributed_trace_async
-    async def begin_cancel_training_job(self, project_name: str, job_id: str, **kwargs: Any) -> AsyncLROPoller[JSON]:
+    @distributed_trace
+    def begin_cancel_training_job(self, project_name: str, job_id: str, **kwargs: Any) -> LROPoller[JSON]:
         """Triggers a cancellation for a running training job.
 
         :param project_name: The name of the project to use. Required.
@@ -4222,14 +4881,14 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         :param job_id: The job ID. Required.
         :type job_id: str
         :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be AsyncLROBasePolling. Pass in False
-         for this operation to not poll, or pass in your own initialized polling object for a personal
+        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
+         this operation to not poll, or pass in your own initialized polling object for a personal
          polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.AsyncPollingMethod
+        :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of AsyncLROPoller that returns JSON object
-        :rtype: ~azure.core.polling.AsyncLROPoller[JSON]
+        :return: An instance of LROPoller that returns JSON object
+        :rtype: ~azure.core.polling.LROPoller[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -4327,11 +4986,11 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         _params = kwargs.pop("params", {}) or {}
 
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
-        polling = kwargs.pop("polling", True)  # type: Union[bool, AsyncPollingMethod]
+        polling = kwargs.pop("polling", True)  # type: Union[bool, PollingMethod]
         lro_delay = kwargs.pop("polling_interval", self._config.polling_interval)
         cont_token = kwargs.pop("continuation_token", None)  # type: Optional[str]
         if cont_token is None:
-            raw_result = await self._cancel_training_job_initial(  # type: ignore
+            raw_result = self._cancel_training_job_initial(  # type: ignore
                 project_name=project_name,
                 job_id=job_id,
                 cls=lambda x, y, z: x,
@@ -4357,24 +5016,23 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         if polling is True:
             polling_method = cast(
-                AsyncPollingMethod,
-                AsyncLROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs),
-            )  # type: AsyncPollingMethod
+                PollingMethod, LROBasePolling(lro_delay, path_format_arguments=path_format_arguments, **kwargs)
+            )  # type: PollingMethod
         elif polling is False:
-            polling_method = cast(AsyncPollingMethod, AsyncNoPolling())
+            polling_method = cast(PollingMethod, NoPolling())
         else:
             polling_method = polling
         if cont_token:
-            return AsyncLROPoller.from_continuation_token(
+            return LROPoller.from_continuation_token(
                 polling_method=polling_method,
                 continuation_token=cont_token,
                 client=self._client,
                 deserialization_callback=get_long_running_output,
             )
-        return AsyncLROPoller(self._client, raw_result, get_long_running_output, polling_method)
+        return LROPoller(self._client, raw_result, get_long_running_output, polling_method)
 
-    @distributed_trace_async
-    async def get_project_deletion_status(self, job_id: str, **kwargs: Any) -> JSON:
+    @distributed_trace
+    def get_project_deletion_job_status(self, job_id: str, **kwargs: Any) -> JSON:
         """Gets the status for a project deletion job.
 
         :param job_id: The job ID. Required.
@@ -4449,7 +5107,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
         cls = kwargs.pop("cls", None)  # type: ClsType[JSON]
 
-        request = build_get_project_deletion_status_request(
+        request = build_get_project_deletion_job_status_request(
             job_id=job_id,
             api_version=self._config.api_version,
             headers=_headers,
@@ -4460,7 +5118,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)  # type: ignore
 
-        pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+        pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
             request, stream=False, **kwargs
         )
 
@@ -4481,7 +5139,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         return cast(JSON, deserialized)
 
     @distributed_trace
-    def get_supported_languages(
+    def list_supported_languages(
         self,
         *,
         project_kind: str,
@@ -4489,7 +5147,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         skip: Optional[int] = None,
         maxpagesize: Optional[int] = None,
         **kwargs: Any
-    ) -> AsyncIterable[JSON]:
+    ) -> Iterable[JSON]:
         """Lists the supported languages for the given project type.
 
         :keyword project_kind: The project kind. Known values are: "Conversation" and "Orchestration".
@@ -4505,7 +5163,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
          value is None.
         :paramtype maxpagesize: int
         :return: An iterator like instance of JSON object
-        :rtype: ~azure.core.async_paging.AsyncItemPaged[JSON]
+        :rtype: ~azure.core.paging.ItemPaged[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -4530,7 +5188,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         def prepare_request(next_link=None):
             if not next_link:
 
-                request = build_get_supported_languages_request(
+                request = build_list_supported_languages_request(
                     project_kind=project_kind,
                     top=top,
                     skip=skip,
@@ -4548,7 +5206,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
             else:
 
-                request = build_get_supported_languages_request(
+                request = build_list_supported_languages_request(
                     headers=_headers,
                     params=_params,
                 )
@@ -4567,17 +5225,17 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 request.method = "GET"
             return request
 
-        async def extract_data(pipeline_response):
+        def extract_data(pipeline_response):
             deserialized = pipeline_response.http_response.json()
             list_of_elem = deserialized["value"]
             if cls:
                 list_of_elem = cls(list_of_elem)
-            return deserialized.get("nextLink", None), AsyncList(list_of_elem)
+            return deserialized.get("nextLink", None), iter(list_of_elem)
 
-        async def get_next(next_link=None):
+        def get_next(next_link=None):
             request = prepare_request(next_link)
 
-            pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
                 request, stream=False, **kwargs
             )
             response = pipeline_response.http_response
@@ -4588,19 +5246,19 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
             return pipeline_response
 
-        return AsyncItemPaged(get_next, extract_data)
+        return ItemPaged(get_next, extract_data)
 
     @distributed_trace
-    def get_supported_prebuilt_entities(
+    def list_supported_prebuilt_entities(
         self,
         *,
         language: Optional[str] = None,
-        multilingual: Optional[str] = None,
+        multilingual: Optional[bool] = None,
         top: Optional[int] = None,
         skip: Optional[int] = None,
         maxpagesize: Optional[int] = None,
         **kwargs: Any
-    ) -> AsyncIterable[JSON]:
+    ) -> Iterable[JSON]:
         """Lists the supported prebuilt entities that can be used while creating composed entities.
 
         :keyword language: The language to get supported prebuilt entities for. Required if
@@ -4609,7 +5267,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         :paramtype language: str
         :keyword multilingual: Whether to get the support prebuilt entities for multilingual or
          monolingual projects. If true, the language parameter is ignored. Default value is None.
-        :paramtype multilingual: str
+        :paramtype multilingual: bool
         :keyword top: The maximum number of resources to return from the collection. Default value is
          None.
         :paramtype top: int
@@ -4620,7 +5278,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
          value is None.
         :paramtype maxpagesize: int
         :return: An iterator like instance of JSON object
-        :rtype: ~azure.core.async_paging.AsyncItemPaged[JSON]
+        :rtype: ~azure.core.paging.ItemPaged[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -4644,7 +5302,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         def prepare_request(next_link=None):
             if not next_link:
 
-                request = build_get_supported_prebuilt_entities_request(
+                request = build_list_supported_prebuilt_entities_request(
                     language=language,
                     multilingual=multilingual,
                     top=top,
@@ -4663,7 +5321,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
             else:
 
-                request = build_get_supported_prebuilt_entities_request(
+                request = build_list_supported_prebuilt_entities_request(
                     headers=_headers,
                     params=_params,
                 )
@@ -4682,17 +5340,17 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 request.method = "GET"
             return request
 
-        async def extract_data(pipeline_response):
+        def extract_data(pipeline_response):
             deserialized = pipeline_response.http_response.json()
             list_of_elem = deserialized["value"]
             if cls:
                 list_of_elem = cls(list_of_elem)
-            return deserialized.get("nextLink", None), AsyncList(list_of_elem)
+            return deserialized.get("nextLink", None), iter(list_of_elem)
 
-        async def get_next(next_link=None):
+        def get_next(next_link=None):
             request = prepare_request(next_link)
 
-            pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
                 request, stream=False, **kwargs
             )
             response = pipeline_response.http_response
@@ -4703,7 +5361,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
             return pipeline_response
 
-        return AsyncItemPaged(get_next, extract_data)
+        return ItemPaged(get_next, extract_data)
 
     @distributed_trace
     def list_training_config_versions(
@@ -4714,7 +5372,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
         skip: Optional[int] = None,
         maxpagesize: Optional[int] = None,
         **kwargs: Any
-    ) -> AsyncIterable[JSON]:
+    ) -> Iterable[JSON]:
         """Lists the support training config version for a given project type.
 
         :keyword project_kind: The project kind. Known values are: "Conversation" and "Orchestration".
@@ -4730,7 +5388,7 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
          value is None.
         :paramtype maxpagesize: int
         :return: An iterator like instance of JSON object
-        :rtype: ~azure.core.async_paging.AsyncItemPaged[JSON]
+        :rtype: ~azure.core.paging.ItemPaged[JSON]
         :raises ~azure.core.exceptions.HttpResponseError:
 
         Example:
@@ -4792,17 +5450,17 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
                 request.method = "GET"
             return request
 
-        async def extract_data(pipeline_response):
+        def extract_data(pipeline_response):
             deserialized = pipeline_response.http_response.json()
             list_of_elem = deserialized["value"]
             if cls:
                 list_of_elem = cls(list_of_elem)
-            return deserialized.get("nextLink", None), AsyncList(list_of_elem)
+            return deserialized.get("nextLink", None), iter(list_of_elem)
 
-        async def get_next(next_link=None):
+        def get_next(next_link=None):
             request = prepare_request(next_link)
 
-            pipeline_response = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            pipeline_response = self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
                 request, stream=False, **kwargs
             )
             response = pipeline_response.http_response
@@ -4813,4 +5471,4 @@ class ConversationAnalysisProjectsClientOperationsMixin(MixinABC):  # pylint: di
 
             return pipeline_response
 
-        return AsyncItemPaged(get_next, extract_data)
+        return ItemPaged(get_next, extract_data)

@@ -62,15 +62,76 @@ These settings apply only when `--tag=release_authoring_1_0` is specified on the
 
 ```yaml $(tag) == 'release_authoring_1_0'
 input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cognitiveservices/data-plane/Language/stable/2022-05-01/analyzeconversations-authoring.json
-output-folder: ../azure/ai/language/conversations/projects
-title: ConversationAnalysisProjectsClient
+output-folder: ../azure/ai/language/conversations/authoring
+title: ConversationAuthoringClient
 ```
 
-## Runtime API Directives
+## Customizations
 
-### Rename Runtime client operation
+Customizations that should eventually be added to central autorest configuration.
+
+### General customizations
 
 ```yaml
+directive:
+# Support automatically generating code for key credentials.
+- from: swagger-document
+  where: $.securityDefinitions
+  transform: |
+    $["AzureKey"] = $["apim_key"];
+    delete $["apim_key"];
+
+- from: swagger-document
+  where: $.security
+  transform: |
+    $ = [
+        {
+          "AzureKey": []
+        }
+    ];
+
+# Fix Endpoint parameter description and format.
+- from: swagger-document
+  where: $.parameters.Endpoint
+  transform: |
+    $["description"] = "Supported Cognitive Services endpoint (e.g., https://<resource-name>.cognitiveservices.azure.com).";
+    $["format"] = "url";
+
+# Define multilingual parameter as a boolean.
+- where-operation: ConversationalAnalysisAuthoring_GetSupportedPrebuiltEntities
+  transform: |
+    var multilingualParam = $.parameters.find(param => param.name === "multilingual");
+    multilingualParam.type = "boolean";
+```
+
+### Python customizations
+
+```yaml
+directive:
+# Always default to UnicodeCodePoint string indices.
+- from: swagger-document
+  where: $.definitions.StringIndexType
+  transform: |
+    $["description"] = "Specifies the method used to interpret string offsets. Set to \"UnicodeCodePoint\" for Python strings.";
+    $["x-ms-client-default"] = "UnicodeCodePoint";
+
+# This is the only option for these types?
+# - from: swagger-document
+#   where: $.definitions.ConversationalAnalysisAuthoringStringIndexType
+#   transform: |
+#     $["x-ms-client-default"] = "Utf16CodeUnit";
+
+# - from: swagger-document
+#   where: $.parameters.ConversationalAnalysisAuthoringStringIndexTypeQueryParameter
+#   transform: |
+#     $["x-ms-client-default"] = "Utf16CodeUnit";
+```
+
+
+### Runtime API Directives
+
+```yaml $(tag) == 'release_runtime_1_0'
+# Rename Runtime client operation
 directive:
     - from: swagger-document
       where: $["paths"]["/:analyze-conversations"]["post"]
@@ -78,9 +139,8 @@ directive:
           $["operationId"] = "AnalyzeConversation";
 ```
 
-### Rename `body` to `tasks`
-
-```yaml
+```yaml $(tag) == 'release_runtime_1_0'
+# Rename analyze_conversation `body` to `tasks`
 directive:
     - from: swagger-document
       where: $["paths"]["/:analyze-conversations"]["post"]
@@ -88,58 +148,11 @@ directive:
         $["parameters"][1]["x-ms-client-name"] = "task";
 ```
 
-### Unify `confidenceScore` in Qna intent result
 
-```yaml
-directive:
-    - from: swagger-document
-      where: $["definitions"]["KnowledgeBaseAnswer"]["properties"]["confidenceScore"]
-      transform: >
-        $["x-ms-client-name"] = "confidence";
-```
-
-```yaml
-directive:
-    - from: swagger-document
-      where: $["definitions"]["AnswerSpan"]["properties"]["confidenceScore"]
-      transform: >
-        $["x-ms-client-name"] = "confidence";
-```
-
-### Set default values for `ParticipantID`, and `ConversationID`
-
-```yaml
-directive:
-    - from: swagger-document
-      where: $["definitions"]["ConversationItemBase"]["properties"]["participantId"]
-      transform: >
-        $["x-ms-client-default"] = 1;
-```
-
-```yaml
-directive:
-    - from: swagger-document
-      where: $["definitions"]["ConversationItemBase"]["properties"]["id"]
-      transform: >
-        $["x-ms-client-default"] = 1;
-```
-
-### Fix `enum` error
-
-```yaml
-directive:
-  - from: swagger-document
-    where: $["definitions"]["CustomConversationTaskParameters"]
-    transform: >
-        delete $.properties["stringIndexType"]
-```
-
-
-## Authoring API Directives
-
-### Give LROs return types
+### Authoring API Directives
 
 ```yaml $(tag) == 'release_authoring_1_0'
+# Give LROs return types
 directive:
   - where-operation: ConversationalAnalysisAuthoring_CancelTrainingJob
     transform: >
@@ -170,7 +183,7 @@ directive:
       $["responses"]["200"] = {
         "description": "dummy schema to get poller response when calling .result()",
         "schema": {
-          "$ref": "#/definitions/ConversationalAnalysisAuthoringDeploymentJobState"
+          "$ref": "#/definitions/ConversationalAnalysisAuthoringProjectDeployment"
         }
       };
   - where-operation: ConversationalAnalysisAuthoring_Export
@@ -207,10 +220,28 @@ directive:
       };
 ```
 
-
-### Rename Authoring client operations
+```yaml $(tag) == 'release_authoring_1_0'
+# Rename `body` param for operations
+directive:
+  - where-operation: ConversationalAnalysisAuthoring_DeployProject
+    transform: >
+        $.parameters[2]["x-ms-client-name"] = "deployment";
+  - where-operation: ConversationalAnalysisAuthoring_Import
+    transform: >
+        $.parameters[2]["x-ms-client-name"] = "project";
+  - where-operation: ConversationalAnalysisAuthoring_SwapDeployments
+    transform: >
+        $.parameters[1]["x-ms-client-name"] = "deployments";
+  - where-operation: ConversationalAnalysisAuthoring_Train
+    transform: >
+        $.parameters[1]["x-ms-client-name"] = "configuration";
+  - where-operation: ConversationalAnalysisAuthoring_CreateProject
+    transform: >
+        $.parameters[1]["x-ms-client-name"] = "project";
+```
 
 ```yaml $(tag) == 'release_authoring_1_0'
+# Rename Authoring client operations
 directive:
   - rename-operation:
       from: ConversationalAnalysisAuthoring_ListProjects
@@ -250,16 +281,16 @@ directive:
       to: DeleteDeployment
   - rename-operation:
       from: ConversationalAnalysisAuthoring_GetDeploymentStatus
-      to: GetDeploymentStatus
+      to: GetDeploymentJobStatus
   - rename-operation:
       from: ConversationalAnalysisAuthoring_GetSwapDeploymentsStatus
-      to: GetSwapDeploymentsStatus
+      to: GetSwapDeploymentsJobStatus
   - rename-operation:
       from: ConversationalAnalysisAuthoring_GetExportStatus
-      to: GetExportStatus
+      to: GetExportProjectJobStatus
   - rename-operation:
       from: ConversationalAnalysisAuthoring_GetImportStatus
-      to: GetImportStatus
+      to: GetImportProjectJobStatus
   - rename-operation:
       from: ConversationalAnalysisAuthoring_ListTrainedModels
       to: ListTrainedModels
@@ -271,7 +302,7 @@ directive:
       to: DeleteTrainedModel
   - rename-operation:
       from: ConversationalAnalysisAuthoring_GetModelEvaluationResults
-      to: GetModelEvaluationResults
+      to: ListModelEvaluationResults
   - rename-operation:
       from: ConversationalAnalysisAuthoring_GetModelEvaluationSummary
       to: GetModelEvaluationSummary
@@ -280,19 +311,19 @@ directive:
       to: ListTrainingJobs
   - rename-operation:
       from: ConversationalAnalysisAuthoring_GetTrainingStatus
-      to: GetTrainingStatus
+      to: GetTrainingJobStatus
   - rename-operation:
       from: ConversationalAnalysisAuthoring_CancelTrainingJob
       to: CancelTrainingJob
   - rename-operation:
       from: ConversationalAnalysisAuthoring_GetProjectDeletionStatus
-      to: GetProjectDeletionStatus
+      to: GetProjectDeletionJobStatus
   - rename-operation:
       from: ConversationalAnalysisAuthoring_GetSupportedLanguages
-      to: GetSupportedLanguages
+      to: ListSupportedLanguages
   - rename-operation:
       from: ConversationalAnalysisAuthoring_GetSupportedPrebuiltEntities
-      to: GetSupportedPrebuiltEntities
+      to: ListSupportedPrebuiltEntities
   - rename-operation:
       from: ConversationalAnalysisAuthoring_ListTrainingConfigVersions
       to: ListTrainingConfigVersions

@@ -16,6 +16,7 @@ from testcase import TextAnalyticsPreparer
 from testcase import TextAnalyticsClientPreparer as _TextAnalyticsClientPreparer
 from devtools_testutils.aio import recorded_by_proxy_async
 from testcase import TextAnalyticsTest
+from azure.ai.textanalytics.aio._lro_async import AsyncAnalyzeHealthcareEntitiesLROPoller
 from azure.ai.textanalytics.aio import TextAnalyticsClient
 from azure.ai.textanalytics import (
     TextDocumentInput,
@@ -550,6 +551,7 @@ class TestHealth(TextAnalyticsTest):
                 continuation_token=cont_token,
                 polling_interval=self._interval(),
             )
+            assert isinstance(poller, AsyncAnalyzeHealthcareEntitiesLROPoller)
             response = await poller.result()
 
             results = []

@@ -7,7 +7,7 @@ import base64
 import functools
 import json
 import datetime
-from typing import Any, Optional
+from typing import Any, Optional, Mapping
 from urllib.parse import urlencode
 from azure.core.polling._poller import PollingReturnType
 from azure.core.exceptions import HttpResponseError
@@ -457,6 +457,86 @@ class AnalyzeActionsLROPoller(LROPoller[PollingReturnType]):
         continuation_token: str,
         **kwargs: Any
     ) -> "AnalyzeActionsLROPoller":  # type: ignore
+        client, initial_response, deserialization_callback = polling_method.from_continuation_token(
+            continuation_token, **kwargs
+        )
+        polling_method._lro_algorithms = [  # pylint: disable=protected-access
+            TextAnalyticsOperationResourcePolling(
+                show_stats=initial_response.context.options["show_stats"]
+            )
+        ]
+        return cls(
+            client,
+            initial_response,
+            functools.partial(deserialization_callback, initial_response),
+            polling_method
+        )
+
+
+class TextAnalyticsLROPoller(LROPoller[PollingReturnType]):
+    def polling_method(self) -> AnalyzeActionsLROPollingMethod:
+        """Return the polling method associated to this poller."""
+        return self._polling_method  # type: ignore
+
+    @property
+    def details(self) -> Mapping[str, Any]:
+        return self.polling_method()._current_body.as_dict()
+    #
+    # @property
+    # def created_on(self) -> datetime.datetime:
+    #     """When your analyze job was created
+    #
+    #     :return: When your analyze job was created
+    #     :rtype: ~datetime.datetime
+    #     """
+    #     return self.polling_method().created_on
+    #
+    # @property
+    # def expires_on(self) -> datetime.datetime:
+    #     """When your analyze job will expire
+    #
+    #     :return: When your analyze job will expire
+    #     :rtype: ~datetime.datetime
+    #     """
+    #     return self.polling_method().expires_on
+    #
+    # @property
+    # def display_name(self) -> Optional[str]:
+    #     """The display name of your :func:`begin_analyze_actions` call.
+    #
+    #     Corresponds to the `display_name` kwarg you pass to your
+    #     :func:`begin_analyze_actions` call.
+    #
+    #     :return: The display name of your :func:`begin_analyze_actions` call.
+    #     :rtype: str
+    #     """
+    #     return self.polling_method().display_name
+    #
+    # @property
+    # def last_modified_on(self) -> datetime.datetime:
+    #     """The last time your actions results were updated
+    #
+    #     :return: The last time your actions results were updated
+    #     :rtype: ~datetime.datetime
+    #     """
+    #     return self.polling_method().last_modified_on
+    #
+    # @property
+    # def id(self) -> str:
+    #     """ID of your :func:`begin_analyze_actions` call.
+    #
+    #     :return: ID of your :func:`begin_analyze_actions` call.
+    #     :rtype: str
+    #     """
+    #     return self.polling_method().id
+
+    @classmethod
+    def from_continuation_token(  # type: ignore
+        cls,
+        polling_method: AnalyzeActionsLROPollingMethod,
+        continuation_token: str,
+        **kwargs: Any
+    ) -> "TextAnalyticsLROPoller":  # type: ignore
         client, initial_response, deserialization_callback = polling_method.from_continuation_token(
             continuation_token, **kwargs
         )

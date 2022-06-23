@@ -123,7 +123,7 @@ def prepare_result(func):
         lro = kwargs.get("lro", False)
 
         if lro:
-            return wrapper(*args, None, ordering_function=order_lro_results)
+            return wrapper(*args, ordering_function=order_lro_results)
         return wrapper(*args, ordering_function=order_results)
 
     return choose_wrapper
@@ -400,7 +400,7 @@ def _get_doc_results(task, doc_id_order, returned_tasks_object):
     if response_task_to_deserialize.results is None:
         return get_ordered_errors(returned_tasks_object, task_name, doc_id_order)
     return deserialization_callback(
-        doc_id_order, response_task_to_deserialize.results, lro=True
+        doc_id_order, response_task_to_deserialize.results, {}, lro=True
     )
 
 

@@ -3,6 +3,8 @@
 This guide walks through the setup necessary to run mypy, a static type checker, on client library code. It also
 contains some general typing tips and guidance as it relates to common types/patterns we use in the Python SDK.
 
+For the TL;DR version, please see the [Static Type Checking Cheat Sheet]().
+
 ### Table of contents
 
   - [Intro to typing in Python](#intro-to-typing-in-python)
@@ -129,8 +131,7 @@ Here are a few considerations and notes on Python version support:
 - With [PEP585](https://peps.python.org/pep-0585/) and [PEP563](https://peps.python.org/pep-0563/), importing certain
   generic collection types from `typing` has been [deprecated](https://peps.python.org/pep-0585/#implementation) in
   favor for using the types in `collections.abc` or generic type hints (like `list`) from the standard library.
-  You can check the Python version at runtime before importing `collections.abc` types which did not have [] notation added until
-  3.9.
+  You can check the Python version at runtime before importing `collections.abc` types (which did not have [] notation added until 3.9).
 
 ```python
 import sys
@@ -142,7 +143,7 @@ else:
 ```
 
 - The `typing-extensions` library backports types that are introduced only in later versions of Python (e.g. `Protocol`
-  which was introduced in Python 3.8) so that they can be used as early as Python 3.6.
+  which was introduced in Python 3.8) so that they can be used in earlier Python versions.
 
 ```python
 from typing_extensions import Protocol
@@ -237,7 +238,7 @@ main.py:11: note: Revealed type is "def (message: builtins.str)"
 ```
 
 These debugging functions don't need to be imported from anywhere and are only recognized by `mypy` - therefore you will
-need to remove them from code before runtime.
+need to remove them from code before runtime (However, `reveal_type` is importable from `typing` since Python 3.11).
 
 ### Use typing.Any sparingly
 

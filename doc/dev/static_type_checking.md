@@ -59,7 +59,6 @@ Annotations provide a cleaner syntax and let you keep the type information close
 ```python
 from typing import Any, Optional
 
-
 def download_blob_from_url(
         blob_url: str,
         output: str,
@@ -75,7 +74,7 @@ A fully annotated signature includes type annotations for all parameters and the
 should follow the `:` syntax and a default argument can be supplied like in the `credential` parameter above. A return
 type follows the function def with an arrow `->`, its type, and then `:`.
 
-Note that since Python 3.6, it is also possible to add type annotations to variables. The syntax follows the same as
+It is also possible to add type annotations to variables. The syntax follows the same as
 function arguments:
 
 ```python
@@ -610,7 +609,7 @@ main.py:17: error: Argument 1 to "make_quack" has incompatible type "Type[Duck]"
 Found 2 errors in 1 file (checked 1 source file)
 ```
 
-### Use forward references when the type is not defined yet
+### Use `from __future__ import annotations` instead of forward references when the type is not defined yet
 
 This is commonly encountered when using `@classmethod`. Because the type does not exist yet, when trying to use it in a
 type hint, Python complains at runtime.
@@ -631,32 +630,33 @@ class TreeHouse:
 NameError: name 'TreeHouse' is not defined
 ```
 
-A forward reference can be used to fix the runtime issue. Simply place the type in quotations like "TreeHouse":
+Using import `from __future__ import annotations` can be used to fix this at runtime:
 
 ```python
+from __future__ import annotations
+
 class TreeHouse:
     def __init__(self) -> None: ...
 
     @classmethod
-    def build(cls) -> "TreeHouse":
+    def build(cls) -> TreeHouse:
         return cls()
 ```
 
-`mypy` recognizes this syntax and will understand the type as `TreeHouse`.
-
-Forward references can also be useful when a type hint is used before a type is defined in a file. Here, `TreeHouse` is
-defined after `Yurt`. However, `Yurt` uses `Treehouse` in a type hint, so it must be a forward reference:
+`from __future__ import annotations` can also be useful when a type hint is used before a type is defined in a file. Here, `TreeHouse` is
+defined after `Yurt`. However, `Yurt` uses `Treehouse` in a type hint so we must use the import to avoid a runtime error:
 
 ```python
+from __future__ import annotations
+
 class Yurt:
-    def add(self, house: "TreeHouse") -> None: ...
+    def add(self, house: TreeHouse) -> None: ...
 
 
 class TreeHouse:
     def __init__(self) -> None: ...
 ```
 
-> Note: While this issue is easily resolved by adding `from __future__ import annotations`, this is currently only supported in Python 3.7+.
 
 ### Use typing.TypeAlias when creating a type alias
 
@@ -792,7 +792,7 @@ def receive_deferred_messages(
         sequence_numbers = [sequence_numbers]
     sequence_numbers = cast(List[int], sequence_numbers)  # mypy clarity
 
-    for num in sequence_numbers:  # if not casted to List[int], mypy will error
+    for num in sequence_numbers:  # if not cast to List[int], mypy will error
         print(num)
 ```
 

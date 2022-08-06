@@ -12,7 +12,7 @@ import copy
 from azure.core.tracing.decorator import distributed_trace
 
 from ._operations import QuestionAnsweringClientOperationsMixin as QuestionAnsweringClientOperationsMixinGenerated
-from ..models import AnswersOptions, AnswersResult, TextDocument, AnswersFromTextOptions, AnswersFromTextResult
+from ..models import AnswersOptions, AnswersResult, TextDocument, AnswersFromTextOptions, AnswersFromTextResult, KnowledgeBaseAnswerContext, QueryFilters, ShortAnswerOptions
 
 
 def _validate_text_records(records):
@@ -128,12 +128,16 @@ class QuestionAnsweringClientOperationsMixin(QuestionAnsweringClientOperationsMi
     def get_answers(self, options: AnswersOptions, **kwargs: Any) -> AnswersResult:
         pass
 
+    # @overload
+    # def get_answers(self, **kwargs: Any) -> AnswersResult:
+    #     pass
+
     @overload
-    def get_answers(self, **kwargs: Any) -> AnswersResult:
+    def get_answers(self, *, project_name: str, deployment_name: str, qna_id: int, question: str, top: int, user_id: str, confidence_threshold: float, answer_context: KnowledgeBaseAnswerContext, ranker_kind: str, filters: QueryFilters, short_answer_options: ShortAnswerOptions, include_unstructured_sources: bool, **kwargs: Any) -> AnswersResult:
         pass
 
     @distributed_trace
-    def get_answers(self, *args: AnswersOptions, **kwargs: Any) -> AnswersResult:
+    def get_answers(self, *args,  **kwargs: Any) -> AnswersResult:
         """Answers the specified question using your knowledge base.
 
         :param options: Positional only. POST body of the request. Provide either `options`, OR

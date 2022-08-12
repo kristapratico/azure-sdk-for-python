@@ -74,7 +74,7 @@ def download_blob_from_url(
     ...
 ```
 
-> Note: Do not use comment style type hints (`# type: Any`). Some of our libraries use type comments due to legacy code supporting Python 2/3, but these will eventually be updated to annotation style.
+> Note: Do not use comment style type hints (`# type: Any`). Some of our libraries use type comments due to legacy code supporting Python 2/3, but these will be updated to annotation style.
 
 A fully annotated signature includes type annotations for all parameters and the return type. The type of a parameter
 should follow the `:` syntax and a default argument can be supplied like in the `credential` parameter above. A return
@@ -112,9 +112,6 @@ given the expressiveness of Python as a language. So, in practice, what should y
 
 2) Add type hints anywhere in the source code where unit tests are worth writing. Consider typing/mypy as "free" tests
    for your library so focusing typing on high density/important areas of the code helps in detecting bugs.
-
-> Note: It's important to call out that if a function is not annotated, mypy will not type check any code
-> contained in the function. You can pass argument `--check-untyped-defs` to mypy to check such functions.
 
 ## Types usable in annotations
 
@@ -197,14 +194,14 @@ If you don't want to use `tox` you can also install and run mypy on its own:
 
 Note that you may see different errors if running a different version of mypy than the one in CI.
 
-If specific configuration of mypy is needed for your library, use a `mypy.ini` file at the package level:
+Config of mypy is handled for the repo, but if specific configuration of mypy is needed for your library, use a `mypy.ini` file at the package level:
 
 `.../azure-sdk-for-python/sdk/textanalytics/azure-ai-textanalytics/mypy.ini`
 
 For example, you might want mypy to ignore type checking files under a specific directory:
 
 ```md
-[mypy-azure.ai.textanalytics._generated.*]
+[mypy-azure.ai.textanalytics._dont_type_check_me.*]
 ignore_errors = True
 ```
 
@@ -222,21 +219,21 @@ To run pyright on your library, run tox pyright env at the package level:
 
 `.../azure-sdk-for-python/sdk/textanalytics/azure-ai-textanalytics>tox -e pyright -c ../../../eng/tox/tox.ini`
 
-If you don't want to use `tox` you can also install and run `pyright` on its own:
+If you don't want to use `tox` you can also install and run pyright on its own:
 
 `pip install pyright==TODO`
 
 `.../azure-sdk-for-python/sdk/textanalytics/azure-ai-textanalytics>pyright azure`
 
-Note that you may see different errors if running a different version of `pyright` than the one in CI.
+Note that you may see different errors if running a different version of pyright than the one in CI.
 
-If specific configuration of pyright is needed for your library, use a `pyrightconfig.json` file at the package level.
+Config of pyright is handled for the repo, but if specific configuration of pyright is needed for your library, use a `pyrightconfig.json` file at the package level.
 
 For example, to ignore type checking files under a specific directory, you can use `exclude`:
 
 ```json
 {
-  "exclude": ["**/_generated/**"]
+  "exclude": ["**/_dont_type_check_me/**"]
 }
 ```
 
@@ -330,7 +327,7 @@ also recommended avoiding having functions return `Union` types as it causes the
 through the return value before acting on it. Sometimes this can be resolved by using an [overload](#use-typingoverload-to-overload-a-function).
 
 If you find yourself writing a function which returns a Union of something | None, consider whether it would make sense 
-throwing an appropriate exception instead.
+throwing an appropriate exception instead, for example:
 
 ```python
 from typing import Union
@@ -447,8 +444,28 @@ At runtime, `employee` is perfectly valid even though it does not conform to a t
 <class 'dict'>
 ```
 
-Note that this also just creates a plain `dict` at runtime. Usage of `TypedDict` is a great way to inform mypy and
-Intellisense how a specific dict should be constructed, but remember that this will not be enforced by the interpreter.
+Note that this creates a plain `dict` at runtime. Usage of `TypedDict` is a great way to inform mypy and
+Intellisense how a specific dict should be constructed and help the type checkers warn users if they try to access
+keys which don't exist.
+
+Use of generic TypeDict is also supported via typing_extensions (>=4.3.0). For example,
+
+```python
+# from typing import TypedDict  # Python >= 3.8
+from typing_extensions import TypedDict
+from typing import Generic, TypeVar, List
+
+T = TypeVar("T")
+
+
+class Employee(TypedDict, Generic[T]):
+    name: str
+    title: str
+    id: int
+    current: bool
+    additional_info: List[T]
+```
+
 
 > Note that TypedDict is backported to older versions of Python by using typing_extensions.
 

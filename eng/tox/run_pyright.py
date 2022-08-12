@@ -40,5 +40,6 @@ if __name__ == "__main__":
                 "-m",
                 "pyright",
                 os.path.join(args.target_package, "azure"),
+                os.path.join(args.target_package, "samples"),
             ]
         )

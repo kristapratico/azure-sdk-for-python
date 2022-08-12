@@ -41,6 +41,8 @@ if __name__ == "__main__":
                 "-m",
                 "mypy",
                 "--ignore-missing-imports",
+                "--check-untyped-defs",
                 os.path.join(args.target_package, "azure"),
+                os.path.join(args.target_package, "samples")
             ]
         )

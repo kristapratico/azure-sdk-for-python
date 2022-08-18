@@ -10,14 +10,15 @@ For the TL;DR version, please see the [Static Type Checking Cheat Sheet]().
   - [Typing a client library](#typing-a-client-library)
   - [Types usable in annotations](#types-usable-in-annotations)
   - [Install and run type checkers on your client library code](#install-and-run-type-checkers-on-your-client-library-code)
-    - [Run both mypy and pyright](#run-both-mypy-and-pyright)
     - [Run mypy](#run-mypy)
     - [Run pyright](#run-pyright)
+    - [How to ignore type checking errors](#how-to-ignore-type-checking-errors)
+    - [How to opt out of type checking](#how-to-opt-out-of-type-checking)
   - [Typing tips and guidance for the Python SDK](#typing-tips-and-guidance-for-the-python-sdk)
     - [Debug type checking with reveal_type and reveal_locals](#debug-type-checking-with-reveal_type-and-reveal_locals)
     - [Use typing.Any sparingly](#use-typingany-sparingly)
     - [Use typing.Union when accepting more than one type](#use-typingunion-when-accepting-more-than-one-type)
-    - [Use typing.Optional when a parameter can be None](#use-typingoptional-when-a-parameter-can-be-none)
+    - [Use typing.Optional when a parameter can explicitly be None](#use-typingoptional-when-a-parameter-can-explicitly-be-none)
     - [Typing for collections](#typing-for-collections)
       - [Mapping types](#mapping-types)
       - [List](#list)
@@ -25,7 +26,7 @@ For the TL;DR version, please see the [Static Type Checking Cheat Sheet]().
     - [Typing variadic arguments - *args and **kwargs](#typing-variadic-arguments---args-and-kwargs)
     - [Use TYPE_CHECKING to avoid circular imports](#use-type_checking-to-avoid-circular-imports)
     - [Passing a function or a class as a parameter or return type](#passing-a-function-or-a-class-as-a-parameter-or-return-type)
-    - [Use `from __future__ import annotations` instead of forward references when the type is not defined yet](#use-from-__future__-import-annotations-instead-of-forward-references-when-the-type-is-not-defined-yet)
+    - [Use `from __future__ import annotations` for forward declarations](#use-from-__future__-import-annotations-for-forward-declarations)
     - [Use type aliases to create readable names for types](#use-type-aliases-to-create-readable-names-for-types)
     - [Use typing.overload to overload a function](#use-typingoverload-to-overload-a-function)
     - [Use typing.cast to help the type checker understand a type](#use-typingcast-to-help-the-type-checker-understand-a-type)
@@ -33,10 +34,9 @@ For the TL;DR version, please see the [Static Type Checking Cheat Sheet]().
     - [Use AnyStr when your parameter or return type expects both str and bytes](#use-anystr-when-your-parameter-or-return-type-expects-both-str-and-bytes)
     - [Use typing.Protocol to support duck typing](#use-typingprotocol-to-support-duck-typing)
       - [Use runtime_checkable to do simple, runtime structural checks on Protocols](#use-runtime_checkable-to-do-simple-runtime-structural-checks)
-    - [Use typing.Literal to indicate behavior based on exact values](#use-typingliteral-to-indicate-behavior-based-on-exact-values)
+    - [Use typing.Literal to restrict based on exact values](#use-typingliteral-to-restrict-based-on-exact-values)
     - [Use typing.NewType to semantically differentiate between types](#use-typingnewtype-to-semantically-differentiate-between-types)
-  - [How to ignore type checking errors](#how-to-ignore-type-checking-errors)
-  - [How to opt out of type checking](#how-to-opt-out-of-type-checking)
+    - [Use typing.Final to restrict a type from changing its value](#use-typingfinal-to-restrict-a-type-from-changing-its-value)
   - [Additional Resources](#additional-resources)
 
 ## Intro to typing in Python
@@ -57,7 +57,7 @@ There are some key benefits to using and checking type hints in Python code:
    of as "free" unit tests, although they do not replace a thorough test suite).
 2) Type hints are shipped in our packages so that customers can use them to further type check their own
    applications and get improved IDE and Intellisense experiences.
-3) Type hints act as documentation in code. This benefits us - the maintainers of the Python SDK!
+3) Type hints act as documentation in code, they inform the reader of the expected type. This benefits us - the maintainers of the Python SDK!
 
 Since Python 3, type annotations were introduced and are the **preferred** method of adding type hints to your code.
 Annotations provide a cleaner syntax and let you keep the type information closer, or inline with the code.
@@ -131,7 +131,7 @@ Here are a few considerations and notes on Python version support:
 - With [PEP585](https://peps.python.org/pep-0585/) and [PEP563](https://peps.python.org/pep-0563/), importing certain
   generic collection types from `typing` has been [deprecated](https://peps.python.org/pep-0585/#implementation) in
   favor for using the types in `collections.abc` or generic type hints (like `list`) from the standard library.
-  Meanwhile, you can check the Python version at runtime before importing `collections.abc` types (which did not have [] notation added until 3.9).
+  If you'd like to use types from `collections.abc`, you can check the Python version at runtime (`collections.abc` types did not have [] notation added until 3.9).
 
 ```python
 import sys
@@ -158,25 +158,17 @@ backported.
 
 ## Install and run type checkers on your client library code
 
-Our Python SDK repo runs two type checkers on the code - [mypy](https://mypy.readthedocs.io/en/stable/) and [pyright](https://github.com/microsoft/pyright). You may see different errors across type checkers.
+Our Python SDK repo CI runs two type checkers on the code - [mypy](https://mypy.readthedocs.io/en/stable/) and [pyright](https://github.com/microsoft/pyright). You may see different errors across type checkers.
 We aim for the Python SDK to have clean client libraries whether using mypy or pyright so that our customers are able to choose either type checker and have a good typing experience.
 
 The versions of mypy and pyright that we run in CI are pinned to specific versions in order to avoid surprise typing errors raised when a new
 version of the type checker ships. All client libraries in the Python SDK repo are automatically opted in to running type checking. If you need to temporarily opt-out of type checking for your client library, see [How to opt out of type checking](#how-to-opt-out-of-type-checking).
 
-The easiest way to install and run mypy locally is
+The easiest way to install and run the type checkers locally is
 with [tox](https://github.com/Azure/azure-sdk-for-python/blob/main/doc/dev/tests.md#tox). This reproduces the exact type checking
 environment run in CI and brings in the third party stub packages necessary.
 
 `pip install tox tox-monorepo`
-
-### Run both mypy and pyright
-
-To run both mypy and pyright on your code, run the type-check tox env at the package level:
-
-`.../azure-sdk-for-python/sdk/textanalytics/azure-ai-textanalytics>tox -e type-check -c ../../../eng/tox/tox.ini`
-
-This will install both mypy and pyright and recreate the exact environment in CI. See specific instructions for running only one type checker at at time in the next sections.
 
 ### Run mypy
 
@@ -209,13 +201,13 @@ Full documentation on mypy config options found here: https://mypy.readthedocs.i
 
 ### Run pyright
 
-> Note: this is not yet implemented in our repo.
+> Note: this is not implemented in our repo yet.
 
 We pin the version of pyright to version (TODO [version](https://github.com/microsoft/pyright)).
 
-Note that pyright requires that node is installed. The commandline package will check if node is in the `PATH`, and if not, will download it at runtime.
+Note that pyright requires that node is installed. The command-line [wrapper package](https://pypi.org/project/pyright/) for pyright will check if node is in the `PATH`, and if not, will download it at runtime.
 
-To run pyright on your library, run tox pyright env at the package level:
+To run pyright on your library, run the tox pyright env at the package level:
 
 `.../azure-sdk-for-python/sdk/textanalytics/azure-ai-textanalytics>tox -e pyright -c ../../../eng/tox/tox.ini`
 
@@ -238,6 +230,49 @@ For example, to ignore type checking files under a specific directory, you can u
 ```
 
 Full documentation on pyright config options can be found here: https://github.com/microsoft/pyright/blob/main/docs/configuration.md
+
+### How to ignore type checking errors
+
+A type checking error can be globally ignored by placing a `# type: ignore` comment on the offending line. Generally, we do not want to
+ignore errors if we can, but sometimes it is not possible to fix the error, e.g. there might be bug in the type checker _or_
+the Python code is more expressive than the type system allows. If you must ignore an error, it is
+recommended that you explain your reasoning in the ignore comment / include a link to the bug or Github issue so someone
+reading the code later may resolve it.
+
+globally ignore (both mypy and pyright):
+```python
+ignore_me: int = 5  # type: ignore  https://www.github.com/Azure/azure-sdk-for-python/issues/my-issue
+```
+
+Note that it is possible to be specific in the error to ignore, instead of globally turning off type checking on
+that line. Syntax for this involves putting the specific error code in brackets of the ignore comment. Error codes
+are found at the end of the type checking error. 
+
+mypy:
+```python
+ignore_me: int = 5  # type: ignore[misc]
+```
+
+pyright:
+```python
+ignore_me: int = 5  # pyright: ignore[reportPrivateUsage]
+```
+
+The type checkers will continue to evaluate the line of code for other typing errors.
+
+
+More information about suppressing errors can be found in the
+official [mypy docs](https://mypy.readthedocs.io/en/stable/type_inference_and_annotations.html?highlight=ignore#silencing-type-errors) and [pyright docs](https://github.com/microsoft/pyright/blob/main/docs/comments.md#line-level-diagnostic-suppression).
+
+
+### How to opt out of type checking
+
+All client libraries in the Python SDK repo are automatically opted in to running type checking. If there is a
+reason why a particular library should not run type checking, it is possible to add that library to a block list to prevent mypy/pyright
+from running checks.
+
+1) Place the package name on this block list: TODO
+2) Open an issue tracking that "library-name" should be opted in to running type checking
 
 
 ## Typing tips and guidance for the Python SDK
@@ -281,7 +316,7 @@ main.py:11: note: Revealed type is "def (message: builtins.str)"
 ```
 
 These debugging functions don't need to be imported from anywhere and are only recognized by the type checkers - therefore you will
-need to remove them from code before runtime (However, `reveal_type` is importable from `typing` since Python 3.11).
+need to remove them from code before runtime.
 
 ### Use typing.Any sparingly
 
@@ -314,36 +349,20 @@ our libraries.
 one type.
 
 ```python
-from typing import Union
+from typing import Union, Dict, List
 
 
-def foo(bat: Union[float, str]) -> None:
+def detect_language(documents: Union[List[DetectLanguageInput], List[Dict[str, str]], List[str]]) -> List[Union[DetectLanguageResult, DocumentError]]:
     ...
 ```
 
 A `Union` requires at least two types and makes sense with types that are not consistent with each other. For
 example, usage of `Union[int, float]` is not necessary since `int` is consistent with `float` -- just use `float`. It's
 also recommended avoiding having functions return `Union` types as it causes the user to need to understand/parse
-through the return value before acting on it. Sometimes this can be resolved by using an [overload](#use-typingoverload-to-overload-a-function).
+through the return value before acting on it to write type safe code. Sometimes this can be resolved by using an [overload](#use-typingoverload-to-overload-a-function).
 
-If you find yourself writing a function which returns a Union of something | None, consider whether it would make sense 
-throwing an appropriate exception instead, for example:
 
-```python
-from typing import Union
-
-def get_word_at_offset(line: str, offset: int) -> Union[str, None]:
-    # word look-up code... not found
-    return None
-
-# becomes...
-
-def get_word_at_offset(line: str, offset: int) -> str:
-    # word look-up code... not found
-    raise IndexError
-```
-
-### Use typing.Optional when a parameter can be None
+### Use typing.Optional when a parameter can explicitly be None
 
 Python's typing docs for [Optional](https://docs.python.org/3/library/typing.html#typing.Optional) explain that
 
@@ -358,7 +377,7 @@ from typing import Optional, Any
 def begin_export_project(
     project_name: str,
     *,
-    string_index_type: str = "UnicodeCodePoint",  # Optional arg with a default, doesn't require Optional
+    string_index_type: str = "UnicodeCodePoint",  # Arg with a default, doesn't require Optional, doesn't allow None
     asset_kind: Optional[str] = None,  # None is allowed, type as Optional
     **kwargs: Any
 ) -> LROPoller[JSON]:
@@ -373,7 +392,7 @@ A few things to consider when typing collections in Python.
 
 1) "Be conservative in what you send, be liberal in what you accept." - The Robustness Principle
 
-   In other words, we should also aim to be lenient in the types we accept as a parameter because this allows for more
+   In other words, we should aim to be lenient in the types we accept as a parameter because this allows for more
    flexibility for the caller, e.g. accepting an `Iterable` (where appropriate) allows for more possible types to be
    passed (list, tuple, dict, etc.) than just specifying a `List`. On the other hand, we should aim to be specific in
    what we say we return - it's more helpful to specify concrete types which a user can reason about, than for example,
@@ -448,7 +467,7 @@ Note that this creates a plain `dict` at runtime. Usage of `TypedDict` is a grea
 Intellisense how a specific dict should be constructed and help the type checkers warn users if they try to access
 keys which don't exist.
 
-Use of generic TypeDict is also supported via typing_extensions (>=4.3.0). For example,
+Use of generic TypedDict is also supported via typing_extensions (>=4.3.0). For example,
 
 ```python
 # from typing import TypedDict  # Python >= 3.8
@@ -677,10 +696,9 @@ main.py:17: error: Argument 1 to "make_quack" has incompatible type "Type[Duck]"
 Found 2 errors in 1 file (checked 1 source file)
 ```
 
-### Use `from __future__ import annotations` or forward references when the type is not defined yet
+### Use `from __future__ import annotations` for forward declarations
 
-This is commonly encountered when using `@classmethod`. Because the type does not exist yet, when trying to use it in a
-type hint, Python complains at runtime.
+Sometimes you might want to use a type in a type hint which hasn't been defined yet. This is commonly encountered when using `@classmethod` and we see Python complain at runtime.
 
 ```python
 class TreeHouse:
@@ -698,7 +716,7 @@ class TreeHouse:
 NameError: name 'TreeHouse' is not defined
 ```
 
-Using import `from __future__ import annotations` can be used to fix this at runtime:
+Importing `from __future__ import annotations` can be used to fix this:
 
 ```python
 from __future__ import annotations
@@ -711,19 +729,10 @@ class TreeHouse:
         return cls()
 ```
 
-`from __future__ import annotations` must be imported at the top of the file before any other imports. It can also be useful when a type hint is used before a type is defined in a file. Here, `TreeHouse` is
-defined after `Yurt`. However, `Yurt` uses `Treehouse` in a type hint so we must use the import to avoid a runtime error:
+This import causes function and variable annotations to not be evaluated at definition time and instead be preserved as string literals in the respective __annotations__ dictionary.
+There is no difference in behavior for the type checkers with using this import. Note that `from __future__ import annotations` must be imported at the top of the file before any other imports.
 
-```python
-from __future__ import annotations
-
-class Yurt:
-    def add(self, house: TreeHouse) -> None: ...
-
-
-class TreeHouse:
-    def __init__(self) -> None: ...
-```
+It's also worth calling out that using this import allows use of generic collection type hints like `dict` and `list` instead of `typing.Dict` and `typing.List`. 
 
 More details about this import and its behavior can be found in [PEP 563](https://peps.python.org/pep-0563/)/[649](https://peps.python.org/pep-0649/).
 
@@ -759,7 +768,7 @@ x: TypeAlias = 1
 
 ### Use typing.overload to overload a function
 
-`typing.overload` allows for annotating different combinations of arguments for a function. This is useful when the
+`typing.overload` allows for annotating different combinations of arguments for a function. This can be useful when the
 return type might depend on the type or types of parameters.
 
 Consider a function which takes in different input types which then inform the output type:
@@ -899,7 +908,7 @@ def pick(p: Sequence[T]) -> T:
 ```
 
 This leaves the type open for the caller to pass a `Sequence[int]`, `Sequence[float]`, `Sequence[str]`, etc. and
-promises to return the same `T` type passed in.
+promises to return the same `T` type passed in. A TypeVar can be constrained/restricted or bound to types.
 
 **Restrict TypeVars to certain types**
 
@@ -920,7 +929,7 @@ Here the type checker will only expect types of `int` or `str` for `T`.
 **Set the upper bound on a TypeVar**
 
 Another way to narrow the type of a `TypeVar` is to provide the `bound` keyword argument with a type which should be
-considered the upper boundary of `T`. Here we pass `typing.SupportsFloat` which says that anything passed as `T` should
+considered the upper boundary of `T`, or consistent with `T`. Here we pass `typing.SupportsFloat` which says that anything passed as `T` should
 be consistent with `SupportsFloat` and must implement `__float__`.
 
 ```python
@@ -1124,7 +1133,7 @@ their type signatures.
 
 > Note that runtime_checkable is backported to older versions of Python by using typing_extensions.
 
-### Use typing.Literal to indicate behavior based on exact values
+### Use typing.Literal to restrict based on exact values
 
 [PEP 586](https://peps.python.org/pep-0586/) introduced the `typing.Literal` type which can be used to indicate that an
 expression has a literal specific value. A Literal can contain one or more literal bool, int, str, bytes, or enum
@@ -1314,71 +1323,51 @@ Therefore, it is preferred to use `typing.Literal` in this situation to provide 
 
 ### Use typing.NewType to semantically differentiate between types
 
-`NewType` can be useful when you want to give a parameter type more meaning than, for example, just string. In the below example,
-a string should be passed into `send_request`, but that input string should be specifically the type returned from the `serialize` function.
-`NewType` creates a `Serialized` type which creates a distinct type for the type checker:
+`NewType` can be useful to catch errors where a particular type is expected. `NewType` will take an existing type and 
+create a brand new type in the same shape; however, these two will not be interchangeable. In the below example,
+a string should be passed into `print_log`, but that input string should be specifically the type `str` returned from the `sanitize` function.
+`NewType` creates a `Sanitized` type which is viewed as a distinct type for the type checker:
 
 ```python
 from typing import NewType
 
-Serialized = NewType("Serialized", str)
+Sanitized = NewType("Sanitized", str)
 
 
-def serialize(body: object) -> Serialized: ...
+def sanitize(log) -> Sanitized:
+    return Sanitized(_sanitize(log))
 
-def send_request(request: Serialized) -> None: ...
+def print_log(log: Sanitized) -> None: ...
 ```
 
 This helps express intent and also gives the type checker a chance to catch logic errors. For example, if a regular string
-is passed, like `send_request("hello world")`, mypy complains:
+is passed, like `print_log("my secret")`, mypy complains:
 
 ```cmd
-main.py:11: error: Argument 1 to "send_request" has incompatible type "str"; expected "Serialized"
+main.py:11: error: Argument 1 to "print_log" has incompatible type "str"; expected "Sanitized"
 Found 1 error in 1 file (checked 1 source file)
 ```
 
-At runtime, `NewType` will return an object that returns its argument when called.
+At runtime, `NewType` will return an object that returns its argument when called. Note that `NewType` is not the same as a type alias. A type alias _is_ interchangeable with the type assigned and just provides another name for it.
 
-## How to ignore type checking errors
+### Use typing.Final to restrict a type from changing its value
 
-A type checking error can be globally ignored by placing a `# type: ignore` comment on the offending line. Generally, we do not want to
-ignore errors if we can, but sometimes it is not possible to fix the error, e.g. there might be bug in the type checker _or_
-the Python code is more expressive than the type system allows. If you must ignore an error, it is
-recommended that you explain your reasoning in the ignore comment / include a link to the bug or Github issue so someone
-reading the code later may resolve it.
-
-Note that it is possible to be specific in the mypy error to ignore, instead of globally turning off type checking on
-that line. Syntax for this involves putting the specific mypy error code in brackets of the ignore comment:
+`Final` indicates to the type checker that a variable cannot be re-assigned to a different value (or overridden in a subclass).
+It is best used when a variable's scope spans a large amount of modules and you want to ensure that it stays immutable (i.e. no line of code tries to change it).
 
 ```python
-ignore_me: int = 5  # type: ignore[misc]
+# from typing import Final  Python >=3.8
+from typing_extensions import Final
+
+MAX_BLOB_SIZE: Final = 4 * 1024 * 1024
 ```
 
-To find the error code associated with your mypy error, run mypy with command argument `--show-error-codes`.
+If `MAX_BLOB_SIZE` gets reassigned somewhere else in the code, the type checker will complain:
 
-More information about ignoring mypy errors can be found in the
-official [mypy docs](https://mypy.readthedocs.io/en/stable/type_inference_and_annotations.html?highlight=ignore#silencing-type-errors).
-
-`pyright` similarly honors the `type: ignore` way to ignore errors, but also supports a `pyright: ignore` if you want to allow
-mypy to continue to evaluate that line of code. Like mypy, you can also ignore by the error code specifically:
-
-```python
-thing._private  # pyright: ignore [reportPrivateUsage]
+```cmd
+main.py:6: error: Cannot assign to final name "MAX_BLOB_SIZE"
+Found 1 error in 1 file (checked 1 source file)
 ```
-
-More information about ignoring mypy errors can be found in the
-official [pyright docs](https://github.com/microsoft/pyright/blob/main/docs/comments.md#line-level-diagnostic-suppression).
-
-
-## How to opt out of type checking
-
-All client libraries in the Python SDK repo are automatically opted in to running type checking. If there is a
-reason why a particular library should not run type checking, it is possible to add that library to a block list to prevent mypy/pyright
-from running checks.
-
-1) Place the package name on this block list: TODO
-2) Open an issue tracking that "library-name" should be opted in to running type checking
-
 
 ## Additional Resources
 

@@ -30,12 +30,12 @@ For the TL;DR version, please see the [Static Type Checking Cheat Sheet]().
     - [Use type aliases to create readable names for types](#use-type-aliases-to-create-readable-names-for-types)
     - [Use typing.overload to overload a function](#use-typingoverload-to-overload-a-function)
     - [Use typing.cast to help the type checker understand a type](#use-typingcast-to-help-the-type-checker-understand-a-type)
-    - [Use TypeVar for generic type hinting](#use-typevar-for-generic-type-hinting)
+    - [Use typing.TypeVar and typing.Generic for generic type hinting](#use-typingtypevar-and-typinggeneric-for-generic-type-hinting)
     - [Use AnyStr when your parameter or return type expects both str and bytes](#use-anystr-when-your-parameter-or-return-type-expects-both-str-and-bytes)
     - [Use typing.Protocol to support duck typing](#use-typingprotocol-to-support-duck-typing)
       - [Use runtime_checkable to do simple, runtime structural checks on Protocols](#use-runtime_checkable-to-do-simple-runtime-structural-checks)
     - [Use typing.Literal to restrict based on exact values](#use-typingliteral-to-restrict-based-on-exact-values)
-    - [Use typing.NewType to semantically differentiate between types](#use-typingnewtype-to-semantically-differentiate-between-types)
+    - [Use typing.NewType to restrict a type to a specific context](#use-typingnewtype-to-restrict-a-type-to-a-specific-context)
     - [Use typing.Final to restrict a type from changing its value](#use-typingfinal-to-restrict-a-type-from-changing-its-value)
   - [Additional Resources](#additional-resources)
 
@@ -130,8 +130,8 @@ Here are a few considerations and notes on Python version support:
 
 - With [PEP585](https://peps.python.org/pep-0585/) and [PEP563](https://peps.python.org/pep-0563/), importing certain
   generic collection types from `typing` has been [deprecated](https://peps.python.org/pep-0585/#implementation) in
-  favor for using the types in `collections.abc` or generic type hints (like `list`) from the standard library.
-  If you'd like to use types from `collections.abc`, you can check the Python version at runtime (`collections.abc` types did not have [] notation added until 3.9).
+  favor for using the types in `collections.abc` or generic collection type hints (like `list`) from the standard library.
+  If you'd like to use types from `collections.abc`, you can check the Python version at runtime (`collections.abc` types did not have [] notation / indexing support added until 3.9).
 
 ```python
 import sys
@@ -340,7 +340,7 @@ def add_things(x: Any, y: Any) -> Any:
 
 `Any` should be used sparingly since it effectively turns the type checker off. If the type can be narrowed down to
 something more specific, that is preferred since over usage of `Any` can undermine the type checker's ability to find
-bugs in other parts of the code. Additionally, `Any` does not benefit our customers who are may be using type checking with
+bugs in other parts of the code. Additionally, `Any` does not benefit our customers who may be using type checking with
 our libraries.
 
 ### Use typing.Union when accepting more than one type
@@ -359,7 +359,7 @@ def detect_language(documents: Union[List[DetectLanguageInput], List[Dict[str, s
 A `Union` requires at least two types and makes sense with types that are not consistent with each other. For
 example, usage of `Union[int, float]` is not necessary since `int` is consistent with `float` -- just use `float`. It's
 also recommended avoiding having functions return `Union` types as it causes the user to need to understand/parse
-through the return value before acting on it to write type safe code. Sometimes this can be resolved by using an [overload](#use-typingoverload-to-overload-a-function).
+through the return value before acting on it to write type-safe code. Sometimes this can be resolved by using an [overload](#use-typingoverload-to-overload-a-function).
 
 
 ### Use typing.Optional when a parameter can explicitly be None
@@ -729,7 +729,8 @@ class TreeHouse:
         return cls()
 ```
 
-This import causes function and variable annotations to not be evaluated at definition time and instead be preserved as string literals in the respective __annotations__ dictionary.
+Backing up a bit, at import time, Python will read in all type hints and store them in `__annotations__` as their actual types.
+`from __future__ import annotations` changes this such that type hints don't get evaluated at runtime and are preserved as string literals in the `__annotations__` dictionary.
 There is no difference in behavior for the type checkers with using this import. Note that `from __future__ import annotations` must be imported at the top of the file before any other imports.
 
 It's also worth calling out that using this import allows use of generic collection type hints like `dict` and `list` instead of `typing.Dict` and `typing.List`. 
@@ -742,16 +743,21 @@ More details about this import and its behavior can be found in [PEP 563](https:
 Use a type alias to create more readable types or convey intent.
 
 ```python
-from typing import Union
-from azure.core.credentials import AzureKeyCredential, TokenCredential, AzureSasCredential
+from typing import List, Tuple, Dict
 
-CredentialTypes = Union[AzureKeyCredential, TokenCredential, AzureSasCredential]
+Coordinate = Tuple[float, float]
+Route = List[Coordinate]
+TrailName = str
+Trails = Dict[TrailName, Route]
 
 
-class Client:
+def get_trails(state) -> Trails:
+    ...
 
-    def __init__(endpoint: str, credential: CredentialTypes, **kwargs) -> None:
-        ...
+# vs.
+
+def get_trails(state) -> Dict[str, List[Tuple[float, float]]]:
+    ...
 ```
 
 If it's possible that a type alias could be confused with a global assignment, e.g. `x = 1`, you can use `typing.TypeAlias`.
@@ -782,8 +788,8 @@ def analyze_text(text: str, analysis_kind: Union[SentimentAnalysis, EntityRecogn
     return _analyze(text, analysis_kind)
 ```
 
-We can annotate this function with overloads to help inform the type checker (and intellisense) which input maps to
-which output type.
+We can annotate this function with overloads to help inform the type checker which input maps to
+which return type.
 
 ```python
 from typing import overload, Union
@@ -819,7 +825,7 @@ reveal_type(result)
 `main.py:28: note: Revealed type is "__main__.LanguageDetectionResult"`
 
 Another use of typing.overload is when there are a different number of arguments. We can take the above example and
-imagine that `analyze_text` has an additional overload which does not take an `analysis_kind`:
+imagine that `analyze_text` has an additional overload which does not take an `analysis_kind` (note that we switched to accepting `*args` and `**kwargs` in this case):
 
 ```python
 from typing import overload, Union, Any
@@ -908,9 +914,9 @@ def pick(p: Sequence[T]) -> T:
 ```
 
 This leaves the type open for the caller to pass a `Sequence[int]`, `Sequence[float]`, `Sequence[str]`, etc. and
-promises to return the same `T` type passed in. A TypeVar can be constrained/restricted or bound to types.
+promises to return the same `T` type passed in. A TypeVar can be constrained or bound to types.
 
-**Restrict TypeVars to certain types**
+**Constrain TypeVars to certain types**
 
 You can restrict a `TypeVar` to several specific types by adding the types as positional arguments:
 
@@ -929,7 +935,7 @@ Here the type checker will only expect types of `int` or `str` for `T`.
 **Set the upper bound on a TypeVar**
 
 Another way to narrow the type of a `TypeVar` is to provide the `bound` keyword argument with a type which should be
-considered the upper boundary of `T`, or consistent with `T`. Here we pass `typing.SupportsFloat` which says that anything passed as `T` should
+considered the upper boundary of `T`, or a subtype of `T`. Here we pass `typing.SupportsFloat` which says that anything passed as `T` should
 be consistent with `SupportsFloat` and must implement `__float__`.
 
 ```python
@@ -1321,7 +1327,7 @@ Therefore, it is preferred to use `typing.Literal` in this situation to provide 
 
 > Note that Literal is backported to older versions of Python by using typing_extensions.
 
-### Use typing.NewType to semantically differentiate between types
+### Use typing.NewType to restrict a type to a specific context
 
 `NewType` can be useful to catch errors where a particular type is expected. `NewType` will take an existing type and 
 create a brand new type in the same shape; however, these two will not be interchangeable. In the below example,

@@ -33,7 +33,7 @@ For the TL;DR version, please see the [Static Type Checking Cheat Sheet]().
     - [Use typing.TypeVar and typing.Generic for generic type hinting](#use-typingtypevar-and-typinggeneric-for-generic-type-hinting)
     - [Use AnyStr when your parameter or return type expects both str and bytes](#use-anystr-when-your-parameter-or-return-type-expects-both-str-and-bytes)
     - [Use typing.Protocol to support duck typing](#use-typingprotocol-to-support-duck-typing)
-      - [Use runtime_checkable to do simple, runtime structural checks on Protocols](#use-runtime_checkable-to-do-simple-runtime-structural-checks)
+      - [Use runtime_checkable to do simple, runtime structural checks on Protocols](#use-runtime_checkable-to-do-simple-runtime-structural-checks-on-protocols)
     - [Use typing.Literal to restrict based on exact values](#use-typingliteral-to-restrict-based-on-exact-values)
     - [Use typing.NewType to restrict a type to a specific context](#use-typingnewtype-to-restrict-a-type-to-a-specific-context)
     - [Use typing.Final to restrict a type from changing its value](#use-typingfinal-to-restrict-a-type-from-changing-its-value)
@@ -1389,7 +1389,11 @@ Found 1 error in 1 file (checked 1 source file)
 ## Additional Resources
 
 Typing docs: https://docs.python.org/3/library/typing.html
+
 Mypy docs: https://mypy.readthedocs.io/en/stable/
+
 Pyright docs: https://github.com/microsoft/pyright/tree/main/docs
+
 Typing PEPs: https://docs.python.org/3/library/typing.html#relevant-peps
+
 Typing school: https://github.com/python/typing/discussions

@@ -32,9 +32,9 @@ table_map: dict[str, Table] = {}  # clarifies what the dictionary expects
 table_map[table_name] = create_table(table_name)
 ```
 
-- Do use mypy and pyright type checkers to statically type check your client library code.
+- Do use [mypy](https://mypy.readthedocs.io/en/stable/) and [pyright](https://github.com/microsoft/pyright) type checkers to statically type check your client library code.
 - Do use [black](https://pypi.org/project/black/) to format type annotations.
-- Do add type hints directly to the source code. If you think you need to use stub files, check with the architects. Note that with stub files, type checking will only work for _users_ of the stub, but won't type check the code itself.
+- Do add type hints directly to the source code. If you think you need to use stub files, check with the architects. Note that with stub files, type checking will only work for _users_ of the stub, but won't type check the library code itself.
 - Do mark your client library package to distribute type hints according to [PEP 561](https://peps.python.org/pep-0561/).
 - Do use the latest typing features available. If not supported by older versions of Python, consider taking a dependency and importing from `typing-extensions`.
 
@@ -46,7 +46,7 @@ from typing_extensions import TypedDict
 ### Importing types
 
 - Do use user-defined types in type hints. 
-- Do import types from `typing`, `typing_extensions`, `collections`, and `collections.abc`. Note that indexing support for generic collection types from `collections.abc` is only supported on Python 3.9+.
+- Do import types from modules such as `typing`, `typing_extensions`, `collections`, and `collections.abc`. Note that indexing support for generic collection types from `collections.abc` is only supported on Python 3.9+.
 - Do not import regular type hints under a `typing.TYPE_CHECKING` block. You may use `TYPE_CHECKING` to fix a circular import or avoid importing a type only needed in type annotations that is otherwise costly to load at runtime.
 
 ```python
@@ -153,7 +153,7 @@ def create_batch(entities: Iterable[Entity]) -> None:
 - If you don't need to mutate the collection, prefer parameter types `Sequence` over `MutableSequence`, `Mapping` over `MutableMapping`, etc.
 - Use `from __future__ import annotations` to use built-in generic collection types (`list` instead of `typing.List`).
 - Consider using `typing.TypedDict` if a dictionary has a fixed set of keys. This is especially useful if a user needs to construct the dict. Do make this importable from the public namespace.
-- Consider using `typing.NamedTuple` if your tuple has a fixed set of named fields. Do make this importable from the public namespace.
+- Consider using `typing.NamedTuple` if your tuple has named fields. Do make this importable from the public namespace.
 
 
 ### Overloads
@@ -184,7 +184,7 @@ def analyze(text: str, task: Union[SentimentAnalysis, EntityRecognition, Languag
     return _analyze(text, task)
 ```
 
-- You should add type hints to the actual implementation for overloads. This helps with our internal tooling and ensures the implementation body is type checked.
+- You should add type hints to the actual implementation for overloads. This helps with our internal tooling and ensures the implementation is type checked.
 
 ### Variadic arguments
 

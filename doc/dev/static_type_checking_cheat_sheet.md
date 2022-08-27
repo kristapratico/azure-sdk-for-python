@@ -272,7 +272,7 @@ T_contra = TypeVar("T_contra", contravariant=True)
 ```
 
 - Use the pre-defined TypeVar, `typing.AnyStr`, when your parameter or return type expects both `str` or `bytes`.
-- Do use `typing.ParamSpec` (a specialized TypeVar) to forward your function type hints from one callable to another callable (e.g. decorators).
+- Do use `typing.ParamSpec` (a specialized TypeVar) to forward your function type hints from one callable to another callable (e.g. decorators). This preserves type hinting in the original function.
 
 ```python
 from typing import TypeVar, Callable, ParamSpec

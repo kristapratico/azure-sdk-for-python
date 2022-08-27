@@ -219,7 +219,7 @@ class TokenCredential(Protocol):
 
 ### Generics
 
-DO use `typing.TypeVar` to indicate a generic type can be passed
+- Use `typing.TypeVar` to bound a specific type (with each use) and allow it to be used as a parameter and return type to create a generic function.
 
 ```python
 from typing import TypeVar, Sequence, Any
@@ -235,9 +235,16 @@ def choose(items: Sequence[T]) -> T:
     ...
 ```
 
-DO constrain your `TypeVar`'s by passing the possible types or `bound` keyword argument, if possible.
+- Try to constrain your `TypeVar`'s by passing the possible types or `bound` keyword argument.
 
-DO give your `typing.TypeVar`'s descriptive names if they will be publicly exposed in the code.
+```python
+from typing import TypeVar
+
+T = TypeVar("T", int, str)
+S = TypeVar("S", bound=str)
+```
+
+- Do give your `typing.TypeVar`'s descriptive names if they will be publicly exposed in the code.
 
 ```python
 from typing import TypeVar, Generic
@@ -255,7 +262,7 @@ class LROPoller(Generic[PollingReturnType]):
     ...
 ```
 
-DO follow naming conventions for covariant (*_co) and contravariant (*_contra) `TypeVar` parameters.
+- Follow naming conventions for covariant (`*_co`) and contravariant (`*_contra`) `TypeVar` parameters when setting variance for Generic classes.
 
 ```python
 from typing import TypeVar
@@ -265,6 +272,27 @@ T_contra = TypeVar("T_contra", contravariant=True)
 ```
 
 - Use the pre-defined TypeVar, `typing.AnyStr`, when your parameter or return type expects both `str` or `bytes`.
+- Do use `typing.ParamSpec` (a specialized TypeVar) to forward your function type hints from one callable to another callable (e.g. decorators).
+
+```python
+from typing import TypeVar, Callable, ParamSpec
+
+
+T = TypeVar("T")
+P = ParamSpec("P")
+
+def validate_table(func: Callable[P, T]) -> Callable[P, T]:
+    def inner(*args: P.args, **kwargs: P.kwargs) -> T:
+        # validate table
+        return func(*args, **kwargs)
+    return inner
+
+
+@validate_table
+def create_table(table_name: str) -> None:
+    ...
+```
+
 
 ### Type Aliases
 
@@ -281,8 +309,72 @@ CredentialTypes = Union[AzureKeyCredential, TokenCredential, AzureSasCredential,
 
 ### Literals
 
-include Final
+- You can use `typing.Literal` when you want to restrict based on exact values.
+- Consider tagging an attribute with the `Literal` type to discriminate between models in a returned Union. This avoids the need to do `isinstance` checks on the return type.
+
+```python
+from typing import Union
+from typing_extensions import Literal
+
+
+# client library code
+class SelectionMark:
+
+    def __init__(self):
+        self.kind: Literal["selectionMark"] = "selectionMark"
+        self.state = "selected"
+
+
+class FormWord:
+
+    def __init__(self):
+        self.kind: Literal["word"] = "word"
+        self.word = "hello"
+
+
+class FormLine:
+
+    def __init__(self):
+        self.kind: Literal["line"] = "line"
+        self.line = "hello world"
+
+
+def get_element() -> Union[SelectionMark, FormWord, FormLine]:
+    ...
+
+
+# user code
+ele = get_element()
+
+if ele.kind == "selectionMark":
+    print(ele.state)
+elif ele.kind == "word":
+    print(ele.word)
+elif ele.kind == "line":
+    print(ele.line)
+```
+
+- If you have a `Literal` type that should not change or get re-assigned in the code, consider typing it as `typing.Final`.
+
+```python
+from typing_extensions import Final
+
+MAX_BLOB_SIZE: Final = 4 * 1024 * 1024
+```
+
 
 ### NewType
 
-### Callables and Class
+- Use `typing.NewType` to restrict a type to a specific context and catch certain programming errors.
+
+```python
+from typing import NewType
+
+Sanitized = NewType("Sanitized", str)
+
+
+def sanitize(log) -> Sanitized:
+    return Sanitized(_sanitize(log))
+
+def print_log(log: Sanitized) -> None: ...
+```

@@ -516,7 +516,7 @@ If the tuple has an arbitrary amount of same type arguments, you can use `...` s
 
 `Tuple[str, ...]`
 
-`typing.NamedTuple` can also be used as a factory for tuple subclasses:
+Additionally, there is `typing.NamedTuple` which can be used as a factory for tuple subclasses:
 
 ```python
 from typing import NamedTuple, List

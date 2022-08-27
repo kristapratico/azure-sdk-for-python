@@ -219,7 +219,7 @@ class TokenCredential(Protocol):
 
 ### Generics
 
-- Use `typing.TypeVar` to bound a specific type (with each use) and allow it to be used as a parameter and return type to create a generic function.
+- Use `typing.TypeVar` to let functions/classes work with arguments of any type and retain relationships between arguments and their return values.
 
 ```python
 from typing import TypeVar, Sequence, Any
@@ -235,15 +235,16 @@ def choose(items: Sequence[T]) -> T:
     ...
 ```
 
-- Try to constrain your `TypeVar`'s by passing the possible types or `bound` keyword argument.
+- Try to constrain your `TypeVar`'s by specifying types or using the `bound` keyword argument.
 
 ```python
 from typing import TypeVar
 
-T = TypeVar("T", int, str)
-S = TypeVar("S", bound=str)
+T = TypeVar("T", int, str)  # limited to int or str
+S = TypeVar("S", bound=str)  # limited to str or any subtype of str
 ```
 
+- Do subclass `typing.Generic` or a generic collection type if your class needs to work with multiple types.
 - Do give your `typing.TypeVar`'s descriptive names if they will be publicly exposed in the code.
 
 ```python
@@ -262,7 +263,7 @@ class LROPoller(Generic[PollingReturnType]):
     ...
 ```
 
-- Follow naming conventions for covariant (`*_co`) and contravariant (`*_contra`) `TypeVar` parameters when setting variance for Generic classes.
+- Follow naming conventions for covariant (`*_co`) and contravariant (`*_contra`) `TypeVar` parameters when setting variance for generic classes.
 
 ```python
 from typing import TypeVar

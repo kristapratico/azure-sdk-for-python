@@ -20,6 +20,7 @@ def create_table(table_name: str) -> Table:
 ```
 
 - Do fully annotate function signatures - this includes type annotations for all parameters and the return type.
+- Do fully annotate function signatures in all samples - this ensures mypy performs type checking on the sample code.
 - You should type annotate variables if the type in the code is different from expected, provides more value than what is already provided by Python itself, or if the type checker requires it.
 
 ```python

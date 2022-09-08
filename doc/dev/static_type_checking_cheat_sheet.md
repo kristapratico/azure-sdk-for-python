@@ -20,7 +20,7 @@ def create_table(table_name: str) -> Table:
 ```
 
 - Do fully annotate function signatures - this includes type annotations for all parameters and the return type.
-- Do fully annotate function signatures in all samples - this ensures mypy performs type checking on the sample code.
+- Do fully annotate function signatures in all samples - this ensures the type checks will check the sample code.
 - You should type annotate variables if the type in the code is different from expected, provides more value than what is already provided by Python itself, or if the type checker requires it.
 
 ```python
@@ -46,8 +46,8 @@ from typing_extensions import TypedDict
 
 ### Importing types
 
-- Do use user-defined types in type hints. 
-- Do import types from modules such as `typing`, `typing_extensions`, `collections`, and `collections.abc`. Note that indexing support for generic collection types from `collections.abc` is only supported on Python 3.9+.
+- Do use only publicly exposed client library types in type hints. 
+- Do import types from modules such as `typing`, `typing_extensions`, `collections`, and `collections.abc`(Note that indexing support for generic collection types from `collections.abc` is only supported on Python 3.9+).
 - Do not import regular type hints under a `typing.TYPE_CHECKING` block. You may use `TYPE_CHECKING` to fix a circular import or avoid importing a type only needed in type annotations that is otherwise costly to load at runtime.
 
 ```python
@@ -92,7 +92,7 @@ class Triangle:
 # type: ignore  # all errors ignored by both mypy and pyright
 ```
 
-- Do leave a comment with a link or explanation for the ignore so that it may be rectified later.
+- Do leave a comment with a link or explanation for the ignore so that it may be fixed later.
 - If you need to ignore type checking all files under a directory for your library, use a `mypy.ini` and `pyrightconfig.json` at the package-level.
 - If you must opt-out of all type checking temporarily, open an issue to re-enable type checking for your library.
 - Try not to use `typing.Any` if it is possible to be more specific. `Any` essentially turns off type checking.
@@ -100,7 +100,18 @@ class Triangle:
 ### Unions
 
 - Use `typing.Union` when a parameter can accept more than one type.
-- Try to avoid returning `Union` types since this typically makes the user need to do `isinstance` checks. See if `@overload` can be used to improve the typing experience.
+  
+```python
+from typing import Union
+
+
+def begin_build_model(
+    self, source: str, build_mode: Union[str, DocumentBuildMode], **kwargs: Any
+) -> DocumentModelAdministrationLROPoller[DocumentModelInfo]:
+    ...
+```
+
+- Try to using `Union` as a return type since this typically makes the user need to do `isinstance` checks. See if `@overload` can be used to improve the typing experience.
 - Do mark a parameter as explicitly `Optional` if a value of `None` is allowed. `Optional` is the same as `Union[<type>, None]`.
 
 ```python
@@ -134,7 +145,7 @@ def get_entity(entity_id: str) -> dict[str, str]:
     ...
 ```
 
-- Try to be lenient in what you accept as a parameter. For example, typing a parameter as accepting `Sequence` over `List`, or `Mapping` over `Dict` gives more flexibility to the caller.
+- Do try to be lenient in what you accept as a parameter. For example, typing a parameter as accepting `Sequence` over `List`, or `Mapping` over `Dict` gives more flexibility to the caller.
 - Do ensure that the type hint given supports the set of operations needed in the function body.
 
 ```python
@@ -154,12 +165,12 @@ def create_batch(entities: Iterable[Entity]) -> None:
 - If you don't need to mutate the collection, prefer parameter types `Sequence` over `MutableSequence`, `Mapping` over `MutableMapping`, etc.
 - Use `from __future__ import annotations` to use built-in generic collection types (`list` instead of `typing.List`).
 - Consider using `typing.TypedDict` if a dictionary has a fixed set of keys. This is especially useful if a user needs to construct the dict. Do make this importable from the public namespace.
-- Consider using `typing.NamedTuple` if your tuple has named fields. Do make this importable from the public namespace.
+- Consider using `typing.NamedTuple` if your tuple should have named fields. Do make this importable from the public namespace.
 
 
 ### Overloads
 
-- Use `typing.overload` if your function takes different combinations of arguments and the input arguments might inform the return type.
+- Use `typing.overload` if your function takes different combinations of typed arguments and the input arguments might inform the return type.
 
 ```python
 from typing import overload, Union
@@ -291,14 +302,14 @@ def validate_table(func: Callable[P, T]) -> Callable[P, T]:
 
 
 @validate_table
-def create_table(table_name: str) -> None:
+def create_table(table_name: str, **kwargs: Any) -> None:
     ...
 ```
 
 
 ### Type Aliases
 
-- Do use type aliases to help make lengthy, complicated type hints more readable and help convey meaning to the reader.
+- Do use type aliases to help make lengthy, complicated type hints more readable or help convey meaning to the reader.
 
 ```python
 from typing import Union, Dict

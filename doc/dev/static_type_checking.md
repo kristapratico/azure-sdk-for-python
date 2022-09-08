@@ -1,9 +1,9 @@
 # Python SDK Static Type Checking Guide
 
-This guide contains some general typing tips and guidance as it relates to common types/patterns we use in the Python SDK.
+This document contains some general typing tips and guidance as it relates to common types/patterns we use in the Python SDK.
 It also walks through the setup necessary to run mypy and pyright, static type checkers, on client library code.
 
-For the TL;DR version, please see the [Static Type Checking Cheat Sheet]().
+For the TL;DR version, please see the [Static Type Checking Cheat Sheet](TODO).
 
 ## Table of contents
   - [Intro to typing in Python](#intro-to-typing-in-python)
@@ -48,7 +48,7 @@ languages, like Java, where you will have to declare types in code and check the
 with [PEP 483](https://peps.python.org/pep-0483/)/[PEP 484](https://peps.python.org/pep-0484/), type hints were
 introduced to Python which makes it possible to do static type checking of Python code. Type hints can be written into
 Python code to indicate the type of a variable, argument, return type, etc. There are tools available to perform static
-type checking using type hints, like [mypy](https://mypy.readthedocs.io/en/stable/) and [pyright](https://github.com/microsoft/pyright).
+type checking of type hints, like [mypy](https://mypy.readthedocs.io/en/stable/) and [pyright](https://github.com/microsoft/pyright).
 Note that type hints do not affect the code at runtime and are not enforced by the interpreter.
 
 There are some key benefits to using and checking type hints in Python code:
@@ -159,7 +159,7 @@ backported.
 ## Install and run type checkers on your client library code
 
 Our Python SDK repo CI runs two type checkers on the code - [mypy](https://mypy.readthedocs.io/en/stable/) and [pyright](https://github.com/microsoft/pyright). You may see different errors across type checkers.
-We aim for the Python SDK to provide "type checker clean" client libraries whether using mypy or pyright so that our customers are able to choose either one and have a good typing experience.
+We aim for the Python SDK to provide "type checker clean" client libraries whether using mypy or pyright so that our customers are able to choose either and have a good typing experience.
 
 The versions of mypy and pyright that we run in CI are pinned to specific versions in order to avoid surprise typing errors raised when a new
 version of the type checker ships. All client libraries in the Python SDK repo are automatically opted in to running type checking. If you need to temporarily opt-out of type checking for your client library, see [How to opt out of type checking](#how-to-opt-out-of-type-checking).
@@ -781,7 +781,7 @@ x: TypeAlias = 1
 
 ### Use typing.overload to overload a function
 
-`typing.overload` allows for annotating different combinations of arguments for a function. This can be useful when the
+`typing.overload` allows for annotating different combinations of typed arguments for a function. This can be useful when the
 return type might depend on the type or types of parameters.
 
 Consider a function which takes in different input types which then inform the output type:
@@ -831,7 +831,7 @@ reveal_type(result)
 
 `main.py:28: note: Revealed type is "__main__.LanguageDetectionResult"`
 
-`typing.overload` can also be used when there are a different number of arguments. We can take the above example and
+`typing.overload` can also be used when there are a different number of typed arguments. We can take the above example and
 imagine that `analyze_text` has an additional overload which does not take an `analysis_kind` (note that we switched to accepting `*args` and `**kwargs` in the actual implementation for this case):
 
 ```python

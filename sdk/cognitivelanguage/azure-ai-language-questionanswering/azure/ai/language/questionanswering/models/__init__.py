@@ -26,11 +26,15 @@ from ._models import TextDocument
 
 from ._enums import ErrorCode
 from ._enums import InnerErrorCode
-from ._patch import __all__ as _patch_all
+
 from ._patch import *  # type: ignore # pylint: disable=unused-wildcard-import
+from ._patch import MetadataFilter
+from ._patch import AnswersFromTextOptions
 from ._patch import patch_sdk as _patch_sdk
 
 __all__ = [
+    "MetadataFilter",
+    "AnswersFromTextOptions",
     "AnswerSpan",
     "AnswersFromTextOptions",
     "AnswersFromTextResult",
@@ -51,5 +55,5 @@ __all__ = [
     "ErrorCode",
     "InnerErrorCode",
 ]
-__all__.extend([p for p in _patch_all if p not in __all__])
+
 _patch_sdk()

@@ -3,9 +3,6 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
-
-from ._version import VERSION
-from ._auth import login
+from ._auth_async import login
 
 __all__ = ["login"]
-__version__ = VERSION

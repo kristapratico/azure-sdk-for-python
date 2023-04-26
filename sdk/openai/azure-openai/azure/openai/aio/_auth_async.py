@@ -3,11 +3,12 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
+import openai
 import typing
 import time
 import logging
 import asyncio
-import openai
+
 
 log = logging.getLogger(__name__)
 
@@ -24,6 +25,7 @@ except ModuleNotFoundError:
 
 
 class AsyncTokenCredentialAuth(aiohttp.ClientRequest):
+    props: typing.Dict[str, typing.Any]
 
     async def _refresh_token(self):
         if self.props.get("cached_token") is None or self.props.get("cached_token").expires_on - time.time() < 300:
@@ -32,13 +34,18 @@ class AsyncTokenCredentialAuth(aiohttp.ClientRequest):
                     self.props["cached_token"] = await self.props["credential"].get_token(*self.props.get("scopes"))
         self.headers["Authorization"] = "Bearer " + self.props["cached_token"].token
 
-    async def send(self, conn: "aiohttp.Connection") -> "aiohttp.ClientResponse":
+    async def send(self, conn: "Connection") -> "aiohttp.ClientResponse":
         await self._refresh_token()
         return await super().send(conn)
 
 
+# let the user pass their own session?
 def login(
-    endpoint: str, credential: "AsyncTokenCredential", *, scopes: typing.Union[str, typing.List[str]], api_version: typing.Optional[str] = None
+    endpoint: str,
+    credential: "AsyncTokenCredential",
+    *,
+    scopes: typing.Optional[typing.Union[str, typing.List[str]]] = None,
+    api_version: typing.Optional[str] = None,
 ) -> None:
     if openai.api_version and api_version:
         log.info(f'Overriding openai.api_version "{openai.api_version}" with api_version "{api_version}" passed to azure.openai.aio.login') 

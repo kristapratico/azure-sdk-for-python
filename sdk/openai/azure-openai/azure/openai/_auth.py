@@ -7,7 +7,6 @@ import typing
 import time
 import logging
 import openai
-
 log = logging.getLogger(__name__)
 
 if typing.TYPE_CHECKING:
@@ -37,7 +36,11 @@ class TokenCredentialAuth:
 
 
 def login(
-    endpoint: str, credential: "TokenCredential", *, scopes: typing.Union[str, typing.List[str]], api_version: typing.Optional[str] = None
+    endpoint: str,
+    credential: "TokenCredential",
+    *,
+    scopes: typing.Optional[typing.Union[str, typing.List[str]]] = None,
+    api_version: typing.Optional[str] = None
 ) -> None:
     if openai.api_version and api_version:
         log.info(f'Overriding openai.api_version "{openai.api_version}" with api_version "{api_version}" passed to azure.openai.login') 
@@ -53,8 +56,8 @@ def login(
     if scopes is None:
         scopes = ["https://cognitiveservices.azure.com/.default"]
 
-    def factory():
-        session = requests.Session()
-        session.auth = TokenCredentialAuth(credential, *scopes)
-        return session
-    openai.requestssession = factory
+    # should this use a session factory instead? i.e a session per thread
+    session = requests.Session()
+    session.auth = TokenCredentialAuth(credential, *scopes)
+    openai.requestssession = session
+    return session

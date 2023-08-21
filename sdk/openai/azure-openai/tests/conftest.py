@@ -51,7 +51,7 @@ def add_sanitizers(test_proxy, environment_variables):
         ENV_TENANT_ID: TEST_ID,
         ENV_CLIENT_ID: TEST_ID,
         ENV_CLIENT_SECRET: TEST_ID,
-        ENV_OPENAI_KEY: TEST_KEY
+        ENV_OPENAI_KEY: TEST_KEY,
     }
     environment_variables.sanitize_batch(sanitization_mapping)
     add_oauth_response_sanitizer()

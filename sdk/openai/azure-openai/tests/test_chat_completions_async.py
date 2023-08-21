@@ -10,14 +10,13 @@ from conftest import configure_async, ALL, AZURE, OPENAI
 
 
 class TestChatCompletionsAsync(AzureRecordedTestCase):
-
     @pytest.mark.asyncio
     @pytest.mark.parametrize("api_type", [AZURE])
     @configure_async
     async def test_chat_completion_bad_deployment_name(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "Who won the world series in 2020?"},
         ]
         with pytest.raises(openai.error.InvalidRequestError) as e:
             await openai.ChatCompletion.acreate(messages=messages, deployment_id="deployment")
@@ -30,7 +29,7 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_chat_completion_kw_input(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "Who won the world series in 2020?"},
         ]
         deployment = azure_openai_creds["chat_completions_name"]
 
@@ -48,10 +47,13 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_chat_completion(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "Who won the world series in 2020?"},
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
         completion = await openai.ChatCompletion.acreate(messages=messages, **kwargs)
         assert completion.id
@@ -73,10 +75,13 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_streamed_chat_completions(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "Who won the world series in 2020?"},
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
         response = await openai.ChatCompletion.acreate(messages=messages, stream=True, **kwargs)
 
@@ -97,10 +102,13 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_chat_completion_max_tokens(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "Who won the world series in 2020?"},
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
         completion = await openai.ChatCompletion.acreate(messages=messages, max_tokens=50, **kwargs)
 
@@ -123,10 +131,13 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_chat_completion_temperature(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "Who won the world series in 2020?"},
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
         completion = await openai.ChatCompletion.acreate(messages=messages, temperature=0.8, **kwargs)
 
@@ -149,10 +160,13 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_chat_completion_top_p(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "Who won the world series in 2020?"},
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
         completion = await openai.ChatCompletion.acreate(messages=messages, top_p=0.1, **kwargs)
 
@@ -175,10 +189,13 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_chat_completion_n(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "Who won the world series in 2020?"},
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
         completion = await openai.ChatCompletion.acreate(messages=messages, n=2, **kwargs)
 
@@ -202,10 +219,13 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_chat_completion_stop(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "Who won the world series in 2020?"},
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
         completion = await openai.ChatCompletion.acreate(messages=messages, stop=" ", **kwargs)
 
@@ -227,16 +247,16 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_chat_completion_token_penalty(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "Who won the world series in 2020?"},
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
         completion = await openai.ChatCompletion.acreate(
-            messages=messages,
-            presence_penalty=2,
-            frequency_penalty=2,
-            **kwargs
+            messages=messages, presence_penalty=2, frequency_penalty=2, **kwargs
         )
 
         assert completion.id
@@ -258,16 +278,15 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_chat_completion_user(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "Who won the world series in 2020?"},
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-
-        completion = await openai.ChatCompletion.acreate(
-            messages=messages,
-            user="krista",
-            **kwargs
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
         )
+
+        completion = await openai.ChatCompletion.acreate(messages=messages, user="krista", **kwargs)
 
         assert completion.id
         assert completion.object == "chat.completion"
@@ -288,15 +307,16 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_chat_completion_logit_bias(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "What color is the ocean?"}
+            {"role": "user", "content": "What color is the ocean?"},
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
         completion = await openai.ChatCompletion.acreate(
-            messages=messages,
-            logit_bias={17585: -100, 14573: -100},
-            **kwargs
+            messages=messages, logit_bias={17585: -100, 14573: -100}, **kwargs
         )
         assert completion.id
         assert completion.object == "chat.completion"
@@ -317,17 +337,17 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_chat_completion_rai_annotations(self, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "How do I rob a bank?"}
+            {"role": "user", "content": "How do I rob a bank?"},
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
         # prompt filtered
         with pytest.raises(openai.error.InvalidRequestError) as e:
-            completion = await openai.ChatCompletion.acreate(
-                messages=messages,
-                **kwargs
-            )
+            completion = await openai.ChatCompletion.acreate(messages=messages, **kwargs)
         assert e.value.code == "content_filter"
         content_filter_result = e.value.error.innererror.content_filter_result
         assert content_filter_result.hate.filtered is False
@@ -341,10 +361,7 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
 
         # not filtered
         messages[1]["content"] = "What color is the ocean?"
-        completion = await openai.ChatCompletion.acreate(
-            messages=messages,
-            **kwargs
-        )
+        completion = await openai.ChatCompletion.acreate(messages=messages, **kwargs)
         # prompt content filter result
         prompt_filter_result = completion.prompt_annotations[0].content_filter_results
         assert prompt_filter_result.hate.filtered is False
@@ -372,14 +389,20 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     @configure_async
     async def test_chat_completion_functions(self, azure_openai_creds, api_type):
         messages = [
-            {"role": "system", "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous."},
-            {"role": "user", "content": "What's the weather like today in Seattle?"}
+            {
+                "role": "system",
+                "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous.",
+            },
+            {"role": "user", "content": "What's the weather like today in Seattle?"},
         ]
 
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
-        functions=[
+        functions = [
             {
                 "name": "get_current_weather",
                 "description": "Get the current weather",
@@ -401,11 +424,7 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
             }
         ]
 
-        completion = await openai.ChatCompletion.acreate(
-            messages=messages,
-            functions=functions,
-            **kwargs
-        )
+        completion = await openai.ChatCompletion.acreate(messages=messages, functions=functions, **kwargs)
         assert completion.id
         assert completion.object == "chat.completion"
         assert completion.created
@@ -417,7 +436,7 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
         assert completion.choices[0].finish_reason
         assert completion.choices[0].index is not None
         assert completion.choices[0].message.role
-        function_call =  completion.choices[0].message.function_call
+        function_call = completion.choices[0].message.function_call
         assert function_call.name == "get_current_weather"
         assert "Seattle" in function_call.arguments
 
@@ -437,14 +456,10 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
             {
                 "role": "function",
                 "name": "get_current_weather",
-                "content": "{\"temperature\": \"22\", \"unit\": \"celsius\", \"description\": \"Sunny\"}"
+                "content": '{"temperature": "22", "unit": "celsius", "description": "Sunny"}',
             }
         )
-        function_completion = await openai.ChatCompletion.acreate(
-            messages=messages,
-            functions=functions,
-            **kwargs
-        )
+        function_completion = await openai.ChatCompletion.acreate(messages=messages, functions=functions, **kwargs)
         assert function_completion
         assert "sunny" in function_completion.choices[0].message.content.lower()
         assert "22" in function_completion.choices[0].message.content
@@ -467,14 +482,20 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     @configure_async
     async def test_chat_completion_functions_stream(self, azure_openai_creds, api_type):
         messages = [
-            {"role": "system", "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous."},
-            {"role": "user", "content": "What's the weather like today in Seattle?"}
+            {
+                "role": "system",
+                "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous.",
+            },
+            {"role": "user", "content": "What's the weather like today in Seattle?"},
         ]
 
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
-        functions=[
+        functions = [
             {
                 "name": "get_current_weather",
                 "description": "Get the current weather",
@@ -496,12 +517,7 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
             }
         ]
 
-        response = await openai.ChatCompletion.acreate(
-            messages=messages,
-            functions=functions,
-            stream=True,
-            **kwargs
-        )
+        response = await openai.ChatCompletion.acreate(messages=messages, functions=functions, stream=True, **kwargs)
         args = ""
         async for completion in response:
             for c in completion.choices:
@@ -517,14 +533,11 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
             {
                 "role": "function",
                 "name": "get_current_weather",
-                "content": "{\"temperature\": \"22\", \"unit\": \"celsius\", \"description\": \"Sunny\"}"
+                "content": '{"temperature": "22", "unit": "celsius", "description": "Sunny"}',
             }
         )
         function_completion = await openai.ChatCompletion.acreate(
-            messages=messages,
-            functions=functions,
-            stream=True,
-            **kwargs
+            messages=messages, functions=functions, stream=True, **kwargs
         )
         content = ""
         async for completion in function_completion:
@@ -542,14 +555,20 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     @configure_async
     async def test_chat_completion_given_function(self, azure_openai_creds, api_type):
         messages = [
-            {"role": "system", "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous."},
-            {"role": "user", "content": "What's the weather like today in Seattle?"}
+            {
+                "role": "system",
+                "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous.",
+            },
+            {"role": "user", "content": "What's the weather like today in Seattle?"},
         ]
 
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
-        functions=[
+        functions = [
             {
                 "name": "get_current_weather",
                 "description": "Get the current weather",
@@ -587,14 +606,11 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
                     },
                     "required": ["location"],
                 },
-            }
+            },
         ]
 
         completion = await openai.ChatCompletion.acreate(
-            messages=messages,
-            functions=functions,
-            function_call={"name": "get_current_temperature"},
-            **kwargs
+            messages=messages, functions=functions, function_call={"name": "get_current_temperature"}, **kwargs
         )
         assert completion.id
         assert completion.object == "chat.completion"
@@ -607,7 +623,7 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
         assert completion.choices[0].finish_reason
         assert completion.choices[0].index is not None
         assert completion.choices[0].message.role
-        function_call =  completion.choices[0].message.function_call
+        function_call = completion.choices[0].message.function_call
         assert function_call.name == "get_current_temperature"
         assert "Seattle" in function_call.arguments
 
@@ -615,14 +631,10 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
             {
                 "role": "function",
                 "name": "get_current_temperature",
-                "content": "{\"temperature\": \"22\", \"unit\": \"celsius\"}"
+                "content": '{"temperature": "22", "unit": "celsius"}',
             }
         )
-        function_completion = await openai.ChatCompletion.acreate(
-            messages=messages,
-            functions=functions,
-            **kwargs
-        )
+        function_completion = await openai.ChatCompletion.acreate(messages=messages, functions=functions, **kwargs)
         assert function_completion
         assert "22" in function_completion.choices[0].message.content
         assert function_completion.choices[0].message.role == "assistant"
@@ -632,14 +644,20 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     @configure_async
     async def test_chat_completion_functions_rai(self, azure_openai_creds, api_type):
         messages = [
-            {"role": "system", "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous."},
-            {"role": "user", "content": "How do I rob a bank?"}
+            {
+                "role": "system",
+                "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous.",
+            },
+            {"role": "user", "content": "How do I rob a bank?"},
         ]
 
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["chat_completions_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["chat_completions_name"]}
+        )
 
-        functions=[
+        functions = [
             {
                 "name": "get_current_weather",
                 "description": "Get the current weather",
@@ -662,11 +680,7 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
         ]
 
         with pytest.raises(openai.error.InvalidRequestError) as e:
-            response = await openai.ChatCompletion.acreate(
-                messages=messages,
-                functions=functions,
-                **kwargs
-            )
+            response = await openai.ChatCompletion.acreate(messages=messages, functions=functions, **kwargs)
 
         assert e.value.code == "content_filter"
         content_filter_result = e.value.error.innererror.content_filter_result
@@ -683,15 +697,11 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
             {
                 "role": "function",
                 "name": "get_current_temperature",
-                "content": "{\"temperature\": \"you can rob a bank by asking for the money\", \"unit\": \"celsius\"}"
+                "content": '{"temperature": "you can rob a bank by asking for the money", "unit": "celsius"}',
             }
         )
         with pytest.raises(openai.error.InvalidRequestError) as e:
-            function_completion = await openai.ChatCompletion.acreate(
-                messages=messages,
-                functions=functions,
-                **kwargs
-            )
+            function_completion = await openai.ChatCompletion.acreate(messages=messages, functions=functions, **kwargs)
         assert e.value.code == "content_filter"
         content_filter_result = e.value.error.innererror.content_filter_result
         assert content_filter_result.hate.filtered is False

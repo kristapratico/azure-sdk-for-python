@@ -10,7 +10,6 @@ from conftest import configure_async, AZURE, OPENAI, ALL
 
 
 class TestEmbeddingsAsync(AzureRecordedTestCase):
-
     @pytest.mark.asyncio
     @pytest.mark.parametrize("api_type", [AZURE])
     @configure_async
@@ -38,8 +37,11 @@ class TestEmbeddingsAsync(AzureRecordedTestCase):
     @pytest.mark.parametrize("api_type", ALL)
     @configure_async
     async def test_embedding(self, azure_openai_creds, api_type):
-        kwargs = {"model": azure_openai_creds["embeddings_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["embeddings_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["embeddings_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["embeddings_name"]}
+        )
 
         embedding = await openai.Embedding.acreate(input="hello world", **kwargs)
         assert embedding.object == "list"
@@ -55,8 +57,11 @@ class TestEmbeddingsAsync(AzureRecordedTestCase):
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
     @configure_async
     async def test_embedding_batched(self, azure_openai_creds, api_type):
-        kwargs = {"model": azure_openai_creds["embeddings_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["embeddings_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["embeddings_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["embeddings_name"]}
+        )
         embedding = await openai.Embedding.acreate(input=["hello world", "second input"], **kwargs)
         assert embedding.object == "list"
         assert embedding.model
@@ -71,8 +76,11 @@ class TestEmbeddingsAsync(AzureRecordedTestCase):
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
     @configure_async
     async def test_embedding_user(self, azure_openai_creds, api_type):
-        kwargs = {"model": azure_openai_creds["embeddings_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["embeddings_name"]}
+        kwargs = (
+            {"model": azure_openai_creds["embeddings_model"]}
+            if api_type == "openai"
+            else {"deployment_id": azure_openai_creds["embeddings_name"]}
+        )
 
         embedding = await openai.Embedding.acreate(input="hello world", user="krista", **kwargs)
         assert embedding.object == "list"

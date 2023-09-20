@@ -25,6 +25,7 @@ package-name: azure-purview-administration
 no-namespace-folders: true
 package-version: 1.0.0b1
 version-tolerant: true
+python: true
 ```
 
 ### Python multi-client

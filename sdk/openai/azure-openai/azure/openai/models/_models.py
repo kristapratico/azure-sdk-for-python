@@ -18,6 +18,469 @@ if TYPE_CHECKING:
     from .. import models as _models
 
 
+class AudioTranscription(_model_base.Model):
+    """Result information for an operation that transcribed spoken audio into written text.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar text: The transcribed text for the provided audio data. Required.
+    :vartype text: str
+    :ivar task: The label that describes which operation type generated the accompanying response
+     data. Known values are: "transcribe" and "translate".
+    :vartype task: str or ~azure.openai.models.AudioTaskLabel
+    :ivar language: The spoken language that was detected in the transcribed audio data.
+     This is expressed as a two-letter ISO-639-1 language code like 'en' or 'fr'.
+    :vartype language: str
+    :ivar duration: The total duration of the audio processed to produce accompanying transcription
+     information.
+    :vartype duration: float
+    :ivar segments: A collection of information about the timing, probabilities, and other detail
+     of each processed audio segment.
+    :vartype segments: list[~azure.openai.models.AudioTranscriptionSegment]
+    """
+
+    text: str = rest_field()
+    """The transcribed text for the provided audio data. Required."""
+    task: Optional[Union[str, "_models.AudioTaskLabel"]] = rest_field()
+    """The label that describes which operation type generated the accompanying response data. Known
+     values are: \"transcribe\" and \"translate\"."""
+    language: Optional[str] = rest_field()
+    """The spoken language that was detected in the transcribed audio data.
+     This is expressed as a two-letter ISO-639-1 language code like 'en' or 'fr'."""
+    duration: Optional[float] = rest_field()
+    """The total duration of the audio processed to produce accompanying transcription information."""
+    segments: Optional[List["_models.AudioTranscriptionSegment"]] = rest_field()
+    """A collection of information about the timing, probabilities, and other detail of each processed
+     audio segment."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        text: str,
+        task: Optional[Union[str, "_models.AudioTaskLabel"]] = None,
+        language: Optional[str] = None,
+        duration: Optional[float] = None,
+        segments: Optional[List["_models.AudioTranscriptionSegment"]] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:# pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
+
+class AudioTranscriptionOptions(_model_base.Model):
+    """The configuration information for an audio transcription request.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar file: The audio data to transcribe. This must be the binary content of a file in one of
+     the supported media formats:
+     flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm. Required.
+    :vartype file: bytes
+    :ivar response_format: The requested format of the transcription response data, which will
+     influence the content and detail of the result. Known values are: "json", "verbose_json",
+     "text", "srt", and "vtt".
+    :vartype response_format: str or ~azure.openai.models.AudioTranscriptionFormat
+    :ivar language: The primary spoken language of the audio data to be transcribed, supplied as a
+     two-letter ISO-639-1 language code
+     such as 'en' or 'fr'.
+     Providing this known input language is optional but may improve the accuracy and/or latency of
+     transcription.
+    :vartype language: str
+    :ivar prompt: An optional hint to guide the model's style or continue from a prior audio
+     segment. The written language of the
+     prompt should match the primary spoken language of the audio data.
+    :vartype prompt: str
+    :ivar temperature: The sampling temperature, between 0 and 1.
+     Higher values like 0.8 will make the output more random, while lower values like 0.2 will make
+     it more focused and deterministic.
+     If set to 0, the model will use log probability to automatically increase the temperature
+     until certain thresholds are hit.
+    :vartype temperature: float
+    :ivar model: The model to use for this transcription request.
+    :vartype model: str
+    """
+
+    file: bytes = rest_field(format="base64")
+    """The audio data to transcribe. This must be the binary content of a file in one of the supported
+     media formats:
+     flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm. Required."""
+    response_format: Optional[Union[str, "_models.AudioTranscriptionFormat"]] = rest_field()
+    """The requested format of the transcription response data, which will influence the content and
+     detail of the result. Known values are: \"json\", \"verbose_json\", \"text\", \"srt\", and
+     \"vtt\"."""
+    language: Optional[str] = rest_field()
+    """The primary spoken language of the audio data to be transcribed, supplied as a two-letter
+     ISO-639-1 language code
+     such as 'en' or 'fr'.
+     Providing this known input language is optional but may improve the accuracy and/or latency of
+     transcription."""
+    prompt: Optional[str] = rest_field()
+    """An optional hint to guide the model's style or continue from a prior audio segment. The written
+     language of the
+     prompt should match the primary spoken language of the audio data."""
+    temperature: Optional[float] = rest_field()
+    """The sampling temperature, between 0 and 1.
+     Higher values like 0.8 will make the output more random, while lower values like 0.2 will make
+     it more focused and deterministic.
+     If set to 0, the model will use log probability to automatically increase the temperature until
+     certain thresholds are hit."""
+    model: Optional[str] = rest_field()
+    """The model to use for this transcription request."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        file: bytes,
+        response_format: Optional[Union[str, "_models.AudioTranscriptionFormat"]] = None,
+        language: Optional[str] = None,
+        prompt: Optional[str] = None,
+        temperature: Optional[float] = None,
+        model: Optional[str] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:# pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
+
+class AudioTranscriptionSegment(_model_base.Model):
+    """Extended information about a single segment of transcribed audio data.
+    Segments generally represent roughly 5-10 seconds of speech. Segment boundaries typically occur
+    between words but not
+    necessarily sentences.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar id: The 0-based index of this segment within a transcription. Required.
+    :vartype id: int
+    :ivar start: The time at which this segment started relative to the beginning of the
+     transcribed audio. Required.
+    :vartype start: float
+    :ivar end: The time at which this segment ended relative to the beginning of the transcribed
+     audio. Required.
+    :vartype end: float
+    :ivar text: The transcribed text that was part of this audio segment. Required.
+    :vartype text: str
+    :ivar temperature: The temperature score associated with this audio segment. Required.
+    :vartype temperature: float
+    :ivar avg_logprob: The average log probability associated with this audio segment. Required.
+    :vartype avg_logprob: float
+    :ivar compression_ratio: The compression ratio of this audio segment. Required.
+    :vartype compression_ratio: float
+    :ivar no_speech_prob: The probability of no speech detection within this audio segment.
+     Required.
+    :vartype no_speech_prob: float
+    :ivar tokens: The token IDs matching the transcribed text in this audio segment. Required.
+    :vartype tokens: list[int]
+    :ivar seek: The seek position associated with the processing of this audio segment.
+     Seek positions are expressed as hundredths of seconds.
+     The model may process several segments from a single seek position, so while the seek position
+     will never represent
+     a later time than the segment's start, the segment's start may represent a significantly later
+     time than the
+     segment's associated seek position. Required.
+    :vartype seek: int
+    """
+
+    id: int = rest_field()
+    """The 0-based index of this segment within a transcription. Required."""
+    start: float = rest_field()
+    """The time at which this segment started relative to the beginning of the transcribed audio.
+     Required."""
+    end: float = rest_field()
+    """The time at which this segment ended relative to the beginning of the transcribed audio.
+     Required."""
+    text: str = rest_field()
+    """The transcribed text that was part of this audio segment. Required."""
+    temperature: float = rest_field()
+    """The temperature score associated with this audio segment. Required."""
+    avg_logprob: float = rest_field()
+    """The average log probability associated with this audio segment. Required."""
+    compression_ratio: float = rest_field()
+    """The compression ratio of this audio segment. Required."""
+    no_speech_prob: float = rest_field()
+    """The probability of no speech detection within this audio segment. Required."""
+    tokens: List[int] = rest_field()
+    """The token IDs matching the transcribed text in this audio segment. Required."""
+    seek: int = rest_field()
+    """The seek position associated with the processing of this audio segment.
+     Seek positions are expressed as hundredths of seconds.
+     The model may process several segments from a single seek position, so while the seek position
+     will never represent
+     a later time than the segment's start, the segment's start may represent a significantly later
+     time than the
+     segment's associated seek position. Required."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        id: int,  # pylint: disable=redefined-builtin
+        start: float,
+        end: float,
+        text: str,
+        temperature: float,
+        avg_logprob: float,
+        compression_ratio: float,
+        no_speech_prob: float,
+        tokens: List[int],
+        seek: int,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:# pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
+
+class AudioTranslation(_model_base.Model):
+    """Result information for an operation that translated spoken audio into written text.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar text: The translated text for the provided audio data. Required.
+    :vartype text: str
+    :ivar task: The label that describes which operation type generated the accompanying response
+     data. Known values are: "transcribe" and "translate".
+    :vartype task: str or ~azure.openai.models.AudioTaskLabel
+    :ivar language: The spoken language that was detected in the translated audio data.
+     This is expressed as a two-letter ISO-639-1 language code like 'en' or 'fr'.
+    :vartype language: str
+    :ivar duration: The total duration of the audio processed to produce accompanying translation
+     information.
+    :vartype duration: float
+    :ivar segments: A collection of information about the timing, probabilities, and other detail
+     of each processed audio segment.
+    :vartype segments: list[~azure.openai.models.AudioTranslationSegment]
+    """
+
+    text: str = rest_field()
+    """The translated text for the provided audio data. Required."""
+    task: Optional[Union[str, "_models.AudioTaskLabel"]] = rest_field()
+    """The label that describes which operation type generated the accompanying response data. Known
+     values are: \"transcribe\" and \"translate\"."""
+    language: Optional[str] = rest_field()
+    """The spoken language that was detected in the translated audio data.
+     This is expressed as a two-letter ISO-639-1 language code like 'en' or 'fr'."""
+    duration: Optional[float] = rest_field()
+    """The total duration of the audio processed to produce accompanying translation information."""
+    segments: Optional[List["_models.AudioTranslationSegment"]] = rest_field()
+    """A collection of information about the timing, probabilities, and other detail of each processed
+     audio segment."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        text: str,
+        task: Optional[Union[str, "_models.AudioTaskLabel"]] = None,
+        language: Optional[str] = None,
+        duration: Optional[float] = None,
+        segments: Optional[List["_models.AudioTranslationSegment"]] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:# pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
+
+class AudioTranslationOptions(_model_base.Model):
+    """The configuration information for an audio translation request.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar file: The audio data to translate. This must be the binary content of a file in one of
+     the supported media formats:
+     flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm. Required.
+    :vartype file: bytes
+    :ivar response_format: The requested format of the translation response data, which will
+     influence the content and detail of the result. Known values are: "json", "verbose_json",
+     "text", "srt", and "vtt".
+    :vartype response_format: str or ~azure.openai.models.AudioTranslationFormat
+    :ivar prompt: An optional hint to guide the model's style or continue from a prior audio
+     segment. The written language of the
+     prompt should match the primary spoken language of the audio data.
+    :vartype prompt: str
+    :ivar temperature: The sampling temperature, between 0 and 1.
+     Higher values like 0.8 will make the output more random, while lower values like 0.2 will make
+     it more focused and deterministic.
+     If set to 0, the model will use log probability to automatically increase the temperature
+     until certain thresholds are hit.
+    :vartype temperature: float
+    :ivar model: The model to use for this translation request.
+    :vartype model: str
+    """
+
+    file: bytes = rest_field(format="base64")
+    """The audio data to translate. This must be the binary content of a file in one of the supported
+     media formats:
+     flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm. Required."""
+    response_format: Optional[Union[str, "_models.AudioTranslationFormat"]] = rest_field()
+    """The requested format of the translation response data, which will influence the content and
+     detail of the result. Known values are: \"json\", \"verbose_json\", \"text\", \"srt\", and
+     \"vtt\"."""
+    prompt: Optional[str] = rest_field()
+    """An optional hint to guide the model's style or continue from a prior audio segment. The written
+     language of the
+     prompt should match the primary spoken language of the audio data."""
+    temperature: Optional[float] = rest_field()
+    """The sampling temperature, between 0 and 1.
+     Higher values like 0.8 will make the output more random, while lower values like 0.2 will make
+     it more focused and deterministic.
+     If set to 0, the model will use log probability to automatically increase the temperature until
+     certain thresholds are hit."""
+    model: Optional[str] = rest_field()
+    """The model to use for this translation request."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        file: bytes,
+        response_format: Optional[Union[str, "_models.AudioTranslationFormat"]] = None,
+        prompt: Optional[str] = None,
+        temperature: Optional[float] = None,
+        model: Optional[str] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:# pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
+
+class AudioTranslationSegment(_model_base.Model):
+    """Extended information about a single segment of translated audio data.
+    Segments generally represent roughly 5-10 seconds of speech. Segment boundaries typically occur
+    between words but not
+    necessarily sentences.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar id: The 0-based index of this segment within a translation. Required.
+    :vartype id: int
+    :ivar start: The time at which this segment started relative to the beginning of the translated
+     audio. Required.
+    :vartype start: float
+    :ivar end: The time at which this segment ended relative to the beginning of the translated
+     audio. Required.
+    :vartype end: float
+    :ivar text: The translated text that was part of this audio segment. Required.
+    :vartype text: str
+    :ivar temperature: The temperature score associated with this audio segment. Required.
+    :vartype temperature: float
+    :ivar avg_logprob: The average log probability associated with this audio segment. Required.
+    :vartype avg_logprob: float
+    :ivar compression_ratio: The compression ratio of this audio segment. Required.
+    :vartype compression_ratio: float
+    :ivar no_speech_prob: The probability of no speech detection within this audio segment.
+     Required.
+    :vartype no_speech_prob: float
+    :ivar tokens: The token IDs matching the translated text in this audio segment. Required.
+    :vartype tokens: list[int]
+    :ivar seek: The seek position associated with the processing of this audio segment.
+     Seek positions are expressed as hundredths of seconds.
+     The model may process several segments from a single seek position, so while the seek position
+     will never represent
+     a later time than the segment's start, the segment's start may represent a significantly later
+     time than the
+     segment's associated seek position. Required.
+    :vartype seek: int
+    """
+
+    id: int = rest_field()
+    """The 0-based index of this segment within a translation. Required."""
+    start: float = rest_field()
+    """The time at which this segment started relative to the beginning of the translated audio.
+     Required."""
+    end: float = rest_field()
+    """The time at which this segment ended relative to the beginning of the translated audio.
+     Required."""
+    text: str = rest_field()
+    """The translated text that was part of this audio segment. Required."""
+    temperature: float = rest_field()
+    """The temperature score associated with this audio segment. Required."""
+    avg_logprob: float = rest_field()
+    """The average log probability associated with this audio segment. Required."""
+    compression_ratio: float = rest_field()
+    """The compression ratio of this audio segment. Required."""
+    no_speech_prob: float = rest_field()
+    """The probability of no speech detection within this audio segment. Required."""
+    tokens: List[int] = rest_field()
+    """The token IDs matching the translated text in this audio segment. Required."""
+    seek: int = rest_field()
+    """The seek position associated with the processing of this audio segment.
+     Seek positions are expressed as hundredths of seconds.
+     The model may process several segments from a single seek position, so while the seek position
+     will never represent
+     a later time than the segment's start, the segment's start may represent a significantly later
+     time than the
+     segment's associated seek position. Required."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        id: int,  # pylint: disable=redefined-builtin
+        start: float,
+        end: float,
+        text: str,
+        temperature: float,
+        avg_logprob: float,
+        compression_ratio: float,
+        no_speech_prob: float,
+        tokens: List[int],
+        seek: int,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:# pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
+
 class AzureChatExtensionConfiguration(_model_base.Model):
     """A representation of configuration data for a single Azure OpenAI chat extension. This will be
     used by a chat
@@ -251,7 +714,7 @@ class ChatCompletions(_model_base.Model):
     """The collection of completions choices associated with this completions response.
      Generally, ``n`` choices are generated per provided prompt with a default value of 1.
      Token limits and other settings may limit the number of choices generated. Required."""
-    prompt_filter_results: Optional[List["_models.PromptFilterResult"]] = rest_field(name="prompt_annotations")
+    prompt_filter_results: Optional[List["_models.PromptFilterResult"]] = rest_field()
     """Content filtering results for zero or more prompts in the request. In a streaming request,
      results for different prompts may arrive at different times or in different orders."""
     usage: "_models.CompletionsUsage" = rest_field()
@@ -637,7 +1100,7 @@ class Completions(_model_base.Model):
     created: datetime.datetime = rest_field(format="unix-timestamp")
     """The first timestamp associated with generation activity for this completions response,
      represented as seconds since the beginning of the Unix epoch of 00:00 on 1 Jan 1970. Required."""
-    prompt_filter_results: Optional[List["_models.PromptFilterResult"]] = rest_field(name="prompt_annotations")
+    prompt_filter_results: Optional[List["_models.PromptFilterResult"]] = rest_field()
     """Content filtering results for zero or more prompts in the request. In a streaming request,
      results for different prompts may arrive at different times or in different orders."""
     choices: List["_models.Choice"] = rest_field()
@@ -674,9 +1137,49 @@ class Completions(_model_base.Model):
 class CompletionsLogProbabilityModel(_model_base.Model):
     """Representation of a log probabilities model for a completions generation.
 
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar tokens: The textual forms of tokens evaluated in this probability model. Required.
+    :vartype tokens: list[str]
+    :ivar token_logprobs: A collection of log probability values for the tokens in this completions
+     data. Required.
+    :vartype token_logprobs: list[float]
+    :ivar top_logprobs: A mapping of tokens to maximum log probability values in this completions
+     data. Required.
+    :vartype top_logprobs: list[dict[str, float]]
+    :ivar text_offset: The text offsets associated with tokens in this completions data. Required.
+    :vartype text_offset: list[int]
     """
 
+    tokens: List[str] = rest_field()
+    """The textual forms of tokens evaluated in this probability model. Required."""
+    token_logprobs: List[float] = rest_field()
+    """A collection of log probability values for the tokens in this completions data. Required."""
+    top_logprobs: List[Dict[str, float]] = rest_field()
+    """A mapping of tokens to maximum log probability values in this completions data. Required."""
+    text_offset: List[int] = rest_field()
+    """The text offsets associated with tokens in this completions data. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        tokens: List[str],
+        token_logprobs: List[float],
+        top_logprobs: List[Dict[str, float]],
+        text_offset: List[int],
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:# pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class CompletionsOptions(_model_base.Model):  # pylint: disable=too-many-instance-attributes
@@ -1036,6 +1539,24 @@ class EmbeddingItem(_model_base.Model):
     index: int = rest_field()
     """Index of the prompt to which the EmbeddingItem corresponds. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        embedding: List[float],
+        index: int,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:# pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class Embeddings(_model_base.Model):
@@ -1052,11 +1573,29 @@ class Embeddings(_model_base.Model):
     :vartype usage: ~azure.openai.models.EmbeddingsUsage
     """
 
-    data: List["_models._models.EmbeddingItem"] = rest_field()
+    data: List["_models.EmbeddingItem"] = rest_field()
     """Embedding values for the prompts submitted in the request. Required."""
-    usage: "_models._models.EmbeddingsUsage" = rest_field()
+    usage: "_models.EmbeddingsUsage" = rest_field()
     """Usage counts for tokens input using the embeddings API. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        data: List["_models.EmbeddingItem"],
+        usage: "_models.EmbeddingsUsage",
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:# pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class EmbeddingsOptions(_model_base.Model):
@@ -1099,6 +1638,25 @@ class EmbeddingsOptions(_model_base.Model):
      space,
      as we have observed inferior results when newlines are present. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        input: List[str],
+        user: Optional[str] = None,
+        model: Optional[str] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:# pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class EmbeddingsUsage(_model_base.Model):
@@ -1117,6 +1675,24 @@ class EmbeddingsUsage(_model_base.Model):
     total_tokens: int = rest_field()
     """Total number of tokens transacted in this request/response. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        prompt_tokens: int,
+        total_tokens: int,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:# pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class Error(_model_base.Model):

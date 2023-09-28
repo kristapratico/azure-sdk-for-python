@@ -6,6 +6,12 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
+from ._models import AudioTranscription
+from ._models import AudioTranscriptionOptions
+from ._models import AudioTranscriptionSegment
+from ._models import AudioTranslation
+from ._models import AudioTranslationOptions
+from ._models import AudioTranslationSegment
 from ._models import AzureChatExtensionConfiguration
 from ._models import AzureChatExtensionsMessageContext
 from ._models import ChatChoice
@@ -19,6 +25,10 @@ from ._models import CompletionsOptions
 from ._models import CompletionsUsage
 from ._models import ContentFilterResult
 from ._models import ContentFilterResults
+from ._models import EmbeddingItem
+from ._models import Embeddings
+from ._models import EmbeddingsOptions
+from ._models import EmbeddingsUsage
 from ._models import Error
 from ._models import FunctionCall
 from ._models import FunctionDefinition
@@ -28,10 +38,12 @@ from ._models import ImagePayload
 from ._models import InnerError
 from ._models import PromptFilterResult
 
+from ._enums import AudioTaskLabel
+from ._enums import AudioTranscriptionFormat
+from ._enums import AudioTranslationFormat
 from ._enums import AzureChatExtensionType
 from ._enums import AzureOpenAIOperationState
 from ._enums import ChatRole
-from ._enums import CompletionsFinishReason
 from ._enums import CompletionsFinishReason
 from ._enums import ContentFilterSeverity
 from ._enums import FunctionCallPreset
@@ -41,6 +53,12 @@ from ._patch import __all__ as _patch_all
 from ._patch import *  # pylint: disable=unused-wildcard-import
 from ._patch import patch_sdk as _patch_sdk
 __all__ = [
+    'AudioTranscription',
+    'AudioTranscriptionOptions',
+    'AudioTranscriptionSegment',
+    'AudioTranslation',
+    'AudioTranslationOptions',
+    'AudioTranslationSegment',
     'AzureChatExtensionConfiguration',
     'AzureChatExtensionsMessageContext',
     'ChatChoice',
@@ -54,6 +72,10 @@ __all__ = [
     'CompletionsUsage',
     'ContentFilterResult',
     'ContentFilterResults',
+    'EmbeddingItem',
+    'Embeddings',
+    'EmbeddingsOptions',
+    'EmbeddingsUsage',
     'Error',
     'FunctionCall',
     'FunctionDefinition',
@@ -62,10 +84,12 @@ __all__ = [
     'ImagePayload',
     'InnerError',
     'PromptFilterResult',
+    'AudioTaskLabel',
+    'AudioTranscriptionFormat',
+    'AudioTranslationFormat',
     'AzureChatExtensionType',
     'AzureOpenAIOperationState',
     'ChatRole',
-    'CompletionsFinishReason',
     'CompletionsFinishReason',
     'ContentFilterSeverity',
     'FunctionCallPreset',

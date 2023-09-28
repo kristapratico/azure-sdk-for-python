@@ -45,7 +45,7 @@ def build_open_ai_get_embeddings_request(
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
     content_type: Optional[str] = kwargs.pop('content_type', _headers.pop('Content-Type', None))
-    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-08-01-preview"))
+    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-09-01-preview"))
     accept = _headers.pop('Accept', "application/json")
 
     # Construct URL
@@ -81,7 +81,7 @@ def build_open_ai_get_completions_request(
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
     content_type: Optional[str] = kwargs.pop('content_type', _headers.pop('Content-Type', None))
-    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-08-01-preview"))
+    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-09-01-preview"))
     accept = _headers.pop('Accept', "application/json")
 
     # Construct URL
@@ -117,7 +117,7 @@ def build_open_ai_get_chat_completions_request(  # pylint: disable=name-too-long
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
     content_type: Optional[str] = kwargs.pop('content_type', _headers.pop('Content-Type', None))
-    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-08-01-preview"))
+    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-09-01-preview"))
     accept = _headers.pop('Accept', "application/json")
 
     # Construct URL
@@ -153,7 +153,7 @@ def build_open_ai_get_chat_completions_with_azure_extensions_request(  # pylint:
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
     content_type: Optional[str] = kwargs.pop('content_type', _headers.pop('Content-Type', None))
-    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-08-01-preview"))
+    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-09-01-preview"))
     accept = _headers.pop('Accept', "application/json")
 
     # Construct URL
@@ -188,7 +188,7 @@ def build_open_ai_get_azure_batch_image_generation_operation_status_request(  # 
     _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
-    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-08-01-preview"))
+    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-09-01-preview"))
     accept = _headers.pop('Accept', "application/json")
 
     # Construct URL
@@ -221,7 +221,7 @@ def build_open_ai_begin_azure_batch_image_generation_request(  # pylint: disable
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
     content_type: Optional[str] = kwargs.pop('content_type', _headers.pop('Content-Type', None))
-    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-08-01-preview"))
+    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-09-01-preview"))
     accept = _headers.pop('Accept', "application/json")
 
     # Construct URL
@@ -243,48 +243,238 @@ def build_open_ai_begin_azure_batch_image_generation_request(  # pylint: disable
         **kwargs
     )
 
+
+def build_open_ai_get_audio_transcription_as_plain_text_request(  # pylint: disable=name-too-long
+    deployment_id: str,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    content_type: Optional[str] = kwargs.pop('content_type', _headers.pop('Content-Type', None))
+    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-09-01-preview"))
+    accept = _headers.pop('Accept', "application/json")
+
+    # Construct URL
+    _url = "/deployments/{deploymentId}/audio/transcriptions"
+    path_format_arguments = {
+        "deploymentId": _SERIALIZER.url("deployment_id", deployment_id, 'str'),
+    }
+
+    _url: str = _url.format(**path_format_arguments)  # type: ignore
+
+    # Construct parameters
+    _params['api-version'] = _SERIALIZER.query("api_version", api_version, 'str')
+
+    # Construct headers
+    _headers['Accept'] = _SERIALIZER.header("accept", accept, 'str')
+    if content_type is not None:
+        _headers['Content-Type'] = _SERIALIZER.header("content_type", content_type, 'str')
+
+    return HttpRequest(
+        method="POST",
+        url=_url,
+        params=_params,
+        headers=_headers,
+        **kwargs
+    )
+
+
+def build_open_ai_get_audio_transcription_as_response_object_request(  # pylint: disable=name-too-long
+    deployment_id: str,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    content_type: str = kwargs.pop('content_type')
+    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-09-01-preview"))
+    accept = _headers.pop('Accept', "application/json")
+
+    # Construct URL
+    _url = "/deployments/{deploymentId}/audio/transcriptions"
+    path_format_arguments = {
+        "deploymentId": _SERIALIZER.url("deployment_id", deployment_id, 'str'),
+    }
+
+    _url: str = _url.format(**path_format_arguments)  # type: ignore
+
+    # Construct parameters
+    _params['api-version'] = _SERIALIZER.query("api_version", api_version, 'str')
+
+    # Construct headers
+    _headers['content-type'] = _SERIALIZER.header("content_type", content_type, 'str')
+    _headers['Accept'] = _SERIALIZER.header("accept", accept, 'str')
+
+    return HttpRequest(
+        method="POST",
+        url=_url,
+        params=_params,
+        headers=_headers,
+        **kwargs
+    )
+
+
+def build_open_ai_get_audio_translation_as_plain_text_request(  # pylint: disable=name-too-long
+    deployment_id: str,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    content_type: Optional[str] = kwargs.pop('content_type', _headers.pop('Content-Type', None))
+    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-09-01-preview"))
+    accept = _headers.pop('Accept', "application/json")
+
+    # Construct URL
+    _url = "/deployments/{deploymentId}/audio/translations"
+    path_format_arguments = {
+        "deploymentId": _SERIALIZER.url("deployment_id", deployment_id, 'str'),
+    }
+
+    _url: str = _url.format(**path_format_arguments)  # type: ignore
+
+    # Construct parameters
+    _params['api-version'] = _SERIALIZER.query("api_version", api_version, 'str')
+
+    # Construct headers
+    _headers['Accept'] = _SERIALIZER.header("accept", accept, 'str')
+    if content_type is not None:
+        _headers['Content-Type'] = _SERIALIZER.header("content_type", content_type, 'str')
+
+    return HttpRequest(
+        method="POST",
+        url=_url,
+        params=_params,
+        headers=_headers,
+        **kwargs
+    )
+
+
+def build_open_ai_get_audio_translation_as_response_object_request(  # pylint: disable=name-too-long
+    deployment_id: str,
+    **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    content_type: str = kwargs.pop('content_type')
+    api_version: str = kwargs.pop('api_version', _params.pop('api-version', "2023-09-01-preview"))
+    accept = _headers.pop('Accept', "application/json")
+
+    # Construct URL
+    _url = "/deployments/{deploymentId}/audio/translations"
+    path_format_arguments = {
+        "deploymentId": _SERIALIZER.url("deployment_id", deployment_id, 'str'),
+    }
+
+    _url: str = _url.format(**path_format_arguments)  # type: ignore
+
+    # Construct parameters
+    _params['api-version'] = _SERIALIZER.query("api_version", api_version, 'str')
+
+    # Construct headers
+    _headers['content-type'] = _SERIALIZER.header("content_type", content_type, 'str')
+    _headers['Accept'] = _SERIALIZER.header("accept", accept, 'str')
+
+    return HttpRequest(
+        method="POST",
+        url=_url,
+        params=_params,
+        headers=_headers,
+        **kwargs
+    )
+
 class OpenAIClientOperationsMixin( 
     OpenAIClientMixinABC
 ):
 
     @overload
-    def _get_embeddings(  # pylint: disable=protected-access
+    def get_embeddings(
         self,
         deployment_id: str,
-        body: _models._models.EmbeddingsOptions,
+        body: _models.EmbeddingsOptions,
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> _models._models.Embeddings:
-        ...
+    ) -> _models.Embeddings:
+        """Return the embeddings for a given prompt.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Required.
+        :type body: ~azure.openai.models.EmbeddingsOptions
+        :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: Embeddings. The Embeddings is compatible with MutableMapping
+        :rtype: ~azure.openai.models.Embeddings
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
     @overload
-    def _get_embeddings(  # pylint: disable=protected-access
+    def get_embeddings(
         self,
         deployment_id: str,
         body: JSON,
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> _models._models.Embeddings:
-        ...
+    ) -> _models.Embeddings:
+        """Return the embeddings for a given prompt.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Required.
+        :type body: JSON
+        :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: Embeddings. The Embeddings is compatible with MutableMapping
+        :rtype: ~azure.openai.models.Embeddings
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
     @overload
-    def _get_embeddings(  # pylint: disable=protected-access
+    def get_embeddings(
         self,
         deployment_id: str,
         body: IO,
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> _models._models.Embeddings:
-        ...
+    ) -> _models.Embeddings:
+        """Return the embeddings for a given prompt.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Required.
+        :type body: IO
+        :keyword content_type: Body Parameter content-type. Content type parameter for binary body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: Embeddings. The Embeddings is compatible with MutableMapping
+        :rtype: ~azure.openai.models.Embeddings
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
 
     @distributed_trace
-    def _get_embeddings(  # pylint: disable=protected-access
+    def get_embeddings(
         self,
         deployment_id: str,
-        body: Union[_models._models.EmbeddingsOptions, JSON, IO],
+        body: Union[_models.EmbeddingsOptions, JSON, IO],
         **kwargs: Any
-    ) -> _models._models.Embeddings:
+    ) -> _models.Embeddings:
         """Return the embeddings for a given prompt.
 
         :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
@@ -310,7 +500,7 @@ class OpenAIClientOperationsMixin(
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop('content_type', _headers.pop('Content-Type', None))
-        cls: ClsType[_models._models.Embeddings] = kwargs.pop(  # pylint: disable=protected-access
+        cls: ClsType[_models.Embeddings] = kwargs.pop(
             'cls', None
         )
 
@@ -353,7 +543,7 @@ class OpenAIClientOperationsMixin(
             deserialized = response.iter_bytes()
         else:
             deserialized = _deserialize(
-                _models._models.Embeddings,  # pylint: disable=protected-access
+                _models.Embeddings,
                 response.json()
             )
 
@@ -862,14 +1052,26 @@ class OpenAIClientOperationsMixin(
 
 
 
+    @distributed_trace
     @api_version_validation(
         method_added_on="2023-06-01-preview",
-    )  # pylint: disable=name-too-long
-    def __get_azure_batch_image_generation_operation_status_initial(  # pylint: disable=name-too-long
+    )  # pylint: disable=protected-access,name-too-long
+    def _get_azure_batch_image_generation_operation_status(  # pylint: disable=protected-access,name-too-long
         self,
         operation_id: str,
         **kwargs: Any
-    ) -> JSON:
+    ) -> _models._models.BatchImageGenerationOperationResponse:
+        """Returns the status of the images operation.
+
+        :param operation_id: . Required.
+        :type operation_id: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: BatchImageGenerationOperationResponse. The BatchImageGenerationOperationResponse is
+         compatible with MutableMapping
+        :rtype: ~azure.openai.models.BatchImageGenerationOperationResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
         error_map = {
             401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError, 304: ResourceNotModifiedError
         }
@@ -878,7 +1080,7 @@ class OpenAIClientOperationsMixin(
         _headers = kwargs.pop("headers", {}) or {}
         _params = kwargs.pop("params", {}) or {}
 
-        cls: ClsType[JSON] = kwargs.pop(
+        cls: ClsType[_models._models.BatchImageGenerationOperationResponse] = kwargs.pop(  # pylint: disable=protected-access
             'cls', None
         )
 
@@ -894,7 +1096,7 @@ class OpenAIClientOperationsMixin(
         }
         request.url = self._client.format_url(request.url, **path_format_arguments)
 
-        _stream = False
+        _stream = kwargs.pop("stream", False)
         pipeline_response: PipelineResponse = self._client._pipeline.run(   # pylint: disable=protected-access
             request,
             stream=_stream,
@@ -909,98 +1111,18 @@ class OpenAIClientOperationsMixin(
             map_error(status_code=response.status_code, response=response, error_map=error_map)
             raise HttpResponseError(response=response)
 
-        deserialized = _deserialize(
-            JSON,
-            response.json()
-        )
+        if _stream:
+            deserialized = response.iter_bytes()
+        else:
+            deserialized = _deserialize(
+                _models._models.BatchImageGenerationOperationResponse,  # pylint: disable=protected-access
+                response.json()
+            )
 
         if cls:
             return cls(pipeline_response, deserialized, {}) # type: ignore
 
         return deserialized # type: ignore
-
-
-
-    @distributed_trace
-    @api_version_validation(
-        method_added_on="2023-06-01-preview",
-    )  # pylint: disable=protected-access,name-too-long
-    def begin__get_azure_batch_image_generation_operation_status(  # pylint: disable=protected-access,name-too-long
-        self,
-        operation_id: str,
-        **kwargs: Any
-    ) -> LROPoller[_models._models.BatchImageGenerationOperationResponse]:
-        """Returns the status of the images operation.
-
-        :param operation_id: . Required.
-        :type operation_id: str
-        :keyword str continuation_token: A continuation token to restart a poller from a saved state.
-        :keyword polling: By default, your polling method will be LROBasePolling. Pass in False for
-         this operation to not poll, or pass in your own initialized polling object for a personal
-         polling strategy.
-        :paramtype polling: bool or ~azure.core.polling.PollingMethod
-        :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
-         Retry-After header is present.
-        :return: An instance of LROPoller that returns BatchImageGenerationOperationResponse. The
-         BatchImageGenerationOperationResponse is compatible with MutableMapping
-        :rtype:
-         ~azure.core.polling.LROPoller[~azure.openai.models.BatchImageGenerationOperationResponse]
-        :raises ~azure.core.exceptions.HttpResponseError:
-        """
-        _headers = kwargs.pop("headers", {}) or {}
-        _params = kwargs.pop("params", {}) or {}
-
-        cls: ClsType[_models._models.BatchImageGenerationOperationResponse] = kwargs.pop(  # pylint: disable=protected-access
-            'cls', None
-        )
-        polling: Union[bool, PollingMethod] = kwargs.pop('polling', True)
-        lro_delay = kwargs.pop(
-            'polling_interval',
-            self._config.polling_interval
-        )
-        cont_token: Optional[str] = kwargs.pop('continuation_token', None)
-        if cont_token is None:
-            raw_result = self.__get_azure_batch_image_generation_operation_status_initial(
-                operation_id=operation_id,
-                cls=lambda x,y,z: x,
-                headers=_headers,
-                params=_params,
-                **kwargs
-            )
-        kwargs.pop('error_map', None)
-
-        def get_long_running_output(pipeline_response):
-            response = pipeline_response.http_response
-            deserialized = _deserialize(
-                _models._models.BatchImageGenerationOperationResponse,  # pylint: disable=protected-access
-                response.json()
-            )
-            if cls:
-                return cls(pipeline_response, deserialized, {}) # type: ignore
-            return deserialized
-
-
-        path_format_arguments = {
-            "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
-        }
-
-        if polling is True:
-            polling_method: PollingMethod = cast(PollingMethod, LROBasePolling(
-                lro_delay,
-                
-                path_format_arguments=path_format_arguments,
-                **kwargs
-        ))
-        elif polling is False: polling_method = cast(PollingMethod, NoPolling())
-        else: polling_method = polling
-        if cont_token:
-            return LROPoller.from_continuation_token(
-                polling_method=polling_method,
-                continuation_token=cont_token,
-                client=self._client,
-                deserialization_callback=get_long_running_output
-            )
-        return LROPoller(self._client, raw_result, get_long_running_output, polling_method)  # type: ignore
 
 
 
@@ -1084,7 +1206,7 @@ class OpenAIClientOperationsMixin(
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> LROPoller[_models._models.BatchImageGenerationOperationResponse]:
+    ) -> LROPoller[_models._models.ImageGenerations]:
         ...
     @overload
     @api_version_validation(
@@ -1096,7 +1218,7 @@ class OpenAIClientOperationsMixin(
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> LROPoller[_models._models.BatchImageGenerationOperationResponse]:
+    ) -> LROPoller[_models._models.ImageGenerations]:
         ...
     @overload
     @api_version_validation(
@@ -1108,7 +1230,7 @@ class OpenAIClientOperationsMixin(
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> LROPoller[_models._models.BatchImageGenerationOperationResponse]:
+    ) -> LROPoller[_models._models.ImageGenerations]:
         ...
 
     @distributed_trace
@@ -1119,7 +1241,7 @@ class OpenAIClientOperationsMixin(
         self,
         body: Union[_models._models.ImageGenerationOptions, JSON, IO],
         **kwargs: Any
-    ) -> LROPoller[_models._models.BatchImageGenerationOperationResponse]:
+    ) -> LROPoller[_models._models.ImageGenerations]:
         """Starts the generation of a batch of images from a text caption.
 
         :param body: Is one of the following types: ImageGenerationOptions, JSON, IO Required.
@@ -1134,17 +1256,16 @@ class OpenAIClientOperationsMixin(
         :paramtype polling: bool or ~azure.core.polling.PollingMethod
         :keyword int polling_interval: Default waiting time between two polls for LRO operations if no
          Retry-After header is present.
-        :return: An instance of LROPoller that returns BatchImageGenerationOperationResponse. The
-         BatchImageGenerationOperationResponse is compatible with MutableMapping
-        :rtype:
-         ~azure.core.polling.LROPoller[~azure.openai.models.BatchImageGenerationOperationResponse]
+        :return: An instance of LROPoller that returns ImageGenerations. The ImageGenerations is
+         compatible with MutableMapping
+        :rtype: ~azure.core.polling.LROPoller[~azure.openai.models.ImageGenerations]
         :raises ~azure.core.exceptions.HttpResponseError:
         """
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop('content_type', _headers.pop('Content-Type', None))
-        cls: ClsType[_models._models.BatchImageGenerationOperationResponse] = kwargs.pop(  # pylint: disable=protected-access
+        cls: ClsType[_models._models.ImageGenerations] = kwargs.pop(  # pylint: disable=protected-access
             'cls', None
         )
         polling: Union[bool, PollingMethod] = kwargs.pop('polling', True)
@@ -1170,8 +1291,8 @@ class OpenAIClientOperationsMixin(
             response_headers['Operation-Location']=self._deserialize('str', response.headers.get('Operation-Location'))
             
             deserialized = _deserialize(
-                _models._models.BatchImageGenerationOperationResponse,  # pylint: disable=protected-access
-                response.json().get("result")
+                _models._models.ImageGenerations,  # pylint: disable=protected-access
+                response.json()
             )
             if cls:
                 return cls(pipeline_response, deserialized, response_headers) # type: ignore
@@ -1199,5 +1320,537 @@ class OpenAIClientOperationsMixin(
                 deserialization_callback=get_long_running_output
             )
         return LROPoller(self._client, raw_result, get_long_running_output, polling_method)  # type: ignore
+
+
+
+    @overload
+    @api_version_validation(
+        method_added_on="2023-09-01-preview",
+    )
+    def get_audio_transcription_as_plain_text(
+        self,
+        deployment_id: str,
+        body: _models.AudioTranscriptionOptions,
+        *,
+        content_type: str = "application/json",
+        **kwargs: Any
+    ) -> str:
+        """Gets transcribed text and associated metadata from provided spoken audio data. Audio will be
+        transcribed in the
+        written language corresponding to the language it was spoken in.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Required.
+        :type body: ~azure.openai.models.AudioTranscriptionOptions
+        :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: str
+        :rtype: str
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @overload
+    @api_version_validation(
+        method_added_on="2023-09-01-preview",
+    )
+    def get_audio_transcription_as_plain_text(
+        self,
+        deployment_id: str,
+        body: JSON,
+        *,
+        content_type: str = "application/json",
+        **kwargs: Any
+    ) -> str:
+        """Gets transcribed text and associated metadata from provided spoken audio data. Audio will be
+        transcribed in the
+        written language corresponding to the language it was spoken in.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Required.
+        :type body: JSON
+        :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: str
+        :rtype: str
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @overload
+    @api_version_validation(
+        method_added_on="2023-09-01-preview",
+    )
+    def get_audio_transcription_as_plain_text(
+        self,
+        deployment_id: str,
+        body: IO,
+        *,
+        content_type: str = "application/json",
+        **kwargs: Any
+    ) -> str:
+        """Gets transcribed text and associated metadata from provided spoken audio data. Audio will be
+        transcribed in the
+        written language corresponding to the language it was spoken in.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Required.
+        :type body: IO
+        :keyword content_type: Body Parameter content-type. Content type parameter for binary body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: str
+        :rtype: str
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+
+    @distributed_trace
+    @api_version_validation(
+        method_added_on="2023-09-01-preview",
+    )
+    def get_audio_transcription_as_plain_text(
+        self,
+        deployment_id: str,
+        body: Union[_models.AudioTranscriptionOptions, JSON, IO],
+        **kwargs: Any
+    ) -> str:
+        """Gets transcribed text and associated metadata from provided spoken audio data. Audio will be
+        transcribed in the
+        written language corresponding to the language it was spoken in.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Is one of the following types: AudioTranscriptionOptions, JSON, IO Required.
+        :type body: ~azure.openai.models.AudioTranscriptionOptions or JSON or IO
+        :keyword content_type: Body parameter Content-Type. Known values are: application/json. Default
+         value is None.
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: str
+        :rtype: str
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError, 304: ResourceNotModifiedError
+        }
+        error_map.update(kwargs.pop('error_map', {}) or {})
+
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = kwargs.pop("params", {}) or {}
+
+        content_type: Optional[str] = kwargs.pop('content_type', _headers.pop('Content-Type', None))
+        cls: ClsType[str] = kwargs.pop(
+            'cls', None
+        )
+
+        content_type = content_type or "application/json"
+        _content = None
+        if isinstance(body, (IOBase, bytes)):
+            _content = body
+        else:
+            _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
+
+        request = build_open_ai_get_audio_transcription_as_plain_text_request(
+            deployment_id=deployment_id,
+            content_type=content_type,
+            api_version=self._config.api_version,
+            content=_content,
+            headers=_headers,
+            params=_params,
+        )
+        path_format_arguments = {
+            "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
+        }
+        request.url = self._client.format_url(request.url, **path_format_arguments)
+
+        _stream = kwargs.pop("stream", False)
+        pipeline_response: PipelineResponse = self._client._pipeline.run(   # pylint: disable=protected-access
+            request,
+            stream=_stream,
+            **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            if _stream:
+                 response.read()  # Load the body in memory and close the socket
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            raise HttpResponseError(response=response)
+
+        if _stream:
+            deserialized = response.iter_bytes()
+        else:
+            deserialized = _deserialize(
+                str,
+                response.json()
+            )
+
+        if cls:
+            return cls(pipeline_response, deserialized, {}) # type: ignore
+
+        return deserialized # type: ignore
+
+
+
+    @distributed_trace
+    @api_version_validation(
+        method_added_on="2023-09-01-preview",
+    )  # pylint: disable=name-too-long
+    def get_audio_transcription_as_response_object(  # pylint: disable=name-too-long
+        self,
+        deployment_id: str,
+        body: _models.AudioTranscriptionOptions,
+        **kwargs: Any
+    ) -> _models.AudioTranscription:
+        """Gets transcribed text and associated metadata from provided spoken audio data. Audio will be
+        transcribed in the
+        written language corresponding to the language it was spoken in.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Required.
+        :type body: ~azure.openai.models.AudioTranscriptionOptions
+        :keyword content_type: The content type for the operation. Always multipart/form-data for this
+         operation. Default value is "multipart/form-data".
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: AudioTranscription. The AudioTranscription is compatible with MutableMapping
+        :rtype: ~azure.openai.models.AudioTranscription
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError, 304: ResourceNotModifiedError
+        }
+        error_map.update(kwargs.pop('error_map', {}) or {})
+
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = kwargs.pop("params", {}) or {}
+
+        content_type: str = kwargs.pop('content_type', _headers.pop('content-type', "multipart/form-data"))
+        cls: ClsType[_models.AudioTranscription] = kwargs.pop(
+            'cls', None
+        )
+
+        _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
+
+        request = build_open_ai_get_audio_transcription_as_response_object_request(
+            deployment_id=deployment_id,
+            content_type=content_type,
+            api_version=self._config.api_version,
+            content=_content,
+            headers=_headers,
+            params=_params,
+        )
+        path_format_arguments = {
+            "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
+        }
+        request.url = self._client.format_url(request.url, **path_format_arguments)
+
+        _stream = kwargs.pop("stream", False)
+        pipeline_response: PipelineResponse = self._client._pipeline.run(   # pylint: disable=protected-access
+            request,
+            stream=_stream,
+            **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            if _stream:
+                 response.read()  # Load the body in memory and close the socket
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            raise HttpResponseError(response=response)
+
+        if _stream:
+            deserialized = response.iter_bytes()
+        else:
+            deserialized = _deserialize(
+                _models.AudioTranscription,
+                response.json()
+            )
+
+        if cls:
+            return cls(pipeline_response, deserialized, {}) # type: ignore
+
+        return deserialized # type: ignore
+
+
+
+    @overload
+    @api_version_validation(
+        method_added_on="2023-09-01-preview",
+    )
+    def get_audio_translation_as_plain_text(
+        self,
+        deployment_id: str,
+        body: _models.AudioTranslationOptions,
+        *,
+        content_type: str = "application/json",
+        **kwargs: Any
+    ) -> str:
+        """Gets English language transcribed text and associated metadata from provided spoken audio data.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Required.
+        :type body: ~azure.openai.models.AudioTranslationOptions
+        :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: str
+        :rtype: str
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @overload
+    @api_version_validation(
+        method_added_on="2023-09-01-preview",
+    )
+    def get_audio_translation_as_plain_text(
+        self,
+        deployment_id: str,
+        body: JSON,
+        *,
+        content_type: str = "application/json",
+        **kwargs: Any
+    ) -> str:
+        """Gets English language transcribed text and associated metadata from provided spoken audio data.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Required.
+        :type body: JSON
+        :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: str
+        :rtype: str
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @overload
+    @api_version_validation(
+        method_added_on="2023-09-01-preview",
+    )
+    def get_audio_translation_as_plain_text(
+        self,
+        deployment_id: str,
+        body: IO,
+        *,
+        content_type: str = "application/json",
+        **kwargs: Any
+    ) -> str:
+        """Gets English language transcribed text and associated metadata from provided spoken audio data.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Required.
+        :type body: IO
+        :keyword content_type: Body Parameter content-type. Content type parameter for binary body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: str
+        :rtype: str
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+
+    @distributed_trace
+    @api_version_validation(
+        method_added_on="2023-09-01-preview",
+    )
+    def get_audio_translation_as_plain_text(
+        self,
+        deployment_id: str,
+        body: Union[_models.AudioTranslationOptions, JSON, IO],
+        **kwargs: Any
+    ) -> str:
+        """Gets English language transcribed text and associated metadata from provided spoken audio data.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Is one of the following types: AudioTranslationOptions, JSON, IO Required.
+        :type body: ~azure.openai.models.AudioTranslationOptions or JSON or IO
+        :keyword content_type: Body parameter Content-Type. Known values are: application/json. Default
+         value is None.
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: str
+        :rtype: str
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError, 304: ResourceNotModifiedError
+        }
+        error_map.update(kwargs.pop('error_map', {}) or {})
+
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = kwargs.pop("params", {}) or {}
+
+        content_type: Optional[str] = kwargs.pop('content_type', _headers.pop('Content-Type', None))
+        cls: ClsType[str] = kwargs.pop(
+            'cls', None
+        )
+
+        content_type = content_type or "application/json"
+        _content = None
+        if isinstance(body, (IOBase, bytes)):
+            _content = body
+        else:
+            _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
+
+        request = build_open_ai_get_audio_translation_as_plain_text_request(
+            deployment_id=deployment_id,
+            content_type=content_type,
+            api_version=self._config.api_version,
+            content=_content,
+            headers=_headers,
+            params=_params,
+        )
+        path_format_arguments = {
+            "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
+        }
+        request.url = self._client.format_url(request.url, **path_format_arguments)
+
+        _stream = kwargs.pop("stream", False)
+        pipeline_response: PipelineResponse = self._client._pipeline.run(   # pylint: disable=protected-access
+            request,
+            stream=_stream,
+            **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            if _stream:
+                 response.read()  # Load the body in memory and close the socket
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            raise HttpResponseError(response=response)
+
+        if _stream:
+            deserialized = response.iter_bytes()
+        else:
+            deserialized = _deserialize(
+                str,
+                response.json()
+            )
+
+        if cls:
+            return cls(pipeline_response, deserialized, {}) # type: ignore
+
+        return deserialized # type: ignore
+
+
+
+    @distributed_trace
+    @api_version_validation(
+        method_added_on="2023-09-01-preview",
+    )
+    def get_audio_translation_as_response_object(
+        self,
+        deployment_id: str,
+        body: _models.AudioTranslationOptions,
+        **kwargs: Any
+    ) -> _models.AudioTranslation:
+        """Gets English language transcribed text and associated metadata from provided spoken audio data.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Required.
+        :type body: ~azure.openai.models.AudioTranslationOptions
+        :keyword content_type: The content type for the operation. Always multipart/form-data for this
+         operation. Default value is "multipart/form-data".
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: AudioTranslation. The AudioTranslation is compatible with MutableMapping
+        :rtype: ~azure.openai.models.AudioTranslation
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError, 304: ResourceNotModifiedError
+        }
+        error_map.update(kwargs.pop('error_map', {}) or {})
+
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = kwargs.pop("params", {}) or {}
+
+        content_type: str = kwargs.pop('content_type', _headers.pop('content-type', "multipart/form-data"))
+        cls: ClsType[_models.AudioTranslation] = kwargs.pop(
+            'cls', None
+        )
+
+        _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
+
+        request = build_open_ai_get_audio_translation_as_response_object_request(
+            deployment_id=deployment_id,
+            content_type=content_type,
+            api_version=self._config.api_version,
+            content=_content,
+            headers=_headers,
+            params=_params,
+        )
+        path_format_arguments = {
+            "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, 'str', skip_quote=True),
+        }
+        request.url = self._client.format_url(request.url, **path_format_arguments)
+
+        _stream = kwargs.pop("stream", False)
+        pipeline_response: PipelineResponse = self._client._pipeline.run(   # pylint: disable=protected-access
+            request,
+            stream=_stream,
+            **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            if _stream:
+                 response.read()  # Load the body in memory and close the socket
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            raise HttpResponseError(response=response)
+
+        if _stream:
+            deserialized = response.iter_bytes()
+        else:
+            deserialized = _deserialize(
+                _models.AudioTranslation,
+                response.json()
+            )
+
+        if cls:
+            return cls(pipeline_response, deserialized, {}) # type: ignore
+
+        return deserialized # type: ignore
 
 

@@ -10,6 +10,55 @@ from enum import Enum
 from azure.core import CaseInsensitiveEnumMeta
 
 
+class AudioTaskLabel(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """Defines the possible descriptors for available audio operation responses.
+    """
+
+    TRANSCRIBE = "transcribe"
+    """Accompanying response data resulted from an audio transcription task."""
+    TRANSLATE = "translate"
+    """Accompanying response data resulted from an audio translation task."""
+
+class AudioTranscriptionFormat(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """Defines available options for the underlying response format of output transcription
+    information.
+    """
+
+    JSON = "json"
+    """Use a response body that is a JSON object containing a single 'text' field for the
+    #: transcription."""
+    VERBOSE_JSON = "verbose_json"
+    """Use a response body that is a JSON object containing transcription text along with timing,
+    #: segments, and other
+    #: metadata."""
+    TEXT = "text"
+    """Use a response body that is plain text containing the raw, unannotated transcription."""
+    SRT = "srt"
+    """Use a response body that is plain text in SubRip (SRT) format that also includes timing
+    #: information."""
+    VTT = "vtt"
+    """Use a response body that is plain text in Web Video Text Tracks (VTT) format that also includes
+    #: timing information."""
+
+class AudioTranslationFormat(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """Defines available options for the underlying response format of output translation information.
+    """
+
+    JSON = "json"
+    """Use a response body that is a JSON object containing a single 'text' field for the translation."""
+    VERBOSE_JSON = "verbose_json"
+    """Use a response body that is a JSON object containing translation text along with timing,
+    #: segments, and other
+    #: metadata."""
+    TEXT = "text"
+    """Use a response body that is plain text containing the raw, unannotated translation."""
+    SRT = "srt"
+    """Use a response body that is plain text in SubRip (SRT) format that also includes timing
+    #: information."""
+    VTT = "vtt"
+    """Use a response body that is plain text in Web Video Text Tracks (VTT) format that also includes
+    #: timing information."""
+
 class AzureChatExtensionType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """A representation of configuration data for a single Azure OpenAI chat extension. This will be
     used by a chat
@@ -50,20 +99,6 @@ class ChatRole(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """The role that provides function results for chat completions."""
     TOOL = "tool"
     """The role that represents extension tool activity within a chat completions operation."""
-
-class CompletionsFinishReason(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Representation of the manner in which a completions response concluded.
-    """
-
-    STOPPED = "stop"
-    """Completions ended normally and reached its end of token generation."""
-    TOKEN_LIMIT_REACHED = "length"
-    """Completions exhausted available token limits before generation could complete."""
-    CONTENT_FILTERED = "content_filter"
-    """Completions generated a response that was identified as potentially sensitive per content
-    #: moderation policies."""
-    FUNCTION_CALL = "function_call"
-    """Completion ended normally, with the model requesting a function to be called."""
 
 class CompletionsFinishReason(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """Representation of the manner in which a completions response concluded.

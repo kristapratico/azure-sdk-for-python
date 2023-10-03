@@ -15,59 +15,54 @@ audio_long_test_file = os.path.abspath(os.path.join(os.path.abspath(__file__), "
 class TestAudio(AzureRecordedTestCase):
 
     @pytest.mark.parametrize("api_type", ALL)
-    @configure
-    def test_transcribe(self, azure_openai_creds, api_type):
+    def test_transcribe(self, client, azure_openai_creds, api_type):
 
-        result = openai.Audio.transcribe(
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb"),
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result.text == "Hello."
 
     @pytest.mark.parametrize("api_type", ALL)
-    @configure
-    def test_transcribe_raw(self, azure_openai_creds, api_type):
-
-        result = openai.Audio.transcribe_raw(
+    def test_transcribe_raw(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb").read(),
-            filename="hello.m4a",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result.text == "Hello."
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_translate(self, azure_openai_creds, api_type):
-
-        result = openai.Audio.translate(
+    def test_translate(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb"),
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result.text == "Hello."
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_translate_raw(self, azure_openai_creds, api_type):
-
-        result = openai.Audio.translate_raw(
+    def test_translate_raw(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb").read(),
-            filename="hello.m4a",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result.text == "Hello."
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_transcribe_verbose(self, azure_openai_creds, api_type):
-        result = openai.Audio.transcribe(
+    def test_transcribe_verbose(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.transcriptions.create(
             file=open(audio_long_test_file, "rb"),
             response_format="verbose_json",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result.text == "The ocelot, Lepardus paradalis, is a small wild cat native to the southwestern " \
             "United States, Mexico, and Central and South America. This medium-sized cat is characterized by " \
@@ -93,46 +88,46 @@ class TestAudio(AzureRecordedTestCase):
             assert segment.no_speech_prob is not None
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_transcribe_text(self, azure_openai_creds, api_type):
-        result = openai.Audio.transcribe(
+    def test_transcribe_text(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb"),
             response_format="text",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result == "Hello.\n"
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_transcribe_srt(self, azure_openai_creds, api_type):
-        result = openai.Audio.transcribe(
+    def test_transcribe_srt(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb"),
             response_format="srt",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result == "1\n00:00:00,000 --> 00:00:02,000\nHello.\n\n\n"
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_transcribe_vtt(self, azure_openai_creds, api_type):
-        result = openai.Audio.transcribe(
+    def test_transcribe_vtt(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb"),
             response_format="vtt",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result == "WEBVTT\n\n00:00:00.000 --> 00:00:02.000\nHello.\n\n"
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_translate_verbose(self, azure_openai_creds, api_type):
-        result = openai.Audio.translate(
+    def test_translate_verbose(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.translations.create(
             file=open(audio_long_test_file, "rb"),
             response_format="verbose_json",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result.text == "The ocelot, Lepardus paradalis, is a small wild cat native to the southwestern " \
             "United States, Mexico, and Central and South America. This medium-sized cat is characterized by " \
@@ -158,59 +153,59 @@ class TestAudio(AzureRecordedTestCase):
             assert segment.no_speech_prob is not None
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_translate_text(self, azure_openai_creds, api_type):
-        result = openai.Audio.translate(
+    def test_translate_text(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb"),
             response_format="text",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result == "Hello.\n"
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_translate_srt(self, azure_openai_creds, api_type):
-        result = openai.Audio.translate(
+    def test_translate_srt(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb"),
             response_format="srt",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result == "1\n00:00:00,000 --> 00:00:02,000\nHello.\n\n\n"
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_translate_vtt(self, azure_openai_creds, api_type):
-        result = openai.Audio.translate(
+    def test_translate_vtt(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb"),
             response_format="vtt",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result == "WEBVTT\n\n00:00:00.000 --> 00:00:02.000\nHello.\n\n"
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_transcribe_options(self, azure_openai_creds, api_type):
-        result = openai.Audio.transcribe(
+    def test_transcribe_options(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb"),
             temperature=0,
             language="en",
             prompt="Transcribe the text exactly as spoken.",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result.text == "Hello"
 
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure
-    def test_translate_options(self, azure_openai_creds, api_type):
-        result = openai.Audio.translate(
+    def test_translate_options(self, client, azure_openai_creds, api_type):
+        model = azure_openai_creds["audio_model"] if api_type == "openai" \
+            else azure_openai_creds["audio_name"]
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb"),
             temperature=0,
             prompt="Translate the text exactly as spoken.",
-            model=azure_openai_creds["audio_model"],
-            deployment_id=azure_openai_creds["audio_name"],
+            model=model,
         )
         assert result.text == "Hello"

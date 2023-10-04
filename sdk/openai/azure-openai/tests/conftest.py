@@ -92,17 +92,37 @@ def azure_openai_creds():
 @pytest.fixture
 def client(api_type):
     if api_type == "azure":
-        client = client = openai.azure.AzureClient(
+        client = openai.azure.AzureClient(
             base_url=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
             api_key=os.getenv(ENV_AZURE_OPENAI_KEY)
         )
     elif api_type == "azuread":
-        client = client = openai.azure.AzureClient(
+        client = openai.azure.AzureClient(
             base_url=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
             credential=openai.azure.TokenCredential()
         )
     elif api_type == "openai":
         client = openai.OpenAI(
+            api_key=os.getenv(ENV_OPENAI_KEY)
+        )
+
+    return client
+
+
+@pytest.fixture
+def client_async(api_type):
+    if api_type == "azure":
+        client = openai.azure.AzureAsyncClient(
+            base_url=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
+            api_key=os.getenv(ENV_AZURE_OPENAI_KEY)
+        )
+    elif api_type == "azuread":
+        client = openai.azure.AzureAsyncClient(
+            base_url=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
+            credential=openai.azure.TokenCredential()
+        )
+    elif api_type == "openai":
+        client = openai.AsyncOpenAI(
             api_key=os.getenv(ENV_OPENAI_KEY)
         )
 

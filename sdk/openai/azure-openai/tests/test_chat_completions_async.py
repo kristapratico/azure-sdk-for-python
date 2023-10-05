@@ -451,7 +451,7 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
 
         if api_type == "azure":
             # output content filter result
-            output_filter_result = completion.choices[0].model_extra["content_filter_results"]
+            output_filter_result = function_completion.choices[0].model_extra["content_filter_results"]
             assert output_filter_result["hate"]["filtered"] is False
             assert output_filter_result["hate"]["severity"] == "safe"
             assert output_filter_result["self_harm"]["filtered"] is False

@@ -10,7 +10,7 @@ import requests
 import aiohttp
 import yarl
 import functools
-import openai
+import openai.azure
 from devtools_testutils.sanitizers import add_header_regex_sanitizer, add_oauth_response_sanitizer
 from azure.identity import DefaultAzureCredential
 
@@ -92,12 +92,12 @@ def azure_openai_creds():
 @pytest.fixture
 def client(api_type):
     if api_type == "azure":
-        client = openai.azure.AzureClient(
+        client = openai.azure.AzureOpenAIClient(
             base_url=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
             api_key=os.getenv(ENV_AZURE_OPENAI_KEY)
         )
     elif api_type == "azuread":
-        client = openai.azure.AzureClient(
+        client = openai.azure.AzureOpenAIClient(
             base_url=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
             credential=openai.azure.TokenCredential()
         )
@@ -112,12 +112,12 @@ def client(api_type):
 @pytest.fixture
 def client_async(api_type):
     if api_type == "azure":
-        client = openai.azure.AzureAsyncClient(
+        client = openai.azure.AsyncAzureOpenAIClient(
             base_url=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
             api_key=os.getenv(ENV_AZURE_OPENAI_KEY)
         )
     elif api_type == "azuread":
-        client = openai.azure.AzureAsyncClient(
+        client = openai.azure.AsyncAzureOpenAIClient(
             base_url=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
             credential=openai.azure.TokenCredential()
         )

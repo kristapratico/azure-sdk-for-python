@@ -438,7 +438,7 @@ class TestChatCompletions(AzureRecordedTestCase):
 
         if api_type == "azure":
             # output content filter result
-            output_filter_result = completion.choices[0].model_extra["content_filter_results"]
+            output_filter_result = function_completion.choices[0].model_extra["content_filter_results"]
             assert output_filter_result["hate"]["filtered"] is False
             assert output_filter_result["hate"]["severity"] == "safe"
             assert output_filter_result["self_harm"]["filtered"] is False
@@ -699,18 +699,18 @@ class TestChatCompletions(AzureRecordedTestCase):
         completion = client.chat.completions.create(
             model=azure_openai_creds["chat_completions_name"],
             messages=messages,
-            extra_body={
-                "dataSources": [
-                    {
-                        "type": "AzureCognitiveSearch",
-                        "parameters": {
-                            "endpoint": azure_openai_creds["search_endpoint"],
-                            "key": azure_openai_creds["search_key"],
-                            "indexName": azure_openai_creds["search_index"]
-                        }
+            # extra_body={
+            data_sources=[
+                {
+                    "type": "AzureCognitiveSearch",
+                    "parameters": {
+                        "endpoint": azure_openai_creds["search_endpoint"],
+                        "key": azure_openai_creds["search_key"],
+                        "indexName": azure_openai_creds["search_index"]
                     }
-                ]
-            }
+                }
+            ],
+            # },
         )
         assert completion.id
         assert completion.object == "extensions.chat.completion"
@@ -734,18 +734,18 @@ class TestChatCompletions(AzureRecordedTestCase):
         response = client.chat.completions.create(
             model=azure_openai_creds["chat_completions_name"],
             messages=messages,
-            extra_body={
-                "dataSources": [
-                    {
-                        "type": "AzureCognitiveSearch",
-                        "parameters": {
-                            "endpoint": azure_openai_creds["search_endpoint"],
-                            "key": azure_openai_creds["search_key"],
-                            "indexName": azure_openai_creds["search_index"]
-                        }
+            # extra_body={
+            data_sources=[
+                {
+                    "type": "AzureCognitiveSearch",
+                    "parameters": {
+                        "endpoint": azure_openai_creds["search_endpoint"],
+                        "key": azure_openai_creds["search_key"],
+                        "indexName": azure_openai_creds["search_index"]
                     }
-                ]
-            },
+                }
+            ],
+            # },
             stream=True
         )
         for chunk in response:

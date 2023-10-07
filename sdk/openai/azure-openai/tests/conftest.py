@@ -97,9 +97,10 @@ def client(api_type):
             api_key=os.getenv(ENV_AZURE_OPENAI_KEY)
         )
     elif api_type == "azuread":
+        from azure.identity import DefaultAzureCredential
         client = openai.azure.AzureOpenAIClient(
             base_url=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
-            credential=openai.azure.TokenCredential()
+            credential=DefaultAzureCredential()
         )
     elif api_type == "openai":
         client = openai.OpenAI(
@@ -117,9 +118,10 @@ def client_async(api_type):
             api_key=os.getenv(ENV_AZURE_OPENAI_KEY)
         )
     elif api_type == "azuread":
+        from azure.identity.aio import DefaultAzureCredential
         client = openai.azure.AsyncAzureOpenAIClient(
             base_url=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
-            credential=openai.azure.TokenCredential()
+            credential=DefaultAzureCredential()
         )
     elif api_type == "openai":
         client = openai.AsyncOpenAI(

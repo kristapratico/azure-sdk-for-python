@@ -97,6 +97,35 @@ def build_chat_completions_create_request(deployment_id: str, **kwargs: Any) -> 
     return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
 
 
+def build_chat_completions_create_extensions_request(  # pylint: disable=name-too-long
+    deployment_id: str, **kwargs: Any
+) -> HttpRequest:
+    _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+    _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
+
+    content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
+    api_version: str = kwargs.pop("api_version", _params.pop("api-version", "2023-09-01-preview"))
+    accept = _headers.pop("Accept", "application/json")
+
+    # Construct URL
+    _url = "/deployments/{deploymentId}/extensions/chat/completions"
+    path_format_arguments = {
+        "deploymentId": _SERIALIZER.url("deployment_id", deployment_id, "str"),
+    }
+
+    _url: str = _url.format(**path_format_arguments)  # type: ignore
+
+    # Construct parameters
+    _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
+
+    # Construct headers
+    _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
+    if content_type is not None:
+        _headers["Content-Type"] = _SERIALIZER.header("content_type", content_type, "str")
+
+    return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
+
+
 def build_embeddings_create_request(deployment_id: str, **kwargs: Any) -> HttpRequest:
     _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
@@ -418,6 +447,123 @@ class ChatCompletionsOperations:
             _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
 
         request = build_chat_completions_create_request(
+            deployment_id=deployment_id,
+            content_type=content_type,
+            api_version=self._config.api_version,
+            content=_content,
+            headers=_headers,
+            params=_params,
+        )
+        path_format_arguments = {
+            "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, "str", skip_quote=True),
+        }
+        request.url = self._client.format_url(request.url, **path_format_arguments)
+
+        _stream = kwargs.pop("stream", False)
+        pipeline_response: PipelineResponse = self._client._pipeline.run(  # pylint: disable=protected-access
+            request, stream=_stream, **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            if _stream:
+                response.read()  # Load the body in memory and close the socket
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            raise HttpResponseError(response=response)
+
+        if _stream:
+            deserialized = response.iter_bytes()
+        else:
+            deserialized = _deserialize(
+                _models._models.ChatCompletions, response.json()  # pylint: disable=protected-access
+            )
+
+        if cls:
+            return cls(pipeline_response, deserialized, {})  # type: ignore
+
+        return deserialized  # type: ignore
+
+    @overload
+    @api_version_validation(
+        method_added_on="2023-08-01-preview",
+    )  # pylint: disable=protected-access
+    def _create_extensions(  # pylint: disable=protected-access
+        self,
+        deployment_id: str,
+        body: _models._models.ChatCompletionsOptions,
+        *,
+        content_type: str = "application/json",
+        **kwargs: Any
+    ) -> _models._models.ChatCompletions:
+        ...
+
+    @overload
+    @api_version_validation(
+        method_added_on="2023-08-01-preview",
+    )  # pylint: disable=protected-access
+    def _create_extensions(  # pylint: disable=protected-access
+        self, deployment_id: str, body: JSON, *, content_type: str = "application/json", **kwargs: Any
+    ) -> _models._models.ChatCompletions:
+        ...
+
+    @overload
+    @api_version_validation(
+        method_added_on="2023-08-01-preview",
+    )  # pylint: disable=protected-access
+    def _create_extensions(  # pylint: disable=protected-access
+        self, deployment_id: str, body: IO, *, content_type: str = "application/json", **kwargs: Any
+    ) -> _models._models.ChatCompletions:
+        ...
+
+    @distributed_trace
+    @api_version_validation(
+        method_added_on="2023-08-01-preview",
+    )  # pylint: disable=protected-access
+    def _create_extensions(  # pylint: disable=protected-access
+        self, deployment_id: str, body: Union[_models._models.ChatCompletionsOptions, JSON, IO], **kwargs: Any
+    ) -> _models._models.ChatCompletions:
+        """Gets chat completions for the provided chat messages.
+        This is an Azure-specific version of chat completions that supports integration with configured
+        data sources and
+        other augmentations to the base chat completions capabilities.
+
+        :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
+         model name (when using non-Azure OpenAI) to use for this request. Required.
+        :type deployment_id: str
+        :param body: Is one of the following types: ChatCompletionsOptions, JSON, IO Required.
+        :type body: ~azure.openai.models.ChatCompletionsOptions or JSON or IO
+        :keyword content_type: Body parameter Content-Type. Known values are: application/json. Default
+         value is None.
+        :paramtype content_type: str
+        :keyword bool stream: Whether to stream the response of this operation. Defaults to False. You
+         will have to context manage the returned stream.
+        :return: ChatCompletions. The ChatCompletions is compatible with MutableMapping
+        :rtype: ~azure.openai.models.ChatCompletions
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = kwargs.pop("params", {}) or {}
+
+        content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
+        cls: ClsType[_models._models.ChatCompletions] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+
+        content_type = content_type or "application/json"
+        _content = None
+        if isinstance(body, (IOBase, bytes)):
+            _content = body
+        else:
+            _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
+
+        request = build_chat_completions_create_extensions_request(
             deployment_id=deployment_id,
             content_type=content_type,
             api_version=self._config.api_version,

@@ -13,8 +13,9 @@ from ._operations import (
     EmbeddingsOperations as GeneratedEmbeddingsOperations,
     CompletionsOperations as GeneratedCompletionsOperations,
     ChatCompletionsOperations as GeneratedChatCompletionsOperations,
+    ImagesOperations as GeneratedImagesOperations,
 )
-from ..models._enums import FunctionCallPreset
+from ..models._enums import FunctionCallPreset, ImageSize, ImageGenerationResponseFormat
 from ..models._models import (
     Embeddings,
     EmbeddingsOptions,
@@ -25,6 +26,8 @@ from ..models._models import (
     ChatMessage,
     FunctionDefinition,
     AzureChatExtensionConfiguration,
+    ImageGenerationOptions,
+    ImageGenerations,
 )
 
 
@@ -254,11 +257,37 @@ class ChatCompletionsOperations(GeneratedChatCompletionsOperations):
         )
 
 
+class ImagesOperations(GeneratedImagesOperations):
+
+    @distributed_trace
+    def generate(
+        self,
+        prompt: str,
+        *,
+        n: Optional[int] = None,
+        size: Optional[Union[str, ImageSize]] = None,
+        response_format: Optional[Union[str, ImageGenerationResponseFormat]] = None,
+        user: Optional[str] = None,
+        **kwargs,
+    ) -> ImageGenerations:
+        poller = super().begin__generate(  # TODO: this should generate internal https://github.com/Azure/autorest.python/issues/2070
+            body=ImageGenerationOptions(
+                prompt=prompt,
+                n=n,
+                size=size,
+                response_format=response_format,
+                user=user,
+            ),
+            **kwargs
+        )
+        result = poller.result()
+        return ImageGenerations(result.as_dict()["result"])
 
 __all__: List[str] = [
     "EmbeddingsOperations",
     "CompletionsOperations",
-    "ChatCompletionsOperations"
+    "ChatCompletionsOperations",
+    "ImagesOperations"
 ]
 
 

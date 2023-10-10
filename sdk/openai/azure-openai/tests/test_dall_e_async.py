@@ -13,9 +13,8 @@ class TestDallEAsync(AzureRecordedTestCase):
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize("api_type", ALL)
-    @configure_async
-    async def test_image_create(self, azure_openai_creds, api_type):
-        image = await openai.Image.acreate(
+    async def test_image_create(self, client_async, azure_openai_creds, api_type):
+        image = await client_async.images.generate(
             prompt="a cute baby seal"
         )
         assert image.created
@@ -24,9 +23,8 @@ class TestDallEAsync(AzureRecordedTestCase):
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure_async
-    async def test_image_create_n(self, azure_openai_creds, api_type):
-        image = await openai.Image.acreate(
+    async def test_image_create_n(self, client_async, azure_openai_creds, api_type):
+        image = await client_async.images.generate(
             prompt="a cute baby seal",
             n=2
         )
@@ -37,9 +35,8 @@ class TestDallEAsync(AzureRecordedTestCase):
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure_async
-    async def test_image_create_size(self, azure_openai_creds, api_type):
-        image = await openai.Image.acreate(
+    async def test_image_create_size(self, client_async, azure_openai_creds, api_type):
+        image = await client_async.images.generate(
             prompt="a cute baby seal",
             size="256x256"
         )
@@ -49,9 +46,8 @@ class TestDallEAsync(AzureRecordedTestCase):
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize("api_type", [OPENAI])
-    @configure_async
-    async def test_image_create_response_format(self, azure_openai_creds, api_type):
-        image = await openai.Image.acreate(
+    async def test_image_create_response_format(self, client_async, azure_openai_creds, api_type):
+        image = await client_async.images.generate(
             prompt="a cute baby seal",
             response_format="b64_json"  # No Azure support yet
         )
@@ -61,9 +57,8 @@ class TestDallEAsync(AzureRecordedTestCase):
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    @configure_async
-    async def test_image_create_user(self, azure_openai_creds, api_type):
-        image = await openai.Image.acreate(
+    async def test_image_create_user(self, client_async, azure_openai_creds, api_type):
+        image = await client_async.images.generate(
             prompt="a cute baby seal",
             user="krista"
         )

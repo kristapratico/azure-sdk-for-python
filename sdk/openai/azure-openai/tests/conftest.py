@@ -13,6 +13,7 @@ import functools
 import openai
 from devtools_testutils.sanitizers import add_header_regex_sanitizer, add_oauth_response_sanitizer
 from azure.identity import DefaultAzureCredential
+from azure.core.credentials import AzureKeyCredential
 
 
 # for pytest.parametrize
@@ -87,6 +88,52 @@ def azure_openai_creds():
         "audio_name": ENV_AZURE_OPENAI_AUDIO_NAME,
         "audio_model": ENV_OPENAI_AUDIO_MODEL,
     }
+
+
+@pytest.fixture
+def client(api_type):
+    if api_type == "azure":
+        from azure.openai import OpenAIClient
+        client = OpenAIClient(
+            endpoint=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
+            credential=AzureKeyCredential(os.getenv(ENV_AZURE_OPENAI_KEY))
+        )
+    elif api_type == "azuread":
+        from azure.openai import OpenAIClient
+        from azure.identity import DefaultAzureCredential
+        client = OpenAIClient(
+            endpoint=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
+            credential=DefaultAzureCredential()
+        )
+    elif api_type == "openai":
+        client = openai.OpenAI(
+            api_key=os.getenv(ENV_OPENAI_KEY)
+        )
+
+    return client
+
+
+@pytest.fixture
+def client_async(api_type):
+    if api_type == "azure":
+        from azure.openai.aio import OpenAIClient
+        client = OpenAIClient(
+            endpoint=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
+            credential=AzureKeyCredential(os.getenv(ENV_AZURE_OPENAI_KEY))
+        )
+    elif api_type == "azuread":
+        from azure.openai.aio import OpenAIClient
+        from azure.identity.aio import DefaultAzureCredential
+        client = OpenAIClient(
+            endpoint=os.getenv(ENV_AZURE_OPENAI_ENDPOINT),
+            credential=DefaultAzureCredential()
+        )
+    elif api_type == "openai":
+        client = openai.AsyncOpenAI(
+            api_key=os.getenv(ENV_OPENAI_KEY)
+        )
+
+    return client
 
 
 def configure_api_type(api_type, whisper=False, **kwargs):

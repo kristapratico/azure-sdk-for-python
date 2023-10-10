@@ -6,10 +6,34 @@
 
 Follow our quickstart for examples: https://aka.ms/azsdk/python/dpcodegen/python/customize
 """
-from typing import List
+from typing import List, Sequence, Optional
+from azure.core.tracing.decorator_async import distributed_trace_async
+from ._operations import EmbeddingsOperations as GeneratedEmbeddingsOperations
+from ...models._models import Embeddings, EmbeddingsOptions
 
 
-__all__: List[str] = []  # Add all objects you want publicly available to users at this package level
+class EmbeddingsOperations(GeneratedEmbeddingsOperations):
+
+    @distributed_trace_async
+    async def create(
+        self,
+        deployment_id: str,
+        input: Sequence[str],
+        *,
+        user: Optional[str] = None,
+        **kwargs
+    ) -> Embeddings:
+        return await super()._create(
+            deployment_id=deployment_id,
+            body=EmbeddingsOptions(
+                input=input,
+                user=user
+            ),
+            **kwargs
+        )
+
+
+__all__: List[str] = ["EmbeddingsOperations"]  # Add all objects you want publicly available to users at this package level
 
 def patch_sdk():
     """Do not remove from this file.

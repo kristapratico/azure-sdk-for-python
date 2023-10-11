@@ -21,7 +21,11 @@ from typing import (
     TypeVar,
     Dict,
     Callable,
-    Any
+    Any,
+    Generic,
+    Iterator,
+    AsyncIterator,
+    TYPE_CHECKING
 )
 from typing_extensions import Literal
 from azure.core.tracing.decorator import distributed_trace
@@ -80,6 +84,10 @@ ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dic
 _SERIALIZER = Serializer()
 _SERIALIZER.client_side_validation = False
 
+ReturnType = TypeVar("ReturnType")
+if TYPE_CHECKING:
+    from .._client import OpenAIClient
+
 
 def build_audio_transcriptions_request(deployment_id: str, **kwargs: Any) -> HttpRequest:
     _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
@@ -133,6 +141,172 @@ def build_audio_translations_request(deployment_id: str, **kwargs: Any) -> HttpR
     return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
 
 
+
+# copied from https://github.com/florimondmanca/httpx-sse/blob/master/src/httpx_sse/_decoders.py
+class ServerSentEvent:
+    def __init__(
+        self,
+        *,
+        event: str | None = None,
+        data: str | None = None,
+        id: str | None = None,
+        retry: int | None = None,
+    ) -> None:
+        if data is None:
+            data = ""
+
+        self._id = id
+        self._data = data
+        self._event = event or None
+        self._retry = retry
+
+    @property
+    def event(self) -> str | None:
+        return self._event
+
+    @property
+    def id(self) -> str | None:
+        return self._id
+
+    @property
+    def retry(self) -> int | None:
+        return self._retry
+
+    @property
+    def data(self) -> str:
+        return self._data
+
+    def json(self) -> Any:
+        return json.loads(self.data)
+
+    def __repr__(self) -> str:
+        return f"ServerSentEvent(event={self.event}, data={self.data}, id={self.id}, retry={self.retry})"
+
+
+class SSEDecoder:
+    def __init__(self) -> None:
+        self._event = ""
+        self._data: List[str] = []
+        self._last_event_id = ""
+        self._retry: Optional[int] = None
+        self._join: bool = True
+
+    def chunked(self, iterator: bytes) -> str:
+        data = b''
+        for chunk in iterator:
+            for line in chunk.splitlines(keepends=True):
+                data += line
+                if data.endswith((b'\r\r', b'\n\n', b'\r\n\r\n')):
+                    yield data.decode("utf-8")
+                    data = b''
+            if data:
+                self._join = False
+                yield data.decode("utf-8")
+
+    def iter(self, iterator: Iterator[bytes]) -> Iterator[ServerSentEvent]:
+        """Given an iterator that yields lines, iterate over it & yield every event encountered"""
+
+        for chunk in self.chunked(iterator):
+            for line in chunk.splitlines():
+                sse = self.decode(line)
+                if sse is not None:
+                    yield sse
+
+    async def aiter(self, iterator: AsyncIterator[str]) -> AsyncIterator[ServerSentEvent]:
+        """Given an async iterator that yields lines, iterate over it & yield every event encountered"""
+        async for line in iterator:
+            line = line.rstrip("\n")
+            sse = self.decode(line)
+            if sse is not None:
+                yield sse
+
+    def decode(self, line: str) -> Optional[ServerSentEvent]:
+        # See: https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation  # noqa: E501
+
+        if not line:
+            if not self._event and not self._data and not self._last_event_id and self._retry is None:
+                return None
+
+            sse = ServerSentEvent(
+                event=self._event,
+                data="\n".join(self._data) if self._join else self._data[-1],
+                id=self._last_event_id,
+                retry=self._retry,
+            )
+
+            # NOTE: as per the SSE spec, do not reset last_event_id.
+            self._event = None
+            self._data = []
+            self._retry = None
+            self._join = True
+            return sse
+
+        if line.startswith(":"):
+            return None
+
+        fieldname, _, value = line.partition(":")
+
+        if value.startswith(" "):
+            value = value[1:]
+
+        if fieldname == "event":
+            self._event = value
+        elif fieldname == "data":
+            self._data.append(value)
+        elif fieldname == "id":
+            if "\0" in value:
+                pass
+            else:
+                self._last_event_id = value
+        elif fieldname == "retry":
+            try:
+                self._retry = int(value)
+            except (TypeError, ValueError):
+                pass
+        else:
+            pass  # Field is ignored.
+
+        return None
+
+
+class Stream(Generic[ReturnType]):
+
+    response: HttpResponse
+
+    def __init__(
+        self,
+        *,
+        return_type: type[ReturnType],
+        response: HttpResponse,
+        client: "OpenAIClient",
+    ) -> None:
+        self.response = response
+        self._return_type = return_type
+        self._client = client
+        self._decoder = SSEDecoder()
+        self._iterator = self._stream()
+
+    def __next__(self) -> ReturnType:
+        return self._iterator.__next__()
+
+    def __iter__(self) -> Iterator[ReturnType]:
+        for item in self._iterator:
+            yield item
+
+    def _iter_events(self) -> Iterator[ServerSentEvent]:
+        yield from self._decoder.iter(self.response)
+
+    def _stream(self) -> Iterator[ReturnType]:
+        return_type = self._return_type
+
+        for sse in self._iter_events():
+            if sse.data.startswith("[DONE]"):
+                break
+
+            if sse.event is None:
+                yield return_type(sse.json())
+
+
 class EmbeddingsOperations(GeneratedEmbeddingsOperations):
 
     @distributed_trace
@@ -176,7 +350,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         frequency_penalty: Optional[float] = None,
         best_of: Optional[int] = None,
         **kwargs
-    ) -> Iterable[Completions]:
+    ) -> Stream[Completions]:
         ...
 
     @overload
@@ -222,10 +396,31 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         frequency_penalty: Optional[float] = None,
         best_of: Optional[int] = None,
         **kwargs
-    ) -> Union[Completions, Iterable[Completions]]:
+    ) -> Union[Completions, Stream[Completions]]:
         if stream:
-            raise NotImplementedError("SSE not implemented")
-
+            response = super()._create(
+                deployment_id=deployment_id,
+                body=CompletionsOptions(
+                    prompt=prompt,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    top_p=top_p,
+                    logit_bias=logit_bias,
+                    user=user,
+                    n=n,
+                    logprobs=logprobs,
+                    echo=echo,
+                    stop=stop,
+                    presence_penalty=presence_penalty,
+                    frequency_penalty=frequency_penalty,
+                    best_of=best_of,
+                    stream=stream,
+                ),
+                stream=stream,
+                **kwargs
+            )
+            return Stream[Completions](return_type=Completions, response=response, client=self._client)  # what do we want response to be?
+        
         return super()._create(
             deployment_id=deployment_id,
             body=CompletionsOptions(

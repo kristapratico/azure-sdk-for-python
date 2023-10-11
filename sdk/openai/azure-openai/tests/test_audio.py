@@ -38,7 +38,6 @@ class TestAudio(AzureRecordedTestCase):
             audio_func = client.audio.transcriptions
         result = audio_func(
             file=open(audio_test_file, "rb").read(),
-            filename="hello.m4a",
             **kwargs,
         )
         assert result.text == "Hello."
@@ -67,7 +66,6 @@ class TestAudio(AzureRecordedTestCase):
             audio_func = client.audio.translations
         result = audio_func(
             file=open(audio_test_file, "rb").read(),
-            filename="hello.m4a",
             **kwargs,
         )
         assert result.text == "Hello."

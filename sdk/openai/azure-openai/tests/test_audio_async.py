@@ -42,7 +42,6 @@ class TestAudioAsync(AzureRecordedTestCase):
             audio_func = client_async.audio.transcriptions
         result = await audio_func(
             file=open(audio_test_file, "rb").read(),
-            filename="hello.m4a",
             **kwargs,
         )
         assert result.text == "Hello."
@@ -73,7 +72,6 @@ class TestAudioAsync(AzureRecordedTestCase):
             audio_func = client_async.audio.translations
         result = await audio_func(
             file=open(audio_test_file, "rb").read(),
-            filename="hello.m4a",
             **kwargs,
         )
         assert result.text == "Hello."

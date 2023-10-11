@@ -357,7 +357,6 @@ class AudioOperations(GeneratedAudioOperations):
         deployment_id: str,
         file: bytes,
         *,
-        filename: str,
         response_format: Optional[Union[str, AudioTranscriptionFormat]] = None,
         language: Optional[str] = None,
         prompt: Optional[str] = None,
@@ -372,7 +371,6 @@ class AudioOperations(GeneratedAudioOperations):
         deployment_id: str,
         file: Union[bytes, IO[bytes]],
         *,
-        filename: Optional[str] = None,
         response_format: Optional[Union[str, AudioTranscriptionFormat]] = None,
         language: Optional[str] = None,
         prompt: Optional[str] = None,
@@ -387,7 +385,12 @@ class AudioOperations(GeneratedAudioOperations):
             "temperature": temperature,
         }
 
-        files={"file": (filename or file.name, file, "application/octet-stream")}
+        if hasattr(file, "name"):
+            filename = file.name
+        else:
+            filename = "filename.mp3"
+
+        files={"file": (filename, file, "application/octet-stream")}
 
         error_map = {
             401: ClientAuthenticationError,
@@ -466,7 +469,6 @@ class AudioOperations(GeneratedAudioOperations):
         deployment_id: str,
         file: bytes,
         *,
-        filename: str,
         response_format: Optional[Union[str, AudioTranslationFormat]] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
@@ -480,7 +482,6 @@ class AudioOperations(GeneratedAudioOperations):
         deployment_id: str,
         file: Union[bytes, IO[bytes]],
         *,
-        filename: Optional[str] = None,
         response_format: Optional[Union[str, AudioTranslationFormat]] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
@@ -493,7 +494,12 @@ class AudioOperations(GeneratedAudioOperations):
             "temperature": temperature,
         }
 
-        files={"file": (filename or file.name, file, "application/octet-stream")}
+        if hasattr(file, "name"):
+            filename = file.name
+        else:
+            filename = "filename.mp3"
+
+        files={"file": (filename, file, "application/octet-stream")}
 
         error_map = {
             401: ClientAuthenticationError,

@@ -30,8 +30,8 @@ from ... import models as _models
 from ..._model_base import AzureJSONEncoder, _deserialize
 from ..._validation import api_version_validation
 from ...operations._operations import (
-    build_audio_transcription_request,
-    build_audio_translation_request,
+    build_audio_transcriptions_request,
+    build_audio_translations_request,
     build_chat_completions_create_extensions_request,
     build_chat_completions_create_request,
     build_completions_create_request,
@@ -745,7 +745,7 @@ class AudioOperations:
     @api_version_validation(
         method_added_on="2023-09-01-preview",
     )  # pylint: disable=protected-access
-    async def _transcription(  # pylint: disable=protected-access
+    async def _transcriptions(  # pylint: disable=protected-access
         self, deployment_id: str, body: _models._models.AudioTranscriptionOptions, **kwargs: Any
     ) -> _models._models.AudioTranscription:
         """Gets transcribed text and associated metadata from provided spoken audio data. Audio will be
@@ -782,7 +782,7 @@ class AudioOperations:
 
         _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
 
-        request = build_audio_transcription_request(
+        request = build_audio_transcriptions_request(
             deployment_id=deployment_id,
             content_type=content_type,
             api_version=self._config.api_version,
@@ -824,7 +824,7 @@ class AudioOperations:
     @api_version_validation(
         method_added_on="2023-09-01-preview",
     )  # pylint: disable=protected-access
-    async def _translation(  # pylint: disable=protected-access
+    async def _translations(  # pylint: disable=protected-access
         self, deployment_id: str, body: _models._models.AudioTranslationOptions, **kwargs: Any
     ) -> _models._models.AudioTranslation:
         """Gets English language transcribed text and associated metadata from provided spoken audio data.
@@ -859,7 +859,7 @@ class AudioOperations:
 
         _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
 
-        request = build_audio_translation_request(
+        request = build_audio_translations_request(
             deployment_id=deployment_id,
             content_type=content_type,
             api_version=self._config.api_version,

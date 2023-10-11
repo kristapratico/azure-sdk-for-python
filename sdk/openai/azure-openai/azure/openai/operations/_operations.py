@@ -175,7 +175,7 @@ def build_images_generate_request(**kwargs: Any) -> HttpRequest:
     return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
 
 
-def build_audio_transcription_request(deployment_id: str, **kwargs: Any) -> HttpRequest:
+def build_audio_transcriptions_request(deployment_id: str, **kwargs: Any) -> HttpRequest:
     _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
@@ -201,7 +201,7 @@ def build_audio_transcription_request(deployment_id: str, **kwargs: Any) -> Http
     return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
 
 
-def build_audio_translation_request(deployment_id: str, **kwargs: Any) -> HttpRequest:
+def build_audio_translations_request(deployment_id: str, **kwargs: Any) -> HttpRequest:
     _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
@@ -921,7 +921,7 @@ class AudioOperations:
     @api_version_validation(
         method_added_on="2023-09-01-preview",
     )  # pylint: disable=protected-access
-    def _transcription(  # pylint: disable=protected-access
+    def _transcriptions(  # pylint: disable=protected-access
         self, deployment_id: str, body: _models._models.AudioTranscriptionOptions, **kwargs: Any
     ) -> _models._models.AudioTranscription:
         """Gets transcribed text and associated metadata from provided spoken audio data. Audio will be
@@ -958,13 +958,14 @@ class AudioOperations:
 
         _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
 
-        request = build_audio_transcription_request(
+        request = build_audio_transcriptions_request(
             deployment_id=deployment_id,
             content_type=content_type,
             api_version=self._config.api_version,
             content=_content,
             headers=_headers,
             params=_params,
+            files=kwargs.pop("files")  # krista
         )
         path_format_arguments = {
             "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, "str", skip_quote=True),
@@ -1000,7 +1001,7 @@ class AudioOperations:
     @api_version_validation(
         method_added_on="2023-09-01-preview",
     )  # pylint: disable=protected-access
-    def _translation(  # pylint: disable=protected-access
+    def _translations(  # pylint: disable=protected-access
         self, deployment_id: str, body: _models._models.AudioTranslationOptions, **kwargs: Any
     ) -> _models._models.AudioTranslation:
         """Gets English language transcribed text and associated metadata from provided spoken audio data.
@@ -1035,7 +1036,7 @@ class AudioOperations:
 
         _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
 
-        request = build_audio_translation_request(
+        request = build_audio_translations_request(
             deployment_id=deployment_id,
             content_type=content_type,
             api_version=self._config.api_version,

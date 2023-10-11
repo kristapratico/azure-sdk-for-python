@@ -278,11 +278,9 @@ class Stream(Generic[ReturnType]):
         *,
         return_type: type[ReturnType],
         response: HttpResponse,
-        client: "OpenAIClient",
     ) -> None:
         self.response = response
         self._return_type = return_type
-        self._client = client
         self._decoder = SSEDecoder()
         self._iterator = self._stream()
 
@@ -397,31 +395,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         best_of: Optional[int] = None,
         **kwargs
     ) -> Union[Completions, Stream[Completions]]:
-        if stream:
-            response = super()._create(
-                deployment_id=deployment_id,
-                body=CompletionsOptions(
-                    prompt=prompt,
-                    max_tokens=max_tokens,
-                    temperature=temperature,
-                    top_p=top_p,
-                    logit_bias=logit_bias,
-                    user=user,
-                    n=n,
-                    logprobs=logprobs,
-                    echo=echo,
-                    stop=stop,
-                    presence_penalty=presence_penalty,
-                    frequency_penalty=frequency_penalty,
-                    best_of=best_of,
-                    stream=stream,
-                ),
-                stream=stream,
-                **kwargs
-            )
-            return Stream[Completions](return_type=Completions, response=response, client=self._client)  # what do we want response to be?
-        
-        return super()._create(
+        response = super()._create(
             deployment_id=deployment_id,
             body=CompletionsOptions(
                 prompt=prompt,
@@ -437,9 +411,17 @@ class CompletionsOperations(GeneratedCompletionsOperations):
                 presence_penalty=presence_penalty,
                 frequency_penalty=frequency_penalty,
                 best_of=best_of,
+                stream=stream,
             ),
+            stream=stream,
             **kwargs
         )
+        if stream:
+            return Stream[Completions](
+                return_type=Completions,
+                response=response,  # TODO: what do we want response to be?
+            )
+        return response
 
 
 class ChatCompletionsOperations(GeneratedChatCompletionsOperations):
@@ -463,7 +445,7 @@ class ChatCompletionsOperations(GeneratedChatCompletionsOperations):
         frequency_penalty: Optional[float] = None,
         data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
         **kwargs
-    ) -> Iterable[ChatCompletions]:
+    ) -> Stream[ChatCompletions]:
         ...
 
     @overload
@@ -509,12 +491,9 @@ class ChatCompletionsOperations(GeneratedChatCompletionsOperations):
         frequency_penalty: Optional[float] = None,
         data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
         **kwargs
-    ) -> Union[ChatCompletions, Iterable[ChatCompletions]]:
-        if stream:
-            raise NotImplementedError("SSE not implemented")
-
+    ) -> Union[ChatCompletions, Stream[ChatCompletions]]:
         if data_sources:
-            return super()._create_extensions(
+            response = super()._create_extensions(
                 deployment_id=deployment_id,
                 body=ChatCompletionsOptions(
                     messages=messages,
@@ -530,28 +509,38 @@ class ChatCompletionsOperations(GeneratedChatCompletionsOperations):
                     presence_penalty=presence_penalty,
                     frequency_penalty=frequency_penalty,
                     data_sources=data_sources,
+                    stream=stream,
                 ),
+                stream=stream,
                 **kwargs
             )
-
-        return super()._create(
-            deployment_id=deployment_id,
-            body=ChatCompletionsOptions(
-                messages=messages,
-                functions=functions,
-                function_call=function_call,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                logit_bias=logit_bias,
-                user=user,
-                n=n,
-                stop=stop,
-                presence_penalty=presence_penalty,
-                frequency_penalty=frequency_penalty,
-            ),
-            **kwargs
-        )
+        else:
+            response = super()._create(
+                deployment_id=deployment_id,
+                body=ChatCompletionsOptions(
+                    messages=messages,
+                    functions=functions,
+                    function_call=function_call,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    top_p=top_p,
+                    logit_bias=logit_bias,
+                    user=user,
+                    n=n,
+                    stop=stop,
+                    presence_penalty=presence_penalty,
+                    frequency_penalty=frequency_penalty,
+                    stream=stream,
+                ),
+                stream=stream,
+                **kwargs
+            )
+        if stream:
+            return Stream[ChatCompletions](
+                return_type=ChatCompletions,
+                response=response,  # TODO: what do we want response to be?
+            )
+        return response
 
 
 class ImagesOperations(GeneratedImagesOperations):

@@ -49,9 +49,31 @@ class AudioTranscription(_model_base.Model):
      This is expressed as a two-letter ISO-639-1 language code like 'en' or 'fr'."""
     duration: Optional[float] = rest_field()
     """The total duration of the audio processed to produce accompanying transcription information."""
-    segments: Optional[List["_models._models.AudioTranscriptionSegment"]] = rest_field()
+    segments: Optional[List["_models.AudioTranscriptionSegment"]] = rest_field()
     """A collection of information about the timing, probabilities, and other detail of each processed
      audio segment."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        text: str,
+        task: Optional[Union[str, "_models.AudioTaskLabel"]] = None,
+        language: Optional[str] = None,
+        duration: Optional[float] = None,
+        segments: Optional[List["_models.AudioTranscriptionSegment"]] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class AudioTranscriptionOptions(_model_base.Model):
@@ -183,6 +205,33 @@ class AudioTranscriptionSegment(_model_base.Model):
      time than the
      segment's associated seek position. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        id: int,  # pylint: disable=redefined-builtin
+        start: float,
+        end: float,
+        text: str,
+        temperature: float,
+        avg_logprob: float,
+        compression_ratio: float,
+        no_speech_prob: float,
+        tokens: List[int],
+        seek: int,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
 
 class AudioTranslation(_model_base.Model):
     """Result information for an operation that translated spoken audio into written text.
@@ -215,9 +264,31 @@ class AudioTranslation(_model_base.Model):
      This is expressed as a two-letter ISO-639-1 language code like 'en' or 'fr'."""
     duration: Optional[float] = rest_field()
     """The total duration of the audio processed to produce accompanying translation information."""
-    segments: Optional[List["_models._models.AudioTranslationSegment"]] = rest_field()
+    segments: Optional[List["_models.AudioTranslationSegment"]] = rest_field()
     """A collection of information about the timing, probabilities, and other detail of each processed
      audio segment."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        text: str,
+        task: Optional[Union[str, "_models.AudioTaskLabel"]] = None,
+        language: Optional[str] = None,
+        duration: Optional[float] = None,
+        segments: Optional[List["_models.AudioTranslationSegment"]] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class AudioTranslationOptions(_model_base.Model):
@@ -337,6 +408,33 @@ class AudioTranslationSegment(_model_base.Model):
      time than the
      segment's associated seek position. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        id: int,  # pylint: disable=redefined-builtin
+        start: float,
+        end: float,
+        text: str,
+        temperature: float,
+        avg_logprob: float,
+        compression_ratio: float,
+        no_speech_prob: float,
+        tokens: List[int],
+        seek: int,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
 
 class AzureChatExtensionConfiguration(_model_base.Model):
     """A representation of configuration data for a single Azure OpenAI chat extension. This will be
@@ -370,6 +468,25 @@ class AzureChatExtensionConfiguration(_model_base.Model):
        extension being configured.
        Azure chat extensions are only compatible with Azure OpenAI. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        type: Union[str, "_models.AzureChatExtensionType"],
+        parameters: Any,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
 
 class AzureChatExtensionsMessageContext(_model_base.Model):
     """A representation of the additional context information available when Azure OpenAI chat
@@ -388,7 +505,7 @@ class AzureChatExtensionsMessageContext(_model_base.Model):
     :vartype messages: list[~azure.openai.models.ChatMessage]
     """
 
-    messages: Optional[List["_models._models.ChatMessage"]] = rest_field()
+    messages: Optional[List["_models.ChatMessage"]] = rest_field()
     """The contextual message payload associated with the Azure chat extensions used for a chat
      completions request.
        These messages describe the data source retrievals, plugin invocations, and other
@@ -396,6 +513,24 @@ class AzureChatExtensionsMessageContext(_model_base.Model):
        course of generating a chat completions response that was augmented by capabilities from
      Azure OpenAI chat
        extensions."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        messages: Optional[List["_models.ChatMessage"]] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class BatchImageGenerationOperationResponse(_model_base.Model):
@@ -426,7 +561,7 @@ class BatchImageGenerationOperationResponse(_model_base.Model):
     expires: Optional[int] = rest_field()
     """A timestamp when this operation and its associated images expire and will be deleted (in unix
      epochs)."""
-    result: Optional["_models._models.ImageGenerations"] = rest_field()
+    result: Optional["_models.ImageGenerations"] = rest_field()
     """The result of the operation if the operation succeeded."""
     status: Union[str, "_models.AzureOpenAIOperationState"] = rest_field()
     """The status of the operation. Required. Known values are: \"notRunning\", \"running\",
@@ -460,19 +595,41 @@ class ChatChoice(_model_base.Model):
     :vartype content_filter_results: ~azure.openai.models.ContentFilterResults
     """
 
-    message: Optional["_models._models.ChatMessage"] = rest_field()
+    message: Optional["_models.ChatMessage"] = rest_field()
     """The chat message for a given chat completions prompt."""
     index: int = rest_field()
     """The ordered index associated with this chat completions choice. Required."""
     finish_reason: Union[str, "_models.CompletionsFinishReason"] = rest_field()
     """The reason that this chat completions choice completed its generated. Required. Known values
      are: \"stop\", \"length\", \"content_filter\", and \"function_call\"."""
-    delta: Optional["_models._models.ChatMessage"] = rest_field()
+    delta: Optional["_models.ChatMessage"] = rest_field()
     """The delta message content for a streaming response."""
-    content_filter_results: Optional["_models._models.ContentFilterResults"] = rest_field()
+    content_filter_results: Optional["_models.ContentFilterResults"] = rest_field()
     """Information about the content filtering category (hate, sexual, violence, self_harm), if it
      has been detected, as well as the severity level (very_low, low, medium, high-scale that
      determines the intensity and risk level of harmful content) and if it has been filtered or not."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        index: int,
+        finish_reason: Union[str, "_models.CompletionsFinishReason"],
+        message: Optional["_models.ChatMessage"] = None,
+        delta: Optional["_models.ChatMessage"] = None,
+        content_filter_results: Optional["_models.ContentFilterResults"] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class ChatCompletions(_model_base.Model):
@@ -507,16 +664,38 @@ class ChatCompletions(_model_base.Model):
     created: datetime.datetime = rest_field(format="unix-timestamp")
     """The first timestamp associated with generation activity for this completions response,
      represented as seconds since the beginning of the Unix epoch of 00:00 on 1 Jan 1970. Required."""
-    choices: List["_models._models.ChatChoice"] = rest_field()
+    choices: List["_models.ChatChoice"] = rest_field()
     """The collection of completions choices associated with this completions response.
      Generally, ``n`` choices are generated per provided prompt with a default value of 1.
      Token limits and other settings may limit the number of choices generated. Required."""
-    prompt_filter_results: Optional[List["_models._models.PromptFilterResult"]] = rest_field()
+    prompt_filter_results: Optional[List["_models.PromptFilterResult"]] = rest_field()
     """Content filtering results for zero or more prompts in the request. In a streaming request,
      results for different prompts may arrive at different times or in different orders."""
-    usage: "_models._models.CompletionsUsage" = rest_field()
+    usage: "_models.CompletionsUsage" = rest_field()
     """Usage information for tokens processed and generated as part of this completions operation.
      Required."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        id: str,  # pylint: disable=redefined-builtin
+        created: datetime.datetime,
+        choices: List["_models.ChatChoice"],
+        usage: "_models.CompletionsUsage",
+        prompt_filter_results: Optional[List["_models.PromptFilterResult"]] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class ChatCompletionsOptions(_model_base.Model):  # pylint: disable=too-many-instance-attributes
@@ -606,12 +785,12 @@ class ChatCompletionsOptions(_model_base.Model):  # pylint: disable=too-many-ins
     :vartype data_sources: list[~azure.openai.models.AzureChatExtensionConfiguration]
     """
 
-    messages: List["_models._models.ChatMessage"] = rest_field()
+    messages: List["_models.ChatMessage"] = rest_field()
     """The collection of context messages associated with this chat completions request.
      Typical usage begins with a chat message for the System role that provides instructions for
      the behavior of the assistant, followed by alternating messages between the User and
      Assistant roles. Required."""
-    functions: Optional[List["_models._models.FunctionDefinition"]] = rest_field()
+    functions: Optional[List["_models.FunctionDefinition"]] = rest_field()
     """A list of functions the model may generate JSON inputs for."""
     function_call: Optional[Union[str, "_models.FunctionCallPreset", "_models.FunctionName"]] = rest_field()
     """Controls how the model responds to function calls. \"none\" means the model does not call a
@@ -670,7 +849,7 @@ class ChatCompletionsOptions(_model_base.Model):  # pylint: disable=too-many-ins
     """The model name to provide as part of this completions request.
      Not applicable to Azure OpenAI, where deployment information should be included in the Azure
      resource URI that's connected to."""
-    data_sources: Optional[List["_models._models.AzureChatExtensionConfiguration"]] = rest_field(name="dataSources")
+    data_sources: Optional[List["_models.AzureChatExtensionConfiguration"]] = rest_field(name="dataSources")
     """The configuration entries for Azure OpenAI chat extensions that use them.
        This additional specification is only compatible with Azure OpenAI."""
 
@@ -715,9 +894,9 @@ class ChatMessage(_model_base.Model):
      function whose response is in the ``content``. May contain a-z, A-Z, 0-9, and underscores, with
      a maximum length of
      64 characters."""
-    function_call: Optional["_models._models.FunctionCall"] = rest_field()
+    function_call: Optional["_models.FunctionCall"] = rest_field()
     """The name and arguments of a function that should be called, as generated by the model."""
-    context: Optional["_models._models.AzureChatExtensionsMessageContext"] = rest_field()
+    context: Optional["_models.AzureChatExtensionsMessageContext"] = rest_field()
     """Additional context data associated with a chat message when requesting chat completions using
      compatible Azure
        OpenAI chat extensions. This includes information like the intermediate data source
@@ -725,6 +904,28 @@ class ChatMessage(_model_base.Model):
        request.
        This context information is only populated when using Azure OpenAI with chat extensions
      capabilities configured."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        role: Union[str, "_models.ChatRole"],
+        content: str,
+        name: Optional[str] = None,
+        function_call: Optional["_models.FunctionCall"] = None,
+        context: Optional["_models.AzureChatExtensionsMessageContext"] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class Choice(_model_base.Model):
@@ -756,7 +957,7 @@ class Choice(_model_base.Model):
     """The generated text for a given completions prompt. Required."""
     index: int = rest_field()
     """The ordered index associated with this completions choice. Required."""
-    content_filter_results: Optional["_models._models.ContentFilterResults"] = rest_field()
+    content_filter_results: Optional["_models.ContentFilterResults"] = rest_field()
     """Information about the content filtering category (hate, sexual, violence, self_harm), if it
      has been detected, as well as the severity level (very_low, low, medium, high-scale that
      determines the intensity and risk level of harmful content) and if it has been filtered or not."""
@@ -765,6 +966,28 @@ class Choice(_model_base.Model):
     finish_reason: Union[str, "_models.CompletionsFinishReason"] = rest_field()
     """Reason for finishing. Required. Known values are: \"stop\", \"length\", \"content_filter\", and
      \"function_call\"."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        text: str,
+        index: int,
+        logprobs: "_models.CompletionsLogProbabilityModel",
+        finish_reason: Union[str, "_models.CompletionsFinishReason"],
+        content_filter_results: Optional["_models.ContentFilterResults"] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class Completions(_model_base.Model):
@@ -799,16 +1022,38 @@ class Completions(_model_base.Model):
     created: datetime.datetime = rest_field(format="unix-timestamp")
     """The first timestamp associated with generation activity for this completions response,
      represented as seconds since the beginning of the Unix epoch of 00:00 on 1 Jan 1970. Required."""
-    prompt_filter_results: Optional[List["_models._models.PromptFilterResult"]] = rest_field()
+    prompt_filter_results: Optional[List["_models.PromptFilterResult"]] = rest_field()
     """Content filtering results for zero or more prompts in the request. In a streaming request,
      results for different prompts may arrive at different times or in different orders."""
-    choices: List["_models._models.Choice"] = rest_field()
+    choices: List["_models.Choice"] = rest_field()
     """The collection of completions choices associated with this completions response.
      Generally, ``n`` choices are generated per provided prompt with a default value of 1.
      Token limits and other settings may limit the number of choices generated. Required."""
-    usage: "_models._models.CompletionsUsage" = rest_field()
+    usage: "_models.CompletionsUsage" = rest_field()
     """Usage information for tokens processed and generated as part of this completions operation.
      Required."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        id: str,  # pylint: disable=redefined-builtin
+        created: datetime.datetime,
+        choices: List["_models.Choice"],
+        usage: "_models.CompletionsUsage",
+        prompt_filter_results: Optional[List["_models.PromptFilterResult"]] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class CompletionsLogProbabilityModel(_model_base.Model):
@@ -1033,6 +1278,26 @@ class CompletionsUsage(_model_base.Model):
     total_tokens: int = rest_field()
     """The total number of tokens processed for the completions request and response. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        completion_tokens: int,
+        prompt_tokens: int,
+        total_tokens: int,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
 
 class ContentFilterResult(_model_base.Model):
     """Information about filtered content severity level and if it has been filtered or not.
@@ -1051,6 +1316,25 @@ class ContentFilterResult(_model_base.Model):
      \"safe\", \"low\", \"medium\", and \"high\"."""
     filtered: bool = rest_field()
     """A value indicating whether or not the content has been filtered. Required."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        severity: Union[str, "_models.ContentFilterSeverity"],
+        filtered: bool,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class ContentFilterResults(_model_base.Model):
@@ -1082,26 +1366,48 @@ class ContentFilterResults(_model_base.Model):
     :vartype error: ~azure.openai.models.Error
     """
 
-    sexual: Optional["_models._models.ContentFilterResult"] = rest_field()
+    sexual: Optional["_models.ContentFilterResult"] = rest_field()
     """Describes language related to anatomical organs and genitals, romantic relationships,
       acts portrayed in erotic or affectionate terms, physical sexual acts, including
       those portrayed as an assault or a forced sexual violent act against one’s will,
       prostitution, pornography, and abuse."""
-    violence: Optional["_models._models.ContentFilterResult"] = rest_field()
+    violence: Optional["_models.ContentFilterResult"] = rest_field()
     """Describes language related to physical actions intended to hurt, injure, damage, or
      kill someone or something; describes weapons, etc."""
-    hate: Optional["_models._models.ContentFilterResult"] = rest_field()
+    hate: Optional["_models.ContentFilterResult"] = rest_field()
     """Describes language attacks or uses that include pejorative or discriminatory language
      with reference to a person or identity group on the basis of certain differentiating
      attributes of these groups including but not limited to race, ethnicity, nationality,
      gender identity and expression, sexual orientation, religion, immigration status, ability
      status, personal appearance, and body size."""
-    self_harm: Optional["_models._models.ContentFilterResult"] = rest_field()
+    self_harm: Optional["_models.ContentFilterResult"] = rest_field()
     """Describes language related to physical actions intended to purposely hurt, injure,
      or damage one’s body, or kill oneself."""
     error: Optional["_models._models.Error"] = rest_field()
     """Describes an error returned if the content filtering system is
      down or otherwise unable to complete the operation in time."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        sexual: Optional["_models.ContentFilterResult"] = None,
+        violence: Optional["_models.ContentFilterResult"] = None,
+        hate: Optional["_models.ContentFilterResult"] = None,
+        self_harm: Optional["_models.ContentFilterResult"] = None,
+        error: Optional["_models._models.Error"] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class EmbeddingItem(_model_base.Model):
@@ -1123,6 +1429,25 @@ class EmbeddingItem(_model_base.Model):
     index: int = rest_field()
     """Index of the prompt to which the EmbeddingItem corresponds. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        embedding: List[float],
+        index: int,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
 
 class Embeddings(_model_base.Model):
     """Representation of the response data from an embeddings request.
@@ -1138,10 +1463,29 @@ class Embeddings(_model_base.Model):
     :vartype usage: ~azure.openai.models.EmbeddingsUsage
     """
 
-    data: List["_models._models.EmbeddingItem"] = rest_field()
+    data: List["_models.EmbeddingItem"] = rest_field()
     """Embedding values for the prompts submitted in the request. Required."""
-    usage: "_models._models.EmbeddingsUsage" = rest_field()
+    usage: "_models.EmbeddingsUsage" = rest_field()
     """Usage counts for tokens input using the embeddings API. Required."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        data: List["_models.EmbeddingItem"],
+        usage: "_models.EmbeddingsUsage",
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class EmbeddingsOptions(_model_base.Model):
@@ -1201,6 +1545,25 @@ class EmbeddingsUsage(_model_base.Model):
     total_tokens: int = rest_field()
     """Total number of tokens transacted in this request/response. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        prompt_tokens: int,
+        total_tokens: int,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
 
 class Error(_model_base.Model):
     """The error object.
@@ -1255,6 +1618,25 @@ class FunctionCall(_model_base.Model):
      not defined by your function schema. Validate the arguments in your code before calling
      your function. Required."""
 
+    @overload
+    def __init__(
+        self,
+        *,
+        name: str,
+        arguments: str,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
+
 
 class FunctionDefinition(_model_base.Model):
     """The definition of a caller-specified function that chat completions may invoke in response to
@@ -1280,6 +1662,26 @@ class FunctionDefinition(_model_base.Model):
      interpreting its parameters."""
     parameters: Optional[Any] = rest_field()
     """The parameters the functions accepts, described as a JSON Schema object."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        name: str,
+        description: Optional[str] = None,
+        parameters: Optional[Any] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class FunctionName(_model_base.Model):
@@ -1367,6 +1769,25 @@ class ImageGenerations(_model_base.Model):
     data: Union[List["_models.ImageLocation"], List["_models.ImagePayload"]] = rest_field()
     """The images generated by the operator. Required. Is either a [ImageLocation] type or a
      [ImagePayload] type."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        created: datetime.datetime,
+        data: Union[List["_models.ImageLocation"], List["_models.ImagePayload"]],
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)
 
 
 class ImageLocation(_model_base.Model):
@@ -1462,5 +1883,24 @@ class PromptFilterResult(_model_base.Model):
 
     prompt_index: int = rest_field()
     """The index of this prompt in the set of prompt results. Required."""
-    content_filter_results: Optional["_models._models.ContentFilterResults"] = rest_field()
+    content_filter_results: Optional["_models.ContentFilterResults"] = rest_field()
     """Content filtering results for this prompt."""
+
+    @overload
+    def __init__(
+        self,
+        *,
+        prompt_index: int,
+        content_filter_results: Optional["_models.ContentFilterResults"] = None,
+    ):
+        ...
+
+    @overload
+    def __init__(self, mapping: Mapping[str, Any]):
+        """
+        :param mapping: raw JSON to initialize the model.
+        :type mapping: Mapping[str, Any]
+        """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
+        super().__init__(*args, **kwargs)

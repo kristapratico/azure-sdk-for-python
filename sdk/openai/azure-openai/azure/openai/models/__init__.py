@@ -6,10 +6,31 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
+from ._models import AudioTranscription
+from ._models import AudioTranscriptionSegment
+from ._models import AudioTranslation
+from ._models import AudioTranslationSegment
+from ._models import AzureChatExtensionConfiguration
+from ._models import AzureChatExtensionsMessageContext
+from ._models import ChatChoice
+from ._models import ChatCompletions
+from ._models import ChatMessage
+from ._models import Choice
+from ._models import Completions
 from ._models import CompletionsLogProbabilityModel
+from ._models import CompletionsUsage
+from ._models import ContentFilterResult
+from ._models import ContentFilterResults
+from ._models import EmbeddingItem
+from ._models import Embeddings
+from ._models import EmbeddingsUsage
+from ._models import FunctionCall
+from ._models import FunctionDefinition
 from ._models import FunctionName
+from ._models import ImageGenerations
 from ._models import ImageLocation
 from ._models import ImagePayload
+from ._models import PromptFilterResult
 
 from ._enums import AudioTaskLabel
 from ._enums import AudioTranscriptionFormat
@@ -27,10 +48,31 @@ from ._patch import *  # pylint: disable=unused-wildcard-import
 from ._patch import patch_sdk as _patch_sdk
 
 __all__ = [
+    "AudioTranscription",
+    "AudioTranscriptionSegment",
+    "AudioTranslation",
+    "AudioTranslationSegment",
+    "AzureChatExtensionConfiguration",
+    "AzureChatExtensionsMessageContext",
+    "ChatChoice",
+    "ChatCompletions",
+    "ChatMessage",
+    "Choice",
+    "Completions",
     "CompletionsLogProbabilityModel",
+    "CompletionsUsage",
+    "ContentFilterResult",
+    "ContentFilterResults",
+    "EmbeddingItem",
+    "Embeddings",
+    "EmbeddingsUsage",
+    "FunctionCall",
+    "FunctionDefinition",
     "FunctionName",
+    "ImageGenerations",
     "ImageLocation",
     "ImagePayload",
+    "PromptFilterResult",
     "AudioTaskLabel",
     "AudioTranscriptionFormat",
     "AudioTranslationFormat",

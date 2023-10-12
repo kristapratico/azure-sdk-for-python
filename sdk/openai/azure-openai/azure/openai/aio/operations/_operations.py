@@ -73,25 +73,25 @@ class CompletionsOperations:
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> _models._models.Completions:
+    ) -> _models.Completions:
         ...
 
     @overload
-    async def _create(  # pylint: disable=protected-access
+    async def _create(
         self, deployment_id: str, body: JSON, *, content_type: str = "application/json", **kwargs: Any
-    ) -> _models._models.Completions:
+    ) -> _models.Completions:
         ...
 
     @overload
-    async def _create(  # pylint: disable=protected-access
+    async def _create(
         self, deployment_id: str, body: IO, *, content_type: str = "application/json", **kwargs: Any
-    ) -> _models._models.Completions:
+    ) -> _models.Completions:
         ...
 
     @distributed_trace_async
-    async def _create(  # pylint: disable=protected-access
+    async def _create(
         self, deployment_id: str, body: Union[_models._models.CompletionsOptions, JSON, IO], **kwargs: Any
-    ) -> _models._models.Completions:
+    ) -> _models.Completions:
         """Gets completions for the provided input prompts.
         Completions support a wide variety of tasks and generate text that continues from or
         "completes"
@@ -123,7 +123,7 @@ class CompletionsOperations:
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
-        cls: ClsType[_models._models.Completions] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models.Completions] = kwargs.pop("cls", None)
 
         content_type = content_type or "application/json"
         _content = None
@@ -161,9 +161,7 @@ class CompletionsOperations:
         if _stream:
             deserialized = response.iter_bytes()
         else:
-            deserialized = _deserialize(
-                _models._models.Completions, response.json()  # pylint: disable=protected-access
-            )
+            deserialized = _deserialize(_models.Completions, response.json())
 
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
@@ -199,34 +197,34 @@ class ChatOperations:
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> _models._models.ChatCompletions:
+    ) -> _models.ChatCompletions:
         ...
 
     @overload
     @api_version_validation(
         method_added_on="2023-05-15",
-    )  # pylint: disable=protected-access
-    async def _create(  # pylint: disable=protected-access
+    )
+    async def _create(
         self, deployment_id: str, body: JSON, *, content_type: str = "application/json", **kwargs: Any
-    ) -> _models._models.ChatCompletions:
+    ) -> _models.ChatCompletions:
         ...
 
     @overload
     @api_version_validation(
         method_added_on="2023-05-15",
-    )  # pylint: disable=protected-access
-    async def _create(  # pylint: disable=protected-access
+    )
+    async def _create(
         self, deployment_id: str, body: IO, *, content_type: str = "application/json", **kwargs: Any
-    ) -> _models._models.ChatCompletions:
+    ) -> _models.ChatCompletions:
         ...
 
     @distributed_trace_async
     @api_version_validation(
         method_added_on="2023-05-15",
-    )  # pylint: disable=protected-access
-    async def _create(  # pylint: disable=protected-access
+    )
+    async def _create(
         self, deployment_id: str, body: Union[_models._models.ChatCompletionsOptions, JSON, IO], **kwargs: Any
-    ) -> _models._models.ChatCompletions:
+    ) -> _models.ChatCompletions:
         """Gets chat completions for the provided chat messages.
         Completions support a wide variety of tasks and generate text that continues from or
         "completes"
@@ -258,7 +256,7 @@ class ChatOperations:
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
-        cls: ClsType[_models._models.ChatCompletions] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models.ChatCompletions] = kwargs.pop("cls", None)
 
         content_type = content_type or "application/json"
         _content = None
@@ -296,9 +294,7 @@ class ChatOperations:
         if _stream:
             deserialized = response.iter_bytes()
         else:
-            deserialized = _deserialize(
-                _models._models.ChatCompletions, response.json()  # pylint: disable=protected-access
-            )
+            deserialized = _deserialize(_models.ChatCompletions, response.json())
 
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
@@ -316,34 +312,34 @@ class ChatOperations:
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> _models._models.ChatCompletions:
+    ) -> _models.ChatCompletions:
         ...
 
     @overload
     @api_version_validation(
         method_added_on="2023-08-01-preview",
-    )  # pylint: disable=protected-access
-    async def _create_extensions(  # pylint: disable=protected-access
+    )
+    async def _create_extensions(
         self, deployment_id: str, body: JSON, *, content_type: str = "application/json", **kwargs: Any
-    ) -> _models._models.ChatCompletions:
+    ) -> _models.ChatCompletions:
         ...
 
     @overload
     @api_version_validation(
         method_added_on="2023-08-01-preview",
-    )  # pylint: disable=protected-access
-    async def _create_extensions(  # pylint: disable=protected-access
+    )
+    async def _create_extensions(
         self, deployment_id: str, body: IO, *, content_type: str = "application/json", **kwargs: Any
-    ) -> _models._models.ChatCompletions:
+    ) -> _models.ChatCompletions:
         ...
 
     @distributed_trace_async
     @api_version_validation(
         method_added_on="2023-08-01-preview",
-    )  # pylint: disable=protected-access
-    async def _create_extensions(  # pylint: disable=protected-access
+    )
+    async def _create_extensions(
         self, deployment_id: str, body: Union[_models._models.ChatCompletionsOptions, JSON, IO], **kwargs: Any
-    ) -> _models._models.ChatCompletions:
+    ) -> _models.ChatCompletions:
         """Gets chat completions for the provided chat messages.
         This is an Azure-specific version of chat completions that supports integration with configured
         data sources and
@@ -375,7 +371,7 @@ class ChatOperations:
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
-        cls: ClsType[_models._models.ChatCompletions] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models.ChatCompletions] = kwargs.pop("cls", None)
 
         content_type = content_type or "application/json"
         _content = None
@@ -413,9 +409,7 @@ class ChatOperations:
         if _stream:
             deserialized = response.iter_bytes()
         else:
-            deserialized = _deserialize(
-                _models._models.ChatCompletions, response.json()  # pylint: disable=protected-access
-            )
+            deserialized = _deserialize(_models.ChatCompletions, response.json())
 
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
@@ -448,25 +442,25 @@ class EmbeddingsOperations:
         *,
         content_type: str = "application/json",
         **kwargs: Any
-    ) -> _models._models.Embeddings:
+    ) -> _models.Embeddings:
         ...
 
     @overload
-    async def _create(  # pylint: disable=protected-access
+    async def _create(
         self, deployment_id: str, body: JSON, *, content_type: str = "application/json", **kwargs: Any
-    ) -> _models._models.Embeddings:
+    ) -> _models.Embeddings:
         ...
 
     @overload
-    async def _create(  # pylint: disable=protected-access
+    async def _create(
         self, deployment_id: str, body: IO, *, content_type: str = "application/json", **kwargs: Any
-    ) -> _models._models.Embeddings:
+    ) -> _models.Embeddings:
         ...
 
     @distributed_trace_async
-    async def _create(  # pylint: disable=protected-access
+    async def _create(
         self, deployment_id: str, body: Union[_models._models.EmbeddingsOptions, JSON, IO], **kwargs: Any
-    ) -> _models._models.Embeddings:
+    ) -> _models.Embeddings:
         """Return the embeddings for a given prompt.
 
         :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
@@ -495,7 +489,7 @@ class EmbeddingsOperations:
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
-        cls: ClsType[_models._models.Embeddings] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models.Embeddings] = kwargs.pop("cls", None)
 
         content_type = content_type or "application/json"
         _content = None
@@ -533,7 +527,7 @@ class EmbeddingsOperations:
         if _stream:
             deserialized = response.iter_bytes()
         else:
-            deserialized = _deserialize(_models._models.Embeddings, response.json())  # pylint: disable=protected-access
+            deserialized = _deserialize(_models.Embeddings, response.json())
 
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
@@ -626,34 +620,34 @@ class ImagesOperations:
     )  # pylint: disable=protected-access
     async def begin__generate(  # pylint: disable=protected-access
         self, body: _models._models.ImageGenerationOptions, *, content_type: str = "application/json", **kwargs: Any
-    ) -> AsyncLROPoller[_models._models.ImageGenerations]:
+    ) -> AsyncLROPoller[_models.ImageGenerations]:
         ...
 
     @overload
     @api_version_validation(
         method_added_on="2023-06-01-preview",
-    )  # pylint: disable=protected-access
-    async def begin__generate(  # pylint: disable=protected-access
+    )
+    async def begin__generate(
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
-    ) -> AsyncLROPoller[_models._models.ImageGenerations]:
+    ) -> AsyncLROPoller[_models.ImageGenerations]:
         ...
 
     @overload
     @api_version_validation(
         method_added_on="2023-06-01-preview",
-    )  # pylint: disable=protected-access
-    async def begin__generate(  # pylint: disable=protected-access
+    )
+    async def begin__generate(
         self, body: IO, *, content_type: str = "application/json", **kwargs: Any
-    ) -> AsyncLROPoller[_models._models.ImageGenerations]:
+    ) -> AsyncLROPoller[_models.ImageGenerations]:
         ...
 
     @distributed_trace_async
     @api_version_validation(
         method_added_on="2023-06-01-preview",
-    )  # pylint: disable=protected-access
-    async def begin__generate(  # pylint: disable=protected-access
+    )
+    async def begin__generate(
         self, body: Union[_models._models.ImageGenerationOptions, JSON, IO], **kwargs: Any
-    ) -> AsyncLROPoller[_models._models.ImageGenerations]:
+    ) -> AsyncLROPoller[_models.ImageGenerations]:
         """Starts the generation of a batch of images from a text caption.
 
         :param body: Is one of the following types: ImageGenerationOptions, JSON, IO Required.
@@ -677,7 +671,7 @@ class ImagesOperations:
         _params = kwargs.pop("params", {}) or {}
 
         content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
-        cls: ClsType[_models._models.ImageGenerations] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models.ImageGenerations] = kwargs.pop("cls", None)
         polling: Union[bool, AsyncPollingMethod] = kwargs.pop("polling", True)
         lro_delay = kwargs.pop("polling_interval", self._config.polling_interval)
         cont_token: Optional[str] = kwargs.pop("continuation_token", None)
@@ -694,9 +688,7 @@ class ImagesOperations:
                 "str", response.headers.get("Operation-Location")
             )
 
-            deserialized = _deserialize(
-                _models._models.ImageGenerations, response.json()  # pylint: disable=protected-access
-            )
+            deserialized = _deserialize(_models.ImageGenerations, response.json())
             if cls:
                 return cls(pipeline_response, deserialized, response_headers)  # type: ignore
             return deserialized
@@ -747,7 +739,7 @@ class AudioOperations:
     )  # pylint: disable=protected-access
     async def _transcriptions(  # pylint: disable=protected-access
         self, deployment_id: str, body: _models._models.AudioTranscriptionOptions, **kwargs: Any
-    ) -> _models._models.AudioTranscription:
+    ) -> _models.AudioTranscription:
         """Gets transcribed text and associated metadata from provided spoken audio data. Audio will be
         transcribed in the
         written language corresponding to the language it was spoken in.
@@ -778,7 +770,7 @@ class AudioOperations:
         _params = kwargs.pop("params", {}) or {}
 
         content_type: str = kwargs.pop("content_type", _headers.pop("content-type", "multipart/form-data"))
-        cls: ClsType[_models._models.AudioTranscription] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models.AudioTranscription] = kwargs.pop("cls", None)
 
         _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
 
@@ -811,9 +803,7 @@ class AudioOperations:
         if _stream:
             deserialized = response.iter_bytes()
         else:
-            deserialized = _deserialize(
-                _models._models.AudioTranscription, response.json()  # pylint: disable=protected-access
-            )
+            deserialized = _deserialize(_models.AudioTranscription, response.json())
 
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
@@ -826,7 +816,7 @@ class AudioOperations:
     )  # pylint: disable=protected-access
     async def _translations(  # pylint: disable=protected-access
         self, deployment_id: str, body: _models._models.AudioTranslationOptions, **kwargs: Any
-    ) -> _models._models.AudioTranslation:
+    ) -> _models.AudioTranslation:
         """Gets English language transcribed text and associated metadata from provided spoken audio data.
 
         :param deployment_id: Specifies either the model deployment name (when using Azure OpenAI) or
@@ -855,7 +845,7 @@ class AudioOperations:
         _params = kwargs.pop("params", {}) or {}
 
         content_type: str = kwargs.pop("content_type", _headers.pop("content-type", "multipart/form-data"))
-        cls: ClsType[_models._models.AudioTranslation] = kwargs.pop("cls", None)  # pylint: disable=protected-access
+        cls: ClsType[_models.AudioTranslation] = kwargs.pop("cls", None)
 
         _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
 
@@ -888,9 +878,7 @@ class AudioOperations:
         if _stream:
             deserialized = response.iter_bytes()
         else:
-            deserialized = _deserialize(
-                _models._models.AudioTranslation, response.json()  # pylint: disable=protected-access
-            )
+            deserialized = _deserialize(_models.AudioTranslation, response.json())
 
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore

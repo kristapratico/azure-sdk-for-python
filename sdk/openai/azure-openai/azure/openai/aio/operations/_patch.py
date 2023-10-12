@@ -419,7 +419,7 @@ class AudioOperations(GeneratedAudioOperations):
 class TranscriptionsOperations(GeneratedAudioOperations):
 
     @overload
-    async def transcriptions(
+    async def create(
         self,
         deployment_id: str,
         file: IO[bytes],
@@ -433,7 +433,7 @@ class TranscriptionsOperations(GeneratedAudioOperations):
         ...
 
     @overload
-    async def transcriptions(
+    async def create(
         self,
         deployment_id: str,
         file: bytes,
@@ -447,7 +447,7 @@ class TranscriptionsOperations(GeneratedAudioOperations):
         ...
 
     @distributed_trace_async
-    async def transcriptions(
+    async def create(
         self,
         deployment_id: str,
         file: Union[bytes, IO[bytes]],
@@ -535,7 +535,7 @@ class TranscriptionsOperations(GeneratedAudioOperations):
 class TranslationsOperations(GeneratedAudioOperations):
 
     @overload
-    async def translations(
+    async def create(
         self,
         deployment_id: str,
         file: IO[bytes],
@@ -548,7 +548,7 @@ class TranslationsOperations(GeneratedAudioOperations):
         ...
 
     @overload
-    async def translations(
+    async def create(
         self,
         deployment_id: str,
         file: bytes,
@@ -561,7 +561,7 @@ class TranslationsOperations(GeneratedAudioOperations):
         ...
 
     @distributed_trace_async
-    async def translations(
+    async def create(
         self,
         deployment_id: str,
         file: Union[bytes, IO[bytes]],

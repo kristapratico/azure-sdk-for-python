@@ -376,7 +376,7 @@ class TestCompletionsAsync(AzureRecordedTestCase):
                 **kwargs
             )
         assert e.value.error.code == "content_filter"
-        content_filter_result = e.value.error.error.innererror["content_filter_result"]
+        content_filter_result = e.value.error.innererror["content_filter_result"]
         assert content_filter_result["hate"]["filtered"] is False
         assert content_filter_result["hate"]["severity"] == "safe"
         assert content_filter_result["self_harm"]["filtered"] is False

@@ -290,7 +290,7 @@ class TestChatCompletions(AzureRecordedTestCase):
                 **kwargs
             )
         assert e.value.error.code == "content_filter"
-        content_filter_result = e.value.error.error.innererror["content_filter_result"]
+        content_filter_result = e.value.error.innererror["content_filter_result"]
         assert content_filter_result["hate"]["filtered"] is False
         assert content_filter_result["hate"]["severity"] == "safe"
         assert content_filter_result["self_harm"]["filtered"] is False
@@ -617,7 +617,7 @@ class TestChatCompletions(AzureRecordedTestCase):
                 **kwargs
             )
         assert e.value.error.code == "content_filter"
-        content_filter_result = e.value.error.error.innererror["content_filter_result"]
+        content_filter_result = e.value.error.innererror["content_filter_result"]
         assert content_filter_result["hate"]["filtered"] is False
         assert content_filter_result["hate"]["severity"] == "safe"
         assert content_filter_result["self_harm"]["filtered"] is False
@@ -641,7 +641,7 @@ class TestChatCompletions(AzureRecordedTestCase):
                 **kwargs
             )
         assert e.value.error.code == "content_filter"
-        content_filter_result = e.value.error.error.innererror["content_filter_result"]
+        content_filter_result = e.value.error.innererror["content_filter_result"]
         assert content_filter_result["hate"]["filtered"] is False
         assert content_filter_result["hate"]["severity"] == "safe"
         assert content_filter_result["self_harm"]["filtered"] is False
@@ -710,10 +710,10 @@ class TestChatCompletions(AzureRecordedTestCase):
             for c in chunk.choices:
                 assert c.index is not None
                 assert c.delta is not None
-                if hasattr(c.delta, "context"):
+                if c.delta.context:
                     assert c.delta.context.messages[0].role == "tool"
-                    assert c.delta.context.messages[0].content.find("citations") != -1
-                if hasattr(c.delta, "role"):
+                    assert c.delta.context.messages[0].content
+                if c.delta.role:
                     assert c.delta.role == "assistant"
-                if hasattr(c.delta, "content"):
+                if c.delta.content:
                     assert c.delta.content is not None

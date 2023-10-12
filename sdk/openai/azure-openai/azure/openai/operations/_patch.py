@@ -25,7 +25,6 @@ from typing import (
     Generic,
     Iterator,
     AsyncIterator,
-    TYPE_CHECKING
 )
 from typing_extensions import Literal
 from azure.core.tracing.decorator import distributed_trace
@@ -44,7 +43,7 @@ from azure.core.utils import case_insensitive_dict
 from ._operations import (
     EmbeddingsOperations as GeneratedEmbeddingsOperations,
     CompletionsOperations as GeneratedCompletionsOperations,
-    ChatCompletionsOperations as GeneratedChatCompletionsOperations,
+    ChatOperations as GeneratedChatOperations,
     ImagesOperations as GeneratedImagesOperations,
     AudioOperations as GeneratedAudioOperations,
 )
@@ -85,8 +84,6 @@ _SERIALIZER = Serializer()
 _SERIALIZER.client_side_validation = False
 
 ReturnType = TypeVar("ReturnType")
-if TYPE_CHECKING:
-    from .._client import OpenAIClient
 
 
 def build_audio_transcriptions_request(deployment_id: str, **kwargs: Any) -> HttpRequest:
@@ -203,6 +200,18 @@ class SSEDecoder:
                 self._join = False
                 yield data.decode("utf-8")
 
+    async def achunked(self, async_iterator: bytes) -> str:
+        data = b''
+        async for chunk in async_iterator:
+            for line in chunk.splitlines(keepends=True):
+                data += line
+                if data.endswith((b'\r\r', b'\n\n', b'\r\n\r\n')):
+                    yield data.decode("utf-8")
+                    data = b''
+            if data:
+                self._join = False
+                yield data.decode("utf-8")
+
     def iter(self, iterator: Iterator[bytes]) -> Iterator[ServerSentEvent]:
         """Given an iterator that yields lines, iterate over it & yield every event encountered"""
 
@@ -212,13 +221,13 @@ class SSEDecoder:
                 if sse is not None:
                     yield sse
 
-    async def aiter(self, iterator: AsyncIterator[str]) -> AsyncIterator[ServerSentEvent]:
+    async def aiter(self, iterator: AsyncIterator[bytes]) -> AsyncIterator[ServerSentEvent]:
         """Given an async iterator that yields lines, iterate over it & yield every event encountered"""
-        async for line in iterator:
-            line = line.rstrip("\n")
-            sse = self.decode(line)
-            if sse is not None:
-                yield sse
+        async for chunk in self.achunked(iterator):
+            for line in chunk.splitlines():
+                sse = self.decode(line)
+                if sse is not None:
+                    yield sse
 
     def decode(self, line: str) -> Optional[ServerSentEvent]:
         # See: https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation  # noqa: E501
@@ -424,7 +433,18 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         return response
 
 
-class ChatCompletionsOperations(GeneratedChatCompletionsOperations):
+class ChatOperations(GeneratedChatOperations):
+
+    completions: "ChatCompletionsOperations"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.completions = ChatCompletionsOperations(*args, **kwargs)
+
+
+
+class ChatCompletionsOperations(GeneratedChatOperations):
+
     @overload
     def create(
         self,
@@ -572,8 +592,19 @@ class ImagesOperations(GeneratedImagesOperations):
 
 class AudioOperations(GeneratedAudioOperations):
 
+    transcriptions: "TranscriptionsOperations"
+    translations: "TranslationsOperations"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.transcriptions = TranscriptionsOperations(*args, **kwargs)
+        self.translations = TranslationsOperations(*args, **kwargs)
+
+
+class TranscriptionsOperations(GeneratedAudioOperations):
+
     @overload
-    def transcriptions(
+    def create(
         self,
         deployment_id: str,
         file: IO[bytes],
@@ -587,7 +618,7 @@ class AudioOperations(GeneratedAudioOperations):
         ...
 
     @overload
-    def transcriptions(
+    def create(
         self,
         deployment_id: str,
         file: bytes,
@@ -601,7 +632,7 @@ class AudioOperations(GeneratedAudioOperations):
         ...
 
     @distributed_trace
-    def transcriptions(
+    def create(
         self,
         deployment_id: str,
         file: Union[bytes, IO[bytes]],
@@ -685,8 +716,11 @@ class AudioOperations(GeneratedAudioOperations):
 
         return deserialized  # type: ignore
 
+
+class TranslationsOperations(GeneratedAudioOperations):
+
     @overload
-    def translations(
+    def create(
         self,
         deployment_id: str,
         file: IO[bytes],
@@ -699,7 +733,7 @@ class AudioOperations(GeneratedAudioOperations):
         ...
 
     @overload
-    def translations(
+    def create(
         self,
         deployment_id: str,
         file: bytes,
@@ -712,7 +746,7 @@ class AudioOperations(GeneratedAudioOperations):
         ...
 
     @distributed_trace
-    def translations(
+    def create(
         self,
         deployment_id: str,
         file: Union[bytes, IO[bytes]],
@@ -798,9 +832,12 @@ class AudioOperations(GeneratedAudioOperations):
 __all__: List[str] = [
     "EmbeddingsOperations",
     "CompletionsOperations",
+    "ChatOperations",
     "ChatCompletionsOperations",
     "ImagesOperations",
     "AudioOperations",
+    "TranscriptionsOperations",
+    "TranslationsOperations",
 ]
 
 

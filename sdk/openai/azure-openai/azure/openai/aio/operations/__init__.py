@@ -7,7 +7,7 @@
 # --------------------------------------------------------------------------
 
 from ._operations import CompletionsOperations
-from ._operations import ChatCompletionsOperations
+from ._operations import ChatOperations
 from ._operations import EmbeddingsOperations
 from ._operations import ImagesOperations
 from ._operations import AudioOperations
@@ -18,7 +18,7 @@ from ._patch import patch_sdk as _patch_sdk
 
 __all__ = [
     "CompletionsOperations",
-    "ChatCompletionsOperations",
+    "ChatOperations",
     "EmbeddingsOperations",
     "ImagesOperations",
     "AudioOperations",

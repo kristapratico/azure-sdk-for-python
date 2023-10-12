@@ -7,7 +7,7 @@ import os
 import pytest
 import openai
 from devtools_testutils import AzureRecordedTestCase
-from conftest import configure, AZURE, OPENAI, ALL
+from conftest import AZURE, OPENAI, ALL
 
 audio_test_file = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "./assets/hello.m4a"))
 audio_long_test_file = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "./assets/wikipediaOcelot.wav"))
@@ -18,11 +18,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_transcribe(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.transcriptions.create
-        else:
-            audio_func = client.audio.transcriptions
-        result = audio_func(
+
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb"),
             **kwargs,
         )
@@ -32,11 +29,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_transcribe_raw(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.transcriptions.create
-        else:
-            audio_func = client.audio.transcriptions
-        result = audio_func(
+
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb").read(),
             **kwargs,
         )
@@ -46,11 +40,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_translate(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.translations.create
-        else:
-            audio_func = client.audio.translations
-        result = audio_func(
+
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb"),
             **kwargs,
         )
@@ -60,11 +51,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_translate_raw(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.translations.create
-        else:
-            audio_func = client.audio.translations
-        result = audio_func(
+
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb").read(),
             **kwargs,
         )
@@ -74,11 +62,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_transcribe_verbose(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.transcriptions.create
-        else:
-            audio_func = client.audio.transcriptions
-        result = audio_func(
+
+        result = client.audio.transcriptions.create(
             file=open(audio_long_test_file, "rb"),
             response_format="verbose_json",
             **kwargs,
@@ -110,11 +95,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_transcribe_text(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.transcriptions.create
-        else:
-            audio_func = client.audio.transcriptions
-        result = audio_func(
+
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb"),
             response_format="text",
             **kwargs,
@@ -125,11 +107,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_transcribe_srt(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.transcriptions.create
-        else:
-            audio_func = client.audio.transcriptions
-        result = audio_func(
+
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb"),
             response_format="srt",
             **kwargs,
@@ -140,11 +119,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_transcribe_vtt(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.transcriptions.create
-        else:
-            audio_func = client.audio.transcriptions
-        result = audio_func(
+
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb"),
             response_format="vtt",
             **kwargs,
@@ -155,11 +131,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_translate_verbose(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.translations.create
-        else:
-            audio_func = client.audio.translations
-        result = audio_func(
+
+        result = client.audio.translations.create(
             file=open(audio_long_test_file, "rb"),
             response_format="verbose_json",
             **kwargs,
@@ -191,11 +164,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_translate_text(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.translations.create
-        else:
-            audio_func = client.audio.translations
-        result = audio_func(
+
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb"),
             response_format="text",
             **kwargs,
@@ -206,11 +176,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_translate_srt(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.translations.create
-        else:
-            audio_func = client.audio.translations
-        result = audio_func(
+
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb"),
             response_format="srt",
             **kwargs,
@@ -221,11 +188,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_translate_vtt(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.translations.create
-        else:
-            audio_func = client.audio.translations
-        result = audio_func(
+
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb"),
             response_format="vtt",
             **kwargs,
@@ -236,11 +200,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_transcribe_options(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.transcriptions.create
-        else:
-            audio_func = client.audio.transcriptions
-        result = audio_func(
+
+        result = client.audio.transcriptions.create(
             file=open(audio_test_file, "rb"),
             temperature=0,
             language="en",
@@ -253,11 +214,8 @@ class TestAudio(AzureRecordedTestCase):
     def test_translate_options(self, client, azure_openai_creds, api_type):
         kwargs = {"model": azure_openai_creds["audio_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["audio_name"]}
-        if api_type == "openai":
-            audio_func = client.audio.translations.create
-        else:
-            audio_func = client.audio.translations
-        result = audio_func(
+
+        result = client.audio.translations.create(
             file=open(audio_test_file, "rb"),
             temperature=0,
             prompt="Translate the text exactly as spoken.",

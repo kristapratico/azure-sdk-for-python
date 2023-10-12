@@ -15,13 +15,7 @@ from azure.core.rest import HttpRequest, HttpResponse
 
 from ._configuration import OpenAIClientConfiguration
 from ._serialization import Deserializer, Serializer
-from .operations import (
-    AudioOperations,
-    ChatCompletionsOperations,
-    CompletionsOperations,
-    EmbeddingsOperations,
-    ImagesOperations,
-)
+from .operations import AudioOperations, ChatOperations, CompletionsOperations, EmbeddingsOperations, ImagesOperations
 
 if TYPE_CHECKING:
     # pylint: disable=unused-import,ungrouped-imports
@@ -33,8 +27,8 @@ class OpenAIClient:  # pylint: disable=client-accepts-api-version-keyword
 
     :ivar completions: CompletionsOperations operations
     :vartype completions: azure.openai.operations.CompletionsOperations
-    :ivar chat_completions: ChatCompletionsOperations operations
-    :vartype chat_completions: azure.openai.operations.ChatCompletionsOperations
+    :ivar chat: ChatOperations operations
+    :vartype chat: azure.openai.operations.ChatOperations
     :ivar embeddings: EmbeddingsOperations operations
     :vartype embeddings: azure.openai.operations.EmbeddingsOperations
     :ivar images: ImagesOperations operations
@@ -65,9 +59,7 @@ class OpenAIClient:  # pylint: disable=client-accepts-api-version-keyword
         self._deserialize = Deserializer()
         self._serialize.client_side_validation = False
         self.completions = CompletionsOperations(self._client, self._config, self._serialize, self._deserialize)
-        self.chat_completions = ChatCompletionsOperations(
-            self._client, self._config, self._serialize, self._deserialize
-        )
+        self.chat = ChatOperations(self._client, self._config, self._serialize, self._deserialize)
         self.embeddings = EmbeddingsOperations(self._client, self._config, self._serialize, self._deserialize)
         self.images = ImagesOperations(self._client, self._config, self._serialize, self._deserialize)
         self.audio = AudioOperations(self._client, self._config, self._serialize, self._deserialize)

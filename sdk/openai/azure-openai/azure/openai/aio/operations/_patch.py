@@ -21,7 +21,10 @@ from typing import (
     TypeVar,
     Dict,
     Callable,
-    Any
+    Any,
+    TypeVar,
+    Generic,
+    AsyncIterator,
 )
 from typing_extensions import Literal
 from azure.core.tracing.decorator_async import distributed_trace_async
@@ -38,11 +41,16 @@ from azure.core.rest import HttpRequest, AsyncHttpResponse
 from azure.core.utils import case_insensitive_dict
 from ..._model_base import AzureJSONEncoder, _deserialize
 from ..._serialization import Serializer
-from ...operations._patch import build_audio_transcriptions_request, build_audio_translations_request
+from ...operations._patch import (
+    build_audio_transcriptions_request,
+    build_audio_translations_request,
+    ServerSentEvent,
+    SSEDecoder,
+)
 from ._operations import (
     EmbeddingsOperations as GeneratedEmbeddingsOperations,
     CompletionsOperations as GeneratedCompletionsOperations,
-    ChatCompletionsOperations as GeneratedChatCompletionsOperations,
+    ChatOperations as GeneratedChatOperations,
     ImagesOperations as GeneratedImagesOperations,
     AudioOperations as GeneratedAudioOperations,
 )
@@ -79,6 +87,45 @@ ClsType = Optional[Callable[[PipelineResponse[HttpRequest, AsyncHttpResponse], T
 
 _SERIALIZER = Serializer()
 _SERIALIZER.client_side_validation = False
+
+ReturnType = TypeVar("ReturnType")
+
+
+class AsyncStream(Generic[ReturnType]):
+
+    response: AsyncHttpResponse
+
+    def __init__(
+        self,
+        *,
+        return_type: type[ReturnType],
+        response: AsyncHttpResponse,
+    ) -> None:
+        self.response = response
+        self._return_type = return_type
+        self._decoder = SSEDecoder()
+        self._iterator = self._stream()
+
+    async def __anext__(self) -> ReturnType:
+        return await self._iterator.__anext__()
+
+    async def __aiter__(self) -> AsyncIterator[ReturnType]:
+        async for item in self._iterator:
+            yield item
+
+    async def _iter_events(self) -> AsyncIterator[ServerSentEvent]:
+        async for sse in self._decoder.aiter(self.response):
+            yield sse
+
+    async def _stream(self) -> AsyncIterator[ReturnType]:
+        return_type = self._return_type
+
+        async for sse in self._iter_events():
+            if sse.data.startswith("[DONE]"):
+                break
+
+            if sse.event is None:
+                yield return_type(sse.json())
 
 
 class EmbeddingsOperations(GeneratedEmbeddingsOperations):
@@ -125,7 +172,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         frequency_penalty: Optional[float] = None,
         best_of: Optional[int] = None,
         **kwargs
-    ) -> AsyncIterable[Completions]:
+    ) -> AsyncStream[Completions]:
         ...
 
     @overload
@@ -171,11 +218,8 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         frequency_penalty: Optional[float] = None,
         best_of: Optional[int] = None,
         **kwargs
-    ) -> Union[Completions, AsyncIterable[Completions]]:
-        if stream:
-            raise NotImplementedError("SSE not implemented")
-
-        return await super()._create(
+    ) -> Union[Completions, AsyncStream[Completions]]:
+        response = await super()._create(
             deployment_id=deployment_id,
             body=CompletionsOptions(
                 prompt=prompt,
@@ -191,12 +235,31 @@ class CompletionsOperations(GeneratedCompletionsOperations):
                 presence_penalty=presence_penalty,
                 frequency_penalty=frequency_penalty,
                 best_of=best_of,
+                stream=stream,
             ),
+            stream=stream,
             **kwargs
         )
+        if stream:
+            return AsyncStream[Completions](
+                return_type=Completions,
+                response=response,  # TODO: what do we want response to be?
+            )
+        return response
 
 
-class ChatCompletionsOperations(GeneratedChatCompletionsOperations):
+class ChatOperations(GeneratedChatOperations):
+
+    completions: "ChatCompletionsOperations"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.completions = ChatCompletionsOperations(*args, **kwargs)
+
+
+
+class ChatCompletionsOperations(GeneratedChatOperations):
+
     @overload
     async def create(
         self,
@@ -217,7 +280,7 @@ class ChatCompletionsOperations(GeneratedChatCompletionsOperations):
         frequency_penalty: Optional[float] = None,
         data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
         **kwargs
-    ) -> AsyncIterable[ChatCompletions]:
+    ) -> AsyncStream[ChatCompletions]:
         ...
 
     @overload
@@ -263,12 +326,9 @@ class ChatCompletionsOperations(GeneratedChatCompletionsOperations):
         frequency_penalty: Optional[float] = None,
         data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
         **kwargs
-    ) -> Union[ChatCompletions, AsyncIterable[ChatCompletions]]:
-        if stream:
-            raise NotImplementedError("SSE not implemented")
-
+    ) -> Union[ChatCompletions, AsyncStream[ChatCompletions]]:
         if data_sources:
-            return await super()._create_extensions(
+            response = await super()._create_extensions(
                 deployment_id=deployment_id,
                 body=ChatCompletionsOptions(
                     messages=messages,
@@ -284,28 +344,38 @@ class ChatCompletionsOperations(GeneratedChatCompletionsOperations):
                     presence_penalty=presence_penalty,
                     frequency_penalty=frequency_penalty,
                     data_sources=data_sources,
+                    stream=stream,
                 ),
+                stream=stream,
                 **kwargs
             )
-
-        return await super()._create(
-            deployment_id=deployment_id,
-            body=ChatCompletionsOptions(
-                messages=messages,
-                functions=functions,
-                function_call=function_call,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                logit_bias=logit_bias,
-                user=user,
-                n=n,
-                stop=stop,
-                presence_penalty=presence_penalty,
-                frequency_penalty=frequency_penalty,
-            ),
-            **kwargs
-        )
+        else:
+            response = await super()._create(
+                deployment_id=deployment_id,
+                body=ChatCompletionsOptions(
+                    messages=messages,
+                    functions=functions,
+                    function_call=function_call,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    top_p=top_p,
+                    logit_bias=logit_bias,
+                    user=user,
+                    n=n,
+                    stop=stop,
+                    presence_penalty=presence_penalty,
+                    frequency_penalty=frequency_penalty,
+                    stream=stream,
+                ),
+                stream=stream,
+                **kwargs
+            )
+        if stream:
+            return AsyncStream[ChatCompletions](
+                return_type=ChatCompletions,
+                response=response,  # TODO: what do we want response to be?
+            )
+        return response
 
 
 class ImagesOperations(GeneratedImagesOperations):
@@ -336,6 +406,17 @@ class ImagesOperations(GeneratedImagesOperations):
 
 
 class AudioOperations(GeneratedAudioOperations):
+
+    transcriptions: "TranscriptionsOperations"
+    translations: "TranslationsOperations"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.transcriptions = TranscriptionsOperations(*args, **kwargs)
+        self.translations = TranslationsOperations(*args, **kwargs)
+
+
+class TranscriptionsOperations(GeneratedAudioOperations):
 
     @overload
     async def transcriptions(
@@ -449,6 +530,9 @@ class AudioOperations(GeneratedAudioOperations):
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
         return deserialized  # type: ignore
+
+
+class TranslationsOperations(GeneratedAudioOperations):
 
     @overload
     async def translations(
@@ -564,9 +648,12 @@ class AudioOperations(GeneratedAudioOperations):
 __all__: List[str] = [
     "EmbeddingsOperations",
     "CompletionsOperations",
+    "ChatOperations",
     "ChatCompletionsOperations",
     "ImagesOperations",
     "AudioOperations",
+    "TranscriptionsOperations",
+    "TranslationsOperations",
 ]
 
 

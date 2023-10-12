@@ -70,7 +70,7 @@ def build_completions_create_request(deployment_id: str, **kwargs: Any) -> HttpR
     return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
 
 
-def build_chat_completions_create_request(deployment_id: str, **kwargs: Any) -> HttpRequest:
+def build_chat_create_request(deployment_id: str, **kwargs: Any) -> HttpRequest:
     _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
@@ -97,9 +97,7 @@ def build_chat_completions_create_request(deployment_id: str, **kwargs: Any) -> 
     return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
 
 
-def build_chat_completions_create_extensions_request(  # pylint: disable=name-too-long
-    deployment_id: str, **kwargs: Any
-) -> HttpRequest:
+def build_chat_create_extensions_request(deployment_id: str, **kwargs: Any) -> HttpRequest:
     _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
@@ -350,14 +348,14 @@ class CompletionsOperations:
         return deserialized  # type: ignore
 
 
-class ChatCompletionsOperations:
+class ChatOperations:
     """
     .. warning::
         **DO NOT** instantiate this class directly.
 
         Instead, you should access the following operations through
         :class:`~azure.openai.OpenAIClient`'s
-        :attr:`chat_completions` attribute.
+        :attr:`chat` attribute.
     """
 
     def __init__(self, *args, **kwargs):
@@ -446,7 +444,7 @@ class ChatCompletionsOperations:
         else:
             _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
 
-        request = build_chat_completions_create_request(
+        request = build_chat_create_request(
             deployment_id=deployment_id,
             content_type=content_type,
             api_version=self._config.api_version,
@@ -563,7 +561,7 @@ class ChatCompletionsOperations:
         else:
             _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
 
-        request = build_chat_completions_create_extensions_request(
+        request = build_chat_create_extensions_request(
             deployment_id=deployment_id,
             content_type=content_type,
             api_version=self._config.api_version,
@@ -965,7 +963,6 @@ class AudioOperations:
             content=_content,
             headers=_headers,
             params=_params,
-            files=kwargs.pop("files")  # krista
         )
         path_format_arguments = {
             "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, "str", skip_quote=True),

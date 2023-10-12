@@ -19,12 +19,9 @@ class TestChatCompletions(AzureRecordedTestCase):
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"}
         ]
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
+
         with pytest.raises(HttpResponseError) as e:
-            chat_completions_func(model="model", messages=messages, deployment_id="deployment")
+            client.chat.completions.create(model="model", messages=messages, deployment_id="deployment")
         assert e.value.http_status == 404
         assert "The API deployment for this resource does not exist" in str(e.value)
 
@@ -36,16 +33,13 @@ class TestChatCompletions(AzureRecordedTestCase):
             {"role": "user", "content": "Who won the world series in 2020?"}
         ]
         deployment = azure_openai_creds["chat_completions_name"]
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
-        completion = chat_completions_func(model="model", messages=messages, deployment_id=deployment)
+
+        completion = client.chat.completions.create(model="model", messages=messages, deployment_id=deployment)
         assert completion
-        completion = chat_completions_func(model="model", messages=messages, engine=deployment)
+        completion = client.chat.completions.create(model="model", messages=messages, engine=deployment)
         assert completion
         with pytest.raises(HttpResponseError) as e:
-            chat_completions_func(messages=messages)
+            client.chat.completions.create(messages=messages)
         assert "Must provide an 'engine' or 'deployment_id' parameter" in str(e.value)
 
     @pytest.mark.parametrize("api_type", ALL)
@@ -58,12 +52,9 @@ class TestChatCompletions(AzureRecordedTestCase):
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
+
         
-        completion = chat_completions_func(messages=messages, **kwargs)
+        completion = client.chat.completions.create(messages=messages, **kwargs)
         assert completion.id
         assert completion.created
         assert completion.usage.completion_tokens is not None
@@ -83,11 +74,8 @@ class TestChatCompletions(AzureRecordedTestCase):
         ]
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
-        response = chat_completions_func(messages=messages, stream=True, **kwargs)
+
+        response = client.chat.completions.create(messages=messages, stream=True, **kwargs)
 
         for completion in response:
             # API versions after 2023-05-15 send an empty first completion with RAI
@@ -106,11 +94,8 @@ class TestChatCompletions(AzureRecordedTestCase):
         ]
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
-        completion = chat_completions_func(messages=messages, max_tokens=50, **kwargs)
+
+        completion = client.chat.completions.create(messages=messages, max_tokens=50, **kwargs)
 
         assert completion.id
         assert completion.created
@@ -131,11 +116,8 @@ class TestChatCompletions(AzureRecordedTestCase):
         ]
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
-        completion = chat_completions_func(messages=messages, temperature=0.8, **kwargs)
+
+        completion = client.chat.completions.create(messages=messages, temperature=0.8, **kwargs)
 
         assert completion.id
         assert completion.created
@@ -156,11 +138,8 @@ class TestChatCompletions(AzureRecordedTestCase):
         ]
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
-        completion = chat_completions_func(messages=messages, top_p=0.1, **kwargs)
+
+        completion = client.chat.completions.create(messages=messages, top_p=0.1, **kwargs)
 
         assert completion.id
         assert completion.created
@@ -181,11 +160,8 @@ class TestChatCompletions(AzureRecordedTestCase):
         ]
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
-        completion = chat_completions_func(messages=messages, n=2, **kwargs)
+
+        completion = client.chat.completions.create(messages=messages, n=2, **kwargs)
 
         assert completion.id
         assert completion.created
@@ -207,11 +183,8 @@ class TestChatCompletions(AzureRecordedTestCase):
         ]
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
-        completion = chat_completions_func(messages=messages, stop=" ", **kwargs)
+
+        completion = client.chat.completions.create(messages=messages, stop=" ", **kwargs)
 
         assert completion.id
         assert completion.created
@@ -231,11 +204,8 @@ class TestChatCompletions(AzureRecordedTestCase):
         ]
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
-        completion = chat_completions_func(
+
+        completion = client.chat.completions.create(
             messages=messages,
             presence_penalty=2,
             frequency_penalty=2,
@@ -261,11 +231,8 @@ class TestChatCompletions(AzureRecordedTestCase):
         ]
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
-        completion = chat_completions_func(
+
+        completion = client.chat.completions.create(
             messages=messages,
             user="krista",
             **kwargs
@@ -290,11 +257,8 @@ class TestChatCompletions(AzureRecordedTestCase):
         ]
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
-        completion = chat_completions_func(
+
+        completion = client.chat.completions.create(
             messages=messages,
             logit_bias={17585: -100, 14573: -100},
             **kwargs
@@ -318,13 +282,10 @@ class TestChatCompletions(AzureRecordedTestCase):
         ]
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
+
         # prompt filtered
         with pytest.raises(HttpResponseError) as e:
-            completion = chat_completions_func(
+            completion = client.chat.completions.create(
                 messages=messages,
                 **kwargs
             )
@@ -341,7 +302,7 @@ class TestChatCompletions(AzureRecordedTestCase):
 
         # not filtered
         messages[1]["content"] = "What color is the ocean?"
-        completion = chat_completions_func(
+        completion = client.chat.completions.create(
             messages=messages,
             **kwargs
         )
@@ -376,10 +337,7 @@ class TestChatCompletions(AzureRecordedTestCase):
 
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
+
         functions=[
             {
                 "name": "get_current_weather",
@@ -402,7 +360,7 @@ class TestChatCompletions(AzureRecordedTestCase):
             }
         ]
 
-        completion = chat_completions_func(
+        completion = client.chat.completions.create(
             messages=messages,
             functions=functions,
             **kwargs
@@ -439,7 +397,7 @@ class TestChatCompletions(AzureRecordedTestCase):
                 "content": "{\"temperature\": \"22\", \"unit\": \"celsius\", \"description\": \"Sunny\"}"
             }
         )
-        function_completion = chat_completions_func(
+        function_completion = client.chat.completions.create(
             messages=messages,
             functions=functions,
             **kwargs
@@ -470,10 +428,7 @@ class TestChatCompletions(AzureRecordedTestCase):
 
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
+
         functions=[
             {
                 "name": "get_current_weather",
@@ -496,7 +451,7 @@ class TestChatCompletions(AzureRecordedTestCase):
             }
         ]
 
-        response = chat_completions_func(
+        response = client.chat.completions.create(
             messages=messages,
             functions=functions,
             stream=True,
@@ -520,7 +475,7 @@ class TestChatCompletions(AzureRecordedTestCase):
                 "content": "{\"temperature\": \"22\", \"unit\": \"celsius\", \"description\": \"Sunny\"}"
             }
         )
-        function_completion = chat_completions_func(
+        function_completion = client.chat.completions.create(
             messages=messages,
             functions=functions,
             stream=True,
@@ -546,10 +501,7 @@ class TestChatCompletions(AzureRecordedTestCase):
 
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
+
         functions=[
             {
                 "name": "get_current_weather",
@@ -591,7 +543,7 @@ class TestChatCompletions(AzureRecordedTestCase):
             }
         ]
 
-        completion = chat_completions_func(
+        completion = client.chat.completions.create(
             messages=messages,
             functions=functions,
             function_call={"name": "get_current_temperature"},
@@ -617,7 +569,7 @@ class TestChatCompletions(AzureRecordedTestCase):
                 "content": "{\"temperature\": \"22\", \"unit\": \"celsius\"}"
             }
         )
-        function_completion = chat_completions_func(
+        function_completion = client.chat.completions.create(
             messages=messages,
             functions=functions,
             **kwargs
@@ -635,10 +587,7 @@ class TestChatCompletions(AzureRecordedTestCase):
 
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}
-        if api_type == "openai":
-            chat_completions_func = client.chat.completions.create
-        else:
-            chat_completions_func = client.chat_completions.create
+
         functions=[
             {
                 "name": "get_current_weather",
@@ -662,7 +611,7 @@ class TestChatCompletions(AzureRecordedTestCase):
         ]
 
         with pytest.raises(HttpResponseError) as e:
-            response = chat_completions_func(
+            response = client.chat.completions.create(
                 messages=messages,
                 functions=functions,
                 **kwargs
@@ -686,7 +635,7 @@ class TestChatCompletions(AzureRecordedTestCase):
             }
         )
         with pytest.raises(HttpResponseError) as e:
-            function_completion = chat_completions_func(
+            function_completion = client.chat.completions.create(
                 messages=messages,
                 functions=functions,
                 **kwargs
@@ -709,7 +658,7 @@ class TestChatCompletions(AzureRecordedTestCase):
             {"role": "user", "content": "How is Azure machine learning different than Azure OpenAI?"}
         ]
 
-        completion = client.chat_completions.create(
+        completion = client.chat.completions.create(
             deployment_id=azure_openai_creds["chat_completions_name"],
             messages=messages,
             data_sources=[
@@ -740,7 +689,7 @@ class TestChatCompletions(AzureRecordedTestCase):
             {"role": "user", "content": "How is Azure machine learning different than Azure OpenAI?"}
         ]
 
-        response = client.chat_completions.create(
+        response = client.chat.completions.create(
             deployment_id=azure_openai_creds["chat_completions_name"],
             messages=messages,
             data_sources=[

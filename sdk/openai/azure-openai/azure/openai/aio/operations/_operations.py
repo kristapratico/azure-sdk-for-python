@@ -32,8 +32,8 @@ from ..._validation import api_version_validation
 from ...operations._operations import (
     build_audio_transcriptions_request,
     build_audio_translations_request,
-    build_chat_completions_create_extensions_request,
-    build_chat_completions_create_request,
+    build_chat_create_extensions_request,
+    build_chat_create_request,
     build_completions_create_request,
     build_embeddings_create_request,
     build_images_generate_request,
@@ -171,14 +171,14 @@ class CompletionsOperations:
         return deserialized  # type: ignore
 
 
-class ChatCompletionsOperations:
+class ChatOperations:
     """
     .. warning::
         **DO NOT** instantiate this class directly.
 
         Instead, you should access the following operations through
         :class:`~azure.openai.aio.OpenAIClient`'s
-        :attr:`chat_completions` attribute.
+        :attr:`chat` attribute.
     """
 
     def __init__(self, *args, **kwargs) -> None:
@@ -267,7 +267,7 @@ class ChatCompletionsOperations:
         else:
             _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
 
-        request = build_chat_completions_create_request(
+        request = build_chat_create_request(
             deployment_id=deployment_id,
             content_type=content_type,
             api_version=self._config.api_version,
@@ -384,7 +384,7 @@ class ChatCompletionsOperations:
         else:
             _content = json.dumps(body, cls=AzureJSONEncoder, exclude_readonly=True)  # type: ignore
 
-        request = build_chat_completions_create_extensions_request(
+        request = build_chat_create_extensions_request(
             deployment_id=deployment_id,
             content_type=content_type,
             api_version=self._config.api_version,

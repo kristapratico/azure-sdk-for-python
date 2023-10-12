@@ -7,7 +7,7 @@
 Follow our quickstart for examples: https://aka.ms/azsdk/python/dpcodegen/python/customize
 """
 import datetime
-from typing import List, Any, overload, Optional, Mapping, List
+from typing import List, Any, overload, Optional, Mapping
 from ._models import (
     Error,
     InnerError,

@@ -15,16 +15,14 @@ from typing import (
     Mapping,
     overload,
     Union,
-    AsyncIterable,
     IO,
-    cast,
     TypeVar,
     Dict,
     Callable,
     Any,
-    TypeVar,
     Generic,
     AsyncIterator,
+    Type,
 )
 from typing_extensions import Literal
 from azure.core.tracing.decorator_async import distributed_trace_async
@@ -99,7 +97,7 @@ class AsyncStream(Generic[ReturnType]):
     def __init__(
         self,
         *,
-        return_type: type[ReturnType],
+        return_type: Type[ReturnType],
         response: AsyncHttpResponse,
     ) -> None:
         self.response = response
@@ -138,7 +136,7 @@ class EmbeddingsOperations(GeneratedEmbeddingsOperations):
         input: Sequence[str],
         *,
         user: Optional[str] = None,
-        **kwargs
+        **kwargs: Any
     ) -> Embeddings:
         return await super()._create(
             deployment_id=deployment_id,
@@ -172,7 +170,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         best_of: Optional[int] = None,
-        **kwargs
+        **kwargs: Any
     ) -> AsyncStream[Completions]:
         ...
 
@@ -195,7 +193,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         best_of: Optional[int] = None,
-        **kwargs
+        **kwargs: Any
     ) -> Completions:
         ...
 
@@ -218,7 +216,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         best_of: Optional[int] = None,
-        **kwargs
+        **kwargs: Any
     ) -> Union[Completions, AsyncStream[Completions]]:
         response = await super()._create(
             deployment_id=deployment_id,
@@ -253,7 +251,7 @@ class ChatOperations(GeneratedChatOperations):
 
     completions: "ChatCompletionsOperations"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.completions = ChatCompletionsOperations(*args, **kwargs)
 
@@ -280,7 +278,7 @@ class ChatCompletionsOperations(GeneratedChatOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
-        **kwargs
+        **kwargs: Any
     ) -> AsyncStream[ChatCompletions]:
         ...
 
@@ -303,7 +301,7 @@ class ChatCompletionsOperations(GeneratedChatOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
-        **kwargs
+        **kwargs: Any
     ) -> ChatCompletions:
         ...
 
@@ -326,7 +324,7 @@ class ChatCompletionsOperations(GeneratedChatOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
-        **kwargs
+        **kwargs: Any
     ) -> Union[ChatCompletions, AsyncStream[ChatCompletions]]:
         if data_sources:
             response = await super()._create_extensions(
@@ -390,9 +388,11 @@ class ImagesOperations(GeneratedImagesOperations):
         size: Optional[Union[str, ImageSize]] = None,
         response_format: Optional[Union[str, ImageGenerationResponseFormat]] = None,
         user: Optional[str] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> ImageGenerations:
-        poller = await super().begin__generate(  # TODO: this should generate internal https://github.com/Azure/autorest.python/issues/2070
+        # TODO: this should generate internal
+        # https://github.com/Azure/autorest.python/issues/2070
+        poller = await super().begin__generate(
             body=ImageGenerationOptions(
                 prompt=prompt,
                 n=n,
@@ -411,7 +411,7 @@ class AudioOperations(GeneratedAudioOperations):
     transcriptions: "TranscriptionsOperations"
     translations: "TranslationsOperations"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.transcriptions = TranscriptionsOperations(*args, **kwargs)
         self.translations = TranslationsOperations(*args, **kwargs)
@@ -429,7 +429,7 @@ class TranscriptionsOperations(GeneratedAudioOperations):
         language: Optional[str] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AudioTranscription:
         ...
 
@@ -443,7 +443,7 @@ class TranscriptionsOperations(GeneratedAudioOperations):
         language: Optional[str] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AudioTranscription:
         ...
 
@@ -457,7 +457,7 @@ class TranscriptionsOperations(GeneratedAudioOperations):
         language: Optional[str] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AudioTranscription:
 
         data = {
@@ -498,7 +498,8 @@ class TranscriptionsOperations(GeneratedAudioOperations):
             params=_params,
             files=files
         )
-        request._files = files  # set_multipart_body in azure-core breaks files, need to reset it here
+        # TODO set_multipart_body in azure-core breaks files, need to reset it here
+        request._files = files  # pylint: disable=protected-access
         path_format_arguments = {
             "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, "str", skip_quote=True),
         }
@@ -544,7 +545,7 @@ class TranslationsOperations(GeneratedAudioOperations):
         response_format: Optional[Union[str, AudioTranscriptionFormat]] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AudioTranslation:
         ...
 
@@ -557,7 +558,7 @@ class TranslationsOperations(GeneratedAudioOperations):
         response_format: Optional[Union[str, AudioTranslationFormat]] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AudioTranslation:
         ...
 
@@ -570,7 +571,7 @@ class TranslationsOperations(GeneratedAudioOperations):
         response_format: Optional[Union[str, AudioTranslationFormat]] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AudioTranslation:
 
         data = {
@@ -610,7 +611,8 @@ class TranslationsOperations(GeneratedAudioOperations):
             params=_params,
             files=files
         )
-        request._files = files  # set_multipart_body in azure-core breaks files, need to reset it here
+        # TODO set_multipart_body in azure-core breaks files, need to reset it here
+        request._files = files  # pylint: disable=protected-access
         path_format_arguments = {
             "endpoint": self._serialize.url("self._config.endpoint", self._config.endpoint, "str", skip_quote=True),
         }

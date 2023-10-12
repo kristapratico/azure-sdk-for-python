@@ -865,7 +865,7 @@ class ChatMessage(_model_base.Model):
     :ivar content: The text associated with this message payload. Required.
     :vartype content: str
     :ivar name: The name of the author of this message. ``name`` is required if role is
-     ``function``\ , and it should be the name of the
+     ``function``, and it should be the name of the
      function whose response is in the ``content``. May contain a-z, A-Z, 0-9, and underscores,
      with a maximum length of
      64 characters.
@@ -889,7 +889,7 @@ class ChatMessage(_model_base.Model):
     content: str = rest_field()
     """The text associated with this message payload. Required."""
     name: Optional[str] = rest_field()
-    """The name of the author of this message. ``name`` is required if role is ``function``\ , and it
+    """The name of the author of this message. ``name`` is required if role is ``function``, and it
      should be the name of the
      function whose response is in the ``content``. May contain a-z, A-Z, 0-9, and underscores, with
      a maximum length of
@@ -1523,7 +1523,6 @@ class EmbeddingsOptions(_model_base.Model):
     input: List[str] = rest_field()
     """Input texts to get embeddings for, encoded as a an array of strings.
      Each input must not exceed 2048 tokens in length.
-     
      Unless you are embedding code, we suggest replacing newlines (\n) in your input with a single
      space,
      as we have observed inferior results when newlines are present. Required."""

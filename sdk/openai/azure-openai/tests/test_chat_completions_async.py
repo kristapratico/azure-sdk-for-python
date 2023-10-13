@@ -71,7 +71,7 @@ class TestChatCompletionsAsync(AzureRecordedTestCase):
     async def test_streamed_chat_completions(self, client_async, azure_openai_creds, api_type):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"}
+            {"role": "user", "content": "How do I bake a chocolate cake?"}
         ]
         kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["chat_completions_name"]}

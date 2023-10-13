@@ -98,33 +98,32 @@ class AsyncStream(Generic[ReturnType]):
         self,
         *,
         return_type: Type[ReturnType],
+        aiter_response: AsyncIterator[bytes],
         response: AsyncHttpResponse,
     ) -> None:
         self.response = response
+        self._aiter_response = aiter_response
         self._return_type = return_type
         self._decoder = SSEDecoder()
-        self._iterator = self._stream()
+        self._aiterator = self._stream()
 
     async def __anext__(self) -> ReturnType:
-        return await self._iterator.__anext__()
+        return await self._aiterator.__anext__()
 
     async def __aiter__(self) -> AsyncIterator[ReturnType]:
-        async for item in self._iterator:
+        async for item in self._aiterator:
             yield item
 
-    async def _iter_events(self) -> AsyncIterator[ServerSentEvent]:
-        async for sse in self._decoder.aiter(self.response):
+    async def _aiter_events(self) -> AsyncIterator[ServerSentEvent]:
+        async for sse in self._decoder.aiter(self._aiter_response):
             yield sse
 
     async def _stream(self) -> AsyncIterator[ReturnType]:
-        return_type = self._return_type
-
-        async for sse in self._iter_events():
+        async for sse in self._aiter_events():
             if sse.data.startswith("[DONE]"):
                 break
 
-            if sse.event is None:
-                yield return_type(sse.json())
+            yield self._return_type(sse.json())
 
 
 class EmbeddingsOperations(GeneratedEmbeddingsOperations):
@@ -218,7 +217,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         best_of: Optional[int] = None,
         **kwargs: Any
     ) -> Union[Completions, AsyncStream[Completions]]:
-        response = await super()._create(
+        response, pipeline_response = await super()._create(
             deployment_id=deployment_id,
             body=CompletionsOptions(
                 prompt=prompt,
@@ -237,12 +236,14 @@ class CompletionsOperations(GeneratedCompletionsOperations):
                 stream=stream,
             ),
             stream=stream,
+            cls=lambda pipeline_response, deserialized, _: (deserialized, pipeline_response),
             **kwargs
         )
         if stream:
             return AsyncStream[Completions](
                 return_type=Completions,
-                response=response,  # TODO: what do we want response to be?
+                response=pipeline_response.http_response,
+                aiter_response=response,
             )
         return response
 
@@ -254,7 +255,6 @@ class ChatOperations(GeneratedChatOperations):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.completions = ChatCompletionsOperations(*args, **kwargs)
-
 
 
 class ChatCompletionsOperations(GeneratedChatOperations):
@@ -327,7 +327,7 @@ class ChatCompletionsOperations(GeneratedChatOperations):
         **kwargs: Any
     ) -> Union[ChatCompletions, AsyncStream[ChatCompletions]]:
         if data_sources:
-            response = await super()._create_extensions(
+            response, pipeline_response = await super()._create_extensions(
                 deployment_id=deployment_id,
                 body=ChatCompletionsOptions(
                     messages=messages,
@@ -346,10 +346,11 @@ class ChatCompletionsOperations(GeneratedChatOperations):
                     stream=stream,
                 ),
                 stream=stream,
+                cls=lambda pipeline_response, deserialized, _: (deserialized, pipeline_response),
                 **kwargs
             )
         else:
-            response = await super()._create(
+            response, pipeline_response = await super()._create(
                 deployment_id=deployment_id,
                 body=ChatCompletionsOptions(
                     messages=messages,
@@ -367,12 +368,14 @@ class ChatCompletionsOperations(GeneratedChatOperations):
                     stream=stream,
                 ),
                 stream=stream,
+                cls=lambda pipeline_response, deserialized, _: (deserialized, pipeline_response),
                 **kwargs
             )
         if stream:
             return AsyncStream[ChatCompletions](
                 return_type=ChatCompletions,
-                response=response,  # TODO: what do we want response to be?
+                response=pipeline_response.http_response,
+                aiter_response=response,
             )
         return response
 
@@ -390,9 +393,7 @@ class ImagesOperations(GeneratedImagesOperations):
         user: Optional[str] = None,
         **kwargs: Any,
     ) -> ImageGenerations:
-        # TODO: this should generate internal
-        # https://github.com/Azure/autorest.python/issues/2070
-        poller = await super().begin__generate(
+        poller = await super()._begin_generate(
             body=ImageGenerationOptions(
                 prompt=prompt,
                 n=n,

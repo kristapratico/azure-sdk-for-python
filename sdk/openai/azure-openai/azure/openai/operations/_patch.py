@@ -119,6 +119,8 @@ def build_audio_translations_request(deployment_id: str, **kwargs: Any) -> HttpR
     _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
+    # TODO: can't pass the content-type, azure-core intentionally omits it in order
+    # to let requests/aiohttp set it automatically
     # content_type: str = kwargs.pop("content_type")
     api_version: str = kwargs.pop("api_version", _params.pop("api-version", "2023-09-01-preview"))
     accept = _headers.pop("Accept", "application/json")
@@ -134,6 +136,8 @@ def build_audio_translations_request(deployment_id: str, **kwargs: Any) -> HttpR
     # Construct parameters
     _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
 
+    # TODO: can't pass the content-type, azure-core intentionally omits it in order
+    # to let requests/aiohttp set it automatically
     # Construct headers
     # _headers["content-type"] = _SERIALIZER.header("content_type", content_type, "str")
     _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
@@ -141,36 +145,14 @@ def build_audio_translations_request(deployment_id: str, **kwargs: Any) -> HttpR
     return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
 
 
-
-# copied from https://github.com/florimondmanca/httpx-sse/blob/master/src/httpx_sse/_decoders.py
+# inspired from https://github.com/openai/openai-python/blob/v1/src/openai/_streaming.py
 class ServerSentEvent:
     def __init__(
         self,
         *,
-        event: Optional[str] = None,
         data: Optional[str] = None,
-        id: Optional[str] = None,
-        retry: Optional[int] = None,
     ) -> None:
-        if data is None:
-            data = ""
-
-        self._id = id
         self._data = data
-        self._event = event or None
-        self._retry = retry
-
-    @property
-    def event(self) -> Optional[str]:
-        return self._event
-
-    @property
-    def id(self) -> Optional[str]:
-        return self._id
-
-    @property
-    def retry(self) -> Optional[int]:
-        return self._retry
 
     @property
     def data(self) -> str:
@@ -180,40 +162,34 @@ class ServerSentEvent:
         return json.loads(self.data)
 
     def __repr__(self) -> str:
-        return f"ServerSentEvent(event={self.event}, data={self.data}, id={self.id}, retry={self.retry})"
+        return f"ServerSentEvent(data={self.data})"
 
 
 class SSEDecoder:
+    """https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation"""
+
+    EMPTY_LINE = (b'\r\r', b'\n\n', b'\r\n\r\n')
+
     def __init__(self) -> None:
-        self._event: Optional[str] = ""
         self._data: List[str] = []
-        self._last_event_id = ""
-        self._retry: Optional[int] = None
-        self._join: bool = True
 
     def chunked(self, iterator: Iterator[bytes]) -> Iterator[str]:
         data = b''
         for chunk in iterator:
             for line in chunk.splitlines(keepends=True):
                 data += line
-                if data.endswith((b'\r\r', b'\n\n', b'\r\n\r\n')):
+                if data.endswith(self.EMPTY_LINE):
                     yield data.decode("utf-8")
                     data = b''
-            if data:
-                self._join = False
-                yield data.decode("utf-8")
 
     async def achunked(self, async_iterator: AsyncIterator[bytes]) -> AsyncIterator[str]:
         data = b''
         async for chunk in async_iterator:
             for line in chunk.splitlines(keepends=True):
                 data += line
-                if data.endswith((b'\r\r', b'\n\n', b'\r\n\r\n')):
+                if data.endswith(self.EMPTY_LINE):
                     yield data.decode("utf-8")
                     data = b''
-            if data:
-                self._join = False
-                yield data.decode("utf-8")
 
     def iter(self, iterator: Iterator[bytes]) -> Iterator[ServerSentEvent]:
         for chunk in self.chunked(iterator):
@@ -230,52 +206,36 @@ class SSEDecoder:
                     yield sse
 
     def decode(self, line: str) -> Optional[ServerSentEvent]:
-        # See: https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation  # noqa: E501
 
         if not line:
-            if not self._event and not self._data and not self._last_event_id and self._retry is None:
-                return None
-
-            sse = ServerSentEvent(
-                event=self._event,
-                data="\n".join(self._data) if self._join else self._data[-1],
-                id=self._last_event_id,
-                retry=self._retry,
-            )
-
-            # NOTE: as per the SSE spec, do not reset last_event_id.
-            self._event = None
-            self._data = []
-            self._retry = None
-            self._join = True
-            return sse
+            return self.event()
 
         if line.startswith(":"):
+            # comment, ignore the line
             return None
 
         fieldname, _, value = line.partition(":")
 
         if value.startswith(" "):
+            # data:test and data: test are equivalent
             value = value[1:]
-
-        if fieldname == "event":
-            self._event = value
-        elif fieldname == "data":
+        if fieldname == "data":
             self._data.append(value)
-        elif fieldname == "id":
-            if "\0" in value:
-                pass
-            else:
-                self._last_event_id = value
-        elif fieldname == "retry":
-            try:
-                self._retry = int(value)
-            except (TypeError, ValueError):
-                pass
         else:
-            pass  # Field is ignored.
+            pass  # field is ignored.
 
         return None
+
+    def event(self) -> Optional[ServerSentEvent]:
+        if not self._data:
+            return None
+
+        sse = ServerSentEvent(
+            data="\n".join(self._data),
+        )
+        
+        self._data = []
+        return sse
 
 
 class Stream(Generic[ReturnType]):
@@ -286,9 +246,11 @@ class Stream(Generic[ReturnType]):
         self,
         *,
         return_type: Type[ReturnType],
+        iter_response: Iterator[bytes],
         response: HttpResponse,
     ) -> None:
         self.response = response
+        self._iter_response = iter_response
         self._return_type = return_type
         self._decoder = SSEDecoder()
         self._iterator = self._stream()
@@ -301,17 +263,14 @@ class Stream(Generic[ReturnType]):
             yield item
 
     def _iter_events(self) -> Iterator[ServerSentEvent]:
-        yield from self._decoder.iter(self.response)
+        yield from self._decoder.iter(self._iter_response)
 
     def _stream(self) -> Iterator[ReturnType]:
-        return_type = self._return_type
-
         for sse in self._iter_events():
             if sse.data.startswith("[DONE]"):
                 break
 
-            if sse.event is None:
-                yield return_type(sse.json())
+            yield self._return_type(sse.json())
 
 
 class EmbeddingsOperations(GeneratedEmbeddingsOperations):
@@ -404,7 +363,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         best_of: Optional[int] = None,
         **kwargs: Any
     ) -> Union[Completions, Stream[Completions]]:
-        response = super()._create(
+        response, pipeline_response = super()._create(
             deployment_id=deployment_id,
             body=CompletionsOptions(
                 prompt=prompt,
@@ -423,12 +382,14 @@ class CompletionsOperations(GeneratedCompletionsOperations):
                 stream=stream,
             ),
             stream=stream,
+            cls=lambda pipeline_response, deserialized, _: (deserialized, pipeline_response),
             **kwargs
         )
         if stream:
             return Stream[Completions](
                 return_type=Completions,
-                response=response,  # TODO: what do we want response to be?
+                response=pipeline_response.http_response,
+                iter_response=response,
             )
         return response
 
@@ -440,7 +401,6 @@ class ChatOperations(GeneratedChatOperations):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.completions = ChatCompletionsOperations(*args, **kwargs)
-
 
 
 class ChatCompletionsOperations(GeneratedChatOperations):
@@ -513,7 +473,7 @@ class ChatCompletionsOperations(GeneratedChatOperations):
         **kwargs: Any
     ) -> Union[ChatCompletions, Stream[ChatCompletions]]:
         if data_sources:
-            response = super()._create_extensions(
+            response, pipeline_response = super()._create_extensions(
                 deployment_id=deployment_id,
                 body=ChatCompletionsOptions(
                     messages=messages,
@@ -532,10 +492,11 @@ class ChatCompletionsOperations(GeneratedChatOperations):
                     stream=stream,
                 ),
                 stream=stream,
+                cls=lambda pipeline_response, deserialized, _: (deserialized, pipeline_response),
                 **kwargs
             )
         else:
-            response = super()._create(
+            response, pipeline_response = super()._create(
                 deployment_id=deployment_id,
                 body=ChatCompletionsOptions(
                     messages=messages,
@@ -553,12 +514,14 @@ class ChatCompletionsOperations(GeneratedChatOperations):
                     stream=stream,
                 ),
                 stream=stream,
+                cls=lambda pipeline_response, deserialized, _: (deserialized, pipeline_response),
                 **kwargs
             )
         if stream:
             return Stream[ChatCompletions](
                 return_type=ChatCompletions,
-                response=response,  # TODO: what do we want response to be?
+                response=pipeline_response.http_response,
+                iter_response=response,
             )
         return response
 
@@ -576,9 +539,7 @@ class ImagesOperations(GeneratedImagesOperations):
         user: Optional[str] = None,
         **kwargs: Any,
     ) -> ImageGenerations:
-        # TODO: this should generate internal
-        # https://github.com/Azure/autorest.python/issues/2070
-        poller = super().begin__generate(
+        poller = super()._begin_generate(
             body=ImageGenerationOptions(
                 prompt=prompt,
                 n=n,

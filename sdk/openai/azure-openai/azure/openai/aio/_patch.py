@@ -7,8 +7,9 @@
 Follow our quickstart for examples: https://aka.ms/azsdk/python/dpcodegen/python/customize
 """
 from typing import List
+from .operations._patch import AsyncStream
 
-__all__: List[str] = []  # Add all objects you want publicly available to users at this package level
+__all__: List[str] = ["AsyncStream"]  # Add all objects you want publicly available to users at this package level
 
 
 def patch_sdk():

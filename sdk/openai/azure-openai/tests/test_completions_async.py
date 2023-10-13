@@ -95,7 +95,7 @@ class TestCompletionsAsync(AzureRecordedTestCase):
         kwargs = {"model": azure_openai_creds["completions_model"]} if api_type == "openai" \
           else {"deployment_id": azure_openai_creds["completions_name"]}
 
-        response = await client_async.completions.create(prompt="hello world", stream=True, **kwargs)
+        response = await client_async.completions.create(prompt="how do I bake a chocolate cake?", max_tokens=500,  stream=True, **kwargs)
 
         async for completion in response:
             # API versions after 2023-05-15 send an empty first completion with RAI

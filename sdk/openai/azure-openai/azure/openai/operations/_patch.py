@@ -89,6 +89,8 @@ def build_audio_transcriptions_request(deployment_id: str, **kwargs: Any) -> Htt
     _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
     _params = case_insensitive_dict(kwargs.pop("params", {}) or {})
 
+    # TODO: can't pass the content-type, azure-core intentionally omits it in order
+    # to let requests/aiohttp set it automatically
     # content_type: str = kwargs.pop("content_type")
     api_version: str = kwargs.pop("api_version", _params.pop("api-version", "2023-09-01-preview"))
     accept = _headers.pop("Accept", "application/json")
@@ -104,6 +106,8 @@ def build_audio_transcriptions_request(deployment_id: str, **kwargs: Any) -> Htt
     # Construct parameters
     _params["api-version"] = _SERIALIZER.query("api_version", api_version, "str")
 
+    # TODO: can't pass the content-type, azure-core intentionally omits it in order
+    # to let requests/aiohttp set it automatically
     # Construct headers
     # _headers["content-type"] = _SERIALIZER.header("content_type", content_type, "str")
     _headers["Accept"] = _SERIALIZER.header("accept", accept, "str")
@@ -667,9 +671,12 @@ class TranscriptionsOperations(GeneratedAudioOperations):
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
         _params = kwargs.pop("params", {}) or {}
 
+        # TODO: can't pass the content-type, azure-core intentionally omits it in order
+        # to let requests/aiohttp set it automatically
         # content_type: str = kwargs.pop("content_type", _headers.pop("content-type", "multipart/form-data"))
         cls: ClsType[AudioTranscription] = kwargs.pop("cls", None)  # pylint: disable=protected-access
 
+        # TODO I need data as a dictionary, not a JSON string
         _data = json.loads(json.dumps(data, cls=AzureJSONEncoder, exclude_readonly=True))  # type: ignore
 
         request = build_audio_transcriptions_request(
@@ -700,6 +707,7 @@ class TranscriptionsOperations(GeneratedAudioOperations):
             map_error(status_code=response.status_code, response=response, error_map=error_map)
             raise HttpResponseError(response=response)
 
+        # TODO Certain response formats return text, not JSON
         if response_format in ["text", "srt", "vtt"]:
             text = response.content.decode()
             return AudioTranscription({"text": text})
@@ -780,9 +788,12 @@ class TranslationsOperations(GeneratedAudioOperations):
         _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
         _params = kwargs.pop("params", {}) or {}
 
+        # TODO: can't pass the content-type, azure-core intentionally omits it in order
+        # to let requests/aiohttp set it automatically
         # content_type: str = kwargs.pop("content_type", _headers.pop("content-type", "multipart/form-data"))
         cls: ClsType[AudioTranslation] = kwargs.pop("cls", None)  # pylint: disable=protected-access
 
+        # TODO I need data as a dictionary, not a JSON string
         _data = json.loads(json.dumps(data, cls=AzureJSONEncoder, exclude_readonly=True))  # type: ignore
 
         request = build_audio_translations_request(
@@ -813,6 +824,7 @@ class TranslationsOperations(GeneratedAudioOperations):
             map_error(status_code=response.status_code, response=response, error_map=error_map)
             raise HttpResponseError(response=response)
 
+        # TODO Certain response formats return text, not JSON
         if response_format in ["text", "srt", "vtt"]:
             text = response.content.decode()
             return AudioTranslation({"text": text})

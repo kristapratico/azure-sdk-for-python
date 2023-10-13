@@ -793,7 +793,7 @@ class ImagesOperations:
     @api_version_validation(
         method_added_on="2023-06-01-preview",
     )  # pylint: disable=protected-access
-    def begin__generate(  # pylint: disable=protected-access
+    def _begin_generate(  # pylint: disable=protected-access
         self, body: _models._models.ImageGenerationOptions, *, content_type: str = "application/json", **kwargs: Any
     ) -> LROPoller[_models.ImageGenerations]:
         ...
@@ -802,7 +802,7 @@ class ImagesOperations:
     @api_version_validation(
         method_added_on="2023-06-01-preview",
     )
-    def begin__generate(
+    def _begin_generate(
         self, body: JSON, *, content_type: str = "application/json", **kwargs: Any
     ) -> LROPoller[_models.ImageGenerations]:
         ...
@@ -811,7 +811,7 @@ class ImagesOperations:
     @api_version_validation(
         method_added_on="2023-06-01-preview",
     )
-    def begin__generate(
+    def _begin_generate(
         self, body: IO, *, content_type: str = "application/json", **kwargs: Any
     ) -> LROPoller[_models.ImageGenerations]:
         ...
@@ -820,7 +820,7 @@ class ImagesOperations:
     @api_version_validation(
         method_added_on="2023-06-01-preview",
     )
-    def begin__generate(
+    def _begin_generate(
         self, body: Union[_models._models.ImageGenerationOptions, JSON, IO], **kwargs: Any
     ) -> LROPoller[_models.ImageGenerations]:
         """Starts the generation of a batch of images from a text caption.

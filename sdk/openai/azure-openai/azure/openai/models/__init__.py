@@ -36,7 +36,6 @@ from ._enums import AudioTaskLabel
 from ._enums import AudioTranscriptionFormat
 from ._enums import AudioTranslationFormat
 from ._enums import AzureChatExtensionType
-from ._enums import AzureOpenAIOperationState
 from ._enums import ChatRole
 from ._enums import CompletionsFinishReason
 from ._enums import ContentFilterSeverity
@@ -77,7 +76,6 @@ __all__ = [
     "AudioTranscriptionFormat",
     "AudioTranslationFormat",
     "AzureChatExtensionType",
-    "AzureOpenAIOperationState",
     "ChatRole",
     "CompletionsFinishReason",
     "ContentFilterSeverity",

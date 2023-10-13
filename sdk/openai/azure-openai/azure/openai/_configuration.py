@@ -8,7 +8,6 @@
 
 from typing import Any, TYPE_CHECKING, Union
 
-from azure.core.configuration import Configuration
 from azure.core.credentials import AzureKeyCredential
 from azure.core.pipeline import policies
 
@@ -19,7 +18,7 @@ if TYPE_CHECKING:
     from azure.core.credentials import TokenCredential
 
 
-class OpenAIClientConfiguration(Configuration):  # pylint: disable=too-many-instance-attributes
+class OpenAIClientConfiguration:  # pylint: disable=too-many-instance-attributes
     """Configuration for OpenAIClient.
 
     Note that all parameters used to create this instance are saved as instance
@@ -39,7 +38,6 @@ class OpenAIClientConfiguration(Configuration):  # pylint: disable=too-many-inst
     """
 
     def __init__(self, endpoint: str, credential: Union[AzureKeyCredential, "TokenCredential"], **kwargs: Any) -> None:
-        super(OpenAIClientConfiguration, self).__init__(**kwargs)
         api_version: str = kwargs.pop("api_version", "2023-09-01-preview")
 
         if endpoint is None:
@@ -52,6 +50,7 @@ class OpenAIClientConfiguration(Configuration):  # pylint: disable=too-many-inst
         self.api_version = api_version
         self.credential_scopes = kwargs.pop("credential_scopes", ["https://cognitiveservices.azure.com/.default"])
         kwargs.setdefault("sdk_moniker", "openai/{}".format(VERSION))
+        self.polling_interval = kwargs.get("polling_interval", 30)
         self._configure(**kwargs)
 
     def _infer_policy(self, **kwargs):

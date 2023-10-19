@@ -282,13 +282,15 @@ class EmbeddingsOperations(GeneratedEmbeddingsOperations):
         input: Sequence[str],
         *,
         user: Optional[str] = None,
+        model: Optional[str] = None,
         **kwargs: Any
     ) -> Embeddings:
         return super()._create(
             deployment_id=deployment_id,
             body=EmbeddingsOptions(
                 input=input,
-                user=user
+                user=user,
+                model=model,
             ),
             **kwargs
         )
@@ -315,6 +317,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         best_of: Optional[int] = None,
+        model: Optional[str] = None,
         **kwargs: Any
     ) -> Stream[Completions]:
         ...
@@ -338,6 +341,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         best_of: Optional[int] = None,
+        model: Optional[str] = None,
         **kwargs: Any
     ) -> Completions:
         ...
@@ -361,6 +365,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         best_of: Optional[int] = None,
+        model: Optional[str] = None,
         **kwargs: Any
     ) -> Union[Completions, Stream[Completions]]:
         response, pipeline_response = super()._create(
@@ -380,6 +385,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
                 frequency_penalty=frequency_penalty,
                 best_of=best_of,
                 stream=stream,
+                model=model,
             ),
             stream=stream,
             cls=lambda pipeline_response, deserialized, _: (deserialized, pipeline_response),
@@ -424,6 +430,7 @@ class ChatCompletionsOperations(GeneratedChatOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
+        model: Optional[str] = None,
         **kwargs: Any
     ) -> Stream[ChatCompletions]:
         ...
@@ -447,6 +454,7 @@ class ChatCompletionsOperations(GeneratedChatOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
+        model: Optional[str] = None,
         **kwargs: Any
     ) -> ChatCompletions:
         ...
@@ -470,6 +478,7 @@ class ChatCompletionsOperations(GeneratedChatOperations):
         presence_penalty: Optional[float] = None,
         frequency_penalty: Optional[float] = None,
         data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
+        model: Optional[str] = None,
         **kwargs: Any
     ) -> Union[ChatCompletions, Stream[ChatCompletions]]:
         if data_sources:
@@ -512,6 +521,7 @@ class ChatCompletionsOperations(GeneratedChatOperations):
                     presence_penalty=presence_penalty,
                     frequency_penalty=frequency_penalty,
                     stream=stream,
+                    model=model,
                 ),
                 stream=stream,
                 cls=lambda pipeline_response, deserialized, _: (deserialized, pipeline_response),
@@ -539,16 +549,22 @@ class ImagesOperations(GeneratedImagesOperations):
         user: Optional[str] = None,
         **kwargs: Any,
     ) -> ImageGenerations:
-        poller = super()._begin_generate(
-            body=ImageGenerationOptions(
-                prompt=prompt,
-                n=n,
-                size=size,
-                response_format=response_format,
-                user=user,
-            ),
-            **kwargs
-        )
+        try:
+            poller = super()._begin_generate(
+                body=ImageGenerationOptions(
+                    prompt=prompt,
+                    n=n,
+                    size=size,
+                    response_format=response_format,
+                    user=user,
+                ),
+                **kwargs
+            )
+        except HttpResponseError as e:
+            if e.status_code == 200:
+                # non-azure openai caller
+                return ImageGenerations(e.response.json())
+            raise e
         result = poller.result()
         return ImageGenerations(result.as_dict()["result"])
 
@@ -576,6 +592,7 @@ class TranscriptionsOperations(GeneratedAudioOperations):
         language: Optional[str] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
+        model: Optional[str] = None,
         **kwargs: Any,
     ) -> AudioTranscription:
         ...
@@ -590,6 +607,7 @@ class TranscriptionsOperations(GeneratedAudioOperations):
         language: Optional[str] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
+        model: Optional[str] = None,
         **kwargs: Any,
     ) -> AudioTranscription:
         ...
@@ -604,6 +622,7 @@ class TranscriptionsOperations(GeneratedAudioOperations):
         language: Optional[str] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
+        model: Optional[str] = None,
         **kwargs: Any,
     ) -> AudioTranscription:
 
@@ -612,6 +631,7 @@ class TranscriptionsOperations(GeneratedAudioOperations):
             "language": language,
             "prompt": prompt,
             "temperature": temperature,
+            "model": model
         }
 
         if hasattr(file, "name"):
@@ -696,6 +716,7 @@ class TranslationsOperations(GeneratedAudioOperations):
         response_format: Optional[Union[str, AudioTranscriptionFormat]] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
+        model: Optional[str] = None,
         **kwargs: Any,
     ) -> AudioTranslation:
         ...
@@ -709,6 +730,7 @@ class TranslationsOperations(GeneratedAudioOperations):
         response_format: Optional[Union[str, AudioTranslationFormat]] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
+        model: Optional[str] = None,
         **kwargs: Any,
     ) -> AudioTranslation:
         ...
@@ -722,6 +744,7 @@ class TranslationsOperations(GeneratedAudioOperations):
         response_format: Optional[Union[str, AudioTranslationFormat]] = None,
         prompt: Optional[str] = None,
         temperature: Optional[float] = None,
+        model: Optional[str] = None,
         **kwargs: Any,
     ) -> AudioTranslation:
 
@@ -729,6 +752,7 @@ class TranslationsOperations(GeneratedAudioOperations):
             "response_format": response_format,
             "prompt": prompt,
             "temperature": temperature,
+            "model": model,
         }
 
         if hasattr(file, "name"):

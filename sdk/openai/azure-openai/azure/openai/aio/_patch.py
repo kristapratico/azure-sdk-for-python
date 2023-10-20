@@ -59,8 +59,9 @@ class OpenAIClient(GeneratedOpenAIClient):
     def __init__(self, *args, **kwargs: Any) -> None:
         if "openai_api_key" in kwargs:
             endpoint = "https://api.openai.com/v1"
+            credential = kwargs.pop("openai_api_key")
             authentication_policy = AzureKeyCredentialPolicy(
-                credential=kwargs.pop("openai_api_key"),
+                credential=credential,
                 name="Authorization",
                 prefix="Bearer",
             )

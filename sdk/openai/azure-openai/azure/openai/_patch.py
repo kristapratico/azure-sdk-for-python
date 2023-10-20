@@ -74,7 +74,7 @@ class URLRewritePolicy(SansIOHTTPPolicy[HTTPRequestType, HTTPResponseType]):
             # remove openai/deployments/deployment_id from the path
             parts = url_parsed.path.split("/")
             path = "/".join(parts[parts.index("deployments")+2:])
-            request.http_request.url = self.url + path
+            request.http_request.url = self.url + f"/{path}"
         elif "images" in url_parsed.path:
             # TODO should we support this? hacky to get working
             request.http_request.url = self.url + "/images/generations"
@@ -125,8 +125,9 @@ class OpenAIClient(GeneratedOpenAIClient):
     def __init__(self, *args, **kwargs: Any) -> None:
         if "openai_api_key" in kwargs:
             endpoint = "https://api.openai.com/v1"
+            credential = kwargs.pop("openai_api_key")
             authentication_policy = AzureKeyCredentialPolicy(
-                credential=kwargs.pop("openai_api_key"),
+                credential=credential,
                 name="Authorization",
                 prefix="Bearer",
             )

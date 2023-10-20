@@ -136,8 +136,6 @@ class OpenAIClient(GeneratedOpenAIClient):
                     "per_call_policies": kwargs.pop("per_call_policies", None) or URLRewritePolicy(endpoint),
                 }
             )
-        elif len(args) < 2:
-            raise ValueError("Please provide an endpoint and a credential, or an OpenAI API key.")
         else:
             positional = list(args)
             endpoint =  positional.pop(0) if positional else kwargs.pop("endpoint", None)

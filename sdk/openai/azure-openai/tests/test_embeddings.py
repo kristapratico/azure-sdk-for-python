@@ -13,7 +13,7 @@ class TestEmbeddings(AzureRecordedTestCase):
 
     @pytest.mark.skip()
     @pytest.mark.parametrize("api_type", [AZURE])
-    def test_embedding_bad_deployment_name(self, client, azure_openai_creds, api_type):
+    def test_embedding_bad_deployment_name(self, client, azure_openai_creds, api_type, **kwargs):
         with pytest.raises(openai.error.InvalidRequestError) as e:
             client.embeddings.create(input="hello world", deployment_id="deployment")
         assert e.value.http_status == 404
@@ -21,7 +21,7 @@ class TestEmbeddings(AzureRecordedTestCase):
 
     @pytest.mark.skip()
     @pytest.mark.parametrize("api_type", [AZURE])
-    def test_embedding_kw_input(self, client, azure_openai_creds, api_type):
+    def test_embedding_kw_input(self, client, azure_openai_creds, api_type, **kwargs):
         deployment = azure_openai_creds["embeddings_name"]
 
         embedding = client.embeddings.create(input="hello world", deployment_id=deployment)
@@ -32,10 +32,9 @@ class TestEmbeddings(AzureRecordedTestCase):
             client.embeddings.create(input="hello world", model=deployment)
         assert "Must provide an 'engine' or 'deployment_id' parameter" in str(e.value)
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_embedding(self, client, azure_openai_creds, api_type):
-        kwargs = {"model": azure_openai_creds["embeddings_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["embeddings_name"]}
+    def test_embedding(self, client, azure_openai_creds, api_type, **kwargs):
 
         embedding = client.embeddings.create(input="hello world", **kwargs)
         assert embedding.usage.prompt_tokens is not None
@@ -44,10 +43,10 @@ class TestEmbeddings(AzureRecordedTestCase):
         assert embedding.data[0].index is not None
         assert len(embedding.data[0].embedding) > 0
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_embedding_batched(self, client, azure_openai_creds, api_type):
-        kwargs = {"model": azure_openai_creds["embeddings_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["embeddings_name"]}
+    def test_embedding_batched(self, client, azure_openai_creds, api_type, **kwargs):
+
         embedding = client.embeddings.create(input=["hello world", "second input"], **kwargs)
         assert embedding.usage.prompt_tokens is not None
         assert embedding.usage.total_tokens is not None
@@ -55,10 +54,9 @@ class TestEmbeddings(AzureRecordedTestCase):
         assert embedding.data[0].index is not None
         assert len(embedding.data[0].embedding) > 0
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_embedding_user(self, client, azure_openai_creds, api_type):
-        kwargs = {"model": azure_openai_creds["embeddings_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["embeddings_name"]}
+    def test_embedding_user(self, client, azure_openai_creds, api_type, **kwargs):
 
         embedding = client.embeddings.create(input="hello world", user="krista", **kwargs)
         assert embedding.usage.prompt_tokens is not None

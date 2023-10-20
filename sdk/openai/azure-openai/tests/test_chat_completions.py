@@ -7,14 +7,14 @@ import pytest
 import openai
 from azure.core.exceptions import HttpResponseError
 from devtools_testutils import AzureRecordedTestCase
-from conftest import AZURE, OPENAI, ALL, AZURE_AD
+from conftest import AZURE, OPENAI, ALL, AZURE_AD, configure
 
 
 class TestChatCompletions(AzureRecordedTestCase):
 
     @pytest.mark.skip()
     @pytest.mark.parametrize("api_type", [AZURE])
-    def test_chat_completion_bad_deployment_name(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_bad_deployment_name(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"}
@@ -27,7 +27,7 @@ class TestChatCompletions(AzureRecordedTestCase):
 
     @pytest.mark.skip()
     @pytest.mark.parametrize("api_type", [AZURE])
-    def test_chat_completion_kw_input(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_kw_input(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"}
@@ -42,15 +42,13 @@ class TestChatCompletions(AzureRecordedTestCase):
             client.chat.completions.create(messages=messages)
         assert "Must provide an 'engine' or 'deployment_id' parameter" in str(e.value)
 
+    @configure
     @pytest.mark.parametrize("api_type", ALL)
-    def test_chat_completion(self, client, azure_openai_creds, api_type):
+    def test_chat_completion(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"}
         ]
-
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         completion = client.chat.completions.create(messages=messages, **kwargs)
         assert completion.id
@@ -64,14 +62,13 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert completion.choices[0].message.content
         assert completion.choices[0].message.role
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_streamed_chat_completions(self, client, azure_openai_creds, api_type):
+    def test_streamed_chat_completions(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "How do I bake a chocolate cake?"}
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         response = client.chat.completions.create(messages=messages, stream=True, **kwargs)
 
@@ -84,14 +81,13 @@ class TestChatCompletions(AzureRecordedTestCase):
                     assert c.index is not None
                     assert c.delta is not None
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_chat_completion_max_tokens(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_max_tokens(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"}
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         completion = client.chat.completions.create(messages=messages, max_tokens=50, **kwargs)
 
@@ -106,14 +102,13 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert completion.choices[0].message.content
         assert completion.choices[0].message.role
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_chat_completion_temperature(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_temperature(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"}
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         completion = client.chat.completions.create(messages=messages, temperature=0.8, **kwargs)
 
@@ -128,14 +123,13 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert completion.choices[0].message.content
         assert completion.choices[0].message.role
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_chat_completion_top_p(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_top_p(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"}
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         completion = client.chat.completions.create(messages=messages, top_p=0.1, **kwargs)
 
@@ -150,14 +144,13 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert completion.choices[0].message.content
         assert completion.choices[0].message.role
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_chat_completion_n(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_n(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"}
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         completion = client.chat.completions.create(messages=messages, n=2, **kwargs)
 
@@ -173,14 +166,13 @@ class TestChatCompletions(AzureRecordedTestCase):
             assert c.message.content
             assert c.message.role
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_chat_completion_stop(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_stop(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"}
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         completion = client.chat.completions.create(messages=messages, stop=" ", **kwargs)
 
@@ -194,14 +186,13 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert completion.choices[0].message.content
         assert completion.choices[0].message.role
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_chat_completion_token_penalty(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_token_penalty(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"}
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         completion = client.chat.completions.create(
             messages=messages,
@@ -221,14 +212,13 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert completion.choices[0].message.content
         assert completion.choices[0].message.role
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_chat_completion_user(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_user(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"}
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         completion = client.chat.completions.create(
             messages=messages,
@@ -247,14 +237,13 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert completion.choices[0].message.content
         assert completion.choices[0].message.role
 
+    @configure
     @pytest.mark.parametrize("api_type", [AZURE, OPENAI])
-    def test_chat_completion_logit_bias(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_logit_bias(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "What color is the ocean?"}
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         completion = client.chat.completions.create(
             messages=messages,
@@ -273,13 +262,11 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert completion.choices[0].message.role
 
     @pytest.mark.parametrize("api_type", [AZURE])
-    def test_chat_completion_rai_annotations(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_rai_annotations(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "how do I rob a bank with violence?"}
         ]
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         # prompt filtered
         with pytest.raises(HttpResponseError) as e:
@@ -327,14 +314,11 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert output_filter_result.violence.severity == "safe"
 
     @pytest.mark.parametrize("api_type", [OPENAI, AZURE])
-    def test_chat_completion_functions(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_functions(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous."},
             {"role": "user", "content": "What's the weather like today in Seattle?"}
         ]
-
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         functions=[
             {
@@ -418,14 +402,11 @@ class TestChatCompletions(AzureRecordedTestCase):
             assert output_filter_result.violence.severity == "safe"
 
     @pytest.mark.parametrize("api_type", [OPENAI, AZURE])
-    def test_chat_completion_functions_stream(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_functions_stream(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous."},
             {"role": "user", "content": "What's the weather like today in Seattle?"}
         ]
-
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         functions=[
             {
@@ -491,14 +472,11 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert "22" in content
 
     @pytest.mark.parametrize("api_type", [OPENAI, AZURE])
-    def test_chat_completion_given_function(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_given_function(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous."},
             {"role": "user", "content": "What's the weather like today in Seattle?"}
         ]
-
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         functions=[
             {
@@ -577,14 +555,11 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert function_completion.choices[0].message.role == "assistant"
 
     @pytest.mark.parametrize("api_type", [AZURE])
-    def test_chat_completion_functions_rai(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_functions_rai(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous."},
             {"role": "user", "content": "how do I rob a bank with violence?"}
         ]
-
-        kwargs = {"model": azure_openai_creds["chat_completions_model"]} if api_type == "openai" \
-          else {"deployment_id": azure_openai_creds["chat_completions_name"]}
 
         functions=[
             {
@@ -650,7 +625,7 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert content_filter_result["violence"]["severity"] is not None
 
     @pytest.mark.parametrize("api_type", [AZURE, AZURE_AD])
-    def test_chat_completion_byod(self, client, azure_openai_creds, api_type):
+    def test_chat_completion_byod(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "How is Azure machine learning different than Azure OpenAI?"}
@@ -681,7 +656,7 @@ class TestChatCompletions(AzureRecordedTestCase):
         assert completion.choices[0].message.context.messages[0].content
 
     @pytest.mark.parametrize("api_type", [AZURE])
-    def test_streamed_chat_completions_byod(self, client, azure_openai_creds, api_type):
+    def test_streamed_chat_completions_byod(self, client, azure_openai_creds, api_type, **kwargs):
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "How is Azure machine learning different than Azure OpenAI?"}

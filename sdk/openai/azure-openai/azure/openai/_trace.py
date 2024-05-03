@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import os
 import json
-from typing import Any, Generator, Iterator, Union
+from typing import Any, Iterator, Union, AsyncIterator
 
 import wrapt
 from opentelemetry import trace
 from openai.types.chat import ChatCompletion, ChatCompletionChunk
 from openai.types.completion import Completion
-from openai import Stream
+from openai import Stream, AsyncStream
 
 TracedModels = Union[ChatCompletion, Completion]
 
@@ -70,53 +70,79 @@ def _add_response_chat_attributes(span: trace.Span, result: ChatCompletion) -> N
         _set_attribute(span, "gen_ai.usage.prompt_tokens", result.usage.prompt_tokens if result.usage else None)
 
 
-def _traceable_stream(stream_obj: Stream[ChatCompletionChunk], span: trace.Span) -> Generator[ChatCompletionChunk, None, None]:
-    try:
-        accumulate: dict[str, Any] = {"role": ""}
-        for chunk in stream_obj:
-            for item in chunk.choices:
-                if item.finish_reason:
-                    accumulate["finish_reason"] = item.finish_reason
-                if item.index:
-                    accumulate["index"] = item.index
-                if item.delta.role:
-                    accumulate["role"] = item.delta.role
-                if item.delta.content:
-                    accumulate.setdefault("content", "")
-                    accumulate["content"] += item.delta.content
-                if item.delta.tool_calls:
-                    accumulate.setdefault("tool_calls", [])
-                    for tool_call in item.delta.tool_calls:
-                        if tool_call.id:
-                            accumulate["tool_calls"].append({"id": tool_call.id, "type": "", "function": {"name": "", "arguments": ""}})
-                        if tool_call.type:
-                            accumulate["tool_calls"][-1]["type"] = tool_call.type
-                        if tool_call.function and tool_call.function.name:
-                            accumulate["tool_calls"][-1]["function"]["name"] = tool_call.function.name
-                        if tool_call.function and tool_call.function.arguments:
-                            accumulate["tool_calls"][-1]["function"]["arguments"] += tool_call.function.arguments
-            yield chunk
-
-        span.add_event(name="gen_ai.response.message", attributes={"event.data": json.dumps(accumulate)})
-        _add_response_chat_attributes(span, chunk)
-
-    except Exception as exc:
-        _set_attribute(span, "error.type", exc.__class__.__name__)
-        raise
-
-    finally:
-        if stream_obj.response.is_stream_consumed is True and stream_obj.response.is_closed is False:
-            span.set_status(trace.Status(trace.StatusCode.ERROR, "Stream was not fully consumed"))
-            # TODO should we add whatever we have for event / response attributes here?
-        span.end()
+def accumulate_response(item, accumulate: dict[str, Any]) -> None:
+    if item.finish_reason:
+        accumulate["finish_reason"] = item.finish_reason
+    if item.index:
+        accumulate["index"] = item.index
+    if item.delta.role:
+        accumulate["role"] = item.delta.role
+    if item.delta.content:
+        accumulate.setdefault("content", "")
+        accumulate["content"] += item.delta.content
+    if item.delta.tool_calls:
+        accumulate.setdefault("tool_calls", [])
+        for tool_call in item.delta.tool_calls:
+            if tool_call.id:
+                accumulate["tool_calls"].append({"id": tool_call.id, "type": "", "function": {"name": "", "arguments": ""}})
+            if tool_call.type:
+                accumulate["tool_calls"][-1]["type"] = tool_call.type
+            if tool_call.function and tool_call.function.name:
+                accumulate["tool_calls"][-1]["function"]["name"] = tool_call.function.name
+            if tool_call.function and tool_call.function.arguments:
+                accumulate["tool_calls"][-1]["function"]["arguments"] += tool_call.function.arguments
 
 
 def _wrapped_stream(stream_obj: Stream[ChatCompletionChunk], span: trace.Span) -> Stream[ChatCompletionChunk]:
     class StreamWrapper(wrapt.ObjectProxy):
         def __iter__(self) -> Iterator[ChatCompletionChunk]:
-            return _traceable_stream(stream_obj, span)
+            try:
+                accumulate: dict[str, Any] = {"role": ""}
+                for chunk in stream_obj:
+                    for item in chunk.choices:
+                        accumulate_response(item, accumulate)
+                    yield chunk
+
+                span.add_event(name="gen_ai.response.message", attributes={"event.data": json.dumps(accumulate)})
+                _add_response_chat_attributes(span, chunk)
+
+            except Exception as exc:
+                _set_attribute(span, "error.type", exc.__class__.__name__)
+                raise
+
+            finally:
+                if stream_obj.response.is_stream_consumed is True and stream_obj.response.is_closed is False:
+                    span.set_status(trace.Status(trace.StatusCode.ERROR, "Stream was not fully consumed"))
+                    # TODO should we add whatever we have for event / response attributes here?
+                span.end()
 
     return StreamWrapper(stream_obj)
+
+
+def _awrapped_stream(stream_obj: AsyncStream[ChatCompletionChunk], span: trace.Span) -> AsyncStream[ChatCompletionChunk]:
+    class AsyncStreamWrapper(wrapt.ObjectProxy):
+        async def __aiter__(self) -> AsyncIterator[ChatCompletionChunk]:
+            try:
+                accumulate: dict[str, Any] = {"role": ""}
+                async for chunk in stream_obj:
+                    for item in chunk.choices:
+                        accumulate_response(item, accumulate)
+                    yield chunk
+
+                span.add_event(name="gen_ai.response.message", attributes={"event.data": json.dumps(accumulate)})
+                _add_response_chat_attributes(span, chunk)
+
+            except Exception as exc:
+                _set_attribute(span, "error.type", exc.__class__.__name__)
+                raise
+
+            finally:
+                if stream_obj.response.is_stream_consumed is True and stream_obj.response.is_closed is False:
+                    span.set_status(trace.Status(trace.StatusCode.ERROR, "Stream was not fully consumed"))
+                    # TODO should we add whatever we have for event / response attributes here?
+                span.end()
+
+    return AsyncStreamWrapper(stream_obj)
 
 
 def _add_request_span_attributes(span: trace.Span, span_name: str, kwargs: Any) -> None:
@@ -182,7 +208,7 @@ def achat_completions_wrapper(tracer: trace.Tracer, span_name: str):
 
             if hasattr(result, "__stream__"):
                 # stream=True used
-                return _wrapped_stream(result, span)
+                return _awrapped_stream(result, span)
             elif hasattr(result, "iter_bytes"):
                 # with_streaming_response used
                 # TODO wrap with object proxy?

@@ -173,11 +173,12 @@ def chat_completions_wrapper(tracer: trace.Tracer, span_name: str):
             if hasattr(result, "__stream__"):
                 # stream=True used
                 return _wrapped_stream(result, span)
-            elif hasattr(result, "iter_bytes"):
+            if hasattr(result, "iter_bytes"):
                 # with_streaming_response used
-                # TODO wrap with object proxy?
+                # TODO should we not report response spans?
+                span.end()
                 return result
-            elif hasattr(result, "parse"):
+            if hasattr(result, "parse"):
                 # with_raw_response used
                 parsed = result.parse()
                 _add_response_span_attributes(span, parsed)
@@ -209,11 +210,12 @@ def achat_completions_wrapper(tracer: trace.Tracer, span_name: str):
             if hasattr(result, "__stream__"):
                 # stream=True used
                 return _awrapped_stream(result, span)
-            elif hasattr(result, "iter_bytes"):
+            if hasattr(result, "iter_bytes"):
                 # with_streaming_response used
-                # TODO wrap with object proxy?
+                # TODO should we not report response spans?
+                span.end()
                 return result
-            elif hasattr(result, "parse"):
+            if hasattr(result, "parse"):
                 # with_raw_response used
                 parsed = result.parse()
                 _add_response_span_attributes(span, parsed)

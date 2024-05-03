@@ -28,4 +28,8 @@ messages = [
 response = client.chat.completions.create(
     messages=messages,
     model="gpt-4",
+    stream=True
 )
+
+for r in response:
+    print(r)

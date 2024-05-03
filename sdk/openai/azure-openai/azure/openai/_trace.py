@@ -102,10 +102,11 @@ def _traceable_stream(stream_obj: Stream[ChatCompletionChunk], span: trace.Span)
 
     except Exception as exc:
         _set_attribute(span, "error.type", exc.__class__.__name__)
-        span.end()
         raise
 
     finally:
+        if stream_obj.response.is_stream_consumed and stream_obj.response.is_closed is False:
+             span.set_status(trace.Status(trace.StatusCode.ERROR, "Stream was not fully consumed"))
         span.end()
 
 

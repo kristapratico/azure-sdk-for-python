@@ -105,8 +105,9 @@ def _traceable_stream(stream_obj: Stream[ChatCompletionChunk], span: trace.Span)
         raise
 
     finally:
-        if stream_obj.response.is_stream_consumed and stream_obj.response.is_closed is False:
-             span.set_status(trace.Status(trace.StatusCode.ERROR, "Stream was not fully consumed"))
+        if stream_obj.response.is_stream_consumed is True and stream_obj.response.is_closed is False:
+            span.set_status(trace.Status(trace.StatusCode.ERROR, "Stream was not fully consumed"))
+            # TODO should we add whatever we have for event / response attributes here?
         span.end()
 
 
@@ -146,19 +147,16 @@ def chat_completions_wrapper(tracer: trace.Tracer, span_name: str):
             if hasattr(result, "__stream__"):
                 # stream=True used
                 return _wrapped_stream(result, span)
-
-            if hasattr(result, "iter_bytes"):
+            elif hasattr(result, "iter_bytes"):
                 # with_streaming_response used
                 # TODO wrap with object proxy?
                 return result
-
-            if hasattr(result, "parse"):
+            elif hasattr(result, "parse"):
                 # with_raw_response used
                 parsed = result.parse()
                 _add_response_span_attributes(span, parsed)
-                return result
-
-            _add_response_span_attributes(span, result)
+            else:
+                _add_response_span_attributes(span, result)
 
         except Exception as exc:
             _set_attribute(span, "error.type", exc.__class__.__name__)
@@ -184,23 +182,20 @@ def achat_completions_wrapper(tracer: trace.Tracer, span_name: str):
 
             if hasattr(result, "__stream__"):
                 # stream=True used
-                # TODO add async wrapper
                 return _wrapped_stream(result, span)
-
-            if hasattr(result, "iter_bytes"):
+            elif hasattr(result, "iter_bytes"):
                 # with_streaming_response used
                 # TODO wrap with object proxy?
                 return result
-
-            if hasattr(result, "parse"):
+            elif hasattr(result, "parse"):
                 # with_raw_response used
                 parsed = result.parse()
                 _add_response_span_attributes(span, parsed)
-                return result
+            else:
+                _add_response_span_attributes(span, result)
 
-            _add_response_span_attributes(span, result)
-
-        except Exception:
+        except Exception as exc:
+            _set_attribute(span, "error.type", exc.__class__.__name__)
             span.end()
             raise
 

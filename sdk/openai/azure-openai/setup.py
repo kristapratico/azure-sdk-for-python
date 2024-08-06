@@ -59,7 +59,7 @@ setup(
     ),
     include_package_data=True,
     package_data={
-        'azure.openai': ['py.typed'],
+        'azure.openai': ["*.pyi"]
     },
     install_requires=[
         "azure-identity<2.0.0,>=1.15.0"

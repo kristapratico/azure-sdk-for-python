@@ -3,7 +3,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 
-from .azure_extensions import (
+from .on_your_data import (
     AzureChatEnhancementConfiguration,
     AzureChatGroundingEnhancementConfiguration,
     AzureChatOCREnhancementConfiguration,
@@ -39,6 +39,22 @@ from .azure_extensions import (
     AzureChatExtensionConfiguration,
 )
 
+from ._content_filtering import (
+    AzureChatCompletionChunk,
+    AzureChatCompletion,
+    ContentFilterResult,
+    Error,
+    ContentFilterResults,
+    PromptFilterResult,
+    AzureChatExtensionsMessageContext,
+    AzureChatCompletionMessage,
+    AzureChatCompletionChoice,
+    AzureChoiceDelta,
+    AzureChatCompletionChoiceDelta,
+    AzureChatCompletionChunk,
+    AzureCompletionChoice,
+    AzureCompletion,
+)
 
 __all__ = [
     "AzureChatEnhancementConfiguration",
@@ -73,5 +89,19 @@ __all__ = [
     "OnYourDataVectorizationSourceType",
     "AzureCognitiveSearchQueryType",
     "ElasticsearchQueryType",
-    "AzureChatExtensionConfiguration"
+    "AzureChatExtensionConfiguration",
+    "AzureChatCompletionChunk",
+    "AzureChatCompletion",
+    "ContentFilterResult",
+    "Error",
+    "ContentFilterResults",
+    "PromptFilterResult",
+    "AzureChatExtensionsMessageContext",
+    "AzureChatCompletionMessage",
+    "AzureChatCompletionChoice",
+    "AzureChoiceDelta",
+    "AzureChatCompletionChoiceDelta",
+    "AzureChatCompletionChunk",
+    "AzureCompletionChoice",
+    "AzureCompletion",
 ]

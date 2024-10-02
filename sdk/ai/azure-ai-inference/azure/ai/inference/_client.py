@@ -26,6 +26,12 @@ from ._operations import (
     ImageEmbeddingsClientOperationsMixin,
 )
 from ._serialization import Deserializer, Serializer
+from ._vendor import handwritten, HANDWRITTEN
+
+
+if HANDWRITTEN or TYPE_CHECKING:
+    from typing import Dict, List, Optional
+    from . import models as _models
 
 if TYPE_CHECKING:
     # pylint: disable=unused-import,ungrouped-imports
@@ -47,7 +53,133 @@ class ChatCompletionsClient(ChatCompletionsClientOperationsMixin):  # pylint: di
     :paramtype api_version: str
     """
 
-    def __init__(self, endpoint: str, credential: Union[AzureKeyCredential, "TokenCredential"], **kwargs: Any) -> None:
+    @handwritten
+    def __init__(
+        self,
+        endpoint: str,
+        credential: Union[AzureKeyCredential, "TokenCredential"],
+        *,
+        frequency_penalty: Optional[float] = None,
+        presence_penalty: Optional[float] = None,
+        temperature: Optional[float] = None,
+        top_p: Optional[float] = None,
+        max_tokens: Optional[int] = None,
+        response_format: Optional[_models.ChatCompletionsResponseFormat] = None,
+        stop: Optional[List[str]] = None,
+        tools: Optional[List[_models.ChatCompletionsToolDefinition]] = None,
+        tool_choice: Optional[
+            Union[str, _models.ChatCompletionsToolChoicePreset, _models.ChatCompletionsNamedToolChoice]
+        ] = None,
+        seed: Optional[int] = None,
+        model: Optional[str] = None,
+        model_extras: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
+    ) -> None:
+        """ChatCompletionsClient.
+
+        :param endpoint: Service host. Required.
+        :type endpoint: str
+        :param credential: Credential used to authenticate requests to the service. Is either a
+        AzureKeyCredential type or a TokenCredential type. Required.
+        :type credential: ~azure.core.credentials.AzureKeyCredential or
+        ~azure.core.credentials.TokenCredential
+        :keyword frequency_penalty: A value that influences the probability of generated tokens
+            appearing based on their cumulative frequency in generated text.
+            Positive values will make tokens less likely to appear as their frequency increases and
+            decrease the likelihood of the model repeating the same statements verbatim.
+            Supported range is [-2, 2].
+            Default value is None.
+        :paramtype frequency_penalty: float
+        :keyword presence_penalty: A value that influences the probability of generated tokens
+            appearing based on their existing
+            presence in generated text.
+            Positive values will make tokens less likely to appear when they already exist and increase
+            the model's likelihood to output new topics.
+            Supported range is [-2, 2].
+            Default value is None.
+        :paramtype presence_penalty: float
+        :keyword temperature: The sampling temperature to use that controls the apparent creativity of
+            generated completions.
+            Higher values will make output more random while lower values will make results more focused
+            and deterministic.
+            It is not recommended to modify temperature and top_p for the same completions request as the
+            interaction of these two settings is difficult to predict.
+            Supported range is [0, 1].
+            Default value is None.
+        :paramtype temperature: float
+        :keyword top_p: An alternative to sampling with temperature called nucleus sampling. This value
+            causes the
+            model to consider the results of tokens with the provided probability mass. As an example, a
+            value of 0.15 will cause only the tokens comprising the top 15% of probability mass to be
+            considered.
+            It is not recommended to modify temperature and top_p for the same completions request as the
+            interaction of these two settings is difficult to predict.
+            Supported range is [0, 1].
+            Default value is None.
+        :paramtype top_p: float
+        :keyword max_tokens: The maximum number of tokens to generate. Default value is None.
+        :paramtype max_tokens: int
+        :keyword response_format: The format that the model must output. Use this to enable JSON mode
+            instead of the default text mode.
+            Note that to enable JSON mode, some AI models may also require you to instruct the model to
+            produce JSON via a system or user message. Default value is None.
+        :paramtype response_format: ~azure.ai.inference.models.ChatCompletionsResponseFormat
+        :keyword stop: A collection of textual sequences that will end completions generation. Default
+            value is None.
+        :paramtype stop: list[str]
+        :keyword tools: The available tool definitions that the chat completions request can use,
+            including caller-defined functions. Default value is None.
+        :paramtype tools: list[~azure.ai.inference.models.ChatCompletionsToolDefinition]
+        :keyword tool_choice: If specified, the model will configure which of the provided tools it can
+            use for the chat completions response. Is either a Union[str,
+            "_models.ChatCompletionsToolChoicePreset"] type or a ChatCompletionsNamedToolChoice type.
+            Default value is None.
+        :paramtype tool_choice: str or ~azure.ai.inference.models.ChatCompletionsToolChoicePreset or
+            ~azure.ai.inference.models.ChatCompletionsNamedToolChoice
+        :keyword seed: If specified, the system will make a best effort to sample deterministically
+            such that repeated requests with the
+            same seed and parameters should return the same result. Determinism is not guaranteed.
+            Default value is None.
+        :paramtype seed: int
+        :keyword model: ID of the specific AI model to use, if more than one model is available on the
+            endpoint. Default value is None.
+        :paramtype model: str
+        :keyword model_extras: Additional, model-specific parameters that are not in the
+            standard request payload. They will be added as-is to the root of the JSON in the request body.
+            How the service handles these extra parameters depends on the value of the
+            ``extra-parameters`` request header. Default value is None.
+        :paramtype model_extras: dict[str, Any]
+        :keyword api_version: The API version to use for this operation. Default value is
+        "2024-05-01-preview". Note that overriding this default value may result in unsupported
+        behavior.
+        :paramtype api_version: str
+        """
+
+        self._model_info: Optional[_models.ModelInfo] = None
+
+        # Store default chat completions settings, to be applied in all future service calls
+        # unless overridden by arguments in the `complete` method.
+        self._frequency_penalty = frequency_penalty
+        self._presence_penalty = presence_penalty
+        self._temperature = temperature
+        self._top_p = top_p
+        self._max_tokens = max_tokens
+        self._response_format = response_format
+        self._stop = stop
+        self._tools = tools
+        self._tool_choice = tool_choice
+        self._seed = seed
+        self._model = model
+        self._model_extras = model_extras
+
+        self._generated__init__(endpoint, credential, **kwargs)
+
+    @handwritten
+    def __str__(self) -> str:
+        # pylint: disable=client-method-name-no-double-underscore
+        return super().__str__() + f"\n{self._model_info}" if self._model_info else super().__str__()
+
+    def _generated__init__(self, endpoint: str, credential: Union[AzureKeyCredential, "TokenCredential"], **kwargs: Any) -> None:
         _endpoint = "{endpoint}"
         self._config = ChatCompletionsClientConfiguration(endpoint=endpoint, credential=credential, **kwargs)
         _policies = kwargs.pop("policies", None)
@@ -125,7 +257,64 @@ class EmbeddingsClient(EmbeddingsClientOperationsMixin):  # pylint: disable=clie
     :paramtype api_version: str
     """
 
-    def __init__(self, endpoint: str, credential: Union[AzureKeyCredential, "TokenCredential"], **kwargs: Any) -> None:
+    @handwritten
+    def __init__(
+        self,
+        endpoint: str,
+        credential: Union[AzureKeyCredential, "TokenCredential"],
+        *,
+        dimensions: Optional[int] = None,
+        encoding_format: Optional[Union[str, _models.EmbeddingEncodingFormat]] = None,
+        input_type: Optional[Union[str, _models.EmbeddingInputType]] = None,
+        model: Optional[str] = None,
+        model_extras: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
+    ) -> None:
+        """EmbeddingsClient.
+
+        :param endpoint: Service host. Required.
+        :type endpoint: str
+        :param credential: Credential used to authenticate requests to the service. Is either a
+        AzureKeyCredential type or a TokenCredential type. Required.
+        :type credential: ~azure.core.credentials.AzureKeyCredential or
+        ~azure.core.credentials.TokenCredential
+        :keyword dimensions: Optional. The number of dimensions the resulting output embeddings should
+            have. Default value is None.
+        :paramtype dimensions: int
+        :keyword encoding_format: Optional. The desired format for the returned embeddings.
+            Known values are:
+            "base64", "binary", "float", "int8", "ubinary", and "uint8". Default value is None.
+        :paramtype encoding_format: str or ~azure.ai.inference.models.EmbeddingEncodingFormat
+        :keyword input_type: Optional. The type of the input. Known values are:
+            "text", "query", and "document". Default value is None.
+        :paramtype input_type: str or ~azure.ai.inference.models.EmbeddingInputType
+        :keyword model: ID of the specific AI model to use, if more than one model is available on the
+            endpoint. Default value is None.
+        :paramtype model: str
+        :keyword model_extras: Additional, model-specific parameters that are not in the
+            standard request payload. They will be added as-is to the root of the JSON in the request body.
+            How the service handles these extra parameters depends on the value of the
+            ``extra-parameters`` request header. Default value is None.
+        :paramtype model_extras: dict[str, Any]
+        :keyword api_version: The API version to use for this operation. Default value is
+        "2024-05-01-preview". Note that overriding this default value may result in unsupported
+        behavior.
+        :paramtype api_version: str
+        """
+
+        self._model_info: Optional[_models.ModelInfo] = None
+
+        # Store default embeddings settings, to be applied in all future service calls
+        # unless overridden by arguments in the `embed` method.
+        self._dimensions = dimensions
+        self._encoding_format = encoding_format
+        self._input_type = input_type
+        self._model = model
+        self._model_extras = model_extras
+
+        self._generated__init__(endpoint, credential, **kwargs)
+
+    def _generated__init__(self, endpoint: str, credential: Union[AzureKeyCredential, "TokenCredential"], **kwargs: Any) -> None:
         _endpoint = "{endpoint}"
         self._config = EmbeddingsClientConfiguration(endpoint=endpoint, credential=credential, **kwargs)
         _policies = kwargs.pop("policies", None)
@@ -177,6 +366,11 @@ class EmbeddingsClient(EmbeddingsClientOperationsMixin):  # pylint: disable=clie
         request_copy.url = self._client.format_url(request_copy.url, **path_format_arguments)
         return self._client.send_request(request_copy, stream=stream, **kwargs)  # type: ignore
 
+    @handwritten
+    def __str__(self) -> str:
+        # pylint: disable=client-method-name-no-double-underscore
+        return super().__str__() + f"\n{self._model_info}" if self._model_info else super().__str__()
+
     def close(self) -> None:
         self._client.close()
 
@@ -203,7 +397,64 @@ class ImageEmbeddingsClient(ImageEmbeddingsClientOperationsMixin):  # pylint: di
     :paramtype api_version: str
     """
 
-    def __init__(self, endpoint: str, credential: Union[AzureKeyCredential, "TokenCredential"], **kwargs: Any) -> None:
+    @handwritten
+    def __init__(
+        self,
+        endpoint: str,
+        credential: Union[AzureKeyCredential, "TokenCredential"],
+        *,
+        dimensions: Optional[int] = None,
+        encoding_format: Optional[Union[str, _models.EmbeddingEncodingFormat]] = None,
+        input_type: Optional[Union[str, _models.EmbeddingInputType]] = None,
+        model: Optional[str] = None,
+        model_extras: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
+    ) -> None:
+        """ImageEmbeddingsClient.
+
+        :param endpoint: Service host. Required.
+        :type endpoint: str
+        :param credential: Credential used to authenticate requests to the service. Is either a
+        AzureKeyCredential type or a TokenCredential type. Required.
+        :type credential: ~azure.core.credentials.AzureKeyCredential or
+        ~azure.core.credentials.TokenCredential
+        :keyword dimensions: Optional. The number of dimensions the resulting output embeddings should
+            have. Default value is None.
+        :paramtype dimensions: int
+        :keyword encoding_format: Optional. The desired format for the returned embeddings.
+            Known values are:
+            "base64", "binary", "float", "int8", "ubinary", and "uint8". Default value is None.
+        :paramtype encoding_format: str or ~azure.ai.inference.models.EmbeddingEncodingFormat
+        :keyword input_type: Optional. The type of the input. Known values are:
+            "text", "query", and "document". Default value is None.
+        :paramtype input_type: str or ~azure.ai.inference.models.EmbeddingInputType
+        :keyword model: ID of the specific AI model to use, if more than one model is available on the
+            endpoint. Default value is None.
+        :paramtype model: str
+        :keyword model_extras: Additional, model-specific parameters that are not in the
+            standard request payload. They will be added as-is to the root of the JSON in the request body.
+            How the service handles these extra parameters depends on the value of the
+            ``extra-parameters`` request header. Default value is None.
+        :paramtype model_extras: dict[str, Any]
+        :keyword api_version: The API version to use for this operation. Default value is
+        "2024-05-01-preview". Note that overriding this default value may result in unsupported
+        behavior.
+        :paramtype api_version: str
+        """
+
+        self._model_info: Optional[_models.ModelInfo] = None
+
+        # Store default embeddings settings, to be applied in all future service calls
+        # unless overridden by arguments in the `embed` method.
+        self._dimensions = dimensions
+        self._encoding_format = encoding_format
+        self._input_type = input_type
+        self._model = model
+        self._model_extras = model_extras
+
+        self._generated__init__(endpoint, credential, **kwargs)
+
+    def _generated__init__(self, endpoint: str, credential: Union[AzureKeyCredential, "TokenCredential"], **kwargs: Any) -> None:
         _endpoint = "{endpoint}"
         self._config = ImageEmbeddingsClientConfiguration(endpoint=endpoint, credential=credential, **kwargs)
         _policies = kwargs.pop("policies", None)
@@ -254,6 +505,11 @@ class ImageEmbeddingsClient(ImageEmbeddingsClientOperationsMixin):  # pylint: di
 
         request_copy.url = self._client.format_url(request_copy.url, **path_format_arguments)
         return self._client.send_request(request_copy, stream=stream, **kwargs)  # type: ignore
+
+    @handwritten
+    def __str__(self) -> str:
+        # pylint: disable=client-method-name-no-double-underscore
+        return super().__str__() + f"\n{self._model_info}" if self._model_info else super().__str__()
 
     def close(self) -> None:
         self._client.close()

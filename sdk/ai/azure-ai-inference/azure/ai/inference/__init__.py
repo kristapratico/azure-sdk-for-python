@@ -6,9 +6,9 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
-from ._patch import ChatCompletionsClient
-from ._patch import EmbeddingsClient
-from ._patch import ImageEmbeddingsClient
+from ._client import ChatCompletionsClient
+from ._client import EmbeddingsClient
+from ._client import ImageEmbeddingsClient
 from ._version import VERSION
 
 __version__ = VERSION

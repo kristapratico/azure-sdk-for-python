@@ -13,6 +13,12 @@ from typing import Any, Dict, List, Literal, Mapping, Optional, TYPE_CHECKING, U
 from .. import _model_base
 from .._model_base import rest_discriminator, rest_field
 from ._enums import ChatRole
+from .._vendor import handwritten, HANDWRITTEN
+
+if HANDWRITTEN or TYPE_CHECKING:
+    import base64
+    import json
+    from typing_extensions import Self
 
 if TYPE_CHECKING:
     # pylint: disable=unused-import,ungrouped-imports
@@ -204,6 +210,11 @@ class ChatCompletions(_model_base.Model):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
         super().__init__(*args, **kwargs)
+
+    @handwritten
+    def __str__(self) -> str:
+        # pylint: disable=client-method-name-no-double-underscore
+        return json.dumps(self.as_dict(), indent=2)
 
 
 class ChatCompletionsNamedToolChoice(_model_base.Model):
@@ -706,6 +717,11 @@ class EmbeddingsResult(_model_base.Model):
     def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
         super().__init__(*args, **kwargs)
 
+    @handwritten
+    def __str__(self) -> str:
+        # pylint: disable=client-method-name-no-double-underscore
+        return json.dumps(self.as_dict(), indent=2)
+
 
 class EmbeddingsUsage(_model_base.Model):
     """Measurement of the amount of tokens used in this request and response.
@@ -905,6 +921,32 @@ class ImageUrl(_model_base.Model):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=useless-super-delegation
         super().__init__(*args, **kwargs)
+
+    @classmethod
+    @handwritten
+    def load(
+        cls, *, image_file: str, image_format: str, detail: Optional[Union[str, "_models.ImageDetailLevel"]] = None
+    ) -> Self:
+        """
+        Create an ImageUrl object from a local image file. The method reads the image
+        file and encodes it as a base64 string, which together with the image format
+        is then used to format the JSON `url` value passed in the request payload.
+
+        :ivar image_file: The name of the local image file to load. Required.
+        :vartype image_file: str
+        :ivar image_format: The MIME type format of the image. For example: "jpeg", "png". Required.
+        :vartype image_format: str
+        :ivar detail: The evaluation quality setting to use, which controls relative prioritization of
+         speed, token consumption, and accuracy. Known values are: "auto", "low", and "high".
+        :vartype detail: str or ~azure.ai.inference.models.ImageDetailLevel
+        :return: An ImageUrl object with the image data encoded as a base64 string.
+        :rtype: ~azure.ai.inference.models.ImageUrl
+        :raises FileNotFoundError: when the image file could not be opened.
+        """
+        with open(image_file, "rb") as f:
+            image_data = base64.b64encode(f.read()).decode("utf-8")
+        url = f"data:image/{image_format};base64,{image_data}"
+        return cls(url=url, detail=detail)
 
 
 class ModelInfo(_model_base.Model):

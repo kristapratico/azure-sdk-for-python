@@ -5,6 +5,7 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
+import inspect
 from abc import ABC
 from typing import TYPE_CHECKING
 
@@ -46,3 +47,12 @@ class ImageEmbeddingsClientMixinABC(ABC):
     _config: ImageEmbeddingsClientConfiguration
     _serialize: "Serializer"
     _deserialize: "Deserializer"
+
+
+HANDWRITTEN = True
+
+_customized = {}
+def handwritten(func_or_class):
+    _customized.setdefault(f"{func_or_class.__module__}.{func_or_class.__qualname__}", [])
+    _customized[f"{func_or_class.__module__}.{func_or_class.__qualname__}"].append(inspect.getsourcelines(func_or_class))
+    return func_or_class

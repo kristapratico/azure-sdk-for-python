@@ -38,7 +38,7 @@ class OpenAIClientConfiguration:  # pylint: disable=too-many-instance-attributes
     """
 
     def __init__(self, endpoint: str, credential: Union[AzureKeyCredential, "TokenCredential"], **kwargs: Any) -> None:
-        api_version: str = kwargs.pop("api_version", "2023-09-01-preview")
+        api_version: str = kwargs.pop("api_version", "2024-06-01")
 
         if endpoint is None:
             raise ValueError("Parameter 'endpoint' must not be None.")

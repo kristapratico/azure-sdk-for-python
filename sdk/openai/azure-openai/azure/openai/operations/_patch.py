@@ -6,6 +6,7 @@
 
 Follow our quickstart for examples: https://aka.ms/azsdk/python/dpcodegen/python/customize
 """
+from __future__ import annotations
 import json
 import sys
 from typing import (
@@ -25,7 +26,8 @@ from typing import (
     AsyncIterator,
     Type,
 )
-from typing_extensions import Literal
+from typing_extensions import Literal, Self
+from types import TracebackType
 from azure.core.tracing.decorator import distributed_trace
 from azure.core.exceptions import (
     ClientAuthenticationError,
@@ -145,132 +147,283 @@ def build_audio_translations_request(deployment_id: str, **kwargs: Any) -> HttpR
     return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
 
 
-# inspired from https://github.com/openai/openai-python/blob/v1/src/openai/_streaming.py
 class ServerSentEvent:
     def __init__(
         self,
         *,
         data: Optional[str] = None,
+        event: Optional[str] = None,
+        id: Optional[str] = None,
+        retry: Optional[int] = None,
     ) -> None:
-        self._data = data
-
-    @property
-    def data(self) -> str:
-        return self._data
+        self.data = data
+        self.event = event
+        self.id = id
+        self.retry = retry
 
     def json(self) -> Any:
         return json.loads(self.data)
 
-    def __repr__(self) -> str:
-        return f"ServerSentEvent(data={self.data})"
-
 
 class SSEDecoder:
-    """https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation"""
-
-    EMPTY_LINE = (b'\r\r', b'\n\n', b'\r\n\r\n')
-
     def __init__(self) -> None:
-        self._data: List[str] = []
+        self._data: list[str] = []
+        self._last_event_id = None
+        self._event = None
+        self._retry = None
 
-    def chunked(self, iterator: Iterator[bytes]) -> Iterator[str]:
-        data = b''
-        for chunk in iterator:
-            for line in chunk.splitlines(keepends=True):
-                data += line
-                if data.endswith(self.EMPTY_LINE):
-                    yield data.decode("utf-8")
-                    data = b''
-
-    async def achunked(self, async_iterator: AsyncIterator[bytes]) -> AsyncIterator[str]:
-        data = b''
-        async for chunk in async_iterator:
-            for line in chunk.splitlines(keepends=True):
-                data += line
-                if data.endswith(self.EMPTY_LINE):
-                    yield data.decode("utf-8")
-                    data = b''
-
-    def iter(self, iterator: Iterator[bytes]) -> Iterator[ServerSentEvent]:
-        for chunk in self.chunked(iterator):
-            for line in chunk.splitlines():
-                sse = self.decode(line)
-                if sse is not None:
-                    yield sse
-
-    async def aiter(self, iterator: AsyncIterator[bytes]) -> AsyncIterator[ServerSentEvent]:
-        async for chunk in self.achunked(iterator):
-            for line in chunk.splitlines():
-                sse = self.decode(line)
-                if sse is not None:
-                    yield sse
-
-    def decode(self, line: str) -> Optional[ServerSentEvent]:
-
-        if not line:
-            return self.event()
-
+    def decode(self, line: str) -> None:
         if line.startswith(":"):
             # comment, ignore the line
             return None
 
-        fieldname, _, value = line.partition(":")
-
-        if value.startswith(" "):
-            # data:test and data: test are equivalent
-            value = value[1:]
-        if fieldname == "data":
-            self._data.append(value)
+        if ":" in line:
+            field, _, value = line.partition(":")
+            if value.startswith(" "):
+                # data:test and data: test are equivalent
+                value = value[1:]
         else:
-            pass  # field is ignored.
+            field = line
+            value = ""
 
-        return None
+        if field == "data":
+            self._data.append(value)
+        elif field == "event":
+            self._event = value
+        elif field == "id":
+            if "\0" in value:
+                pass
+            else:
+                self._last_event_id = value
+        elif field == "retry":
+            try:
+                self._retry = int(value)
+            except (TypeError, ValueError):
+                pass
 
-    def event(self) -> Optional[ServerSentEvent]:
-        if not self._data:
-            return None
+        # else: ignore the field
 
+    def event(self) -> ServerSentEvent:
         sse = ServerSentEvent(
+            event="data",
             data="\n".join(self._data),
+            id=self._last_event_id,
+            retry=self._retry,
         )
         
         self._data = []
+        self._event = None
+        self._retry = None
         return sse
 
 
-class Stream(Generic[ReturnType]):
-
-    response: HttpResponse
-
+class JSONLEvent:
     def __init__(
         self,
         *,
-        return_type: Type[ReturnType],
-        iter_response: Iterator[bytes],
-        response: HttpResponse,
+        data: Optional[str] = None,
     ) -> None:
-        self.response = response
-        self._iter_response = iter_response
-        self._return_type = return_type
-        self._decoder = SSEDecoder()
-        self._iterator = self._stream()
+        self.data = data
+        self.event = None
+
+    def json(self) -> Any:
+        return json.loads(self.data)
+
+
+class JSONLDecoder:
+    def __init__(self) -> None:
+        self._data: list[str] = []
+
+    def decode(self, line: str) -> None:
+        self._data.append(line)
+
+    def event(self) -> JSONLEvent:
+        jsonl = JSONLEvent(data="\n".join(self._data))
+        self._data = []
+        return jsonl
+
+
+
+class ChunkIterator(Iterator[ReturnType]):
+    def __init__(
+        self,
+        *,
+        iter_bytes: Iterator[bytes],
+        deserialization_callback: Callable[[Any], ReturnType],
+        response: PipelineResponse,
+        decoder: SSEDecoder | JSONLDecoder,
+        event_mapping: Optional[Mapping[str, Type[ReturnType]]] = None,
+        event_handler: Optional[Any] = None,
+    ):
+        self._iter_bytes = iter_bytes
+        self._decoder = decoder
+        self._deserialization_callback = deserialization_callback
+        self._iterator = self.__iter__()
+        self._callbacks = {}
+        self._event_handler = event_handler
+        self._event_mapping = event_mapping
+        self._response = response
 
     def __next__(self) -> ReturnType:
         return self._iterator.__next__()
 
     def __iter__(self) -> Iterator[ReturnType]:
-        for item in self._iterator:
-            yield item
+        for line in self._parse_chunk(self._iter_bytes):
+            for data in line.splitlines():
+                if data:
+                    self._decoder.decode(data)
+                else:
+                    event = self._decoder.event()
+                    if event.data.startswith("[DONE]"):
+                        break
 
-    def _iter_events(self) -> Iterator[ServerSentEvent]:
-        yield from self._decoder.iter(self._iter_response)
+                    return_cls = self._deserialization_callback(self._response, event.json())
+                    if event.event in self._callbacks:
+                        self._callbacks[event.event](return_cls)
 
-    def _stream(self) -> Iterator[ReturnType]:
-        for sse in self._iter_events():
-            if sse.data.startswith("[DONE]"):
-                break
+                    if self._event_handler:
+                        getattr(self._event_handler, f"on_{event.event}")(return_cls)
+                    yield return_cls
 
-            yield self._return_type(sse.json())
+    def _parse_chunk(self, iter_bytes: Iterator[bytes]) -> Iterator[str]:
+        data = b''
+        for chunk in iter_bytes:
+            for line in chunk.splitlines(keepends=True):
+                data += line
+                if data.endswith((b'\r\r', b'\n\n', b'\r\n\r\n')):
+                    yield data.decode("utf-8")
+                    data = b''
+
+
+# class Stream(Iterator[ReturnType]):
+#     """Stream class.
+
+#     :param response: The response object.
+#     :type response: ~azure.core.rest.HttpResponse
+#     :param return_cls: The type returned by the stream. Can be a single type or a Union of types.
+#     :type return_cls: Type[ReturnType]
+#     :param decoder: The decoder to use to parse the stream.
+#     :type decoder: Union[SSEDecoder, JSONLDecoder]
+#     :param event_mapping: A mapping of event types to types to return when the event is received.
+#     :type event_mapping: Optional[Mapping[str, Type[ReturnType]]]
+#     :param event_handler: An event handler to call when an event is received.
+#     :type event_handler: Optional[Any]
+#     """
+#     def __init__(
+#         self,
+#         *,
+#         response: HttpResponse,
+#         deserialization_callback: Callable[[Any], ReturnType],
+#         decoder: SSEDecoder | JSONLDecoder,
+#         event_mapping: Optional[Mapping[str, Type[ReturnType]]] = None,
+#         event_handler: Optional[Any] = None,
+#     ) -> None:
+#         self._response = response
+#         self._iterator = ChunkIterator[ReturnType](
+#             iter_bytes=self._response.iter_bytes(),
+#             deserialization_callback=deserialization_callback,
+#             decoder=decoder,
+#             event_handler=event_handler,
+#             event_mapping=event_mapping,
+#         )
+
+#     def iter_events(self) -> None:
+#         for _ in self._iterator:
+#             pass
+
+#     def register_event(self, event_type: str, on_event: Callable) -> None:
+#         self._iterator._callbacks[event_type] = on_event
+
+#     def __iter__(self) -> Iterator[ReturnType]:
+#         return self
+
+#     def __next__(self) -> ReturnType:
+#         return self._iterator.__next__()
+
+#     def __exit__(
+#         self,
+#         exc_type: type[BaseException] | None,
+#         exc: BaseException | None,
+#         exc_tb: TracebackType | None,
+#     ) -> None:
+#         self.close()
+
+#     def __enter__(self) -> Self:
+#         return self
+
+#     def close(self) -> None:
+#         self._response.close()
+
+
+
+
+class Stream(Iterator[ReturnType]):
+    """Stream class.
+
+    :param response: The response object.
+    :type response: ~azure.core.rest.HttpResponse
+    :param return_cls: The type returned by the stream. Can be a single type or a Union of types.
+    :type return_cls: Type[ReturnType]
+    :param decoder: The decoder to use to parse the stream.
+    :type decoder: Union[SSEDecoder, JSONLDecoder]
+    """
+    def __init__(
+        self,
+        *,
+        response: PipelineResponse,
+        deserialization_callback: Callable[[Any, Any], ReturnType],
+        terminal_event: Optional[str] = None,
+    ) -> None:
+        self._response = response.http_response
+        self._decoder = SSEDecoder() if self._response.headers.get("Content-Type") == "text/event-stream" else JSONLDecoder()
+        self._deserialization_callback = deserialization_callback
+        self._terminal_event = terminal_event
+        self._iterator = self._iter_events()
+
+    def __next__(self) -> ReturnType:
+        return self._iterator.__next__()
+
+    def __iter__(self) -> Iterator[ReturnType]:
+        yield from self._iterator
+
+    def _iter_events(self) -> Iterator[ReturnType]:
+        for line in self._parse_chunk(self._response.iter_bytes()):
+            for data in line.splitlines():
+                if data:
+                    self._decoder.decode(data)
+                else:
+                    event = self._decoder.event()
+                    if self._terminal_event:
+                        if event.data == self._terminal_event:
+                            break
+
+                    event_model = self._deserialization_callback(self._response, event.json())
+
+                    yield event_model
+
+    def _parse_chunk(self, iter_bytes: Iterator[bytes]) -> Iterator[str]:
+        data = b''
+        for chunk in iter_bytes:
+            for line in chunk.splitlines(keepends=True):
+                data += line
+                if data.endswith((b'\r\r', b'\n\n', b'\r\n\r\n')):
+                    yield data.decode("utf-8")
+                    data = b''
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        self.close()
+
+    def __enter__(self) -> Self:
+        return self
+
+    def close(self) -> None:
+        self._response.close()
+
 
 
 class EmbeddingsOperations(GeneratedEmbeddingsOperations):
@@ -296,6 +449,28 @@ class EmbeddingsOperations(GeneratedEmbeddingsOperations):
         )
 
 
+class ChannelEvent:
+    kind: str
+
+class UserConnect(ChannelEvent):
+    kind: Literal["userconnect"]
+    username: str
+    time: str
+
+class UserMessage(ChannelEvent):
+    kind: Literal["usermessage"]
+    username: str
+    time: str
+    text: str
+
+class UserDisconnect(ChannelEvent):
+    kind: Literal["userdisconnect"]
+    username: str
+    time: str
+
+ChannelEvents = Union[UserConnect, UserMessage, UserDisconnect]
+
+
 class CompletionsOperations(GeneratedCompletionsOperations):
 
     @overload
@@ -319,7 +494,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         best_of: Optional[int] = None,
         model: Optional[str] = None,
         **kwargs: Any
-    ) -> Stream[Completions]:
+    ) -> Stream[ChannelEvents]:
         ...
 
     @overload
@@ -343,7 +518,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         best_of: Optional[int] = None,
         model: Optional[str] = None,
         **kwargs: Any
-    ) -> Completions:
+    ) -> ChannelEvents:
         ...
 
     @distributed_trace
@@ -367,7 +542,7 @@ class CompletionsOperations(GeneratedCompletionsOperations):
         best_of: Optional[int] = None,
         model: Optional[str] = None,
         **kwargs: Any
-    ) -> Union[Completions, Stream[Completions]]:
+    ) -> Union[ChannelEvents, Stream[ChannelEvents]]:
         response, pipeline_response = super()._create(
             deployment_id=deployment_id,
             body=CompletionsOptions(
@@ -391,11 +566,11 @@ class CompletionsOperations(GeneratedCompletionsOperations):
             cls=lambda pipeline_response, deserialized, _: (deserialized, pipeline_response),
             **kwargs
         )
+        deserialization_callback = lambda pipeline_response, deserialized, _: (deserialized, pipeline_response)
         if stream:
-            return Stream[Completions](
-                return_type=Completions,
+            return Stream[ChannelEvents](
+                deserialization_callback=Completions,
                 response=pipeline_response.http_response,
-                iter_response=response,
             )
         return response
 
@@ -411,53 +586,53 @@ class ChatOperations(GeneratedChatOperations):
 
 class ChatCompletionsOperations(GeneratedChatOperations):
 
-    @overload
-    def create(
-        self,
-        deployment_id: str,
-        messages: Sequence[ChatMessage],
-        *,
-        stream: Literal[True],
-        functions: Optional[Sequence[FunctionDefinition]] = None,
-        function_call: Optional[Union[str, FunctionCallPreset, FunctionName]] = None,
-        max_tokens: Optional[int] = None,
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        logit_bias: Optional[Mapping[str, int]] = None,
-        user: Optional[str] = None,
-        n: Optional[int] = None,
-        stop: Optional[Sequence[str]] = None,
-        presence_penalty: Optional[float] = None,
-        frequency_penalty: Optional[float] = None,
-        data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
-        model: Optional[str] = None,
-        **kwargs: Any
-    ) -> Stream[ChatCompletions]:
-        ...
+    # @overload
+    # def create(
+    #     self,
+    #     deployment_id: str,
+    #     messages: Sequence[ChatMessage],
+    #     *,
+    #     stream: Literal[True],
+    #     functions: Optional[Sequence[FunctionDefinition]] = None,
+    #     function_call: Optional[Union[str, FunctionCallPreset, FunctionName]] = None,
+    #     max_tokens: Optional[int] = None,
+    #     temperature: Optional[float] = None,
+    #     top_p: Optional[float] = None,
+    #     logit_bias: Optional[Mapping[str, int]] = None,
+    #     user: Optional[str] = None,
+    #     n: Optional[int] = None,
+    #     stop: Optional[Sequence[str]] = None,
+    #     presence_penalty: Optional[float] = None,
+    #     frequency_penalty: Optional[float] = None,
+    #     data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
+    #     model: Optional[str] = None,
+    #     **kwargs: Any
+    # ) -> Stream[ChatCompletions]:
+    #     ...
 
-    @overload
-    def create(
-        self,
-        deployment_id: str,
-        messages: Sequence[ChatMessage],
-        *,
-        stream: Optional[Literal[False]] = None,
-        functions: Optional[Sequence[FunctionDefinition]] = None,
-        function_call: Optional[Union[str, FunctionCallPreset, FunctionName]] = None,
-        max_tokens: Optional[int] = None,
-        temperature: Optional[float] = None,
-        top_p: Optional[float] = None,
-        logit_bias: Optional[Mapping[str, int]] = None,
-        user: Optional[str] = None,
-        n: Optional[int] = None,
-        stop: Optional[Sequence[str]] = None,
-        presence_penalty: Optional[float] = None,
-        frequency_penalty: Optional[float] = None,
-        data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
-        model: Optional[str] = None,
-        **kwargs: Any
-    ) -> ChatCompletions:
-        ...
+    # @overload
+    # def create(
+    #     self,
+    #     deployment_id: str,
+    #     messages: Sequence[ChatMessage],
+    #     *,
+    #     stream: Optional[Literal[False]] = None,
+    #     functions: Optional[Sequence[FunctionDefinition]] = None,
+    #     function_call: Optional[Union[str, FunctionCallPreset, FunctionName]] = None,
+    #     max_tokens: Optional[int] = None,
+    #     temperature: Optional[float] = None,
+    #     top_p: Optional[float] = None,
+    #     logit_bias: Optional[Mapping[str, int]] = None,
+    #     user: Optional[str] = None,
+    #     n: Optional[int] = None,
+    #     stop: Optional[Sequence[str]] = None,
+    #     presence_penalty: Optional[float] = None,
+    #     frequency_penalty: Optional[float] = None,
+    #     data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
+    #     model: Optional[str] = None,
+    #     **kwargs: Any
+    # ) -> ChatCompletions:
+    #     ...
 
     @distributed_trace
     def create(
@@ -480,7 +655,7 @@ class ChatCompletionsOperations(GeneratedChatOperations):
         data_sources: Optional[Sequence[AzureChatExtensionConfiguration]] = None,
         model: Optional[str] = None,
         **kwargs: Any
-    ) -> Union[ChatCompletions, Stream[ChatCompletions]]:
+    ) -> Stream[ChatCompletions]:
         if data_sources:
             response, pipeline_response = super()._create_extensions(
                 deployment_id=deployment_id,
@@ -527,11 +702,19 @@ class ChatCompletionsOperations(GeneratedChatOperations):
                 cls=lambda pipeline_response, deserialized, _: (deserialized, pipeline_response),
                 **kwargs
             )
+        cls = kwargs.pop("cls", None)
+
+        def callback(pipeline_response, json):
+            deserialized = _deserialize(ChatCompletions, json)
+            if cls:
+                return cls(pipeline_response, deserialized, {})
+            return deserialized
+
         if stream:
             return Stream[ChatCompletions](
-                return_type=ChatCompletions,
-                response=pipeline_response.http_response,
-                iter_response=response,
+                deserialization_callback=callback,
+                response=pipeline_response,
+                terminal_event="[DONE]",
             )
         return response
 

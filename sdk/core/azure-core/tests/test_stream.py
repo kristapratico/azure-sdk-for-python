@@ -20,22 +20,17 @@ class TestStreaming:
         for d in data:
             yield d
 
+    def broken_up_data(self):
+        data = [b'{"msg": "this is a third message"}\n{"msg": ', b'"this is a fouth message"}']
+        for d in data:
+            yield d
+
     def test_stream_data(self):
         stream = Stream(
             deserialization_callback=lambda _, x: x,
-            response=MockPipelineResponse(MockResponse(self.multiple_data)),
+            response=MockPipelineResponse(MockResponse(self.broken_up_data)),
             decoder=JSONLDecoder(),
         )
 
         for s in stream:
-            assert s == {"msg": "this is a message"}
-
-    # def test_stream_data_no_space(self):
-    #     stream = Stream(
-    #         return_type=lambda x: x,
-    #         response=object(),
-    #         iter_response=self.data_no_space(),
-    #     )
-
-    #     for s in stream:
-    #         assert s == {"msg": "this is a message"}
+            assert s

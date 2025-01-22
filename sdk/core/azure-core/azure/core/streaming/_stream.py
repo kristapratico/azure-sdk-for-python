@@ -24,10 +24,10 @@
 #
 # --------------------------------------------------------------------------
 
-from typing import Iterator, TypeVar, Callable, Any, Optional, Type
+from typing import Iterator, TypeVar, Callable, Any, Optional, Type, Protocol, Tuple
 from types import TracebackType
 
-from typing_extensions import Self
+from typing_extensions import Self, runtime_checkable
 
 from ..rest import HttpRequest, HttpResponse
 from ..pipeline import PipelineResponse
@@ -35,6 +35,33 @@ from ._decoders import JSONLDecoder
 
 
 ReturnType = TypeVar("ReturnType")
+
+
+
+# TODO ensure protocols actually correctly represent the types
+
+@runtime_checkable
+class EventType(Protocol):
+    data: str
+
+    def json(self) -> Any:
+        ...
+
+
+@runtime_checkable
+class StreamDecoder(Protocol):
+    data: str
+    line_separators: Tuple[bytes, ...]
+
+    def iter_events(self, iter_bytes: Iterator[bytes]) -> Iterator[EventType]:
+        ...
+
+    def event(self) -> EventType:
+        ...
+
+    def decode(self, line: str) -> None:
+        ...
+
 
 
 class Stream(Iterator[ReturnType]):
@@ -52,13 +79,13 @@ class Stream(Iterator[ReturnType]):
         *,
         response: PipelineResponse[HttpRequest, HttpResponse],
         deserialization_callback: Callable[[Any, Any], ReturnType],
-        decoder: Any = None,  # TODO will be a protocol
+        decoder: StreamDecoder = None,
         terminal_event: Optional[str] = None,
     ) -> None:
         self._response = response.http_response
         self._deserialization_callback = deserialization_callback
         self._terminal_event = terminal_event
-        self._iterator = self._iter_events()  # TODO allow user to pass in and create own iterator class, actually this should be part of the decoder
+        self._iterator = self.__iter__()
 
         if decoder is not None:
             self._decoder = decoder
@@ -68,46 +95,20 @@ class Stream(Iterator[ReturnType]):
             raise ValueError(
                 f"Unsupported Content-Type "
                 f"{self._response.headers.get('Content-Type')} "
-                "for streaming. Provide a decoder."
+                "for streaming. Provide a custom decoder."
             )
-
 
     def __next__(self) -> ReturnType:
         return self._iterator.__next__()
 
     def __iter__(self) -> Iterator[ReturnType]:
-        yield from self._iterator
+        for event in self._decoder.iter_events(self._response.iter_bytes()):
+            if event.data == self._terminal_event:
+                break
 
-    def _iter_events(self) -> Iterator[ReturnType]:
-        for line in self._parse_chunk(self._response.iter_bytes()):
-            for data in line.splitlines():
-                if data:
-                    self._decoder.decode(data)
-                else:
-                    event = self._decoder.event()
-                    if self._terminal_event:
-                        if event.data == self._terminal_event:
-                            break
-
-                    result = self._deserialization_callback(self._response, event.json())
-
-                    yield result
-        if data:
-            event = self._decoder.event()
             result = self._deserialization_callback(self._response, event.json())
 
             yield result
-
-    def _parse_chunk(self, iter_bytes: Iterator[bytes]) -> Iterator[str]:
-        data = b''
-        for chunk in iter_bytes:
-            for line in chunk.splitlines(keepends=True):
-                data += line
-                if data.endswith(self._decoder.line_endings):
-                    yield data.decode("utf-8")
-                    data = b''
-        if data:
-            yield data
 
     def __exit__(
         self,

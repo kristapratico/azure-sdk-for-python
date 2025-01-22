@@ -23,8 +23,7 @@
 # IN THE SOFTWARE.
 #
 # --------------------------------------------------------------------------
-
-from typing import List
+from typing import Iterator, List
 
 from ._events import JSONLEvent
 
@@ -32,12 +31,37 @@ from ._events import JSONLEvent
 class JSONLDecoder:
     def __init__(self) -> None:
         self.data: List[str] = []
-        self.line_endings = (b"\n", b"\r\n")
+        self.line_separators = (b"\n", b"\r\n")
 
     def decode(self, line: str) -> None:
         self.data.append(line)
 
+    def iter_events(self, iter_bytes) -> Iterator[JSONLEvent]:
+        for line in self._parse_chunk(iter_bytes):
+            for data in line.splitlines():
+                if data:
+                    self.decode(data)
+
+                event = self.event()
+                if event:
+                    yield event
+
+    def _parse_chunk(self, iter_bytes: Iterator[bytes]) -> Iterator[str]:
+        data = b''
+        for chunk in iter_bytes:
+            for line in chunk.splitlines(keepends=True):
+                data += line
+                if data.endswith(self.line_separators):
+                    yield data.decode("utf-8")
+                    data = b''
+
+        # the last line did not end with a line separator
+        if data:
+            yield data.decode("utf-8")
+
     def event(self) -> JSONLEvent:
+        if not self.data:
+            return
         jsonl = JSONLEvent(data="\n".join(self.data))
         self.data = []
         return jsonl

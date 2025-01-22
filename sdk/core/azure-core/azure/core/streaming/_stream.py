@@ -24,7 +24,7 @@
 #
 # --------------------------------------------------------------------------
 
-from typing import Iterator, TypeVar, Callable, Any, Optional, Type, Protocol, Tuple
+from typing import Iterator, TypeVar, Callable, Any, Optional, Type, Protocol, Tuple, List
 from types import TracebackType
 
 from typing_extensions import Self, runtime_checkable
@@ -50,8 +50,7 @@ class EventType(Protocol):
 
 @runtime_checkable
 class StreamDecoder(Protocol):
-    data: str
-    line_separators: Tuple[bytes, ...]
+    data: List[str]
 
     def iter_events(self, iter_bytes: Iterator[bytes]) -> Iterator[EventType]:
         ...
@@ -78,14 +77,14 @@ class Stream(Iterator[ReturnType]):
         self,
         *,
         response: PipelineResponse[HttpRequest, HttpResponse],
-        deserialization_callback: Callable[[Any, Any], ReturnType],
-        decoder: StreamDecoder = None,
+        deserialization_callback: Callable[[Any, Any], ReturnType], # TODO type hint correct?
+        decoder: Optional[StreamDecoder] = None,
         terminal_event: Optional[str] = None,
     ) -> None:
         self._response = response.http_response
         self._deserialization_callback = deserialization_callback
         self._terminal_event = terminal_event
-        self._iterator = self.__iter__()
+        self._iterator = self._iter_events()
 
         if decoder is not None:
             self._decoder = decoder
@@ -93,7 +92,7 @@ class Stream(Iterator[ReturnType]):
             self._decoder = JSONLDecoder()
         else:
             raise ValueError(
-                f"Unsupported Content-Type "
+                f"Unsupported content-type "
                 f"{self._response.headers.get('Content-Type')} "
                 "for streaming. Provide a custom decoder."
             )
@@ -102,12 +101,14 @@ class Stream(Iterator[ReturnType]):
         return self._iterator.__next__()
 
     def __iter__(self) -> Iterator[ReturnType]:
+        yield from self._iterator
+
+    def _iter_events(self) -> Iterator[ReturnType]:
         for event in self._decoder.iter_events(self._response.iter_bytes()):
             if event.data == self._terminal_event:
                 break
 
             result = self._deserialization_callback(self._response, event.json())
-
             yield result
 
     def __exit__(

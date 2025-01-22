@@ -147,76 +147,6 @@ def build_audio_translations_request(deployment_id: str, **kwargs: Any) -> HttpR
     return HttpRequest(method="POST", url=_url, params=_params, headers=_headers, **kwargs)
 
 
-class ServerSentEvent:
-    def __init__(
-        self,
-        *,
-        data: Optional[str] = None,
-        event: Optional[str] = None,
-        id: Optional[str] = None,
-        retry: Optional[int] = None,
-    ) -> None:
-        self.data = data
-        self.event = event
-        self.id = id
-        self.retry = retry
-
-    def json(self) -> Any:
-        return json.loads(self.data)
-
-
-class SSEDecoder:
-    def __init__(self) -> None:
-        self._data: list[str] = []
-        self._last_event_id = None
-        self._event = None
-        self._retry = None
-
-    def decode(self, line: str) -> None:
-        if line.startswith(":"):
-            # comment, ignore the line
-            return None
-
-        if ":" in line:
-            field, _, value = line.partition(":")
-            if value.startswith(" "):
-                # data:test and data: test are equivalent
-                value = value[1:]
-        else:
-            field = line
-            value = ""
-
-        if field == "data":
-            self._data.append(value)
-        elif field == "event":
-            self._event = value
-        elif field == "id":
-            if "\0" in value:
-                pass
-            else:
-                self._last_event_id = value
-        elif field == "retry":
-            try:
-                self._retry = int(value)
-            except (TypeError, ValueError):
-                pass
-
-        # else: ignore the field
-
-    def event(self) -> ServerSentEvent:
-        sse = ServerSentEvent(
-            event="data",
-            data="\n".join(self._data),
-            id=self._last_event_id,
-            retry=self._retry,
-        )
-        
-        self._data = []
-        self._event = None
-        self._retry = None
-        return sse
-
-
 class JSONLEvent:
     def __init__(
         self,
@@ -357,6 +287,152 @@ class ChunkIterator(Iterator[ReturnType]):
 
 
 
+class ServerSentEvent:
+    def __init__(
+        self,
+        *,
+        data: Optional[str] = None,
+        event: Optional[str] = None,
+        id: Optional[str] = None,
+        retry: Optional[int] = None,
+    ) -> None:
+        self.data = data
+        self.event = event
+        self.id = id
+        self.retry = retry
+
+    def json(self) -> Any:
+        return json.loads(self.data)
+
+
+# class SSEDecoder:
+#     def __init__(self) -> None:
+#         self._data: list[str] = []
+#         self._last_event_id = None
+#         self._event = None
+#         self._retry = None
+
+#     def decode(self, line: str) -> None:
+#         if line.startswith(":"):
+#             # comment, ignore the line
+#             return None
+
+#         if ":" in line:
+#             field, _, value = line.partition(":")
+#             if value.startswith(" "):
+#                 # data:test and data: test are equivalent
+#                 value = value[1:]
+#         else:
+#             field = line
+#             value = ""
+
+#         if field == "data":
+#             self._data.append(value)
+#         elif field == "event":
+#             self._event = value
+#         elif field == "id":
+#             if "\0" in value:
+#                 pass
+#             else:
+#                 self._last_event_id = value
+#         elif field == "retry":
+#             try:
+#                 self._retry = int(value)
+#             except (TypeError, ValueError):
+#                 pass
+
+#         # else: ignore the field
+
+#     def event(self) -> ServerSentEvent:
+#         sse = ServerSentEvent(
+#             event="data",
+#             data="\n".join(self._data),
+#             id=self._last_event_id,
+#             retry=self._retry,
+#         )
+        
+#         self._data = []
+#         self._event = None
+#         self._retry = None
+#         return sse
+
+
+
+class SSEDecoder:
+    def __init__(self) -> None:
+        self._data: List[str] = []
+        self._line_separators = (b'\r\r', b'\n\n', b'\r\n\r\n')
+        self._last_event_id = None
+        self._event = None
+        self._retry = None
+
+    def decode(self, line: bytes) -> None:
+        line = line.decode("utf-8")
+        if line.startswith(":"):
+            # comment, ignore the line
+            return None
+
+        if ":" in line:
+            field, _, value = line.partition(":")
+            if value.startswith(" "):
+                # data:test and data: test are equivalent
+                value = value[1:]
+        else:
+            field = line
+            value = ""
+
+        if field == "data":
+            self._data.append(value)
+        elif field == "event":
+            self._event = value
+        elif field == "id":
+            if "\0" in value:
+                pass
+            else:
+                self._last_event_id = value
+        elif field == "retry":
+            try:
+                self._retry = int(value)
+            except (TypeError, ValueError):
+                pass
+
+        # else: ignore the field
+
+    def iter_events(self, iter_bytes: Iterator[bytes]) -> Iterator[ServerSentEvent]:
+        for line in self._parse_chunk(iter_bytes):
+            for data in line.splitlines():
+                if data:
+                    self.decode(data)
+                else:
+                    event = self.event()
+                    yield event
+
+    def _parse_chunk(self, iter_bytes: Iterator[bytes]) -> Iterator[bytes]:
+        data = b''
+        for chunk in iter_bytes:
+            for line in chunk.splitlines(keepends=True):
+                data += line
+                if data.endswith(self._line_separators):
+                    yield data
+                    data = b''
+        if data:
+            yield data
+
+    def event(self) -> Union[ServerSentEvent, None]:
+        if not self._data:
+            return
+
+        sse = ServerSentEvent(
+            event="data",
+            data="\n".join(self._data),
+            id=self._last_event_id,
+            retry=self._retry,
+        )
+        self._data = []
+        self._event = None
+        self._retry = None
+        return sse
+
 class Stream(Iterator[ReturnType]):
     """Stream class.
 
@@ -370,8 +446,9 @@ class Stream(Iterator[ReturnType]):
     def __init__(
         self,
         *,
-        response: PipelineResponse,
-        deserialization_callback: Callable[[Any, Any], ReturnType],
+        response: PipelineResponse[HttpRequest, HttpResponse],
+        deserialization_callback: Callable[[Any, Any], ReturnType], # TODO type hint correct?
+        decoder = None,
         terminal_event: Optional[str] = None,
     ) -> None:
         self._response = response.http_response
@@ -387,28 +464,12 @@ class Stream(Iterator[ReturnType]):
         yield from self._iterator
 
     def _iter_events(self) -> Iterator[ReturnType]:
-        for line in self._parse_chunk(self._response.iter_bytes()):
-            for data in line.splitlines():
-                if data:
-                    self._decoder.decode(data)
-                else:
-                    event = self._decoder.event()
-                    if self._terminal_event:
-                        if event.data == self._terminal_event:
-                            break
+        for event in self._decoder.iter_events(self._response.iter_bytes()):
+            if event.data == self._terminal_event:
+                break
 
-                    event_model = self._deserialization_callback(self._response, event.json())
-
-                    yield event_model
-
-    def _parse_chunk(self, iter_bytes: Iterator[bytes]) -> Iterator[str]:
-        data = b''
-        for chunk in iter_bytes:
-            for line in chunk.splitlines(keepends=True):
-                data += line
-                if data.endswith((b'\r\r', b'\n\n', b'\r\n\r\n')):
-                    yield data.decode("utf-8")
-                    data = b''
+            result = self._deserialization_callback(self._response, event.json())
+            yield result
 
     def __exit__(
         self,

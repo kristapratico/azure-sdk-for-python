@@ -30,39 +30,31 @@ from ._events import JSONLEvent
 
 class JSONLDecoder:
     def __init__(self) -> None:
-        self.data: List[str] = []
-        self.line_separators: Tuple[bytes, ...] = (b"\n", b"\r\n")
+        self._data: str = ""
+        self._line_separators: Tuple[bytes, ...] = (b"\n", b"\r\n")
 
     def decode(self, line: bytes) -> None:
-        data = line.decode("utf-8")
-        self.data.append(data)
+        self._data = line.decode("utf-8")
 
     def iter_events(self, iter_bytes: Iterator[bytes]) -> Iterator[JSONLEvent]:
-        for line in self._parse_chunk(iter_bytes):
-            if line:
-                self.decode(line)
-
-            event = self.event()
-            if event:
-                yield event
-
-    def _parse_chunk(self, iter_bytes: Iterator[bytes]) -> Iterator[bytes]:
         data = b''
         for chunk in iter_bytes:
             for line in chunk.splitlines(keepends=True):
                 data += line
-                if data.endswith(self.line_separators):
-                    yield data
+                if data.endswith(self._line_separators):
+                    self.decode(data.splitlines()[0])
+                    event = self.event()
+                    yield event
                     data = b''
 
-        # the last line did not end with a line separator
-        # ok per JSONL spec: https://jsonlines.org/
         if data:
-            yield data
+            # the last line did not end with a line separator
+            # ok per JSONL spec: https://jsonlines.org/
+            self.decode(data)
+            event = self.event()
+            yield event
 
-    def event(self) -> Union[JSONLEvent, None]:
-        if not self.data:
-            return
-        jsonl = JSONLEvent(data="\n".join(self.data))
-        self.data = []
+    def event(self) -> JSONLEvent:
+        jsonl = JSONLEvent(data=self._data)
+        self._data = ""
         return jsonl

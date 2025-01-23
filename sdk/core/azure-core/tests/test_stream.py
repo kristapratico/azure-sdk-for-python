@@ -1,82 +1,96 @@
+# --------------------------------------------------------------------------
+#
+# Copyright (c) Microsoft Corporation. All rights reserved.
+#
+# The MIT License (MIT)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the ""Software""), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+# --------------------------------------------------------------------------
+
+import pytest
+
+from azure.core.rest import HttpRequest
 from azure.core.streaming import Stream
 from azure.core.streaming._decoders import JSONLDecoder
 
 
-class MockResponse:
-    def __init__(self, iter_bytes):
-        self.iter_bytes = iter_bytes
+@pytest.fixture
+def deserialization_callback():
+    def _callback(_, json):
+        return json
+
+    return _callback
 
 
-class MockPipelineResponse:
-    def __init__(self, http_response):
-        self.http_response = http_response
-
-
-class TestStreaming:
-
-    def data(self):
-        yield b'{"msg": "this is a message"}\n'
-
-    def multiple_data(self):
-        data = [b'{"msg": "this is a message"}\n', b'{"msg": "this is another message"}\n', b'{"msg": "this is a third message"}\n{"msg": "this is a fouth message"}']
-        yield from data
-
-    def broken_up_data(self):
-        data = [b'{"msg": "this is a third message"}\n{"msg": ', b'"this is a fouth message"}']
-        yield from data
-
-    def test_stream_data(self):
-        stream = Stream(
-            deserialization_callback=lambda _, x: x,
-            response=MockPipelineResponse(MockResponse(self.data)),
-            decoder=JSONLDecoder(),
+@pytest.fixture
+def stream(client, deserialization_callback):
+    def _callback(request, **kwargs):
+        initial_response = client.send_request(request=request, stream=True, _return_pipeline_response=True)
+        return Stream(
+            deserialization_callback=deserialization_callback,
+            response=initial_response,
         )
 
-        for s in stream:
-            assert s == {"msg": "this is a message"}
+    return _callback
 
-    def test_stream_multiple_data(self):
-        stream = Stream(
-            deserialization_callback=lambda _, x: x,
-            response=MockPipelineResponse(MockResponse(self.multiple_data)),
-            decoder=JSONLDecoder(),
-        )
-        messages = []
-        for s in stream:
-            messages.append(s)
-        assert messages == [
-            {"msg": "this is a message"},
-            {"msg": "this is another message"},
-            {"msg": "this is a third message"},
-            {"msg": "this is a fouth message"},
-        ]
 
-    def test_stream_broken_up_data(self):
-        stream = Stream(
-            deserialization_callback=lambda _, x: x,
-            response=MockPipelineResponse(MockResponse(self.broken_up_data)),
-            decoder=JSONLDecoder(),
-        )
+def test_stream_jsonl_basic(stream):
+    jsonl_stream = stream(HttpRequest("GET", "/streams/jsonl_basic"))
+    messages = []
+    for s in jsonl_stream:
+        messages.append(s)
+    assert messages == [
+        {"msg": "this is a message"},
+        {"msg": "this is another message"},
+        {"msg": "this is a third message"},
+        {"msg": "this is a fourth message"},
+    ]
 
-        messages = []
-        for s in stream:
-            messages.append(s)
-        assert messages == [
-            {"msg": "this is a third message"},
-            {"msg": "this is a fouth message"},
-        ]
 
-    def test_stream_next(self):
-        stream = Stream(
-            deserialization_callback=lambda _, x: x,
-            response=MockPipelineResponse(MockResponse(self.multiple_data)),
-            decoder=JSONLDecoder(),
-        )
-        message = next(stream)
-        assert message == {"msg": "this is a message"}
-        message = next(stream)
-        assert message == {"msg": "this is another message"}
-        message = next(stream)
-        assert message == {"msg": "this is a third message"}
-        message = next(stream)
-        assert message == {"msg": "this is a fouth message"}
+def test_stream_jsonl_no_final_line_separator(stream):
+    jsonl_stream = stream(HttpRequest("GET", "/streams/jsonl_no_final_line_separator"))
+    for s in jsonl_stream:
+        assert s == {"msg": "this is a message"}
+
+
+def test_stream_jsonl_broken_up_data(stream):
+    jsonl_stream = stream(HttpRequest("GET", "/streams/jsonl_broken_up_data"))
+    messages = []
+    for s in jsonl_stream:
+        messages.append(s)
+    assert messages == [
+        {"msg": "this is a third message"},
+        {"msg": "this is a fourth message"},
+    ]
+
+
+def test_stream_jsonl_next(stream):
+    jsonl_stream = stream(HttpRequest("GET", "/streams/jsonl_basic"))
+    message = next(jsonl_stream)
+    assert message == {"msg": "this is a message"}
+    message = next(jsonl_stream)
+    assert message == {"msg": "this is another message"}
+    message = next(jsonl_stream)
+    assert message == {"msg": "this is a third message"}
+    message = next(jsonl_stream)
+    assert message == {"msg": "this is a fourth message"}
+
+    with pytest.raises(StopIteration):
+        next(jsonl_stream)

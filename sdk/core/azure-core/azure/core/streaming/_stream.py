@@ -24,7 +24,7 @@
 #
 # --------------------------------------------------------------------------
 
-from typing import Iterator, TypeVar, Callable, Any, Optional, Type, Protocol, Tuple, List
+from typing import Iterator, TypeVar, Callable, Any, Optional, Type, Protocol
 from types import TracebackType
 
 from typing_extensions import Self, runtime_checkable
@@ -50,7 +50,6 @@ class EventType(Protocol):
 
 @runtime_checkable
 class StreamDecoder(Protocol):
-    data: List[str]
 
     def iter_events(self, iter_bytes: Iterator[bytes]) -> Iterator[EventType]:
         ...
@@ -58,7 +57,7 @@ class StreamDecoder(Protocol):
     def event(self) -> EventType:
         ...
 
-    def decode(self, line: str) -> None:
+    def decode(self, line: bytes) -> None:
         ...
 
 
@@ -93,7 +92,7 @@ class Stream(Iterator[ReturnType]):
         else:
             raise ValueError(
                 f"Unsupported content-type "
-                f"{self._response.headers.get('Content-Type')} "
+                f"'{self._response.headers.get('Content-Type')}' "
                 "for streaming. Provide a custom decoder."
             )
 

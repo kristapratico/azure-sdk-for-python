@@ -24,7 +24,7 @@
 #
 # --------------------------------------------------------------------------
 
-from ._stream import Stream
+from ._stream import Stream, AsyncStream
 
 
-__all__ = ["Stream"]
+__all__ = ["Stream", "AsyncStream"]

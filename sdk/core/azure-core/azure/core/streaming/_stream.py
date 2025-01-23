@@ -24,7 +24,7 @@
 #
 # --------------------------------------------------------------------------
 
-from typing import Iterator, TypeVar, Callable, Any, Optional, Type, Protocol
+from typing import Iterator, AsyncIterator, TypeVar, Callable, Any, Optional, Type, Protocol
 from types import TracebackType
 
 from typing_extensions import Self, runtime_checkable
@@ -52,6 +52,9 @@ class EventType(Protocol):
 class StreamDecoder(Protocol):
 
     def iter_events(self, iter_bytes: Iterator[bytes]) -> Iterator[EventType]:
+        ...
+
+    def aiter_events(self, iter_bytes: AsyncIterator[bytes]) -> AsyncIterator[EventType]:
         ...
 
     def event(self) -> EventType:
@@ -123,3 +126,68 @@ class Stream(Iterator[ReturnType]):
 
     def close(self) -> None:
         self._response.close()
+
+
+
+class AsyncStream(AsyncIterator[ReturnType]):
+    """AsyncStream class.
+
+    :keyword response: The response object.
+    :paramtype response: ~azure.core.pipeline.PipelineResponse
+    :keyword deserialization_callback: A callback that takes HttpResponse and returns a deserialized object
+    :paramtype deserialization_callback: Callable
+    :keyword terminal_event: A terminal event that indicates the end of the SSE stream.
+    :paramtype terminal_event: Optional[str]
+    """
+    def __init__(
+        self,
+        *,
+        response: PipelineResponse[HttpRequest, HttpResponse],
+        deserialization_callback: Callable[[Any, Any], ReturnType], # TODO type hint correct?
+        decoder: Optional[StreamDecoder] = None,
+        terminal_event: Optional[str] = None,
+    ) -> None:
+        self._response = response.http_response
+        self._deserialization_callback = deserialization_callback
+        self._terminal_event = terminal_event
+        self._iterator = self._aiter_events()
+
+        if decoder is not None:
+            self._decoder = decoder
+        elif self._response.headers.get("Content-Type") == "application/jsonl":
+            self._decoder = JSONLDecoder()
+        else:
+            raise ValueError(
+                f"Unsupported content-type "
+                f"'{self._response.headers.get('Content-Type')}' "
+                "for streaming. Provide a custom decoder."
+            )
+
+    def __anext__(self) -> ReturnType:
+        return self._iterator.__anext__()
+
+    async def __aiter__(self) -> AsyncIterator[ReturnType]:
+        async for item in self._iterator:
+            yield item
+
+    async def _aiter_events(self) -> AsyncIterator[ReturnType]:
+        async for event in self._decoder.aiter_events(self._response.iter_bytes()):
+            if event.data == self._terminal_event:
+                break
+
+            result = self._deserialization_callback(self._response, event.json())
+            yield result
+
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]] = None,
+        exc_value: Optional[BaseException] = None,
+        traceback: Optional[TracebackType] = None,
+    ) -> None:
+        await self.close()
+
+    def __aenter__(self) -> Self:
+        return self
+
+    async def close(self) -> None:
+        await self._response.close()

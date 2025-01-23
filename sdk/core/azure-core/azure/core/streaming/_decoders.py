@@ -23,7 +23,7 @@
 # IN THE SOFTWARE.
 #
 # --------------------------------------------------------------------------
-from typing import Iterator, List, Tuple, Union
+from typing import Iterator, AsyncIterator, Tuple
 
 from ._events import JSONLEvent
 
@@ -39,6 +39,24 @@ class JSONLDecoder:
     def iter_events(self, iter_bytes: Iterator[bytes]) -> Iterator[JSONLEvent]:
         data = b''
         for chunk in iter_bytes:
+            for line in chunk.splitlines(keepends=True):
+                data += line
+                if data.endswith(self._line_separators):
+                    self.decode(data.splitlines()[0])
+                    event = self.event()
+                    yield event
+                    data = b''
+
+        if data:
+            # the last line did not end with a line separator
+            # ok per JSONL spec: https://jsonlines.org/
+            self.decode(data)
+            event = self.event()
+            yield event
+
+    async def aiter_events(self, iter_bytes: AsyncIterator[bytes]) -> AsyncIterator[JSONLEvent]:
+        data = b''
+        async for chunk in iter_bytes:
             for line in chunk.splitlines(keepends=True):
                 data += line
                 if data.endswith(self._line_separators):

@@ -36,8 +36,6 @@ from ._decoders import JSONLDecoder
 
 ReturnType = TypeVar("ReturnType")
 
-
-
 # TODO ensure protocols actually correctly represent the types
 
 @runtime_checkable
@@ -54,7 +52,7 @@ class StreamDecoder(Protocol):
     def iter_events(self, iter_bytes: Iterator[bytes]) -> Iterator[EventType]:
         ...
 
-    def aiter_events(self, iter_bytes: AsyncIterator[bytes]) -> AsyncIterator[EventType]:
+    async def aiter_events(self, iter_bytes: AsyncIterator[bytes]) -> AsyncIterator[EventType]:
         ...
 
     def event(self) -> EventType:
@@ -126,7 +124,6 @@ class Stream(Iterator[ReturnType]):
 
     def close(self) -> None:
         self._response.close()
-
 
 
 class AsyncStream(AsyncIterator[ReturnType]):

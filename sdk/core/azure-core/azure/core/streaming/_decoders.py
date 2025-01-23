@@ -23,6 +23,7 @@
 # IN THE SOFTWARE.
 #
 # --------------------------------------------------------------------------
+
 from typing import Iterator, AsyncIterator, Tuple
 
 from ._events import JSONLEvent

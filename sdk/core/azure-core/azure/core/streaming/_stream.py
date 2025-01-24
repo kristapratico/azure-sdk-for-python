@@ -31,7 +31,7 @@ from typing_extensions import Self, runtime_checkable
 
 from ..rest import HttpRequest, HttpResponse
 from ..pipeline import PipelineResponse
-from ._decoders import JSONLDecoder
+from ._decoders import JSONLDecoder, SSEDecoder
 
 
 ReturnType = TypeVar("ReturnType")
@@ -143,6 +143,7 @@ class AsyncStream(AsyncIterator[ReturnType]):
         deserialization_callback: Callable[[Any, Any], ReturnType], # TODO type hint correct?
         decoder: Optional[StreamDecoder] = None,
         terminal_event: Optional[str] = None,
+        client: Optional[Any] = None,
     ) -> None:
         self._response = response.http_response
         self._deserialization_callback = deserialization_callback
@@ -153,6 +154,8 @@ class AsyncStream(AsyncIterator[ReturnType]):
             self._decoder = decoder
         elif self._response.headers.get("Content-Type") == "application/jsonl":
             self._decoder = JSONLDecoder()
+        elif self._response.headers.get("Content-Type") == "text/event-stream":
+            self._decoder = SSEDecoder(client=client, response=self._response)
         else:
             raise ValueError(
                 f"Unsupported content-type "

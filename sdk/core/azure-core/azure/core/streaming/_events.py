@@ -25,7 +25,7 @@
 # --------------------------------------------------------------------------
 
 import json
-from typing import Any
+from typing import Any, Optional
 
 
 class JSONLEvent:
@@ -36,6 +36,24 @@ class JSONLEvent:
         data: str
     ) -> None:
         self.data = data
+
+    def json(self) -> Any:
+        return json.loads(self.data)
+
+
+class ServerSentEvent:
+    def __init__(
+        self,
+        *,
+        data: str,
+        event: Optional[str] = None,
+        last_event_id: Optional[str] = None,
+        retry: Optional[int] = None,
+    ) -> None:
+        self.data = data
+        self.event = event
+        self.last_event_id = last_event_id
+        self.retry = retry
 
     def json(self) -> Any:
         return json.loads(self.data)

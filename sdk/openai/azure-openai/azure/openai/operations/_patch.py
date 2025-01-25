@@ -365,6 +365,7 @@ class SSEDecoder:
         self._last_event_id = None
         self._event = None
         self._retry = None
+        self.counter = 0
 
     def decode(self, line: bytes) -> None:
         line = line.decode("utf-8")
@@ -410,6 +411,12 @@ class SSEDecoder:
     def _parse_chunk(self, iter_bytes: Iterator[bytes]) -> Iterator[bytes]:
         data = b''
         for chunk in iter_bytes:
+            # randomly throw a TypeError to test retry
+            import random
+            if random.randint(0, 1) == 1:
+                self.counter += 1
+                if self.counter == 2 or self.counter == 4:
+                    raise TypeError
             for line in chunk.splitlines(keepends=True):
                 data += line
                 if data.endswith(self._line_separators):
@@ -418,10 +425,7 @@ class SSEDecoder:
         if data:
             yield data
 
-    def event(self) -> Union[ServerSentEvent, None]:
-        if not self._data:
-            return
-
+    def event(self) -> ServerSentEvent:
         sse = ServerSentEvent(
             event="data",
             data="\n".join(self._data),
@@ -432,6 +436,8 @@ class SSEDecoder:
         self._event = None
         self._retry = None
         return sse
+
+
 
 class Stream(Iterator[ReturnType]):
     """Stream class.
@@ -450,11 +456,14 @@ class Stream(Iterator[ReturnType]):
         deserialization_callback: Callable[[Any, Any], ReturnType], # TODO type hint correct?
         decoder = None,
         terminal_event: Optional[str] = None,
+        client: Optional[Any] = None,
     ) -> None:
+        self._initial_response = response
         self._response = response.http_response
         self._decoder = SSEDecoder() if self._response.headers.get("Content-Type") == "text/event-stream" else JSONLDecoder()
         self._deserialization_callback = deserialization_callback
         self._terminal_event = terminal_event
+        self._client = client
         self._iterator = self._iter_events()
 
     def __next__(self) -> ReturnType:
@@ -464,12 +473,31 @@ class Stream(Iterator[ReturnType]):
         yield from self._iterator
 
     def _iter_events(self) -> Iterator[ReturnType]:
-        for event in self._decoder.iter_events(self._response.iter_bytes()):
-            if event.data == self._terminal_event:
-                break
+        try:
+            for event in self._decoder.iter_events(self._response.iter_bytes()):
+                if event.data == self._terminal_event:
+                    break
 
-            result = self._deserialization_callback(self._response, event.json())
-            yield result
+                result = self._deserialization_callback(self._response, event.json())
+                yield result
+        except TypeError: # TODO: TypeError used to simulate retry, fix to actual exception
+            # only SSE streams should retry
+            if isinstance(self._decoder, SSEDecoder) and self._client:
+                yield from self._retry()
+            else:
+                raise
+
+    def _retry(self):
+        if self._decoder._retry is not None:
+            self._client._pipeline._transport.sleep(self._decoder._retry / 1000)
+        headers = {"Accept": "text/event-stream"}
+        if self._decoder._last_event_id:
+            headers["Last-Event-ID"] = self._decoder._last_event_id
+        self._response = self._client.send_request(self._initial_response.http_request, headers=headers, stream=True)
+        if self._response.status_code == 204:
+            # server says stop trying to connect
+            return
+        yield from self._iter_events()
 
     def __exit__(
         self,
@@ -776,6 +804,7 @@ class ChatCompletionsOperations(GeneratedChatOperations):
                 deserialization_callback=callback,
                 response=pipeline_response,
                 terminal_event="[DONE]",
+                client=self._client,
             )
         return response
 

@@ -25,7 +25,7 @@
 # --------------------------------------------------------------------------
 
 import json
-from typing import Any, Protocol
+from typing import Any, Protocol, Optional
 
 from typing_extensions import runtime_checkable
 
@@ -64,4 +64,22 @@ class JSONLEvent:
         :rtype: any
         :return: The JSON data for the event
         """
+        return json.loads(self.data)
+
+
+class ServerSentEvent:
+    def __init__(
+        self,
+        *,
+        data: str,
+        event_type: Optional[str] = None,
+        last_event_id: Optional[str] = None,
+        retry: Optional[int] = None,
+    ) -> None:
+        self.data = data
+        self.event_type = event_type
+        self.last_event_id = last_event_id
+        self.retry = retry
+
+    def json(self) -> Any:
         return json.loads(self.data)

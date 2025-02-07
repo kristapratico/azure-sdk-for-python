@@ -26,11 +26,11 @@
 
 import re
 import codecs
-from typing import Iterator, AsyncIterator, Protocol
+from typing import Iterator, AsyncIterator, Protocol, List
 
 from typing_extensions import runtime_checkable
 
-from .events import JSONLEvent, EventType
+from .events import JSONLEvent, ServerSentEvent, EventType
 
 
 @runtime_checkable
@@ -167,3 +167,161 @@ class AsyncJSONLDecoder:
         jsonl = JSONLEvent(data=self._data)
         self._data = ""
         return jsonl
+
+
+class SSEDecoder:
+    def __init__(self) -> None:
+        self._data: List[str] = []
+        self._last_event_id = None
+        self._event_type = None
+        self._retry = None
+        self._decoder = codecs.getincrementaldecoder("utf-8")()
+        self._line_separators = re.compile(r"\r\n\r\n|\n\n|\r\r")
+
+    def _parse_line(self, line: str) -> None:
+        if line.startswith(":"):
+            # comment, ignore the line
+            return None
+
+        if ":" in line:
+            field, _, value = line.partition(":")
+            if value.startswith(" "):
+                # data:test and data: test are equivalent
+                value = value[1:]
+        else:
+            field = line
+            value = ""
+
+        if field == "data":
+            self._data.append(value)
+        elif field == "event":
+            self._event_type = value
+        elif field == "id":
+            if "\0" in value:
+                pass
+            else:
+                self._last_event_id = value
+        elif field == "retry":
+            try:
+                self._retry = int(value)
+            except (TypeError, ValueError):
+                pass
+
+        # else: ignore the field
+
+    def _parse_chunk(self, iter_bytes: Iterator[bytes]) -> Iterator[str]:
+        buffer = ""
+        for chunk in iter_bytes:
+            buffer += self._decoder.decode(chunk)
+            while True:
+                match = self._line_separators.search(buffer)
+                if match:
+                    data = buffer[: match.end()]
+                    yield data
+                    buffer = buffer[match.end() :]
+                else:
+                    break
+
+        buffer += self._decoder.decode(b"", final=True)
+        if buffer:
+            yield buffer
+
+    def iter_events(self, iter_bytes: Iterator[bytes]) -> Iterator[ServerSentEvent]:
+        for data in self._parse_chunk(iter_bytes):
+            for line in data.splitlines():
+                if line:
+                    self._parse_line(line)
+                else:
+                    event = self.event()
+                    yield event
+
+    def event(self) -> ServerSentEvent:
+        sse = ServerSentEvent(
+            data="\n".join(self._data),
+            event_type=self._event_type or "message",
+            last_event_id=self._last_event_id,
+            retry=self._retry,
+        )
+        self._data = []
+        self._event_type = None
+        self._retry = None
+        return sse
+
+
+class AsyncSSEDecoder:
+    def __init__(self) -> None:
+        self._data: List[str] = []
+        self._last_event_id = None
+        self._event_type = None
+        self._retry = None
+        self._decoder = codecs.getincrementaldecoder("utf-8")()
+        self._line_separators = re.compile(r"\r\n\r\n|\n\n|\r\r")
+
+    def _parse_line(self, line: str) -> None:
+        if line.startswith(":"):
+            # comment, ignore the line
+            return None
+
+        if ":" in line:
+            field, _, value = line.partition(":")
+            if value.startswith(" "):
+                # data:test and data: test are equivalent
+                value = value[1:]
+        else:
+            field = line
+            value = ""
+
+        if field == "data":
+            self._data.append(value)
+        elif field == "event":
+            self._event_type = value
+        elif field == "id":
+            if "\0" in value:
+                pass
+            else:
+                self._last_event_id = value
+        elif field == "retry":
+            try:
+                self._retry = int(value)
+            except (TypeError, ValueError):
+                pass
+
+        # else: ignore the field
+
+    async def _parse_chunk(self, iter_bytes: AsyncIterator[bytes]) -> AsyncIterator[str]:
+        buffer = ""
+        async for chunk in iter_bytes:
+            buffer += self._decoder.decode(chunk)
+            while True:
+                match = self._line_separators.search(buffer)
+                if match:
+                    data = buffer[: match.end()]
+                    yield data
+                    buffer = buffer[match.end() :]
+                else:
+                    break
+
+        buffer += self._decoder.decode(b"", final=True)
+        if buffer:
+            yield buffer
+
+    async def aiter_events(self, iter_bytes: AsyncIterator[bytes]) -> AsyncIterator[ServerSentEvent]:
+        async for data in self._parse_chunk(iter_bytes):
+            for line in data.splitlines():
+                if line:
+                    self._parse_line(line)
+                else:
+                    event = self.event()
+                    yield event
+
+    def event(self) -> ServerSentEvent:
+        sse = ServerSentEvent(
+            data="\n".join(self._data),
+            event_type=self._event_type or "message",
+            last_event_id=self._last_event_id,
+            retry=self._retry,
+        )
+        self._data = []
+        self._event_type = None
+        self._retry = None
+        return sse

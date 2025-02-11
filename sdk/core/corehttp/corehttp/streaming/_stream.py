@@ -24,8 +24,10 @@
 #
 # --------------------------------------------------------------------------
 
+from __future__ import annotations
+
 from types import TracebackType
-from typing import Iterator, AsyncIterator, TypeVar, Callable, Any, Optional, Type
+from typing import Iterator, AsyncIterator, TypeVar, Callable, Any, Optional, Type, Mapping
 
 from typing_extensions import Self
 
@@ -61,6 +63,22 @@ class Stream(Iterator[ReturnType]):
         self._decoder = decoder
         self._deserialization_callback = deserialization_callback
         self._terminal_event = terminal_event
+        self._current_event = None
+        self._iterator = self._iter_results()
+
+    @property
+    def response(self) -> HttpResponse:
+        return self._response
+
+    @property
+    def current_event(self) -> Mapping[str, Any] | None:
+        if self._current_event:
+            return self._current_event.json()
+        return None
+
+    def reconnect(self, response: HttpResponse) -> None:
+        self._response = response
+        self._current_event = None
         self._iterator = self._iter_results()
 
     def __next__(self) -> ReturnType:
@@ -71,6 +89,7 @@ class Stream(Iterator[ReturnType]):
 
     def _iter_results(self) -> Iterator[ReturnType]:
         for event in self._decoder.iter_events(self._response.iter_bytes()):
+            self._current_event = event
             if event.data == self._terminal_event:
                 break
 
@@ -117,6 +136,22 @@ class AsyncStream(AsyncIterator[ReturnType]):
         self._decoder = decoder
         self._deserialization_callback = deserialization_callback
         self._terminal_event = terminal_event
+        self._current_event = None
+        self._iterator = self._iter_results()
+
+    @property
+    def response(self) -> HttpResponse:
+        return self._response
+
+    @property
+    def current_event(self) -> Mapping[str, Any] | None:
+        if self._current_event:
+            return self._current_event.json()
+        return None
+
+    def reconnect(self, response: HttpResponse) -> None:
+        self._response = response
+        self._current_event = None
         self._iterator = self._iter_results()
 
     async def __anext__(self) -> ReturnType:
@@ -128,6 +163,7 @@ class AsyncStream(AsyncIterator[ReturnType]):
 
     async def _iter_results(self) -> AsyncIterator[ReturnType]:
         async for event in self._decoder.aiter_events(self._response.iter_bytes()):
+            self._current_event = event
             if event.data == self._terminal_event:
                 break
 

@@ -82,7 +82,6 @@ class JSONLDecoder:
 
     def __init__(self) -> None:
         self._data: str = ""
-        self._decoder = codecs.getincrementaldecoder("utf-8")()
         self._line_separators = re.compile(r"\r\n|\n")
 
     def iter_events(self, iter_bytes: Iterator[bytes]) -> Iterator[JSONLEvent]:
@@ -94,8 +93,9 @@ class JSONLDecoder:
         :return: An iterator of JSONLEvent objects.
         """
         buffer = ""
+        decoder = codecs.getincrementaldecoder("utf-8")()
         for chunk in iter_bytes:
-            buffer += self._decoder.decode(chunk)
+            buffer += decoder.decode(chunk)
             while True:
                 match = self._line_separators.search(buffer)
                 if match:
@@ -105,7 +105,7 @@ class JSONLDecoder:
                 else:
                     break
 
-        buffer += self._decoder.decode(b"", final=True)
+        buffer += decoder.decode(b"", final=True)
         if buffer:
             # the last line did not end with a line separator
             # ok per JSONL spec
@@ -128,7 +128,6 @@ class AsyncJSONLDecoder:
 
     def __init__(self) -> None:
         self._data: str = ""
-        self._decoder = codecs.getincrementaldecoder("utf-8")()
         self._line_separators = re.compile(r"\r\n|\n")
 
     async def aiter_events(self, iter_bytes: AsyncIterator[bytes]) -> AsyncIterator[JSONLEvent]:
@@ -140,8 +139,9 @@ class AsyncJSONLDecoder:
         :return: An asynchronous iterator of JSONLEvent objects.
         """
         buffer = ""
+        decoder = codecs.getincrementaldecoder("utf-8")()
         async for chunk in iter_bytes:
-            buffer += self._decoder.decode(chunk)
+            buffer += decoder.decode(chunk)
             while True:
                 match = self._line_separators.search(buffer)
                 if match:
@@ -151,7 +151,7 @@ class AsyncJSONLDecoder:
                 else:
                     break
 
-        buffer += self._decoder.decode(b"", final=True)
+        buffer += decoder.decode(b"", final=True)
         if buffer:
             # the last line did not end with a line separator
             # ok per JSONL spec
@@ -175,7 +175,6 @@ class SSEDecoder:
         self._last_event_id = None
         self._event_type = None
         self._retry = None
-        self._decoder = codecs.getincrementaldecoder("utf-8")()
         self._line_separators = re.compile(r"\r\n\r\n|\n\n|\r\r")
 
     def _parse_line(self, line: str) -> None:
@@ -211,8 +210,9 @@ class SSEDecoder:
 
     def _parse_chunk(self, iter_bytes: Iterator[bytes]) -> Iterator[str]:
         buffer = ""
+        decoder = codecs.getincrementaldecoder("utf-8")()
         for chunk in iter_bytes:
-            buffer += self._decoder.decode(chunk)
+            buffer += decoder.decode(chunk)
             while True:
                 match = self._line_separators.search(buffer)
                 if match:
@@ -222,7 +222,7 @@ class SSEDecoder:
                 else:
                     break
 
-        buffer += self._decoder.decode(b"", final=True)
+        buffer += decoder.decode(b"", final=True)
         if buffer:
             yield buffer
 
@@ -254,7 +254,6 @@ class AsyncSSEDecoder:
         self._last_event_id = None
         self._event_type = None
         self._retry = None
-        self._decoder = codecs.getincrementaldecoder("utf-8")()
         self._line_separators = re.compile(r"\r\n\r\n|\n\n|\r\r")
 
     def _parse_line(self, line: str) -> None:
@@ -290,8 +289,9 @@ class AsyncSSEDecoder:
 
     async def _parse_chunk(self, iter_bytes: AsyncIterator[bytes]) -> AsyncIterator[str]:
         buffer = ""
+        decoder = codecs.getincrementaldecoder("utf-8")()
         async for chunk in iter_bytes:
-            buffer += self._decoder.decode(chunk)
+            buffer += decoder.decode(chunk)
             while True:
                 match = self._line_separators.search(buffer)
                 if match:
@@ -301,7 +301,7 @@ class AsyncSSEDecoder:
                 else:
                     break
 
-        buffer += self._decoder.decode(b"", final=True)
+        buffer += decoder.decode(b"", final=True)
         if buffer:
             yield buffer
 

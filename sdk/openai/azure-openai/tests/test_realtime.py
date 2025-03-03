@@ -13,6 +13,7 @@ from conftest import (
     ENV_AZURE_OPENAI_SWEDENCENTRAL_KEY,
     GPT_4_AZURE,
     GPT_4_OPENAI,
+    PREVIEW,
     configure,
 )
 
@@ -173,3 +174,29 @@ class TestRealtime(AzureRecordedTestCase):
                     assert event.text
                 elif event.type == "response.done":
                     break
+
+    @configure
+    @pytest.mark.parametrize(
+        "api_type, api_version",
+        [(GPT_4_AZURE, PREVIEW)],
+    )
+    def test_realtime_sessions_create(self, client, api_type, api_version, **kwargs):
+        # TODO using key b/c entra ID not supported yet
+        client = openai.AzureOpenAI(
+            azure_endpoint=os.getenv(ENV_AZURE_OPENAI_SWEDENCENTRAL_ENDPOINT),
+            api_key=os.getenv(ENV_AZURE_OPENAI_SWEDENCENTRAL_KEY),
+            api_version=api_version,
+        )
+        
+        session = client.beta.realtime.sessions.create(
+            modalities=["text"],
+            instructions="You are a helpful assistant.",
+            **kwargs
+        )
+
+        assert session.client_secret
+        assert session.modalities == ["text"]
+        assert session.instructions == "You are a helpful assistant."
+        assert session.max_response_output_tokens == "inf"
+        assert session.turn_detection
+        assert session.tool_choice == "auto"

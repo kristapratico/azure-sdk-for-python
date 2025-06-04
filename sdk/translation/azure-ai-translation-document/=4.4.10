@@ -1,0 +1,46 @@
+Defaulting to user installation because normal site-packages is not writeable
+Collecting tox
+  Downloading tox-4.26.0-py3-none-any.whl.metadata
+     - 3.7 kB ? 0:00:00
+Collecting cachetools>=5.5.1 (from tox)
+  Downloading cachetools-6.0.0-py3-none-any.whl.metadata
+     - 5.4 kB ? 0:00:00
+Requirement already satisfied: chardet>=5.2 in /usr/lib/python3/dist-packages (from tox) (5.2.0)
+Requirement already satisfied: colorama>=0.4.6 in /usr/lib/python3/dist-packages (from tox) (0.4.6)
+Collecting filelock>=3.16.1 (from tox)
+  Downloading filelock-3.18.0-py3-none-any.whl.metadata
+     - 2.9 kB ? 0:00:00
+Collecting packaging>=24.2 (from tox)
+  Downloading packaging-25.0-py3-none-any.whl.metadata
+     - 3.3 kB ? 0:00:00
+Requirement already satisfied: platformdirs>=4.3.6 in /usr/local/lib/python3.12/dist-packages (from tox) (4.3.8)
+Collecting pluggy>=1.5 (from tox)
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata
+     - 4.8 kB ? 0:00:00
+Collecting pyproject-api>=1.8 (from tox)
+  Downloading pyproject_api-1.9.1-py3-none-any.whl.metadata
+     - 2.7 kB ? 0:00:00
+Collecting virtualenv>=20.31 (from tox)
+  Downloading virtualenv-20.31.2-py3-none-any.whl.metadata
+     - 4.5 kB ? 0:00:00
+Collecting distlib<1,>=0.3.7 (from virtualenv>=20.31->tox)
+  Downloading distlib-0.3.9-py2.py3-none-any.whl.metadata
+     - 5.2 kB ? 0:00:00
+Downloading tox-4.26.0-py3-none-any.whl
+   - 172.8 kB 4.4 MB/s 0:00:00
+Downloading cachetools-6.0.0-py3-none-any.whl
+   - 11.0 kB 33.5 MB/s 0:00:00
+Downloading filelock-3.18.0-py3-none-any.whl
+   - 16.2 kB 58.2 MB/s 0:00:00
+Downloading packaging-25.0-py3-none-any.whl
+   - 66.5 kB 70.9 MB/s 0:00:00
+Downloading pluggy-1.6.0-py3-none-any.whl
+   - 20.5 kB 138.0 MB/s 0:00:00
+Downloading pyproject_api-1.9.1-py3-none-any.whl
+   - 13.2 kB 121.2 MB/s 0:00:00
+Downloading virtualenv-20.31.2-py3-none-any.whl
+   \ 6.1 MB 68.6 MB/s 0:00:00
+Downloading distlib-0.3.9-py2.py3-none-any.whl
+   - 469.0 kB 234.9 MB/s 0:00:00
+Installing collected packages: distlib, pluggy, packaging, filelock, cachetools, virtualenv, pyproject-api, tox
+Successfully installed cachetools-6.0.0 distlib-0.3.9 filelock-3.18.0 packaging-25.0 pluggy-1.6.0 pyproject-api-1.9.1 tox-4.26.0 virtualenv-20.31.2

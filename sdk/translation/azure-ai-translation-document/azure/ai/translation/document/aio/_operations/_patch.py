@@ -187,6 +187,7 @@ class AsyncDocumentTranslationLROPollingMethod(AsyncLROBasePolling):
 
 
 class DocumentTranslationClientOperationsMixin(GeneratedDocumentTranslationClientOperationsMixin):
+    """Mixin class for document translation client operations."""
 
     @distributed_trace
     async def _begin_translation(  # type: ignore[override]
@@ -246,6 +247,7 @@ class DocumentTranslationClientOperationsMixin(GeneratedDocumentTranslationClien
 class SingleDocumentTranslationClientOperationsMixin(
     GeneratedSingleDocumentTranslationClientOperationsMixin
 ):  # pylint: disable=name-too-long
+    """Mixin class for single document translation client operations."""
 
     @overload
     async def translate(

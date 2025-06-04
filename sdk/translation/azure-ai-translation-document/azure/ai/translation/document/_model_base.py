@@ -6,6 +6,7 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=protected-access, broad-except
+"""Base model classes for Azure AI Document Translation client library."""
 
 import copy
 import calendar

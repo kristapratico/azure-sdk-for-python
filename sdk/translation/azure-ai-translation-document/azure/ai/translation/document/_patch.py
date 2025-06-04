@@ -3,6 +3,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 # mypy: disable-error-code="attr-defined"
+"""Client implementation for Azure AI Document Translation service."""
 
 from typing import Any, List, Union, overload, Optional, cast, Mapping, IO, MutableMapping
 from enum import Enum

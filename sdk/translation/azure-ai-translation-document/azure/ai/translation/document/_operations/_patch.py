@@ -271,7 +271,7 @@ class TranslationPolling(OperationResourcePolling):
         error = body["error"]
         if body["error"].get("innerError", None):
             error = body["error"]["innerError"]
-        http_response_error = HttpResponseError(message="({}): {}".format(error["code"], error["message"]))
+        http_response_error = HttpResponseError(message=f"({error['code']}): {error['message']}")
         http_response_error.error = ODataV4Format(error)  # set error.code
         raise http_response_error
 

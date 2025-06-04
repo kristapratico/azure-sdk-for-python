@@ -126,17 +126,9 @@ class DocumentTranslationInput:
 
     def __repr__(self) -> str:
         return (
-            "DocumentTranslationInput(source_url={}, targets={}, "
-            "source_language={}, storage_type={}, "
-            "storage_source={}, prefix={}, suffix={})".format(
-                self.source_url,
-                repr(self.targets),
-                self.source_language,
-                repr(self.storage_type),
-                self.storage_source,
-                self.prefix,
-                self.suffix,
-            )[:1024]
+            f"DocumentTranslationInput(source_url={self.source_url}, targets={repr(self.targets)}, "
+            f"source_language={self.source_language}, storage_type={repr(self.storage_type)}, "
+            f"storage_source={self.storage_source}, prefix={self.prefix}, suffix={self.suffix})"[:1024]
         )
 
 

@@ -3,6 +3,7 @@
 # Licensed under the MIT License.
 # ------------------------------------
 # mypy: disable-error-code="attr-defined"
+"""Async client implementation for Azure AI Document Translation service."""
 
 import json
 import datetime

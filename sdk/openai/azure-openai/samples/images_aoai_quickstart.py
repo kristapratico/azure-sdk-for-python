@@ -62,7 +62,7 @@ def images_aoai_quickstart() -> None:
     image_path = os.path.join(image_dir, 'generated_image.png')
 
     # Retrieve the generated image
-    image_url = result.data[0].url  # extract image URL from response
+    image_url = result.data[0].url if result.data and len(result.data) > 0 else None  # extract image URL from response
     if image_url:
         generated_image = httpx.get(image_url).content  # download the image
 

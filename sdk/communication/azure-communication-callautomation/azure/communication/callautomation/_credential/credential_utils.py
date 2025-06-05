@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+"""Credential utilities for Azure Communication Call Automation."""
 import os
 
 COMMUNICATION_CUSTOM_ENDPOINT_ENABLED = "COMMUNICATION_CUSTOM_ENDPOINT_ENABLED"

@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+"""Async Call Automation client for Azure Communication Services."""
 from typing import List, Union, Optional, TYPE_CHECKING, AsyncIterable, overload, Dict
 from urllib.parse import urlparse
 import warnings

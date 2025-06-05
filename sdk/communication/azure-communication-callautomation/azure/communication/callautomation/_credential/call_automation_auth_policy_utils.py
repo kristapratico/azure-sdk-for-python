@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # -------------------------------------------------------------------------
+"""Authentication policy utilities for Azure Communication Call Automation."""
 
 from typing import Union
 from azure.core.credentials import TokenCredential, AzureKeyCredential

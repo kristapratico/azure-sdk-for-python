@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+"""User credential for Azure Communication Services."""
 
 from threading import Lock, Condition, Timer, TIMEOUT_MAX, Event
 from datetime import timedelta
@@ -12,7 +13,7 @@ from .utils import get_current_utc_as_int
 from .utils import create_access_token
 
 
-class CommunicationTokenCredential(object):
+class CommunicationTokenCredential:
     """Credential type used for authenticating to an Azure Communication service.
     :param str token: The token used to authenticate to an Azure Communication service.
     :keyword token_refresher: The sync token refresher to provide capacity to fetch a fresh token.

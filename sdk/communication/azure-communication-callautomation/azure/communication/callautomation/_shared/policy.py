@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # -------------------------------------------------------------------------
+"""Authentication policy for Azure Communication Services."""
 
 import hashlib
 import urllib
@@ -30,7 +31,7 @@ class HMACCredentialsPolicy(SansIOHTTPPolicy):
         access_key: Union[str, AzureKeyCredential],
         decode_url: bool = False,
     ) -> None:
-        super(HMACCredentialsPolicy, self).__init__()
+        super().__init__()
 
         if host.startswith("https://"):
             self._host = host.replace("https://", "")
@@ -67,7 +68,7 @@ class HMACCredentialsPolicy(SansIOHTTPPolicy):
         # There's a similar scenario in azure-storage-blob and azure-appconfiguration, the check logic is from there.
         try:
             from yarl import URL
-            from azure.core.pipeline.transport import (  # pylint:disable=non-abstract-transport-import
+            from azure.core.pipeline.transport import (
                 AioHttpTransport,
             )
 

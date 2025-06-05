@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
-# pylint: disable=C4763
+"""Async user credential for Azure Communication Services."""
 from asyncio import Condition, Lock, Event
 from datetime import timedelta
 from typing import Any
@@ -14,7 +14,7 @@ from .utils import create_access_token
 from .utils_async import AsyncTimer
 
 
-class CommunicationTokenCredential(object):
+class CommunicationTokenCredential:
     """Credential type used for authenticating to an Azure Communication service.
     :param str token: The token used to authenticate to an Azure Communication service.
     :keyword token_refresher: The async token refresher to provide capacity to fetch a fresh token.

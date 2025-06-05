@@ -9,6 +9,9 @@ jobs:
     permissions:
       contents: read
 
+    env:
+      COPILOT_AGENT_FIREWALL_ALLOW_LIST_ADDITIONS: pypi.org
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

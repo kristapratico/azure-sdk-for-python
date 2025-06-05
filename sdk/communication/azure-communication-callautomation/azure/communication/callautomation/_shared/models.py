@@ -2,6 +2,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 # ------------------------------------
+"""Shared model classes for Azure Communication Services."""
 from enum import Enum
 import warnings
 from typing import Mapping, Optional, Union, Any, cast

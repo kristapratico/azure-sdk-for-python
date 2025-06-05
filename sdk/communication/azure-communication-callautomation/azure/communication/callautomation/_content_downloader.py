@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+"""Content downloader for Azure Communication Call Automation."""
 
 from typing import Any
 

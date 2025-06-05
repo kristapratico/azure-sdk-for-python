@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+"""Azure Communication Call Automation client library."""
 import warnings
 
 from ._version import VERSION

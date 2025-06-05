@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
-# pylint: disable=C4763
+"""Async user credential for Azure Communication Services."""
 from asyncio import Condition, Lock, Event
 from datetime import timedelta
 from typing import Any

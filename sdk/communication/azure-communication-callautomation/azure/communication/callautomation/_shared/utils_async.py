@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # -------------------------------------------------------------------------
-# pylint: disable=C4763
+"""Shared async utility functions for Azure Communication Services."""
 from asyncio import sleep, ensure_future
 
 class AsyncTimer:

@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+"""Call Automation client for Azure Communication Services."""
 from typing import List, Union, Optional, TYPE_CHECKING, Iterable, overload, Dict
 from urllib.parse import urlparse
 import warnings
@@ -149,7 +150,7 @@ class CallAutomationClient:
         endpoint, access_key = parse_connection_str(conn_str)
         return cls(endpoint, access_key, **kwargs)
 
-    def get_call_connection(  # pylint: disable=client-method-missing-tracing-decorator
+    def get_call_connection(
         self, call_connection_id: str, **kwargs
     ) -> CallConnectionClient:
         """Get CallConnectionClient object.

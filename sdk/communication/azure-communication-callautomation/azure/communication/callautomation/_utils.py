@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+"""Utility functions for Azure Communication Call Automation."""
 from typing import TYPE_CHECKING, Dict, Any, List, Optional, Union
 from datetime import datetime
 

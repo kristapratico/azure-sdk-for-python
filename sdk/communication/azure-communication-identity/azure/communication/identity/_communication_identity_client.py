@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     from azure.core.credentials import TokenCredential, AzureKeyCredential
 
 
-class CommunicationIdentityClient(object):
+class CommunicationIdentityClient:
     """Azure Communication Services Identity client.
 
     :param str endpoint:
@@ -31,7 +31,8 @@ class CommunicationIdentityClient(object):
     :param Union[TokenCredential, AzureKeyCredential] credential:
         The credential we use to authenticate against the service.
     :keyword api_version: Azure Communication Identity API version.
-        Default value is "2022-10-01". Note that overriding this default value may result in unsupported behavior.
+        Default value is "2022-10-01". Note that overriding this default value may result in
+        unsupported behavior.
     :paramtype api_version: str
 
     .. admonition:: Example:
@@ -78,7 +79,8 @@ class CommunicationIdentityClient(object):
         """
         endpoint, access_key = parse_connection_str(conn_str)
 
-        # There is logic downstream in method `get_authentication_policy` to handle string credential.
+        # There is logic downstream in method `get_authentication_policy` to handle string
+        # credential.
         # Marking this as type: ignore to resolve mypy warning.
         return cls(endpoint, access_key, **kwargs)  # type: ignore
 
@@ -89,9 +91,13 @@ class CommunicationIdentityClient(object):
         :return: CommunicationUserIdentifier
         :rtype: ~azure.communication.identity.CommunicationUserIdentifier
         """
-        identity_access_token = self._identity_service_client.communication_identity.create(**kwargs)
+        identity_access_token = self._identity_service_client.communication_identity.create(
+            **kwargs
+        )
 
-        return CommunicationUserIdentifier(identity_access_token.identity.id, raw_id=identity_access_token.identity.id)
+        return CommunicationUserIdentifier(
+            user_id=identity_access_token.identity.id, raw_id=identity_access_token.identity.id
+        )
 
     @distributed_trace
     def create_user_and_token(
@@ -104,12 +110,14 @@ class CommunicationIdentityClient(object):
 
         :param scopes: List of scopes to be added to the token.
         :type scopes: list[str or ~azure.communication.identity.CommunicationTokenScope]
-        :keyword token_expires_in: Custom validity period of the Communication Identity access token
-         within [1, 24] hours range. If not provided, the default value of 24 hours will be used.
+        :keyword token_expires_in: Custom validity period of the Communication Identity
+         access token within [1, 24] hours range. If not provided, the default value of
+         24 hours will be used.
         :paramtype token_expires_in: ~datetime.timedelta
         :return: A tuple of a CommunicationUserIdentifier and a AccessToken.
         :rtype:
-            tuple of (~azure.communication.identity.CommunicationUserIdentifier, ~azure.core.credentials.AccessToken)
+            tuple of (~azure.communication.identity.CommunicationUserIdentifier,
+                     ~azure.core.credentials.AccessToken)
         """
         request_body = {
             "createTokenWithScopes": scopes,
@@ -120,7 +128,7 @@ class CommunicationIdentityClient(object):
         )
 
         user_identifier = CommunicationUserIdentifier(
-            identity_access_token.identity.id, raw_id=identity_access_token.identity.id
+            user_id=identity_access_token.identity.id, raw_id=identity_access_token.identity.id
         )
         access_token = AccessToken(
             identity_access_token.access_token.token,
@@ -158,8 +166,9 @@ class CommunicationIdentityClient(object):
         :type user: ~azure.communication.identity.CommunicationUserIdentifier
         :param scopes: List of scopes to be added to the token.
         :type scopes: list[str or ~azure.communication.identity.CommunicationTokenScope]
-        :keyword token_expires_in: Custom validity period of the Communication Identity access token
-         within [1, 24] hours range. If not provided, the default value of 24 hours will be used.
+        :keyword token_expires_in: Custom validity period of the Communication Identity
+         access token within [1, 24] hours range. If not provided, the default value of
+         24 hours will be used.
         :paramtype token_expires_in: ~datetime.timedelta
         :return: AccessToken
         :rtype: ~azure.core.credentials.AccessToken
@@ -200,7 +209,8 @@ class CommunicationIdentityClient(object):
         user_object_id: str,
         **kwargs: Any
     ) -> AccessToken:
-        """Exchanges an Azure AD access token of a Teams User for a new Communication Identity access token.
+        """Exchanges an Azure AD access token of a Teams User for a new Communication 
+        Identity access token.
 
         :param aad_token: an Azure AD access token of a Teams User.
         :type aad_token: str
@@ -220,8 +230,11 @@ class CommunicationIdentityClient(object):
             "userId": user_object_id,
         }
 
-        access_token = self._identity_service_client.communication_identity.exchange_teams_user_access_token(
-            body=request_body, **kwargs  # type: ignore
+        access_token = (
+            self._identity_service_client.communication_identity
+            .exchange_teams_user_access_token(
+                body=request_body, **kwargs  # type: ignore
+            )
         )
 
         return AccessToken(access_token.token, access_token.expires_on)

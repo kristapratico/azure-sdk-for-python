@@ -30,7 +30,7 @@ class HMACCredentialsPolicy(SansIOHTTPPolicy):
         access_key: Union[str, AzureKeyCredential],
         decode_url: bool = False,
     ) -> None:
-        super(HMACCredentialsPolicy, self).__init__()
+        super().__init__()
 
         if host.startswith("https://"):
             self._host = host.replace("https://", "")
@@ -63,11 +63,13 @@ class HMACCredentialsPolicy(SansIOHTTPPolicy):
         if parsed_url.query:
             query_url += "?" + parsed_url.query
 
-        # Need URL() to get a correct encoded key value, from "%3A" to ":", when transport is in type AioHttpTransport.
-        # There's a similar scenario in azure-storage-blob and azure-appconfiguration, the check logic is from there.
+        # Need URL() to get a correct encoded key value, from "%3A" to ":", when transport is in
+        # type AioHttpTransport.
+        # There's a similar scenario in azure-storage-blob and azure-appconfiguration, the check
+        # logic is from there.
         try:
-            from yarl import URL
-            from azure.core.pipeline.transport import (  # pylint:disable=non-abstract-transport-import
+            from yarl import URL  # pylint: disable=import-outside-toplevel
+            from azure.core.pipeline.transport import (  # pylint:disable=non-abstract-transport-import,import-outside-toplevel
                 AioHttpTransport,
             )
 
@@ -101,7 +103,9 @@ class HMACCredentialsPolicy(SansIOHTTPPolicy):
         content_digest = hashlib.sha256((request.http_request.body.encode("utf-8"))).digest()
         content_hash = base64.b64encode(content_digest).decode("utf-8")
 
-        string_to_sign = verb + "\n" + query_url + "\n" + utc_now + ";" + self._host + ";" + content_hash
+        string_to_sign = (
+            verb + "\n" + query_url + "\n" + utc_now + ";" + self._host + ";" + content_hash
+        )
 
         signature = self._compute_hmac(string_to_sign)
 
@@ -109,7 +113,9 @@ class HMACCredentialsPolicy(SansIOHTTPPolicy):
             "x-ms-date": utc_now,
             "x-ms-content-sha256": content_hash,
             "x-ms-return-client-request-id": "true",
-            "Authorization": "HMAC-SHA256 SignedHeaders=" + signed_headers + "&Signature=" + signature,
+            "Authorization": (
+                "HMAC-SHA256 SignedHeaders=" + signed_headers + "&Signature=" + signature
+            ),
         }
 
         request.http_request.headers.update(signature_header)

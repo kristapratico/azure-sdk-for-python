@@ -29,7 +29,8 @@ def get_authentication_policy(
     :param bool decode_url: `True` if there is a need to decode the url. Default value is `False`
     :param bool is_async: For async clients there is a need to decode the url
 
-    :return: Either AsyncBearerTokenCredentialPolicy or BearerTokenCredentialPolicy or HMACCredentialsPolicy
+    :return: Either AsyncBearerTokenCredentialPolicy or BearerTokenCredentialPolicy or
+     HMACCredentialsPolicy
     :rtype: ~azure.core.pipeline.policies.AsyncBearerTokenCredentialPolicy or
     ~azure.core.pipeline.policies.BearerTokenCredentialPolicy or
     ~azure.communication.identity.shared.policy.HMACCredentialsPolicy
@@ -42,11 +43,13 @@ def get_authentication_policy(
             return AsyncBearerTokenCredentialPolicy(
                 credential, "https://communication.azure.com//.default"  # type: ignore
             )
-        return BearerTokenCredentialPolicy(credential, "https://communication.azure.com//.default")  # type: ignore
+        return BearerTokenCredentialPolicy(
+            credential, "https://communication.azure.com//.default"  # type: ignore
+        )
     if isinstance(credential, (AzureKeyCredential, str)):
         return HMACCredentialsPolicy(endpoint, credential, decode_url=decode_url)
 
     raise TypeError(
-        f"Unsupported credential: {format(type(credential))}. Use an access token string to use HMACCredentialsPolicy"
-        "or a token credential from azure.identity"
+        f"Unsupported credential: {format(type(credential))}. Use an access token string to use "
+        "HMACCredentialsPolicy or a token credential from azure.identity"
     )

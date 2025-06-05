@@ -18,6 +18,7 @@ class AsyncTimer:
         self._task = None
 
     def start(self):
+        """Start the async timer."""
         self._task = ensure_future(self._job())
 
     async def _job(self):

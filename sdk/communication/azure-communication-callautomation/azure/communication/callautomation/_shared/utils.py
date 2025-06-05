@@ -27,6 +27,14 @@ def _convert_datetime_to_utc_int(input_datetime) -> int:
 
 
 def parse_connection_str(conn_str: Optional[str]) -> Tuple[str, str]:
+    """Parse connection string to extract endpoint and access key.
+    
+    :param conn_str: Connection string
+    :type conn_str: Optional[str]
+    :return: Tuple of endpoint and access key
+    :rtype: Tuple[str, str]
+    :raises ValueError: If connection string is None or invalid
+    """
     if conn_str is None:
         raise ValueError("Connection string is undefined.")
     endpoint = None
@@ -52,15 +60,31 @@ def parse_connection_str(conn_str: Optional[str]) -> Tuple[str, str]:
 
 
 def get_current_utc_time() -> str:
+    """Get current UTC time as formatted string.
+    
+    :return: Formatted UTC time string
+    :rtype: str
+    """
     return str(datetime.now(tz=TZ_UTC).strftime("%a, %d %b %Y %H:%M:%S ")) + "GMT"
 
 
 def get_current_utc_as_int() -> int:
+    """Get current UTC time as integer timestamp.
+    
+    :return: UTC timestamp as integer
+    :rtype: int
+    """
     current_utc_datetime = datetime.utcnow()
     return _convert_datetime_to_utc_int(current_utc_datetime)
 
 
 def create_access_token(token) -> AccessToken:
+    """Create an access token from token string.
+    
+    :param token: Token string
+    :return: AccessToken object
+    :rtype: AccessToken
+    """
     """Creates an instance of azure.core.credentials.AccessToken from a
     string token. The input string is jwt token in the following form:
     <token_header>.<token_payload>.<token_signature>

@@ -39,6 +39,14 @@ def build_external_storage(
     recording_storage: Union['AzureCommunicationsRecordingStorage',
                              'AzureBlobContainerRecordingStorage'] = None
 ) -> Optional[ExternalStorage]:
+    """Build external storage configuration for recording.
+    
+    :param recording_storage: Storage configuration for recording
+    :type recording_storage: Union[AzureCommunicationsRecordingStorage,
+                                   AzureBlobContainerRecordingStorage]
+    :return: External storage configuration
+    :rtype: Optional[ExternalStorage]
+    """
     request: Optional[ExternalStorage] = None
     if recording_storage:
         if recording_storage.kind == RecordingStorageKind.AZURE_BLOB_STORAGE:
@@ -112,6 +120,11 @@ def build_call_locator(
     return request
 
 def process_repeatability_first_sent(keywords: Dict[str, Any]) -> None:
+    """Process repeatability first sent header.
+    
+    :param keywords: Request keywords containing headers
+    :type keywords: Dict[str, Any]
+    """
     if "headers" in keywords:
         if "Repeatability-First-Sent" not in keywords["headers"]:
             keywords["headers"]["Repeatability-First-Sent"] = get_repeatability_timestamp()
@@ -120,6 +133,11 @@ def process_repeatability_first_sent(keywords: Dict[str, Any]) -> None:
 
 
 def get_repeatability_timestamp() -> str:
+    """Get timestamp for repeatability header.
+    
+    :return: Formatted timestamp string
+    :rtype: str
+    """
     return datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
 
 

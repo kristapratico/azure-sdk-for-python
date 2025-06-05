@@ -55,17 +55,17 @@ class CommunicationIdentifier(Protocol):
     @property
     def raw_id(self) -> str:
         """The raw ID of the identifier."""
-        ...
+        raise NotImplementedError()
 
     @property
     def kind(self) -> CommunicationIdentifierKind:
         """The type of identifier."""
-        ...
+        raise NotImplementedError()
 
     @property
     def properties(self) -> Mapping[str, Any]:
         """The properties of the identifier."""
-        ...
+        raise NotImplementedError()
 
 
 PHONE_NUMBER_PREFIX = "4:"
@@ -105,14 +105,14 @@ class CommunicationUserIdentifier:
     raw_id: str
     """The raw ID of the identifier."""
 
-    def __init__(self, id: str, **kwargs: Any) -> None:
+    def __init__(self, user_id: str, **kwargs: Any) -> None:
         """
-        :param str id: ID of the Communication user as returned from Azure Communication Identity.
-        :keyword str raw_id: The raw ID of the identifier. If not specified, the 'id' value will be used.
+        :param str user_id: ID of the Communication user as returned from Azure Communication Identity.
+        :keyword str raw_id: The raw ID of the identifier. If not specified, the 'user_id' value will be used.
         """
-        self.properties = CommunicationUserProperties(id=id)
+        self.properties = CommunicationUserProperties(id=user_id)
         raw_id: Optional[str] = kwargs.get("raw_id")
-        self.raw_id = raw_id if raw_id is not None else id
+        self.raw_id = raw_id if raw_id is not None else user_id
 
     def __eq__(self, other):
         try:

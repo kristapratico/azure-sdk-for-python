@@ -120,7 +120,9 @@ class CallAutomationClient:
                 custom_url,
                 credential,
                 api_version=api_version or DEFAULT_VERSION,
-                authentication_policy=get_call_automation_auth_policy(custom_url, credential, acs_url=endpoint),
+                authentication_policy=get_call_automation_auth_policy(
+                    custom_url, credential, acs_url=endpoint
+                ),
                 sdk_moniker=SDK_MONIKER,
                 **kwargs,
             )

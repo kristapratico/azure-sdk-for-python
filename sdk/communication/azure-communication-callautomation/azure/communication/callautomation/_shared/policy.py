@@ -31,7 +31,7 @@ class HMACCredentialsPolicy(SansIOHTTPPolicy):
         access_key: Union[str, AzureKeyCredential],
         decode_url: bool = False,
     ) -> None:
-        super(HMACCredentialsPolicy, self).__init__()
+        super().__init__()
 
         if host.startswith("https://"):
             self._host = host.replace("https://", "")

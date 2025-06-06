@@ -66,7 +66,7 @@ class HMACCredentialsPolicy(SansIOHTTPPolicy):
         # Need URL() to get a correct encoded key value, from "%3A" to ":", when transport is in type AioHttpTransport.
         # There's a similar scenario in azure-storage-blob and azure-appconfiguration, the check logic is from there.
         try:
-            from yarl import URL
+            from yarl import URL  # type: ignore[import-not-found]
             from azure.core.pipeline.transport import (  # pylint:disable=non-abstract-transport-import
                 AioHttpTransport,
             )

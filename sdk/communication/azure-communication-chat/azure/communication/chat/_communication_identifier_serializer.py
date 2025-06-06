@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
-from typing import Dict, Any, TYPE_CHECKING
+from typing import Dict, Any, TYPE_CHECKING, cast
 
 from ._shared.models import (
     CommunicationIdentifier,
@@ -31,7 +31,7 @@ def serialize_identifier(identifier):
         request_model = {"raw_id": identifier.raw_id}
 
         if identifier.kind and identifier.kind != CommunicationIdentifierKind.UNKNOWN:
-            request_model[str(identifier.kind)] = identifier.properties
+            request_model[str(identifier.kind)] = cast(Any, identifier.properties)
         return request_model
     except AttributeError:
         raise TypeError(  # pylint: disable=raise-missing-from

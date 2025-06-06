@@ -6,7 +6,7 @@
 from urllib.parse import urlparse
 
 # pylint: disable=unused-import,ungrouped-imports
-from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar, Union
+from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar, Union, cast
 from datetime import datetime
 from uuid import uuid4
 
@@ -141,18 +141,18 @@ class ChatClient(object):  # pylint: disable=client-accepts-api-version-keyword
 
         create_thread_request = CreateChatThreadRequest(topic=topic, participants=participants)
 
-        create_chat_thread_result = await self._client.chat.create_chat_thread(
+        create_chat_thread_result_generated = await self._client.chat.create_chat_thread(
             create_chat_thread_request=create_thread_request, repeatability_request_id=idempotency_token, **kwargs
         )
 
         errors = None
-        if hasattr(create_chat_thread_result, "invalid_participants"):
+        if hasattr(create_chat_thread_result_generated, "invalid_participants"):
             errors = CommunicationErrorResponseConverter.convert(
-                participants=thread_participants or [], chat_errors=create_chat_thread_result.invalid_participants
+                participants=thread_participants or [], chat_errors=create_chat_thread_result_generated.invalid_participants
             )
 
         chat_thread = ChatThreadProperties._from_generated(  # pylint:disable=protected-access
-            create_chat_thread_result.chat_thread
+            create_chat_thread_result_generated.chat_thread
         )
 
         create_chat_thread_result = CreateChatThreadResult(chat_thread=chat_thread, errors=errors)
@@ -181,7 +181,7 @@ class ChatClient(object):  # pylint: disable=client-accepts-api-version-keyword
         results_per_page = kwargs.pop("results_per_page", None)
         start_time = kwargs.pop("start_time", None)
 
-        return self._client.chat.list_chat_threads(max_page_size=results_per_page, start_time=start_time, **kwargs)
+        return cast(AsyncItemPaged[ChatThreadItem], self._client.chat.list_chat_threads(max_page_size=results_per_page, start_time=start_time, **kwargs))
 
     @distributed_trace_async
     async def delete_chat_thread(self, thread_id: str, **kwargs) -> None:

@@ -9,11 +9,12 @@ from urllib.parse import urlparse
 
 from azure.core.tracing.decorator import distributed_trace
 from azure.core.pipeline.policies import BearerTokenCredentialPolicy
+from azure.core.paging import ItemPaged
 
 from ._chat_thread_client import ChatThreadClient
 from ._shared.user_credential import CommunicationTokenCredential
 from ._generated import AzureCommunicationChatService
-from ._generated.models import CreateChatThreadRequest
+from ._generated.models import CreateChatThreadRequest, ChatThreadItem
 from ._models import ChatThreadProperties, CreateChatThreadResult
 from ._utils import (  # pylint: disable=unused-import
     _to_utc_datetime,
@@ -156,18 +157,18 @@ class ChatClient(object):  # pylint: disable=client-accepts-api-version-keyword
 
         create_thread_request = CreateChatThreadRequest(topic=topic, participants=participants)
 
-        create_chat_thread_result = self._client.chat.create_chat_thread(
+        create_chat_thread_result_generated = self._client.chat.create_chat_thread(
             create_chat_thread_request=create_thread_request, repeatability_request_id=idempotency_token, **kwargs
         )
 
         errors = None
-        if hasattr(create_chat_thread_result, "invalid_participants"):
+        if hasattr(create_chat_thread_result_generated, "invalid_participants"):
             errors = CommunicationErrorResponseConverter.convert(
-                participants=thread_participants or [], chat_errors=create_chat_thread_result.invalid_participants
+                participants=thread_participants or [], chat_errors=create_chat_thread_result_generated.invalid_participants
             )
 
         chat_thread_properties = ChatThreadProperties._from_generated(  # pylint:disable=protected-access
-            create_chat_thread_result.chat_thread
+            create_chat_thread_result_generated.chat_thread
         )
 
         create_chat_thread_result = CreateChatThreadResult(chat_thread=chat_thread_properties, errors=errors)

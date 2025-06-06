@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 
 from azure.core.tracing.decorator import distributed_trace
 from azure.core.pipeline.policies import BearerTokenCredentialPolicy
+from azure.core.paging import ItemPaged
 
 from ._shared.user_credential import CommunicationTokenCredential
 from ._shared.models import CommunicationIdentifier
@@ -22,6 +23,8 @@ from ._generated.models import (
     UpdateChatThreadRequest,
     ChatMessageType,
     SendChatMessageResult,
+    ChatError,
+    CommunicationIdentifierModel,
 )
 from ._models import ChatParticipant, ChatMessage, ChatMessageReadReceipt, ChatThreadProperties
 
@@ -564,7 +567,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
         return self._client.chat_thread.remove_chat_participant(
             chat_thread_id=self._thread_id,
-            participant_communication_identifier=serialize_identifier(identifier),
+            participant_communication_identifier=CommunicationIdentifierModel(**serialize_identifier(identifier)),
             **kwargs
         )
 

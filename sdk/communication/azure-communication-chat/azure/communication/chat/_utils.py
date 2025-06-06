@@ -4,6 +4,10 @@
 # license information.
 # --------------------------------------------------------------------------
 
+from typing import Any, Dict, List, Optional, Tuple
+from ._models import ChatParticipant
+from ._generated.models import ChatError
+
 
 def _to_utc_datetime(value):
     return value.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -23,8 +27,7 @@ class CommunicationErrorResponseConverter(object):
     """
 
     @classmethod
-    def convert(cls, participants, chat_errors):
-        # type: (...) -> list[(ChatThreadParticipant, ChatError)]
+    def convert(cls, participants: List[ChatParticipant], chat_errors: Optional[List[ChatError]]) -> List[Tuple[Optional[ChatParticipant], ChatError]]:
         """
         Util function to convert AddChatParticipantsResult.
 
@@ -40,13 +43,12 @@ class CommunicationErrorResponseConverter(object):
         :rtype: list[(~azure.communication.chat.ChatParticipant, ~azure.communication.chat.ChatError)]
         """
 
-        def create_dict(participants):
-            # type: (...) -> Dict(str, ChatThreadParticipant)
+        def create_dict(participants: List[ChatParticipant]) -> Dict[str, ChatParticipant]:
             """
             Create dictionary of id -> ChatParticipant
 
-            :param list participants: list of ChatThreadParticipant
-            :return: Dictionary of id -> ChatThreadParticipant
+            :param participants: list of ChatParticipant
+            :return: Dictionary of id -> ChatParticipant
             :rtype: dict
             """
             result = {}
@@ -60,7 +62,9 @@ class CommunicationErrorResponseConverter(object):
 
         if chat_errors is not None:
             for chat_error in chat_errors:
-                _thread_participant = _thread_participants_dict.get(chat_error.target)
-                failed_chat_thread_participants.append((_thread_participant, chat_error))
+                target = chat_error.target
+                if target is not None:
+                    _thread_participant = _thread_participants_dict.get(target)
+                    failed_chat_thread_participants.append((_thread_participant, chat_error))
 
         return failed_chat_thread_participants

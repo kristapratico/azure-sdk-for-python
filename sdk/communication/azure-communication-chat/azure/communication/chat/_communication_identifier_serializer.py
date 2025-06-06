@@ -31,7 +31,7 @@ def serialize_identifier(identifier):
         request_model = {"raw_id": identifier.raw_id}
 
         if identifier.kind and identifier.kind != CommunicationIdentifierKind.UNKNOWN:
-            request_model[identifier.kind] = dict(identifier.properties)
+            request_model[str(identifier.kind)] = dict(identifier.properties)  # type: ignore[assignment]
         return request_model
     except AttributeError:
         raise TypeError(  # pylint: disable=raise-missing-from
@@ -52,7 +52,7 @@ def deserialize_identifier(identifier_model):
     raw_id = identifier_model.raw_id
 
     if identifier_model.communication_user:
-        return CommunicationUserIdentifier(raw_id, raw_id=raw_id)
+        return CommunicationUserIdentifier(raw_id or "", raw_id=raw_id)
     if identifier_model.phone_number:
         return PhoneNumberIdentifier(identifier_model.phone_number.value, raw_id=raw_id)
     if identifier_model.microsoft_teams_user:
@@ -62,4 +62,4 @@ def deserialize_identifier(identifier_model):
             is_anonymous=identifier_model.microsoft_teams_user.is_anonymous,
             cloud=identifier_model.microsoft_teams_user.cloud,
         )
-    return UnknownIdentifier(raw_id)
+    return UnknownIdentifier(raw_id or "")

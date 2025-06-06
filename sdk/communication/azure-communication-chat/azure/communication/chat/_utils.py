@@ -4,6 +4,10 @@
 # license information.
 # --------------------------------------------------------------------------
 
+from typing import Dict, List, Tuple, Optional
+from ._models import ChatParticipant
+from ._generated.models import ChatError
+
 
 def _to_utc_datetime(value):
     return value.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -24,7 +28,7 @@ class CommunicationErrorResponseConverter(object):
 
     @classmethod
     def convert(cls, participants, chat_errors):
-        # type: (...) -> list[(ChatThreadParticipant, ChatError)]
+        # type: (...) -> List[Tuple[Optional[ChatParticipant], ChatError]]
         """
         Util function to convert AddChatParticipantsResult.
 
@@ -41,12 +45,12 @@ class CommunicationErrorResponseConverter(object):
         """
 
         def create_dict(participants):
-            # type: (...) -> Dict(str, ChatThreadParticipant)
+            # type: (...) -> Dict[str, ChatParticipant]
             """
             Create dictionary of id -> ChatParticipant
 
-            :param list participants: list of ChatThreadParticipant
-            :return: Dictionary of id -> ChatThreadParticipant
+            :param list participants: list of ChatParticipant
+            :return: Dictionary of id -> ChatParticipant
             :rtype: dict
             """
             result = {}

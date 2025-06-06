@@ -35,7 +35,7 @@ jobs:
       - name: Set VIRTUALENV_OVERRIDE_APP_DATA
         run: |
           mkdir -p ${{ runner.temp }}/_virtualenv
-          echo "VIRTUALENV_OVERRIDE_APP_DATA=${{ runner.temp }}/_virtualenv"
+          echo "VIRTUALENV_OVERRIDE_APP_DATA=${{ runner.temp }}/_virtualenv" >> $GITHUB_ENV
 
       - name: Populate the seed dir
         run: |

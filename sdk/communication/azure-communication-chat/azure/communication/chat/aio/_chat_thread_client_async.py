@@ -122,7 +122,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         return ChatThreadProperties._from_generated(chat_thread)  # pylint:disable=protected-access
 
     @distributed_trace_async
-    async def update_topic(self, topic: str = None, **kwargs) -> None:
+    async def update_topic(self, topic: Optional[str] = None, **kwargs) -> None:
         """Updates a thread's properties.
 
         :param topic: Thread topic. If topic is not specified, the update will succeed but
@@ -196,7 +196,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         skip = kwargs.pop("skip", None)
 
-        return self._client.chat_thread.list_chat_read_receipts(
+        return self._client.chat_thread.list_chat_read_receipts(  # type: ignore[return-value]
             self._thread_id,
             max_page_size=results_per_page,
             skip=skip,
@@ -233,7 +233,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         )
 
     @distributed_trace_async
-    async def send_message(self, content: str, *, metadata: Dict[str, str] = None, **kwargs) -> SendChatMessageResult:
+    async def send_message(self, content: str, *, metadata: Optional[Dict[str, str]] = None, **kwargs) -> SendChatMessageResult:
         """Sends a message to a thread.
 
         :param content: Required. Chat message content.
@@ -334,7 +334,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         start_time = kwargs.pop("start_time", None)
 
-        return self._client.chat_thread.list_chat_messages(
+        return self._client.chat_thread.list_chat_messages(  # type: ignore[return-value]
             self._thread_id,
             max_page_size=results_per_page,
             start_time=start_time,
@@ -344,7 +344,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
     @distributed_trace_async
     async def update_message(
-        self, message_id: str, content: str = None, *, metadata: Dict[str, str] = None, **kwargs
+        self, message_id: str, content: Optional[str] = None, *, metadata: Optional[Dict[str, str]] = None, **kwargs
     ) -> None:
         """Updates a message.
 
@@ -426,7 +426,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         skip = kwargs.pop("skip", None)
 
-        return self._client.chat_thread.list_chat_participants(
+        return self._client.chat_thread.list_chat_participants(  # type: ignore[return-value]
             self._thread_id,
             max_page_size=results_per_page,
             skip=skip,
@@ -437,7 +437,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
     @distributed_trace_async
     async def add_participants(
         self, thread_participants: List[ChatParticipant], **kwargs
-    ) -> List[Tuple[ChatParticipant, ChatError]]:
+    ) -> List[Tuple[Optional[ChatParticipant], ChatError]]:
         """Adds thread participants to a thread. If participants already exist, no change occurs.
 
         If all participants are added successfully, then an empty list is returned;
@@ -496,7 +496,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         if not identifier:
             raise ValueError("identifier cannot be None.")
 
-        return await self._client.chat_thread.remove_chat_participant(
+        return await self._client.chat_thread.remove_chat_participant(  # type: ignore
             chat_thread_id=self._thread_id,
             participant_communication_identifier=serialize_identifier(identifier),
             **kwargs

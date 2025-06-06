@@ -151,13 +151,13 @@ class ChatClient(object):  # pylint: disable=client-accepts-api-version-keyword
                 participants=thread_participants or [], chat_errors=create_chat_thread_result.invalid_participants
             )
 
-        chat_thread = ChatThreadProperties._from_generated(  # pylint:disable=protected-access
+        chat_thread_properties = ChatThreadProperties._from_generated(  # pylint:disable=protected-access
             create_chat_thread_result.chat_thread
         )
 
-        create_chat_thread_result = CreateChatThreadResult(chat_thread=chat_thread, errors=errors)
+        result = CreateChatThreadResult(chat_thread=chat_thread_properties, errors=errors)
 
-        return create_chat_thread_result
+        return result
 
     @distributed_trace
     def list_chat_threads(self, **kwargs: Any) -> AsyncItemPaged[ChatThreadItem]:
@@ -181,7 +181,7 @@ class ChatClient(object):  # pylint: disable=client-accepts-api-version-keyword
         results_per_page = kwargs.pop("results_per_page", None)
         start_time = kwargs.pop("start_time", None)
 
-        return self._client.chat.list_chat_threads(max_page_size=results_per_page, start_time=start_time, **kwargs)
+        return self._client.chat.list_chat_threads(max_page_size=results_per_page, start_time=start_time, **kwargs)  # type: ignore[return-value]
 
     @distributed_trace_async
     async def delete_chat_thread(self, thread_id: str, **kwargs) -> None:

@@ -30,7 +30,7 @@ class CommunicationErrorResponseConverter(object):
 
     @classmethod
     def convert(cls, participants, chat_errors):
-        # type: (List[ChatParticipant], Optional[List[ChatError]]) -> List[Tuple[Optional[ChatParticipant], ChatError]]
+        # type: (List[ChatParticipant], Optional[List[ChatError]]) -> List[Tuple[ChatParticipant, ChatError]]
         """
         Util function to convert AddChatParticipantsResult.
 
@@ -62,13 +62,14 @@ class CommunicationErrorResponseConverter(object):
 
         _thread_participants_dict = create_dict(participants=participants)
 
-        failed_chat_thread_participants: List[Tuple[Optional["ChatParticipant"], "ChatError"]] = []
+        failed_chat_thread_participants: List[Tuple["ChatParticipant", "ChatError"]] = []
 
         if chat_errors is not None:
             for chat_error in chat_errors:
                 target = chat_error.target
                 if target is not None:
                     _thread_participant = _thread_participants_dict.get(target)
-                    failed_chat_thread_participants.append((_thread_participant, chat_error))
+                    if _thread_participant is not None:
+                        failed_chat_thread_participants.append((_thread_participant, chat_error))
 
         return failed_chat_thread_participants

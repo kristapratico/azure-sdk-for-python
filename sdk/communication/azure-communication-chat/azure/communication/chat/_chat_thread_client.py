@@ -3,12 +3,13 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
-from typing import TYPE_CHECKING, Any, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple, cast
 
 from urllib.parse import urlparse
 
 from azure.core.tracing.decorator import distributed_trace
 from azure.core.pipeline.policies import BearerTokenCredentialPolicy
+from azure.core.paging import ItemPaged
 
 from ._shared.user_credential import CommunicationTokenCredential
 from ._shared.models import CommunicationIdentifier
@@ -22,6 +23,8 @@ from ._generated.models import (
     UpdateChatThreadRequest,
     ChatMessageType,
     SendChatMessageResult,
+    ChatError,
+    CommunicationIdentifierModel,
 )
 from ._models import ChatParticipant, ChatMessage, ChatMessageReadReceipt, ChatThreadProperties
 
@@ -221,14 +224,17 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         skip = kwargs.pop("skip", None)
 
-        return self._client.chat_thread.list_chat_read_receipts(
-            self._thread_id,
-            max_page_size=results_per_page,
-            skip=skip,
-            cls=lambda objs: [
-                ChatMessageReadReceipt._from_generated(x) for x in objs  # pylint:disable=protected-access
-            ],
-            **kwargs
+        return cast(
+            ItemPaged[ChatMessageReadReceipt],
+            self._client.chat_thread.list_chat_read_receipts(
+                self._thread_id,
+                max_page_size=results_per_page,
+                skip=skip,
+                cls=lambda objs: [
+                    ChatMessageReadReceipt._from_generated(x) for x in objs  # pylint:disable=protected-access
+                ],
+                **kwargs
+            )
         )
 
     @distributed_trace
@@ -377,14 +383,16 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         start_time = kwargs.pop("start_time", None)
 
-        a = self._client.chat_thread.list_chat_messages(
-            self._thread_id,
-            max_page_size=results_per_page,
-            start_time=start_time,
-            cls=lambda objs: [ChatMessage._from_generated(x) for x in objs],  # pylint:disable=protected-access
-            **kwargs
+        return cast(
+            ItemPaged[ChatMessage],
+            self._client.chat_thread.list_chat_messages(
+                self._thread_id,
+                max_page_size=results_per_page,
+                start_time=start_time,
+                cls=lambda objs: [ChatMessage._from_generated(x) for x in objs],  # pylint:disable=protected-access
+                **kwargs
+            )
         )
-        return a
 
     @distributed_trace
     def update_message(
@@ -484,12 +492,15 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         skip = kwargs.pop("skip", None)
 
-        return self._client.chat_thread.list_chat_participants(
-            self._thread_id,
-            max_page_size=results_per_page,
-            skip=skip,
-            cls=lambda objs: [ChatParticipant._from_generated(x) for x in objs],  # pylint:disable=protected-access
-            **kwargs
+        return cast(
+            ItemPaged[ChatParticipant],
+            self._client.chat_thread.list_chat_participants(
+                self._thread_id,
+                max_page_size=results_per_page,
+                skip=skip,
+                cls=lambda objs: [ChatParticipant._from_generated(x) for x in objs],  # pylint:disable=protected-access
+                **kwargs
+            )
         )
 
     @distributed_trace
@@ -498,7 +509,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         thread_participants,  # type: List[ChatParticipant]
         **kwargs  # type: Any
     ):
-        # type: (...) -> List[Tuple[ChatParticipant, ChatError]]
+        # type: (...) -> List[Tuple[Optional[ChatParticipant], ChatError]]
         """Adds thread participants to a thread. If participants already exist, no change occurs.
 
         If all participants are added successfully, then an empty list is returned;
@@ -507,8 +518,8 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
         :param thread_participants: Thread participants to be added to the thread.
         :type thread_participants: List[~azure.communication.chat.ChatParticipant]
-        :return: List[Tuple[ChatParticipant, ChatError]]
-        :rtype: List[Tuple[~azure.communication.chat.ChatParticipant, ~azure.communication.chat.ChatError]]
+        :return: List[Tuple[Optional[ChatParticipant], ChatError]]
+        :rtype: List[Tuple[Optional[~azure.communication.chat.ChatParticipant], ~azure.communication.chat.ChatError]]
         :raises: ~azure.core.exceptions.HttpResponseError
 
         .. admonition:: Example:
@@ -562,9 +573,12 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         if not identifier:
             raise ValueError("identifier cannot be None.")
 
+        identifier_dict = serialize_identifier(identifier)
+        identifier_model = CommunicationIdentifierModel(**identifier_dict)
+        
         return self._client.chat_thread.remove_chat_participant(
             chat_thread_id=self._thread_id,
-            participant_communication_identifier=serialize_identifier(identifier),
+            participant_communication_identifier=identifier_model,
             **kwargs
         )
 

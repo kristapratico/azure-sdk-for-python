@@ -35,8 +35,8 @@ if TYPE_CHECKING:
 )
 
 def build_external_storage(
-    recording_storage: Union['AzureCommunicationsRecordingStorage',
-                             'AzureBlobContainerRecordingStorage'] = None
+    recording_storage: Optional[Union['AzureCommunicationsRecordingStorage',
+                                     'AzureBlobContainerRecordingStorage']] = None
 ) -> Optional[ExternalStorage]:
     request: Optional[ExternalStorage] = None
     if recording_storage:
@@ -57,8 +57,8 @@ def build_call_locator(
     server_call_id: Optional[str],
     group_call_id: Optional[str],
     room_id: Optional[str],
-    args: List[Union['ServerCallLocator', 'GroupCallLocator','RoomCallLocator']] = None,
-) -> CallLocator:
+    args: Optional[List[Union['ServerCallLocator', 'GroupCallLocator','RoomCallLocator']]] = None,
+) -> Optional[CallLocator]:
     """Build the generated callLocator object from args in kwargs with support for legacy models.
 
     :param args: Any positional parameters provided. This may include the legacy model. The new method signature
@@ -133,7 +133,7 @@ def serialize_identifier(identifier: CommunicationIdentifier) -> Dict[str, Any]:
     try:
         request_model = {"raw_id": identifier.raw_id}
         if identifier.kind and identifier.kind != CommunicationIdentifierKind.UNKNOWN:
-            request_model[identifier.kind] = dict(identifier.properties)
+            request_model[str(identifier.kind)] = dict(identifier.properties)  # type: ignore[assignment]
         return request_model
     except AttributeError:
         raise TypeError(f"Unsupported identifier type: {identifier.__class__.__name__}") from None
@@ -212,7 +212,7 @@ def deserialize_identifier(identifier_model: CommunicationIdentifierModel) -> Co
     raw_id = identifier_model.raw_id
 
     if identifier_model.communication_user:
-        return CommunicationUserIdentifier(raw_id, raw_id=raw_id)
+        return CommunicationUserIdentifier(raw_id or "", raw_id=raw_id)
     if identifier_model.phone_number:
         return PhoneNumberIdentifier(identifier_model.phone_number.value, raw_id=raw_id)
     if identifier_model.microsoft_teams_user:
@@ -228,7 +228,7 @@ def deserialize_identifier(identifier_model: CommunicationIdentifierModel) -> Co
             app_id=identifier_model.microsoft_teams_app.app_id,
             cloud=identifier_model.microsoft_teams_app.cloud,
         )
-    return UnknownIdentifier(raw_id)
+    return UnknownIdentifier(raw_id or "")
 
 
 def deserialize_phone_identifier(identifier_model: PhoneNumberIdentifierModel) -> Union[PhoneNumberIdentifier, None]:

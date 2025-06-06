@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 import warnings
 
 from typing_extensions import Literal
-
+from azure.core.credentials import AzureKeyCredential
 from azure.core.paging import ItemPaged
 from azure.core.tracing.decorator import distributed_trace
 
@@ -83,8 +83,8 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
 
     def __init__(
         self,
-        endpoint: str,
-        credential: Union["TokenCredential", "AzureKeyCredential"],
+        endpoint: Optional[str],
+        credential: Optional[Union["TokenCredential", "AzureKeyCredential"]],
         call_connection_id: str,
         *,
         api_version: Optional[str] = None,
@@ -94,6 +94,8 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
         if call_automation_client is None:
             if not credential:
                 raise ValueError("credential can not be None")
+            if not endpoint:
+                raise ValueError("endpoint can not be None")
             try:
                 if not endpoint.lower().startswith("http"):
                     endpoint = "https://" + endpoint
@@ -108,7 +110,7 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
             if custom_enabled and custom_url is not None:
                 self._client = AzureCommunicationCallAutomationService(
                     custom_url,
-                    credential,
+                    AzureKeyCredential("dummy"),  # Credential handled by authentication_policy
                     api_version=api_version or DEFAULT_VERSION,
                     authentication_policy=get_call_automation_auth_policy(custom_url, credential, acs_url=endpoint),
                     sdk_moniker=SDK_MONIKER,
@@ -117,14 +119,14 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
             else:
                 self._client = AzureCommunicationCallAutomationService(
                     endpoint,
-                    credential,
+                    AzureKeyCredential("dummy"),  # Credential handled by authentication_policy
                     api_version=api_version or DEFAULT_VERSION,
                     authentication_policy=get_authentication_policy(endpoint, credential),
                     sdk_moniker=SDK_MONIKER,
                     **kwargs,
                 )
         else:
-            self._client = call_automation_client
+            self._client = call_automation_client._client  # Use the internal client
 
         self._call_connection_id = call_connection_id
         self._call_connection_client = self._client.call_connection
@@ -142,7 +144,7 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
         :rtype: ~azure.communication.callautomation.CallConnectionClient
         """
         endpoint, access_key = parse_connection_str(conn_str)
-        return cls(endpoint, access_key, call_connection_id, **kwargs)
+        return cls(endpoint, AzureKeyCredential(access_key), call_connection_id, **kwargs)
 
     @classmethod
     def _from_callautomation_client(
@@ -209,7 +211,7 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
         :rtype: ~azure.core.paging.ItemPaged[azure.communication.callautomation.CallParticipant]
         :raises ~azure.core.exceptions.HttpResponseError:
         """
-        return self._call_connection_client.get_participants(
+        return self._call_connection_client.get_participants(  # type: ignore[return-value]
             self._call_connection_id,
             cls=lambda participants: [
                 CallParticipant._from_generated(p) for p in participants  # pylint:disable=protected-access
@@ -260,7 +262,7 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
             else None
         )
         request = TransferToParticipantRequest(
-            target_participant=serialize_identifier(target_participant),
+            target_participant=serialize_identifier(target_participant),  # type: ignore[arg-type]
             operation_context=operation_context,
             operation_callback_uri=operation_callback_url,
             custom_calling_context=user_custom_context,
@@ -268,7 +270,7 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
         )
         process_repeatability_first_sent(kwargs)
         if transferee:
-            request.transferee = serialize_identifier(transferee)
+            request.transferee = serialize_identifier(transferee)  # type: ignore[assignment]
         result = self._call_connection_client.transfer_to_participant(self._call_connection_id, request, **kwargs)
         return TransferCallResult._from_generated(result)  # pylint:disable=protected-access
 
@@ -324,7 +326,7 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
         if sip_headers or voip_headers:
             user_custom_context = CustomCallingContext(voip_headers=voip_headers, sip_headers=sip_headers)
         add_participant_request = AddParticipantRequest(
-            participant_to_add=serialize_identifier(target_participant),
+            participant_to_add=serialize_identifier(target_participant),  # type: ignore[arg-type]
             source_caller_id_number=serialize_phone_identifier(source_caller_id_number),
             source_display_name=source_display_name,
             invitation_timeout_in_seconds=invitation_timeout,
@@ -363,7 +365,7 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
         :raises ~azure.core.exceptions.HttpResponseError:
         """
         remove_participant_request = RemoveParticipantRequest(
-            participant_to_remove=serialize_identifier(target_participant),
+            participant_to_remove=serialize_identifier(target_participant),  # type: ignore[arg-type]
             operation_context=operation_context,
             operation_callback_uri=operation_callback_url,
         )

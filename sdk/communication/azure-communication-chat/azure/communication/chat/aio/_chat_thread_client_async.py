@@ -6,7 +6,7 @@
 from urllib.parse import urlparse
 
 # pylint: disable=unused-import,ungrouped-imports
-from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar, Union, Tuple
+from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar, Union, Tuple, cast
 from datetime import datetime
 
 from azure.core.tracing.decorator import distributed_trace
@@ -197,7 +197,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         skip = kwargs.pop("skip", None)
 
-        return self._client.chat_thread.list_chat_read_receipts(
+        return cast(AsyncItemPaged[ChatMessageReadReceipt], self._client.chat_thread.list_chat_read_receipts(
             self._thread_id,
             max_page_size=results_per_page,
             skip=skip,
@@ -205,7 +205,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
                 ChatMessageReadReceipt._from_generated(x) for x in objs  # pylint:disable=protected-access
             ],
             **kwargs
-        )
+        ))
 
     @distributed_trace_async
     async def send_typing_notification(self, *, sender_display_name: Optional[str] = None, **kwargs) -> None:
@@ -335,13 +335,13 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         start_time = kwargs.pop("start_time", None)
 
-        return self._client.chat_thread.list_chat_messages(
+        return cast(AsyncItemPaged[ChatMessage], self._client.chat_thread.list_chat_messages(
             self._thread_id,
             max_page_size=results_per_page,
             start_time=start_time,
             cls=lambda objs: [ChatMessage._from_generated(x) for x in objs],  # pylint:disable=protected-access
             **kwargs
-        )
+        ))
 
     @distributed_trace_async
     async def update_message(
@@ -427,18 +427,18 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         skip = kwargs.pop("skip", None)
 
-        return self._client.chat_thread.list_chat_participants(
+        return cast(AsyncItemPaged[ChatParticipant], self._client.chat_thread.list_chat_participants(
             self._thread_id,
             max_page_size=results_per_page,
             skip=skip,
             cls=lambda objs: [ChatParticipant._from_generated(x) for x in objs],  # pylint:disable=protected-access
             **kwargs
-        )
+        ))
 
     @distributed_trace_async
     async def add_participants(
-        self, thread_participants: List[ChatParticipant], **kwargs
-    ) -> List[Tuple[ChatParticipant, ChatError]]:
+        self, thread_participants: List[ChatParticipant], **kwargs: Any
+    ) -> List[Tuple[Optional[ChatParticipant], ChatError]]:
         """Adds thread participants to a thread. If participants already exist, no change occurs.
 
         If all participants are added successfully, then an empty list is returned;
@@ -497,9 +497,10 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         if not identifier:
             raise ValueError("identifier cannot be None.")
 
+        participant_model = CommunicationIdentifierModel(**serialize_identifier(identifier))
         return await self._client.chat_thread.remove_chat_participant(
             chat_thread_id=self._thread_id,
-            participant_communication_identifier=serialize_identifier(identifier),
+            participant_communication_identifier=participant_model,
             **kwargs
         )
 

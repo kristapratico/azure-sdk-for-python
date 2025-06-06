@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 from uuid import uuid4
 from urllib.parse import urlparse
 
@@ -196,7 +196,7 @@ class ChatClient(object):  # pylint: disable=client-accepts-api-version-keyword
         results_per_page = kwargs.pop("results_per_page", None)
         start_time = kwargs.pop("start_time", None)
 
-        return self._client.chat.list_chat_threads(max_page_size=results_per_page, start_time=start_time, **kwargs)
+        return cast(ItemPaged[ChatThreadItem], self._client.chat.list_chat_threads(max_page_size=results_per_page, start_time=start_time, **kwargs))
 
     @distributed_trace
     def delete_chat_thread(

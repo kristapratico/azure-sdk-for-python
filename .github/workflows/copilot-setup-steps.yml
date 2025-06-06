@@ -39,8 +39,8 @@ jobs:
 
       - name: Populate the seed dir
         run: |
-          virtualenv --download --reset-app-data `
-            --pip=20.3.3 `
-            --setuptools=59.6.0 `
-            --wheel=0.37.0 `
+          virtualenv --download --reset-app-data \
+            --pip=20.3.3 \
+            --setuptools=59.6.0 \
+            --wheel=0.37.0 \
             ${{ runner.temp }}/seed_env

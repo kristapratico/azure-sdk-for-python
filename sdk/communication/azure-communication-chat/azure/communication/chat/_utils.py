@@ -4,6 +4,12 @@
 # license information.
 # --------------------------------------------------------------------------
 
+from typing import List, Tuple, Dict, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ._models import ChatParticipant
+    from ._generated.models import ChatError
+
 
 def _to_utc_datetime(value):
     return value.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -24,7 +30,7 @@ class CommunicationErrorResponseConverter(object):
 
     @classmethod
     def convert(cls, participants, chat_errors):
-        # type: (...) -> list[(ChatThreadParticipant, ChatError)]
+        # type: (List[ChatParticipant], Optional[List[ChatError]]) -> List[Tuple[Optional[ChatParticipant], ChatError]]
         """
         Util function to convert AddChatParticipantsResult.
 
@@ -41,12 +47,12 @@ class CommunicationErrorResponseConverter(object):
         """
 
         def create_dict(participants):
-            # type: (...) -> Dict(str, ChatThreadParticipant)
+            # type: (List[ChatParticipant]) -> Dict[str, ChatParticipant]
             """
             Create dictionary of id -> ChatParticipant
 
-            :param list participants: list of ChatThreadParticipant
-            :return: Dictionary of id -> ChatThreadParticipant
+            :param list participants: list of ChatParticipant
+            :return: Dictionary of id -> ChatParticipant
             :rtype: dict
             """
             result = {}
@@ -56,11 +62,13 @@ class CommunicationErrorResponseConverter(object):
 
         _thread_participants_dict = create_dict(participants=participants)
 
-        failed_chat_thread_participants = []
+        failed_chat_thread_participants: List[Tuple[Optional["ChatParticipant"], "ChatError"]] = []
 
         if chat_errors is not None:
             for chat_error in chat_errors:
-                _thread_participant = _thread_participants_dict.get(chat_error.target)
-                failed_chat_thread_participants.append((_thread_participant, chat_error))
+                target = chat_error.target
+                if target is not None:
+                    _thread_participant = _thread_participants_dict.get(target)
+                    failed_chat_thread_participants.append((_thread_participant, chat_error))
 
         return failed_chat_thread_participants

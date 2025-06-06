@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 
 from azure.core.tracing.decorator import distributed_trace
 from azure.core.pipeline.policies import BearerTokenCredentialPolicy
+from azure.core.paging import ItemPaged
 
 from ._shared.user_credential import CommunicationTokenCredential
 from ._shared.models import CommunicationIdentifier
@@ -22,6 +23,8 @@ from ._generated.models import (
     UpdateChatThreadRequest,
     ChatMessageType,
     SendChatMessageResult,
+    ChatError,
+    CommunicationIdentifierModel,
 )
 from ._models import ChatParticipant, ChatMessage, ChatMessageReadReceipt, ChatThreadProperties
 
@@ -198,9 +201,8 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
     @distributed_trace
     def list_read_receipts(
-        self, **kwargs  # type: Any
-    ):
-        # type: (...) -> ItemPaged[ChatMessageReadReceipt]
+        self, **kwargs: Any
+    ) -> ItemPaged[ChatMessageReadReceipt]:
         """Gets read receipts for a thread.
 
         :keyword int results_per_page: The maximum number of chat message read receipts to be returned per page.
@@ -353,9 +355,8 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
     @distributed_trace
     def list_messages(
-        self, **kwargs  # type: Any
-    ):
-        # type: (...) -> ItemPaged[ChatMessage]
+        self, **kwargs: Any
+    ) -> ItemPaged[ChatMessage]:
         """Gets a list of messages from a thread.
 
         :keyword int results_per_page: The maximum number of messages to be returned per page.
@@ -460,9 +461,8 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
     @distributed_trace
     def list_participants(
-        self, **kwargs  # type: Any
-    ):
-        # type: (...) -> ItemPaged[ChatParticipant]
+        self, **kwargs: Any
+    ) -> ItemPaged[ChatParticipant]:
         """Gets the participants of a thread.
 
         :keyword int results_per_page: The maximum number of participants to be returned per page.
@@ -495,10 +495,9 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
     @distributed_trace
     def add_participants(
         self,
-        thread_participants,  # type: List[ChatParticipant]
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> List[Tuple[ChatParticipant, ChatError]]
+        thread_participants: List[ChatParticipant],
+        **kwargs: Any
+    ) -> List[Tuple[Optional[ChatParticipant], ChatError]]:
         """Adds thread participants to a thread. If participants already exist, no change occurs.
 
         If all participants are added successfully, then an empty list is returned;
@@ -562,9 +561,10 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         if not identifier:
             raise ValueError("identifier cannot be None.")
 
+        participant_model = CommunicationIdentifierModel(**serialize_identifier(identifier))
         return self._client.chat_thread.remove_chat_participant(
             chat_thread_id=self._thread_id,
-            participant_communication_identifier=serialize_identifier(identifier),
+            participant_communication_identifier=participant_model,
             **kwargs
         )
 

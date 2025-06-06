@@ -58,7 +58,7 @@ class CommunicationErrorResponseConverter(object):
 
         _thread_participants_dict = create_dict(participants=participants)
 
-        failed_chat_thread_participants = []
+        failed_chat_thread_participants: List[Tuple[Optional[ChatParticipant], ChatError]] = []
 
         if chat_errors is not None:
             for chat_error in chat_errors:

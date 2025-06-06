@@ -26,6 +26,7 @@ from .._generated.models import (
     SendChatMessageResult,
     ChatMessageType,
     ChatError,
+    CommunicationIdentifierModel,
 )
 from .._models import ChatParticipant, ChatMessage, ChatMessageReadReceipt, ChatThreadProperties
 from .._shared.models import CommunicationIdentifier
@@ -122,7 +123,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         return ChatThreadProperties._from_generated(chat_thread)  # pylint:disable=protected-access
 
     @distributed_trace_async
-    async def update_topic(self, topic: str = None, **kwargs) -> None:
+    async def update_topic(self, topic: Optional[str] = None, **kwargs: Any) -> None:
         """Updates a thread's properties.
 
         :param topic: Thread topic. If topic is not specified, the update will succeed but
@@ -233,7 +234,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         )
 
     @distributed_trace_async
-    async def send_message(self, content: str, *, metadata: Dict[str, str] = None, **kwargs) -> SendChatMessageResult:
+    async def send_message(self, content: str, *, metadata: Optional[Dict[str, str]] = None, **kwargs: Any) -> SendChatMessageResult:
         """Sends a message to a thread.
 
         :param content: Required. Chat message content.
@@ -344,7 +345,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
     @distributed_trace_async
     async def update_message(
-        self, message_id: str, content: str = None, *, metadata: Dict[str, str] = None, **kwargs
+        self, message_id: str, content: Optional[str] = None, *, metadata: Optional[Dict[str, str]] = None, **kwargs: Any
     ) -> None:
         """Updates a message.
 

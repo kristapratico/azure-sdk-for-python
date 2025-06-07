@@ -83,7 +83,7 @@ class CommunicationIdentityClient:
         """
         identity_access_token = await self._identity_service_client.communication_identity.create(**kwargs)
 
-        return CommunicationUserIdentifier(identity_access_token.identity.id, raw_id=identity_access_token.identity.id)
+        return CommunicationUserIdentifier(user_id=identity_access_token.identity.id, raw_id=identity_access_token.identity.id)
 
     @distributed_trace_async
     async def create_user_and_token(
@@ -113,7 +113,7 @@ class CommunicationIdentityClient:
         )
 
         user_identifier = CommunicationUserIdentifier(
-            identity_access_token.identity.id, raw_id=identity_access_token.identity.id
+            user_id=identity_access_token.identity.id, raw_id=identity_access_token.identity.id
         )
         access_token = AccessToken(
             identity_access_token.access_token.token,

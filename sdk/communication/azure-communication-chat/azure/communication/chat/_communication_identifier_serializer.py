@@ -28,7 +28,7 @@ def serialize_identifier(identifier):
     :rtype: ~azure.communication.chat._generated.models.CommunicationIdentifierModel
     """
     try:
-        request_model = {"raw_id": identifier.raw_id}
+        request_model: Dict[str, Any] = {"raw_id": identifier.raw_id}
 
         if identifier.kind and identifier.kind != CommunicationIdentifierKind.UNKNOWN:
             request_model[identifier.kind] = dict(identifier.properties)
@@ -52,7 +52,7 @@ def deserialize_identifier(identifier_model):
     raw_id = identifier_model.raw_id
 
     if identifier_model.communication_user:
-        return CommunicationUserIdentifier(raw_id, raw_id=raw_id)
+        return CommunicationUserIdentifier(raw_id or "", raw_id=raw_id)
     if identifier_model.phone_number:
         return PhoneNumberIdentifier(identifier_model.phone_number.value, raw_id=raw_id)
     if identifier_model.microsoft_teams_user:
@@ -62,4 +62,19 @@ def deserialize_identifier(identifier_model):
             is_anonymous=identifier_model.microsoft_teams_user.is_anonymous,
             cloud=identifier_model.microsoft_teams_user.cloud,
         )
-    return UnknownIdentifier(raw_id)
+    return UnknownIdentifier(raw_id or "")
+
+
+def identifier_to_generated_model(identifier):
+    # type: (CommunicationIdentifier) -> CommunicationIdentifierModel
+    """Convert a CommunicationIdentifier to a CommunicationIdentifierModel
+    
+    :param identifier: Identifier object
+    :type identifier: CommunicationIdentifier
+    :return: CommunicationIdentifierModel
+    :rtype: ~azure.communication.chat._generated.models.CommunicationIdentifierModel
+    """
+    from ._generated.models import CommunicationIdentifierModel
+    
+    serialized = serialize_identifier(identifier)
+    return CommunicationIdentifierModel(**serialized)  # type: ignore[misc]

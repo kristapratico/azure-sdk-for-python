@@ -4,6 +4,12 @@
 # license information.
 # --------------------------------------------------------------------------
 
+from typing import Any, Dict, List, Optional, Tuple, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ._models import ChatParticipant
+    from ._generated.models import ChatError
+
 
 def _to_utc_datetime(value):
     return value.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -24,7 +30,7 @@ class CommunicationErrorResponseConverter(object):
 
     @classmethod
     def convert(cls, participants, chat_errors):
-        # type: (...) -> list[(ChatThreadParticipant, ChatError)]
+        # type: (...) -> List[Tuple[ChatParticipant, ChatError]]
         """
         Util function to convert AddChatParticipantsResult.
 
@@ -41,7 +47,7 @@ class CommunicationErrorResponseConverter(object):
         """
 
         def create_dict(participants):
-            # type: (...) -> Dict(str, ChatThreadParticipant)
+            # type: (...) -> Dict[str, ChatParticipant]
             """
             Create dictionary of id -> ChatParticipant
 
@@ -61,6 +67,7 @@ class CommunicationErrorResponseConverter(object):
         if chat_errors is not None:
             for chat_error in chat_errors:
                 _thread_participant = _thread_participants_dict.get(chat_error.target)
-                failed_chat_thread_participants.append((_thread_participant, chat_error))
+                if _thread_participant is not None:
+                    failed_chat_thread_participants.append((_thread_participant, chat_error))
 
         return failed_chat_thread_participants

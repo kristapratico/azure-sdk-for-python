@@ -5,10 +5,9 @@
 # -------------------------------------------------------------------------
 
 import hashlib
-import urllib
 import base64
 import hmac
-from urllib.parse import ParseResult, urlparse
+from urllib.parse import ParseResult, urlparse, unquote
 from typing import Union
 from azure.core.credentials import AzureKeyCredential
 from azure.core.pipeline.policies import SansIOHTTPPolicy
@@ -42,7 +41,7 @@ class HMACCredentialsPolicy(SansIOHTTPPolicy):
         self._decode_url = decode_url
 
     def _compute_hmac(
-        self, value  # type: str
+        self, value: str
     ):
         if isinstance(self._access_key, AzureKeyCredential):
             decoded_secret = base64.b64decode(self._access_key.key)
@@ -91,7 +90,7 @@ class HMACCredentialsPolicy(SansIOHTTPPolicy):
             pass
 
         if self._decode_url:
-            query_url = urllib.parse.unquote(query_url)
+            query_url = unquote(query_url)
 
         signed_headers = "x-ms-date;host;x-ms-content-sha256"
 

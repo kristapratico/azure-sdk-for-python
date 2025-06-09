@@ -8,4 +8,4 @@
 
 VERSION = "1.0.1b1"
 
-SDK_MONIKER = "communication-email/{}".format(VERSION)  # type: str
+SDK_MONIKER: str = "communication-email/{}".format(VERSION)

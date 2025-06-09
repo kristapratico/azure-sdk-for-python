@@ -9,7 +9,13 @@ import urllib
 import base64
 import hmac
 from urllib.parse import ParseResult, urlparse
-from typing import Union
+from typing import Union, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    try:
+        from yarl import URL  # type: ignore[import-untyped]
+    except ImportError:
+        pass
 from azure.core.credentials import AzureKeyCredential
 from azure.core.pipeline.policies import SansIOHTTPPolicy
 from .utils import get_current_utc_time

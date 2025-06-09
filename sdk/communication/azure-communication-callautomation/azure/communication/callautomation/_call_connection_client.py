@@ -4,6 +4,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+"""Call Connection client for Azure Communication Services."""
 from typing import TYPE_CHECKING, Optional, List, Union, Dict, overload
 from urllib.parse import urlparse
 import warnings

@@ -6,7 +6,7 @@
 # pylint: disable=C4763
 from asyncio import Condition, Lock, Event
 from datetime import timedelta
-from typing import Any
+from typing import Any, Optional
 import sys
 
 from .utils import get_current_utc_as_int
@@ -41,7 +41,7 @@ class CommunicationTokenCredential(object):
         self._proactive_refresh = kwargs.pop("proactive_refresh", False)
         if self._proactive_refresh and self._token_refresher is None:
             raise ValueError("When 'proactive_refresh' is True, 'token_refresher' must not be None.")
-        self._timer = None
+        self._timer: Optional[AsyncTimer] = None
         self._async_mutex = Lock()
         if sys.version_info[:3] == (3, 10, 0):
             # Workaround for Python 3.10 bug(https://bugs.python.org/issue45416):
@@ -109,10 +109,11 @@ class CommunicationTokenCredential(object):
             timespan = token_ttl // 2
         else:
             # Schedule the next refresh for when it gets in to the soon-to-expire window.
-            timespan = token_ttl - timedelta(minutes=self._DEFAULT_AUTOREFRESH_INTERVAL_MINUTES).total_seconds()
+            timespan = token_ttl - int(timedelta(minutes=self._DEFAULT_AUTOREFRESH_INTERVAL_MINUTES).total_seconds())
 
-        self._timer = AsyncTimer(timespan, self._update_token_and_reschedule)
-        self._timer.start()
+        timer = AsyncTimer(timespan, self._update_token_and_reschedule)
+        self._timer = timer
+        timer.start()
 
     async def _wait_till_lock_owner_finishes_refreshing(self):
         self._lock.release()

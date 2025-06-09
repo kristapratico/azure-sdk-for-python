@@ -6,7 +6,7 @@
 
 from threading import Lock, Condition, Timer, TIMEOUT_MAX, Event
 from datetime import timedelta
-from typing import Any
+from typing import Any, Optional
 
 from .utils import get_current_utc_as_int
 from .utils import create_access_token
@@ -39,7 +39,7 @@ class CommunicationTokenCredential(object):
         self._proactive_refresh = kwargs.pop("proactive_refresh", False)
         if self._proactive_refresh and self._token_refresher is None:
             raise ValueError("When 'proactive_refresh' is True, 'token_refresher' must not be None.")
-        self._timer = None
+        self._timer: Optional[Timer] = None
         self._lock = Condition(Lock())
         self._some_thread_refreshing = False
         self._is_closed = Event()
@@ -103,11 +103,12 @@ class CommunicationTokenCredential(object):
             timespan = token_ttl // 2
         else:
             # Schedule the next refresh for when it gets in to the soon-to-expire window.
-            timespan = token_ttl - timedelta(minutes=self._DEFAULT_AUTOREFRESH_INTERVAL_MINUTES).total_seconds()
+            timespan = token_ttl - int(timedelta(minutes=self._DEFAULT_AUTOREFRESH_INTERVAL_MINUTES).total_seconds())
         if timespan <= TIMEOUT_MAX:
-            self._timer = Timer(timespan, self._update_token_and_reschedule)
-            self._timer.daemon = True
-            self._timer.start()
+            timer = Timer(timespan, self._update_token_and_reschedule)
+            self._timer = timer
+            timer.daemon = True
+            timer.start()
 
     def _wait_till_lock_owner_finishes_refreshing(self):
         self._lock.release()

@@ -146,7 +146,7 @@ class CallConnectionClient:  # pylint: disable=too-many-public-methods
 
     @classmethod
     def _from_callautomation_client(
-        cls, callautomation_client: "CallAutomationClient", call_connection_id: str
+        cls, callautomation_client: "AzureCommunicationCallAutomationService", call_connection_id: str
     ) -> "CallConnectionClient":
         """Internal constructor for sharing the pipeline with CallAutomationClient.
 

@@ -31,15 +31,28 @@ USAGE:
 
 import os
 import sys
+from typing import cast
 
 sys.path.append("..")
 
 
 class SendWhatsAppMessageSample(object):
 
-    endpoint_string = os.getenv("COMMUNICATION_SAMPLES_ENDPOINT_STRING")
-    phone_number = os.getenv("RECIPIENT_PHONE_NUMBER")
-    channel_id = os.getenv("WHATSAPP_CHANNEL_ID")
+    def __init__(self) -> None:
+        endpoint_string = os.getenv("COMMUNICATION_SAMPLES_ENDPOINT_STRING")
+        phone_number = os.getenv("RECIPIENT_PHONE_NUMBER")
+        channel_id = os.getenv("WHATSAPP_CHANNEL_ID")
+        
+        if not endpoint_string:
+            raise ValueError("COMMUNICATION_SAMPLES_ENDPOINT_STRING environment variable must be set")
+        if not phone_number:
+            raise ValueError("RECIPIENT_PHONE_NUMBER environment variable must be set")
+        if not channel_id:
+            raise ValueError("WHATSAPP_CHANNEL_ID environment variable must be set")
+            
+        self.endpoint_string = cast(str, endpoint_string)
+        self.phone_number = cast(str, phone_number)
+        self.channel_id = cast(str, channel_id)
 
     def send_text_send_message(self):
 

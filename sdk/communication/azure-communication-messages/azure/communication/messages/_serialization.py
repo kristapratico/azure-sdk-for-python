@@ -871,7 +871,7 @@ class Serializer:  # pylint: disable=too-many-public-methods
                 return self.serialize_basic(data, data_type, **kwargs)
 
             if data_type in self.serialize_type:
-                return self.serialize_type[data_type](data, **kwargs)
+                return self.serialize_type[data_type](data, **kwargs)  # type: ignore
 
             # If dependencies is empty, try with current data class
             # It has to be a subclass of Enum anyway
@@ -881,7 +881,7 @@ class Serializer:  # pylint: disable=too-many-public-methods
 
             iter_type = data_type[0] + data_type[-1]
             if iter_type in self.serialize_type:
-                return self.serialize_type[iter_type](data, data_type[1:-1], **kwargs)
+                return self.serialize_type[iter_type](data, data_type[1:-1], **kwargs)  # type: ignore
 
         except (ValueError, TypeError) as err:
             msg = "Unable to serialize value: {!r} as type: {!r}."
@@ -1071,22 +1071,22 @@ class Serializer:  # pylint: disable=too-many-public-methods
             return self._serialize(attr)
 
         if obj_type == dict:
-            serialized = {}
+            serialized_dict = {}
             for key, value in attr.items():
                 try:
-                    serialized[self.serialize_unicode(key)] = self.serialize_object(value, **kwargs)
+                    serialized_dict[self.serialize_unicode(key)] = self.serialize_object(value, **kwargs)
                 except ValueError:
-                    serialized[self.serialize_unicode(key)] = None
-            return serialized
+                    serialized_dict[self.serialize_unicode(key)] = None
+            return serialized_dict
 
         if obj_type == list:
-            serialized = []
+            serialized_list = []
             for obj in attr:
                 try:
-                    serialized.append(self.serialize_object(obj, **kwargs))
+                    serialized_list.append(self.serialize_object(obj, **kwargs))
                 except ValueError:
                     pass
-            return serialized
+            return serialized_list
         return str(attr)
 
     @staticmethod
@@ -1730,7 +1730,7 @@ class Deserializer:
             if data_type in self.basic_types.values():
                 return self.deserialize_basic(data, data_type)
             if data_type in self.deserialize_type:
-                if isinstance(data, self.deserialize_expected_types.get(data_type, tuple())):
+                if isinstance(data, self.deserialize_expected_types.get(data_type, tuple())):  # type: ignore
                     return data
 
                 is_a_text_parsing_type = lambda x: x not in [  # pylint: disable=unnecessary-lambda-assignment
@@ -1740,12 +1740,12 @@ class Deserializer:
                 ]
                 if isinstance(data, ET.Element) and is_a_text_parsing_type(data_type) and not data.text:
                     return None
-                data_val = self.deserialize_type[data_type](data)
+                data_val = self.deserialize_type[data_type](data)  # type: ignore
                 return data_val
 
             iter_type = data_type[0] + data_type[-1]
             if iter_type in self.deserialize_type:
-                return self.deserialize_type[iter_type](data, data_type[1:-1])
+                return self.deserialize_type[iter_type](data, data_type[1:-1])  # type: ignore
 
             obj_type = self.dependencies[data_type]
             if issubclass(obj_type, Enum):
@@ -1815,22 +1815,22 @@ class Deserializer:
             return self.deserialize_long(attr)
 
         if obj_type == dict:
-            deserialized = {}
+            deserialized_dict = {}
             for key, value in attr.items():
                 try:
-                    deserialized[key] = self.deserialize_object(value, **kwargs)
+                    deserialized_dict[key] = self.deserialize_object(value, **kwargs)
                 except ValueError:
-                    deserialized[key] = None
-            return deserialized
+                    deserialized_dict[key] = None
+            return deserialized_dict
 
         if obj_type == list:
-            deserialized = []
+            deserialized_list = []
             for obj in attr:
                 try:
-                    deserialized.append(self.deserialize_object(obj, **kwargs))
+                    deserialized_list.append(self.deserialize_object(obj, **kwargs))
                 except ValueError:
                     pass
-            return deserialized
+            return deserialized_list
 
         error = "Cannot deserialize generic object with type: "
         raise TypeError(error + str(obj_type))
@@ -2051,7 +2051,9 @@ class Deserializer:
         try:
             parsed_date = email.utils.parsedate_tz(attr)  # type: ignore
             date_obj = datetime.datetime(
-                *parsed_date[:6], tzinfo=_FixedOffset(datetime.timedelta(minutes=(parsed_date[9] or 0) / 60))
+                parsed_date[0], parsed_date[1], parsed_date[2],
+                parsed_date[3], parsed_date[4], parsed_date[5],
+                tzinfo=_FixedOffset(datetime.timedelta(minutes=(parsed_date[9] or 0) / 60))
             )
             if not date_obj.tzinfo:
                 date_obj = date_obj.astimezone(tz=TZ_UTC)

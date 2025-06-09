@@ -9,7 +9,7 @@
 from ._client import CommunicationIdentityClient
 
 try:
-    from ._patch import __all__ as _patch_all
+    from ._patch import __all__ as _patch_all  # type: ignore
     from ._patch import *  # pylint: disable=unused-wildcard-import
 except ImportError:
     _patch_all = []

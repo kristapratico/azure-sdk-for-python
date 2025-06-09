@@ -6,4 +6,4 @@
 
 VERSION = "1.5.1"
 
-SDK_MONIKER = f"communication-identity/{VERSION}"  # type: str
+SDK_MONIKER: str = f"communication-identity/{VERSION}"

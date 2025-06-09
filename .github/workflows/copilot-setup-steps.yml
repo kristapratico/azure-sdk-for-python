@@ -4,6 +4,7 @@ on: workflow_dispatch
 
 env:
   PIP_TIMEOUT: 1200
+  VIRTUALENV_DOWNLOAD: 0
 
 jobs:
   copilot-setup-steps:

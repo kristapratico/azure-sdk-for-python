@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
-from typing import TYPE_CHECKING, Any, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple, cast
 
 from urllib.parse import urlparse
 
@@ -22,6 +22,7 @@ from ._generated.models import (
     UpdateChatThreadRequest,
     ChatMessageType,
     SendChatMessageResult,
+    ChatError,
 )
 from ._models import ChatParticipant, ChatMessage, ChatMessageReadReceipt, ChatThreadProperties
 
@@ -66,12 +67,11 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
     def __init__(
         self,
-        endpoint,  # type: str
-        credential,  # type: CommunicationTokenCredential
-        thread_id,  # type: str
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> None
+        endpoint: str,
+        credential: CommunicationTokenCredential,
+        thread_id: str,
+        **kwargs: Any
+    ) -> None:
         if not thread_id:
             raise ValueError("thread_id can not be None or empty")
 
@@ -100,8 +100,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         )
 
     @property
-    def thread_id(self):
-        # type: () -> str
+    def thread_id(self) -> str:
         """
         Gets the thread id from the client.
 
@@ -111,9 +110,8 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
     @distributed_trace
     def get_properties(
-        self, **kwargs  # type: Any
-    ):
-        # type: (...) -> ChatThreadProperties
+        self, **kwargs: Any
+    ) -> ChatThreadProperties:
         """Gets the properties of the chat thread.
 
         :return: ChatThreadProperties
@@ -136,10 +134,9 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
     @distributed_trace
     def update_topic(
         self,
-        topic=None,  # type: Optional[str]
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> None
+        topic: Optional[str] = None,
+        **kwargs: Any
+    ) -> None:
         """Updates a thread's properties.
 
         :param topic: Thread topic. If topic is not specified, the update will succeed but
@@ -167,10 +164,9 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
     @distributed_trace
     def send_read_receipt(
         self,
-        message_id,  # type: str
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> None
+        message_id: str,
+        **kwargs: Any
+    ) -> None:
         """Posts a read receipt event to a chat thread, on behalf of a user.
 
         :param message_id: Required. Id of the latest message read by current user.
@@ -198,9 +194,8 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
     @distributed_trace
     def list_read_receipts(
-        self, **kwargs  # type: Any
-    ):
-        # type: (...) -> ItemPaged[ChatMessageReadReceipt]
+        self, **kwargs: Any
+    ) -> "ItemPaged[ChatMessageReadReceipt]":
         """Gets read receipts for a thread.
 
         :keyword int results_per_page: The maximum number of chat message read receipts to be returned per page.
@@ -221,7 +216,7 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         skip = kwargs.pop("skip", None)
 
-        return self._client.chat_thread.list_chat_read_receipts(
+        return cast("ItemPaged[ChatMessageReadReceipt]", self._client.chat_thread.list_chat_read_receipts(
             self._thread_id,
             max_page_size=results_per_page,
             skip=skip,
@@ -229,13 +224,12 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
                 ChatMessageReadReceipt._from_generated(x) for x in objs  # pylint:disable=protected-access
             ],
             **kwargs
-        )
+        ))
 
     @distributed_trace
     def send_typing_notification(
-        self, **kwargs  # type: Any
-    ):
-        # type: (...) -> None
+        self, **kwargs: Any
+    ) -> None:
         """Posts a typing event to a thread, on behalf of a user.
 
         :keyword str sender_display_name: The display name of the typing notification sender. This property
@@ -263,10 +257,9 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
     @distributed_trace
     def send_message(
         self,
-        content,  # type: str
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> SendChatMessageResult
+        content: str,
+        **kwargs: Any
+    ) -> SendChatMessageResult:
         """Sends a message to a thread.
 
         :param content: Required. Chat message content.
@@ -324,10 +317,9 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
     @distributed_trace
     def get_message(
         self,
-        message_id,  # type: str
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> ChatMessage
+        message_id: str,
+        **kwargs: Any
+    ) -> ChatMessage:
         """Gets a message by id.
 
         :param message_id: Required. The message id.
@@ -353,9 +345,8 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
     @distributed_trace
     def list_messages(
-        self, **kwargs  # type: Any
-    ):
-        # type: (...) -> ItemPaged[ChatMessage]
+        self, **kwargs: Any
+    ) -> "ItemPaged[ChatMessage]":
         """Gets a list of messages from a thread.
 
         :keyword int results_per_page: The maximum number of messages to be returned per page.
@@ -377,23 +368,21 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         start_time = kwargs.pop("start_time", None)
 
-        a = self._client.chat_thread.list_chat_messages(
+        return cast("ItemPaged[ChatMessage]", self._client.chat_thread.list_chat_messages(
             self._thread_id,
             max_page_size=results_per_page,
             start_time=start_time,
             cls=lambda objs: [ChatMessage._from_generated(x) for x in objs],  # pylint:disable=protected-access
             **kwargs
-        )
-        return a
+        ))
 
     @distributed_trace
     def update_message(
         self,
-        message_id,  # type: str
-        content=None,  # type: Optional[str]
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> None
+        message_id: str,
+        content: Optional[str] = None,
+        **kwargs: Any
+    ) -> None:
         """Updates a message.
 
         :param message_id: Required. The message id.
@@ -430,10 +419,9 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
     @distributed_trace
     def delete_message(
         self,
-        message_id,  # type: str
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> None
+        message_id: str,
+        **kwargs: Any
+    ) -> None:
         """Deletes a message.
 
         :param message_id: Required. The message id.
@@ -460,9 +448,8 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
     @distributed_trace
     def list_participants(
-        self, **kwargs  # type: Any
-    ):
-        # type: (...) -> ItemPaged[ChatParticipant]
+        self, **kwargs: Any
+    ) -> "ItemPaged[ChatParticipant]":
         """Gets the participants of a thread.
 
         :keyword int results_per_page: The maximum number of participants to be returned per page.
@@ -484,21 +471,20 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
         results_per_page = kwargs.pop("results_per_page", None)
         skip = kwargs.pop("skip", None)
 
-        return self._client.chat_thread.list_chat_participants(
+        return cast("ItemPaged[ChatParticipant]", self._client.chat_thread.list_chat_participants(
             self._thread_id,
             max_page_size=results_per_page,
             skip=skip,
             cls=lambda objs: [ChatParticipant._from_generated(x) for x in objs],  # pylint:disable=protected-access
             **kwargs
-        )
+        ))
 
     @distributed_trace
     def add_participants(
         self,
-        thread_participants,  # type: List[ChatParticipant]
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> List[Tuple[ChatParticipant, ChatError]]
+        thread_participants: List[ChatParticipant],
+        **kwargs: Any
+    ) -> List[Tuple[ChatParticipant, ChatError]]:
         """Adds thread participants to a thread. If participants already exist, no change occurs.
 
         If all participants are added successfully, then an empty list is returned;
@@ -538,10 +524,9 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
     @distributed_trace
     def remove_participant(
         self,
-        identifier,  # type: CommunicationIdentifier
-        **kwargs  # type: Any
-    ):
-        # type: (...) -> None
+        identifier: CommunicationIdentifier,
+        **kwargs: Any
+    ) -> None:
         """Remove a participant from a thread.
 
         :param identifier: Required. Identifier of the thread participant to remove from the thread.
@@ -564,19 +549,16 @@ class ChatThreadClient(object):  # pylint: disable=client-accepts-api-version-ke
 
         return self._client.chat_thread.remove_chat_participant(
             chat_thread_id=self._thread_id,
-            participant_communication_identifier=serialize_identifier(identifier),
+            participant_communication_identifier=serialize_identifier(identifier),  # type: ignore
             **kwargs
         )
 
-    def close(self):
-        # type: () -> None
+    def close(self) -> None:
         return self._client.close()
 
-    def __enter__(self):
-        # type: () -> ChatThreadClient
+    def __enter__(self) -> "ChatThreadClient":
         self._client.__enter__()  # pylint:disable=no-member
         return self
 
-    def __exit__(self, *args):
-        # type: (*Any) -> None
+    def __exit__(self, *args: Any) -> None:
         self._client.__exit__(*args)  # pylint:disable=no-member

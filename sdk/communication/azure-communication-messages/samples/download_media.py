@@ -21,6 +21,7 @@ USAGE:
 
 import os
 import sys
+from typing import cast
 from io import RawIOBase
 
 sys.path.append("..")
@@ -28,7 +29,13 @@ sys.path.append("..")
 
 class DownloadMediaSample(object):
 
-    connection_string = os.getenv("COMMUNICATION_SAMPLES_CONNECTION_STRING")
+    def __init__(self) -> None:
+        connection_string = os.getenv("COMMUNICATION_SAMPLES_CONNECTION_STRING")
+        
+        if not connection_string:
+            raise ValueError("COMMUNICATION_SAMPLES_CONNECTION_STRING environment variable must be set")
+            
+        self.connection_string = cast(str, connection_string)
 
     def download_media(self):
 

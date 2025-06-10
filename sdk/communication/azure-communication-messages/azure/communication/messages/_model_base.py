@@ -630,7 +630,8 @@ class Model(_MyMutableMapping):
             if data.get(xml_name) is not None:
                 discriminator_value = data.get(xml_name)
             else:
-                discriminator_value = data.find(xml_name).text  # pyright: ignore
+                element = data.find(xml_name)
+                discriminator_value = element.text if element is not None else None
         else:
             discriminator_value = data.get(discriminator._rest_name)
         mapped_cls = cls.__mapping__.get(discriminator_value, cls)  # pyright: ignore

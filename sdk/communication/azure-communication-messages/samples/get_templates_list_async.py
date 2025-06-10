@@ -23,14 +23,24 @@ USAGE:
 import asyncio
 import os
 import sys
+from typing import cast
 
 sys.path.append("..")
 
 
 class GetTemplatesSampleAsync(object):
 
-    connection_string = os.getenv("COMMUNICATION_SAMPLES_CONNECTION_STRING")
-    channel_id = os.getenv("WHATSAPP_CHANNEL_ID")
+    def __init__(self) -> None:
+        connection_string = os.getenv("COMMUNICATION_SAMPLES_CONNECTION_STRING")
+        channel_id = os.getenv("WHATSAPP_CHANNEL_ID")
+        
+        if not connection_string:
+            raise ValueError("COMMUNICATION_SAMPLES_CONNECTION_STRING environment variable must be set")
+        if not channel_id:
+            raise ValueError("WHATSAPP_CHANNEL_ID environment variable must be set")
+            
+        self.connection_string = cast(str, connection_string)
+        self.channel_id = cast(str, channel_id)
 
     async def get_templates_list_async(self):
 

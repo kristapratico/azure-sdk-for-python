@@ -6,7 +6,7 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
-from typing import Any, TYPE_CHECKING, Union
+from typing import Any, TYPE_CHECKING, Union, cast
 
 from azure.core.credentials import AzureKeyCredential
 from azure.core.pipeline import policies
@@ -56,7 +56,7 @@ class NotificationMessagesClientConfiguration:  # pylint: disable=too-many-insta
 
     def _infer_policy(self, **kwargs):
         if hasattr(self.credential, "get_token"):
-            return policies.AsyncBearerTokenCredentialPolicy(self.credential, *self.credential_scopes, **kwargs)
+            return policies.AsyncBearerTokenCredentialPolicy(cast("AsyncTokenCredential", self.credential), *self.credential_scopes, **kwargs)
         if isinstance(self.credential, AzureKeyCredential):
             return policies.AzureKeyCredentialPolicy(self.credential, "Authorization", **kwargs)
         raise TypeError(f"Unsupported credential: {self.credential}")
@@ -114,7 +114,7 @@ class MessageTemplateClientConfiguration:  # pylint: disable=too-many-instance-a
 
     def _infer_policy(self, **kwargs):
         if hasattr(self.credential, "get_token"):
-            return policies.AsyncBearerTokenCredentialPolicy(self.credential, *self.credential_scopes, **kwargs)
+            return policies.AsyncBearerTokenCredentialPolicy(cast("AsyncTokenCredential", self.credential), *self.credential_scopes, **kwargs)
         if isinstance(self.credential, AzureKeyCredential):
             return policies.AzureKeyCredentialPolicy(self.credential, "Authorization", **kwargs)
         raise TypeError(f"Unsupported credential: {self.credential}")

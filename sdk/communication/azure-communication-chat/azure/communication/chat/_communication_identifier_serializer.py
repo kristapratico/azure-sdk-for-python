@@ -18,8 +18,7 @@ if TYPE_CHECKING:
     from ._generated.models import CommunicationIdentifierModel
 
 
-def serialize_identifier(identifier):
-    # type: (CommunicationIdentifier) -> Dict[str, Any]
+def serialize_identifier(identifier: CommunicationIdentifier) -> Dict[str, Any]:
     """Serialize the Communication identifier into CommunicationIdentifierModel
 
     :param identifier: Identifier object
@@ -31,7 +30,7 @@ def serialize_identifier(identifier):
         request_model = {"raw_id": identifier.raw_id}
 
         if identifier.kind and identifier.kind != CommunicationIdentifierKind.UNKNOWN:
-            request_model[identifier.kind] = dict(identifier.properties)
+            request_model[identifier.kind] = dict(identifier.properties)  # type: ignore
         return request_model
     except AttributeError:
         raise TypeError(  # pylint: disable=raise-missing-from
@@ -39,8 +38,7 @@ def serialize_identifier(identifier):
         )
 
 
-def deserialize_identifier(identifier_model):
-    # type: (CommunicationIdentifierModel) -> CommunicationIdentifier
+def deserialize_identifier(identifier_model: "CommunicationIdentifierModel") -> CommunicationIdentifier:
     """
     Deserialize the CommunicationIdentifierModel into Communication Identifier
 
@@ -50,16 +48,24 @@ def deserialize_identifier(identifier_model):
     :rtype: ~azure.communication.chat.CommunicationIdentifier
     """
     raw_id = identifier_model.raw_id
+    if raw_id is None:
+        raise ValueError("identifier_model.raw_id cannot be None")
 
     if identifier_model.communication_user:
         return CommunicationUserIdentifier(raw_id, raw_id=raw_id)
     if identifier_model.phone_number:
-        return PhoneNumberIdentifier(identifier_model.phone_number.value, raw_id=raw_id)
+        if identifier_model.phone_number.value is not None:
+            return PhoneNumberIdentifier(identifier_model.phone_number.value, raw_id=raw_id)
+        else:
+            raise ValueError("phone_number.value cannot be None")
     if identifier_model.microsoft_teams_user:
-        return MicrosoftTeamsUserIdentifier(
-            raw_id=raw_id,
-            user_id=identifier_model.microsoft_teams_user.user_id,
-            is_anonymous=identifier_model.microsoft_teams_user.is_anonymous,
-            cloud=identifier_model.microsoft_teams_user.cloud,
-        )
+        if identifier_model.microsoft_teams_user.user_id is not None:
+            return MicrosoftTeamsUserIdentifier(
+                raw_id=raw_id,
+                user_id=identifier_model.microsoft_teams_user.user_id,
+                is_anonymous=identifier_model.microsoft_teams_user.is_anonymous,
+                cloud=identifier_model.microsoft_teams_user.cloud,
+            )
+        else:
+            raise ValueError("microsoft_teams_user.user_id cannot be None")
     return UnknownIdentifier(raw_id)

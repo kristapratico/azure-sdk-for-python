@@ -112,12 +112,21 @@ class CallAutomationClient:
         if not parsed_url.netloc:
             raise ValueError(f"Invalid URL: {format(endpoint)}")
 
+        from azure.core.credentials import AzureKeyCredential as AzureKeyCredentialType
+        
+        # For generated client, we need AzureKeyCredential but auth is handled by policy
+        if isinstance(credential, AzureKeyCredentialType):
+            client_credential = credential
+        else:
+            # For TokenCredential, pass a dummy AzureKeyCredential since auth is handled by policy
+            client_credential = AzureKeyCredentialType("dummy")
+            
         custom_enabled = get_custom_enabled()
         custom_url = get_custom_url()
         if custom_enabled and custom_url is not None:
             self._client = AzureCommunicationCallAutomationService(
                 custom_url,
-                credential,
+                client_credential,
                 api_version=api_version or DEFAULT_VERSION,
                 authentication_policy=get_call_automation_auth_policy(custom_url, credential, acs_url=endpoint),
                 sdk_moniker=SDK_MONIKER,
@@ -126,7 +135,7 @@ class CallAutomationClient:
         else:
             self._client = AzureCommunicationCallAutomationService(
                 endpoint,
-                credential,
+                client_credential,
                 api_version=api_version or DEFAULT_VERSION,
                 authentication_policy=get_authentication_policy(endpoint, credential),
                 sdk_moniker=SDK_MONIKER,
@@ -146,8 +155,9 @@ class CallAutomationClient:
         :return: CallAutomationClient
         :rtype: ~azure.communication.callautomation.CallAutomationClient
         """
+        from azure.core.credentials import AzureKeyCredential
         endpoint, access_key = parse_connection_str(conn_str)
-        return cls(endpoint, access_key, **kwargs)
+        return cls(endpoint, AzureKeyCredential(access_key), **kwargs)
 
     def get_call_connection(  # pylint: disable=client-method-missing-tracing-decorator
         self, call_connection_id: str, **kwargs
@@ -399,14 +409,15 @@ class CallAutomationClient:
             else None
         )
 
-        try:
+        # Handle union type: single identifier or list of identifiers
+        if isinstance(target_participant, list):
             targets = [serialize_identifier(p) for p in target_participant]
-        except TypeError:
+        else:
             targets = [serialize_identifier(target_participant)]
         media_config = media_streaming.to_generated() if media_streaming else None
         transcription_config = transcription.to_generated() if transcription else None
         create_call_request = CreateCallRequest(
-            targets=targets,
+            targets=targets,  # type: ignore[arg-type]
             callback_uri=callback_url,
             source_caller_id_number=serialize_phone_identifier(source_caller_id_number),
             source_display_name=source_display_name,
@@ -583,7 +594,7 @@ class CallAutomationClient:
             user_custom_context = CustomCallingContext(voip_headers=voip_headers, sip_headers=sip_headers)
         redirect_call_request = RedirectCallRequest(
             incoming_call_context=incoming_call_context,
-            target=serialize_identifier(target_participant),
+            target=serialize_identifier(target_participant),  # type: ignore[arg-type]
             custom_calling_context=user_custom_context,
         )
         process_repeatability_first_sent(kwargs)
@@ -833,7 +844,7 @@ class CallAutomationClient:
             kwargs.pop("server_call_id", None),
             kwargs.pop("group_call_id", None),
             kwargs.pop("room_id", None),
-            args
+            list(args)
         )
         external_storage = build_external_storage(kwargs.pop("recording_storage", None))
         call_connection_id = kwargs.pop("call_connection_id", None)
@@ -908,7 +919,7 @@ class CallAutomationClient:
 
     @distributed_trace
     def download_recording(
-        self, recording_url: str, *, offset: int = None, length: int = None, **kwargs
+        self, recording_url: str, *, offset: Optional[int] = None, length: Optional[int] = None, **kwargs
     ) -> Iterable[bytes]:
         """Download a stream of the call recording.
 
@@ -927,7 +938,7 @@ class CallAutomationClient:
         stream = self._downloader.download_streaming(
             source_location=recording_url, offset=offset, length=length, **kwargs
         )
-        return stream
+        return stream.iter_bytes()  # type: ignore[attr-defined]
 
     @distributed_trace
     def delete_recording(self, recording_url: str, **kwargs) -> None:

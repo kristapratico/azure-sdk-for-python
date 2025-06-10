@@ -6,4 +6,4 @@
 
 VERSION = "1.3.0"
 
-SDK_MONIKER = "communication-chat/{}".format(VERSION)  # type: str
+SDK_MONIKER: str = "communication-chat/{}".format(VERSION)

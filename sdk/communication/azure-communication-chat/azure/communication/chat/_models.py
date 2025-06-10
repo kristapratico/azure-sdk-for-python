@@ -59,7 +59,7 @@ class ChatParticipant:
 
     def _to_generated(self):
         return ChatParticipantAutorest(
-            communication_identifier=serialize_identifier(self.identifier),
+            communication_identifier=serialize_identifier(self.identifier),  # type: ignore
             display_name=self.display_name,
             share_history_time=self.share_history_time,
         )

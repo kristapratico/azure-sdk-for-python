@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # -------------------------------------------------------------------------
-# pylint: disable=C4763
+"""Shared async utility functions for Azure Communication Services."""
 from asyncio import sleep, ensure_future
 
 class AsyncTimer:
@@ -18,6 +18,7 @@ class AsyncTimer:
         self._task = None
 
     def start(self):
+        """Start the timer."""
         self._task = ensure_future(self._job())
 
     async def _job(self):
@@ -25,6 +26,7 @@ class AsyncTimer:
         await self._callback()
 
     def cancel(self):
+        """Cancel the timer."""
         if self._task is not None:
             self._task.cancel()
         self._task = None

@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+"""Content downloader for Azure Communication Call Automation."""
 
 from typing import Any
 
@@ -27,7 +28,7 @@ _SERIALIZER = Serializer()
 _SERIALIZER.client_side_validation = False
 
 
-class ContentDownloader(object):
+class ContentDownloader:
     def __init__(self, call_recording_client: CallRecordingOperations) -> None:
 
         self._call_recording_client = call_recording_client

@@ -3,11 +3,12 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+"""Model classes for Azure Communication Call Automation."""
 from typing import List, Optional, Union, TYPE_CHECKING
 from typing_extensions import Literal
 from ._generated.models import (
     CallLocator,
-    MediaStreamingOptions as MediaStreamingOptionsRest,
+    MediaStreamingOptionsRest as MediaStreamingOptionsRest,
     TranscriptionOptions as TranscriptionOptionsRest,
     FileSource as FileSourceInternal,
     TextSource as TextSourceInternal,

@@ -11,6 +11,7 @@ from azure.core import CaseInsensitiveEnumMeta
 
 
 class DeprecatedEnumMeta(CaseInsensitiveEnumMeta):
+    """Meta class for deprecated enum members."""
 
     def __getattribute__(cls, item):
         if item.upper() == "MICROSOFT_BOT":
@@ -26,7 +27,8 @@ class DeprecatedEnumMeta(CaseInsensitiveEnumMeta):
 class CommunicationIdentifierKind(str, Enum, metaclass=DeprecatedEnumMeta):
     """Communication Identifier Kind.
 
-    For checking yet unknown identifiers it is better to rely on the presence of the `raw_id` property,
+    For checking yet unknown identifiers it is better to rely on the presence of the `raw_id` 
+    property,
     as new or existing distinct type identifiers always contain the `raw_id` property.
     It is not advisable to rely on the `kind` property with a value `unknown`,
     as it could become a new or existing distinct type in the future.
@@ -54,17 +56,14 @@ class CommunicationIdentifier(Protocol):
     @property
     def raw_id(self) -> str:
         """The raw ID of the identifier."""
-        ...
 
     @property
     def kind(self) -> CommunicationIdentifierKind:
         """The type of identifier."""
-        ...
 
     @property
     def properties(self) -> Mapping[str, Any]:
         """The properties of the identifier."""
-        ...
 
 
 PHONE_NUMBER_PREFIX = "4:"
@@ -104,14 +103,14 @@ class CommunicationUserIdentifier:
     raw_id: str
     """The raw ID of the identifier."""
 
-    def __init__(self, id: str, **kwargs: Any) -> None:
+    def __init__(self, user_id: str, **kwargs: Any) -> None:
         """
-        :param str id: ID of the Communication user as returned from Azure Communication Identity.
-        :keyword str raw_id: The raw ID of the identifier. If not specified, the 'id' value will be used.
+        :param str user_id: ID of the Communication user as returned from Azure Communication Identity.
+        :keyword str raw_id: The raw ID of the identifier. If not specified, the 'user_id' value will be used.
         """
-        self.properties = CommunicationUserProperties(id=id)
+        self.properties = CommunicationUserProperties(id=user_id)
         raw_id: Optional[str] = kwargs.get("raw_id")
-        self.raw_id = raw_id if raw_id is not None else id
+        self.raw_id = raw_id if raw_id is not None else user_id
 
     def __eq__(self, other):
         try:
@@ -413,5 +412,5 @@ def identifier_from_raw_id(raw_id: str) -> CommunicationIdentifier:  # pylint: d
         ACS_USER_GCCH_CLOUD_PREFIX,
         SPOOL_USER_PREFIX,
     ]:
-        return CommunicationUserIdentifier(id=raw_id, raw_id=raw_id)
+        return CommunicationUserIdentifier(user_id=raw_id, raw_id=raw_id)
     return UnknownIdentifier(identifier=raw_id)

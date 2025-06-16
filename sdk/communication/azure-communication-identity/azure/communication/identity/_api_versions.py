@@ -8,6 +8,7 @@ from azure.core import CaseInsensitiveEnumMeta
 
 
 class ApiVersion(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """API versions supported by Azure Communication Identity service."""
     V2021_03_07 = "2021-03-07"
     V2022_06_01 = "2022-06-01"
     V2022_10_01 = "2022-10-01"

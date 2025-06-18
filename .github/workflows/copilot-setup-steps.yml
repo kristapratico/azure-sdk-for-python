@@ -3,8 +3,7 @@ name: Copilot Setup Steps
 on: workflow_dispatch
 
 env:
-  PIP_TIMEOUT: 1200
-  COPILOT_AGENT_FIREWALL_ENABLED: false
+  COPILOT_AGENT_FIREWALL_ALLOW_LIST: frdvsblobprodcus327.vsblob.vsassets.io
 
 jobs:
   copilot-setup-steps:

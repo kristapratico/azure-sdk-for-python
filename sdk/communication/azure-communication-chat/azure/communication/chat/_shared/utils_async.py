@@ -3,7 +3,6 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # -------------------------------------------------------------------------
-# pylint: disable=C4763
 from asyncio import sleep, ensure_future
 
 class AsyncTimer:

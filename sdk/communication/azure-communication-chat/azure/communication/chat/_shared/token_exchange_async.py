@@ -6,7 +6,6 @@
 
 import json
 from typing import Any, Optional, List
-# pylint: disable=non-abstract-transport-import
 # pylint: disable=no-name-in-module
 from azure.core.pipeline.transport import AioHttpTransport
 from azure.core.credentials import AccessToken
@@ -28,8 +27,6 @@ class TokenExchangeClient:
     :keyword transport: Optional transport to use for the pipeline.
     """
 
-    # pylint: disable=C4748
-    # pylint: disable=client-method-missing-type-annotations
     def __init__(
         self,
         resource_endpoint: str,

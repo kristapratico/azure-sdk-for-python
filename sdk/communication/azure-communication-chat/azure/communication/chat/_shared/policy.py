@@ -67,7 +67,7 @@ class HMACCredentialsPolicy(SansIOHTTPPolicy):
         # There's a similar scenario in azure-storage-blob and azure-appconfiguration, the check logic is from there.
         try:
             from yarl import URL
-            from azure.core.pipeline.transport import (  # pylint:disable=non-abstract-transport-import
+            from azure.core.pipeline.transport import (
                 AioHttpTransport,
             )
 

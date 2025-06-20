@@ -6,6 +6,7 @@
 # license information.
 # --------------------------------------------------------------------------
 # pylint: disable=protected-access, broad-except
+"""Model base classes for Azure Communication Messages."""
 
 import copy
 import calendar
@@ -63,7 +64,7 @@ def _timedelta_as_isostr(td: timedelta) -> str:
     # Build date
     date_str = ""
     if days:
-        date_str = "%sD" % days
+        date_str = f"{days}D"
 
     if hours or minutes or seconds:
         # Build time
@@ -72,26 +73,26 @@ def _timedelta_as_isostr(td: timedelta) -> str:
         # Hours
         bigger_exists = date_str or hours
         if bigger_exists:
-            time_str += "{:02}H".format(hours)
+            time_str += f"{hours:02}H"
 
         # Minutes
         bigger_exists = bigger_exists or minutes
         if bigger_exists:
-            time_str += "{:02}M".format(minutes)
+            time_str += f"{minutes:02}M"
 
         # Seconds
         try:
             if seconds.is_integer():
-                seconds_string = "{:02}".format(int(seconds))
+                seconds_string = f"{int(seconds):02}"
             else:
                 # 9 chars long w/ leading 0, 6 digits after decimal
-                seconds_string = "%09.6f" % seconds
+                seconds_string = f"{seconds:09.6f}"
                 # Remove trailing zeros
                 seconds_string = seconds_string.rstrip("0")
         except AttributeError:  # int.is_integer() raises
-            seconds_string = "{:02}".format(seconds)
+            seconds_string = f"{seconds:02}"
 
-        time_str += "{}S".format(seconds_string)
+        time_str += f"{seconds_string}S"
     else:
         time_str = ""
 

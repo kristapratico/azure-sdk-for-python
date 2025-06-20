@@ -10,7 +10,6 @@ import datetime
 from io import IOBase
 from typing import Any, Callable, Dict, IO, Iterable, Optional, TypeVar, Union, overload
 import urllib.parse
-import uuid
 
 from azure.core.exceptions import (
     ClientAuthenticationError,

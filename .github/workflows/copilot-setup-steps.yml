@@ -1,0 +1,56 @@
+name: Copilot Setup Steps
+
+on: workflow_dispatch
+
+env:
+  COPILOT_AGENT_FIREWALL_ALLOW_LIST: frdvsblobprodcus327.vsblob.vsassets.io
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - name: Ensure virtualenv installed
+        run: python -m pip install virtualenv
+
+      - name: Create and activate virtual environment
+        run: |
+          python -m virtualenv .venv
+          echo "VIRTUAL_ENV=$(pwd)/.venv" >> $GITHUB_ENV
+          echo "$(pwd)/.venv/bin" >> $GITHUB_PATH
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install -r eng/ci_tools.txt
+
+      - name: Set persistent wheel cache path
+        run: |
+          echo "VIRTUALENV_OVERRIDE_APP_DATA=${{ github.workspace }}/.venv_app_data" >> $GITHUB_ENV
+
+      - name: Cache virtualenv wheel data
+        uses: actions/cache@v4
+        with:
+          path: .venv_app_data
+          key: venv-app-data-${{ runner.os }}-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            venv-app-data-${{ runner.os }}-
+
+      - name: Populate the seed dir
+        run: |
+          virtualenv --download \
+            --pip=24.0 \
+            --setuptools=75.3.2 \
+            --wheel=0.45.1 \
+            ${{ github.workspace }}/.venv_app_data
